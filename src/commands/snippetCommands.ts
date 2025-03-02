@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import onDoubleClick from "./doubleClickHandler";
 
 function initSnippetCommands(context: vscode.ExtensionContext) {
     // Show Snippets view
@@ -7,12 +8,6 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
             vscode.commands.executeCommand('workbench.view.extension.snippet-manager-view');
         })
     );
-
-     
-    context.subscriptions.push(vscode.commands.registerCommand('snippetstudio.showSnippetBody', (body: string) => {
-        // Display the snippet body (e.g., in an information message or a webview)
-        vscode.window.showInformationMessage(body); // Example: Display in an info message
-    }));
 
     // Open Snippets file
     context.subscriptions.push(
@@ -29,6 +24,46 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
             }
         })
     );
+
+    // Show Snippet Body
+    const showSnippetOnDoubleClick = onDoubleClick((item: vscode.TreeItem) => {
+        vscode.window.showInformationMessage(item.tooltip?.toString() ?? "");
+    });
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.showSnippetBody", (item: vscode.TreeItem) => {
+            showSnippetOnDoubleClick(item);
+        })
+    );
+
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.openSettings", () => {
+            vscode.window.showErrorMessage("Not implimented yet!");
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.addGlobalSnippet", () => {
+            vscode.window.showErrorMessage("Not implimented yet!");
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.deleteSnippetFile", () => {
+            vscode.window.showErrorMessage("Not implimented yet!");
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.editSnippet", () => {
+            vscode.window.showErrorMessage("Not implimented yet!");
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.deleteSnippet", () => {
+            vscode.window.showErrorMessage("Not implimented yet!");
+        })
+    );
+    
+
+
 }
 
 export default initSnippetCommands;

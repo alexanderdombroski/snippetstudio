@@ -52,26 +52,51 @@
         "title": "Open Snippet Manager"
       },
       {
-        "command": "snippet-manager.add",
-        "title": "Add Snippet",
-        "icon": "$(plus)"
+        "command": "snippetstudio.addGlobalSnippet",
+        "title": "Add Global Snippet",
+        "icon": "$(plus)",
+        "shortTitle": "Add Snippet"
+      },
+      {
+        "command": "snippetstudio.openSettings",
+        "title": "Open Snippet Studio Settings",
+        "icon": "$(gear)"
       },
       {
         "command": "snippetstudio.showSnippetBody",
-        "title": "Show Snippet Body",
-        "enablement": "false"
+        "title": "Show Snippet Body"
       },
       {
         "command": "snippetstudio.openSnippetFile",
         "title": "Open Snippet File"
+      },
+      {
+        "command": "snippetstudio.deleteSnippetFile",
+        "title": "Delete Snippet File",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "snippetstudio.editSnippet",
+        "title": "Edit Snippet File",
+        "icon": "$(pencil)"
+      },
+      {
+        "command": "snippetstudio.deleteSnippet",
+        "title": "Delete Snippet",
+        "icon": "$(trash)"
       }
     ],
     "menus": {
       "view/title": [
         {
-          "command": "snippet-manager.add",
+          "command": "snippetstudio.openSettings",
           "when": "view == snippet-manager-view",
-          "group": "navigaion"
+          "group": "inline"
+        },
+        {
+          "command": "snippetstudio.addGlobalSnippet",
+          "when": "view == snippet-manager-view",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -79,6 +104,21 @@
           "command": "snippetstudio.openSnippetFile",
           "when": "viewItem == snippet-filepath",
           "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.deleteSnippetFile",
+          "when": "viewItem == snippet-filepath",
+          "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.deleteSnippet",
+          "when": "viewItem == snippet",
+          "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.editSnippet",
+          "when": "viewItem == snippet",
+          "group": "inline"
         }
       ]
     }

@@ -10,11 +10,13 @@ import { VSCodeSnippet, VSCodeSnippets } from "../types/snippetTypes.js";
  * @returns A vscode.TreeItem representing the snippet.
  */
 export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeSnippet): vscode.TreeItem {
-    const treeItem = new vscode.TreeItem(snippetTitle, vscode.TreeItemCollapsibleState.None);
+    const prefix = Array.isArray(snippet.prefix) ? snippet.prefix[0] : snippet.prefix;
+    const treeItem = new vscode.TreeItem(prefix, vscode.TreeItemCollapsibleState.None);
 
-    // treeItem.description = snippet.description;
+    treeItem.description = snippetTitle;
+    treeItem.contextValue = "snippet";
 
-    const body = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body;
+    const body: string = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body;
     treeItem.tooltip = `Keyword: ${snippet.prefix}\n${body}\n\n${snippet.description}`;
 
 
@@ -22,7 +24,7 @@ export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeS
     treeItem.command = {
         title: 'Show Snippet Body',
         command: 'snippetstudio.showSnippetBody', // Replace with your command ID
-        arguments: [body]
+        arguments: [treeItem]
     };
 
     return treeItem;
@@ -34,7 +36,7 @@ export function createTreeItemFromFilePath(filepath: string): vscode.TreeItem {
     treeItem.description = filepath;
     treeItem.tooltip = "Snippets from this dropdown are found in " + filepath + "\n\nRight Click to open the file!";
     treeItem.contextValue = "snippet-filepath";
-
+    
     return treeItem;
 }
 

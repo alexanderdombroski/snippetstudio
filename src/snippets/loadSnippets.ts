@@ -6,7 +6,6 @@ import { createTreeItemFromFilePath, createTreeItemFromSnippet } from "../ui/tem
 
 export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.TreeItem[]][]>  {
     const snippetFiles: string[] = await locateSnippetFiles();
-    console.log("files: ", snippetFiles);
     const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(snippetFiles);
     const treeItems: [vscode.TreeItem, vscode.TreeItem[]][] = snippetGroups.map(([filePath, group]) => {
         const dropdown = createTreeItemFromFilePath(filePath);

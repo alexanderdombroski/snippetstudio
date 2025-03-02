@@ -46,6 +46,5 @@ export default async function readJsoncFilesAsync(filePaths: string[]): Promise<
     });
 
     await Promise.all(promises);
-    console.log(snippetMap);
     return snippetMap;
 }

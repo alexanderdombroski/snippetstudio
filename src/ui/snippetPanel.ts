@@ -28,7 +28,6 @@ export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeI
     public async refresh() {
         this.snippetTreeItems = await loadSnippets();
         this._onDidChangeTreeData.fire();
-        console.log("Tree: ", this.snippetTreeItems);
     }
     private debounceRefresh() {
         if (this.debounceTimer) {
