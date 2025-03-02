@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 // import * as path from 'path';
-import locateSnippetFiles from '../snippets/locateSnippets.mjs';
+import locateSnippetFiles from '../snippets/locateSnippets.js';
 // import fs from "fs";
 
 suite('Snippet File Location Tests', () => {

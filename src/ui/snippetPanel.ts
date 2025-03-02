@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { VSCodeSnippets } from '../types/snippetTypes.js';
-import loadSnippets from '../snippets/loadSnippets.mjs';
+import loadSnippets from '../snippets/loadSnippets.js';
 
 export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     // ---------- Refresh the tree when the active editor changes ----------
@@ -10,10 +10,10 @@ export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeI
 
     private langId = vscode.window.activeTextEditor?.document.languageId;
     constructor() {
-        vscode.window.onDidChangeActiveTextEditor(() => { 
+        vscode.window.onDidChangeActiveTextEditor(async () => { 
             const newLangId: string | undefined = vscode.window.activeTextEditor?.document.languageId;
             if (this.langId !== newLangId) {
-                this.refresh(); 
+                await this.refresh(); 
                 this.langId = newLangId;
             }
         });

@@ -13,7 +13,7 @@ import { glob } from "glob";
 async function locateSnippetFiles(): Promise<string[]> {
     const filePaths: string[] = [];
     const editor = vscode.window.activeTextEditor;
-    console.log("Locating files!")
+    console.log("Locating files!");
 
     if (editor === undefined) {
         return [];
@@ -115,4 +115,4 @@ function getAllParentDirs(filePath: string): string[] {
 }
 
 
-export default locateSnippetFiles 
+export default locateSnippetFiles;
