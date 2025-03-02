@@ -1,8 +1,8 @@
 import * as path from 'path';
 import * as vscode from 'vscode';
-import os from 'os';
 import fs from 'fs';
 import { glob } from "glob";
+import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo';
 
 /**
  * Finds all snippet files for a given language ID, starting from the workspace root and including global snippets. 
@@ -18,14 +18,15 @@ async function locateSnippetFiles(): Promise<string[]> {
         return [];
     }
     const languageId = editor.document.languageId;
-    const folder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
+    
+    const folder = getWorkspaceFolder();
     if (folder) {
         const global = getGlobalSnippetFiles(languageId);
         if (global) {
             filePaths.push(global);
         }
         
-        const localPaths = getAllParentDirs(folder.uri.fsPath);
+        const localPaths = getAllParentDirs(folder);
         
         const filePathPromises = localPaths.map(path => findWorkspaceSnippetFiles(path, languageId));
         const workspaceSnippets = await Promise.all(filePathPromises);
@@ -65,22 +66,7 @@ async function findWorkspaceSnippetFiles(folderPath: string, languageId: string)
  * @returns returns a global snippet filepath, or empty string if couldn't find it.
  */
 function getGlobalSnippetFiles(languageId: string): string {
-    let globalSnippetsPath: string = "";
-    switch (process.platform) {
-        case 'win32':
-            globalSnippetsPath = path.join(os.homedir(), 'AppData', 'Roaming', 'Code', 'User', 'snippets');
-            break;
-        case 'linux':
-            globalSnippetsPath = path.join(os.homedir(), '.config', 'Code', 'User', 'snippets');
-            break;
-        case 'darwin':
-            globalSnippetsPath = path.join(os.homedir(), 'Library', 'Application Support', 'Code', 'User', 'snippets');
-            break;
-        default:
-            console.warn(`Unsupported platform: ${process.platform} Couldn't find global snippets file: ${languageId}`);
-            return "";
-    }
-
+    const globalSnippetsPath = getGlobalSnippetFilesDir();
     if (!globalSnippetsPath) {
         return "";
     }

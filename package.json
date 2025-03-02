@@ -44,6 +44,10 @@
       {
         "view": "overview",
         "contents": "To start managing your snippets, please open a project or file.\n[Open Folder](command:vscode.openFolder)\n"
+      },
+      {
+        "view": "location-manager",
+        "contents": "This is where snippets of ALL languages being loaded in will appear!"
       }
     ],
     "commands": [
@@ -84,6 +88,26 @@
         "command": "snippetstudio.deleteSnippet",
         "title": "Delete Snippet",
         "icon": "$(trash)"
+      },
+      {
+        "command": "snippetstudio.refresh",
+        "title": "Refresh Snippets",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "snippetstudio.createGlobalLangFile",
+        "title": "Create Global Snippets File",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "snippetstudio.createLocalSnippetsFile",
+        "title": "Create Local Mixed Snippets File",
+        "icon": "$(book)"
+      },
+      {
+        "command": "snippetstudio.createLocalLangFile",
+        "title": "Create Local Snippets File",
+        "icon": "$(file-code)"
       }
     ],
     "menus": {
@@ -97,6 +121,26 @@
           "command": "snippetstudio.addGlobalSnippet",
           "when": "view == snippet-manager-view",
           "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.refresh",
+          "when": "view == snippet-manager-view",
+          "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.createLocalLangFile",
+          "group": "inline",
+          "when": "view == snippet-manager-view || view == location-manager"
+        },
+        {
+          "command": "snippetstudio.createGlobalLangFile",
+          "group": "inline",
+          "when": "view == snippet-manager-view || view == location-manager"
+        },
+        {
+          "command": "snippetstudio.createLocalSnippetsFile",
+          "group": "inline",
+          "when": "view == location-manager"
         }
       ],
       "view/item/context": [
