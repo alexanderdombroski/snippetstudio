@@ -13,7 +13,6 @@ async function processJsonWithComments(jsonString: string): Promise<any> {
     }
 }
 
-
 /**
  * Function that reads and uses all jsonc files asynchronously and independently. It
  * returns an array objects holding groups of snippets from each file
@@ -21,16 +20,32 @@ async function processJsonWithComments(jsonString: string): Promise<any> {
  * @param filePaths
  * @param callback A void function that takes a JSONObject<any> as a parameter
  */
-export default async function readJsoncFilesAsync(filePaths: string[]): Promise<VSCodeSnippets[]> {
+export default async function readJsoncFilesAsync(filePaths: string[]): Promise<[string, VSCodeSnippets][]> {
+    const snippetMap: [string, VSCodeSnippets][] = [];
     const promises = filePaths.map(filePath => {
         return fs.readFile(filePath, 'utf8')
             .then(fileContent => processJsonWithComments(fileContent))
-            .then(cleanedJsonString => JSON.parse(cleanedJsonString))
+            .then(jsonObject => {
+                if (jsonObject) {
+                    snippetMap.push([filePath, jsonObject as VSCodeSnippets]);
+                } else {
+                    const errorObject = {
+                        "file incorrect format": {
+                            body: "Need to fix json file!", 
+                            prefix: "error"
+                        }
+                    };
+                    snippetMap.push([filePath, errorObject]);
+                }
+                return null;
+            })
             .catch(error => {
                 console.error(`Error processing file ${filePath}:`, error);
                 return null;
             });
     });
 
-    return Promise.all(promises).then(results => results.filter(result => result !== null));
+    await Promise.all(promises);
+    console.log(snippetMap);
+    return snippetMap;
 }

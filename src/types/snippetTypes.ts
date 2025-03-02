@@ -27,4 +27,8 @@ interface VSCodeSnippets {
     [snippetTitle: string]: VSCodeSnippet;
 }
 
-export { VSCodeSnippet, VSCodeSnippets };
+interface SnippetMap {
+    [fileName: string]: VSCodeSnippets;
+}
+
+export { VSCodeSnippet, VSCodeSnippets, SnippetMap };

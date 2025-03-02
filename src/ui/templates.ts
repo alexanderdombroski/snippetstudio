@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import path from "path";
 import { VSCodeSnippet, VSCodeSnippets } from "../types/snippetTypes.js";
 
 /**
@@ -11,10 +12,10 @@ import { VSCodeSnippet, VSCodeSnippets } from "../types/snippetTypes.js";
 export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeSnippet): vscode.TreeItem {
     const treeItem = new vscode.TreeItem(snippetTitle, vscode.TreeItemCollapsibleState.None);
 
-    treeItem.description = snippet.description;
+    // treeItem.description = snippet.description;
 
     const body = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body;
-    treeItem.tooltip = `${snippet.prefix}\n${body}`;
+    treeItem.tooltip = `Keyword: ${snippet.prefix}\n${body}\n\n${snippet.description}`;
 
 
     // Add a command to show the snippet body when clicked
@@ -24,5 +25,21 @@ export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeS
         arguments: [body]
     };
 
+    return treeItem;
+}
+
+export function createTreeItemFromFilePath(filepath: string): vscode.TreeItem {
+    const filename = path.basename(filepath);
+    const treeItem = new vscode.TreeItem(filename, vscode.TreeItemCollapsibleState.Collapsed);
+    treeItem.description = filepath;
+    treeItem.tooltip = "Snippets from this dropdown are found in " + filepath + "\n\nRight Click to open the file!";
+    treeItem.contextValue = "snippet-filepath";
+
+    return treeItem;
+}
+
+export function selectedLanguageTemplate(langId: string | undefined): vscode.TreeItem {
+    const treeItem = new vscode.TreeItem(langId === undefined ? "No Language Open" : `${langId}`.toUpperCase());
+    treeItem.tooltip = "The language of the open file";
     return treeItem;
 }

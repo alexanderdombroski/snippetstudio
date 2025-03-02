@@ -1,56 +1,72 @@
 import * as vscode from 'vscode';
-import { VSCodeSnippets } from '../types/snippetTypes.js';
 import loadSnippets from '../snippets/loadSnippets.js';
+import { selectedLanguageTemplate } from './templates.js';
+
+type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
 export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-    // ---------- Refresh the tree when the active editor changes ----------
-    private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-    // private readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
-    private snippetTreeItems: vscode.TreeItem[][] | undefined;
-
-    private langId = vscode.window.activeTextEditor?.document.languageId;
+    // ---------- Attributes ---------- //
+    private snippetTreeItems: ParentChildTreeItems | undefined;
+    private langId: string | undefined;
+    private debounceTimer: NodeJS.Timeout | undefined; // Debounce timer
+    
+    // ---------- Constructor ---------- //
     constructor() {
-        vscode.window.onDidChangeActiveTextEditor(async () => { 
-            const newLangId: string | undefined = vscode.window.activeTextEditor?.document.languageId;
+        this.langId = vscode.window.activeTextEditor?.document.languageId;
+        this.refresh();
+
+        vscode.window.onDidChangeActiveTextEditor(async () => {
+            const newLangId = vscode.window.activeTextEditor?.document.languageId;
             if (this.langId !== newLangId) {
-                await this.refresh(); 
                 this.langId = newLangId;
+                this.debounceRefresh();
             }
         });
     }
+
+    // ---------- Refresh Methods ---------- //
     public async refresh() {
-        this._onDidChangeTreeData.fire();
         this.snippetTreeItems = await loadSnippets();
+        this._onDidChangeTreeData.fire();
+        console.log("Tree: ", this.snippetTreeItems);
+    }
+    private debounceRefresh() {
+        if (this.debounceTimer) {
+            clearTimeout(this.debounceTimer); // Clear previous timer
+        }
+        this.debounceTimer = setTimeout(async () => {
+            await this.refresh(); // Call refresh after delay
+            this.debounceTimer = undefined; // Clear timer
+        }, 300); // Adjust delay as needed (e.g., 200ms)
     }
 
-    // ---------- INIT TREE ----------
+    // ---------- INIT TREE Methods ---------- //
     getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
         return element;
     }
 
-    async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[] | null | undefined> {
+    async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[] | undefined> {
         if (element) {
-            if (element.label === 'Dropdown') {
-                // Return items for the dropdown
-                return [
-                    new vscode.TreeItem('Option 1'),
-                    new vscode.TreeItem('Option 2')
-                ];
-            }
-            // Logic for child items (if any)
-            return [];
+            // Handle child items
+            const parentChild = this.snippetTreeItems?.find(group => group[0].description === element.description);
+            return parentChild ? parentChild[1] : undefined;
         } else {
-            // Logic for root items
-            return [
-                new vscode.TreeItem(this.langId === undefined ? "No Language Open" : `${this.langId}`.toUpperCase()),
-                new vscode.TreeItem('Dropdown', vscode.TreeItemCollapsibleState.Collapsed),
-                ...this.snippetTreeItems!.flat()
-            ];
+            // Root level: Load snippet files and create parent items
+            if (!this.snippetTreeItems) {
+                this.snippetTreeItems = await loadSnippets();
+            }
+
+            if (!this.snippetTreeItems || this.snippetTreeItems.length === 0) {
+                return [selectedLanguageTemplate(this.langId)];
+            }
+
+            return this.snippetTreeItems.map(group => group[0]);
         }
     }
 
 
-
-    
+    // ---------- Event Emitters ---------- //
+    private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> = new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
+    readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
 }

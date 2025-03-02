@@ -60,6 +60,10 @@
         "command": "snippetstudio.showSnippetBody",
         "title": "Show Snippet Body",
         "enablement": "false"
+      },
+      {
+        "command": "snippetstudio.openSnippetFile",
+        "title": "Open Snippet File"
       }
     ],
     "menus": {
@@ -68,6 +72,13 @@
           "command": "snippet-manager.add",
           "when": "view == snippet-manager-view",
           "group": "navigaion"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "snippetstudio.openSnippetFile",
+          "when": "viewItem == snippet-filepath",
+          "group": "navigation"
         }
       ]
     }

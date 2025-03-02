@@ -13,7 +13,6 @@ import { glob } from "glob";
 async function locateSnippetFiles(): Promise<string[]> {
     const filePaths: string[] = [];
     const editor = vscode.window.activeTextEditor;
-    console.log("Locating files!");
 
     if (editor === undefined) {
         return [];
@@ -27,9 +26,6 @@ async function locateSnippetFiles(): Promise<string[]> {
         }
         
         const localPaths = getAllParentDirs(folder.uri.fsPath);
-        
-        console.log("Lang: ", languageId);
-        console.log("Dirs: ", localPaths);
         
         const filePathPromises = localPaths.map(path => findWorkspaceSnippetFiles(path, languageId));
         const workspaceSnippets = await Promise.all(filePathPromises);
