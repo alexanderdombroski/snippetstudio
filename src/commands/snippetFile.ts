@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import fs from "fs";
 import path from "path";
-import { createGlobalLangFile, createLocalLangFile, createLocalSnippetFile } from "../snippets/newSnippetFile";
+import { createGlobalLangFile, createGlobalSnippetsFile, createLocalLangFile, createLocalSnippetsFile } from "../snippets/newSnippetFile";
 
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
@@ -38,7 +38,14 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
     // Create Local Mixed Snippet File
     context.subscriptions.push(
         vscode.commands.registerCommand("snippetstudio.createLocalSnippetsFile", () => {
-            createLocalSnippetFile();
+            createLocalSnippetsFile();
+            vscode.commands.executeCommand("snippetstudio.refresh");
+        })
+    );
+    // Create Global Mixed Snippet File
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.createGlobalSnippetsFile", () => {
+            createGlobalSnippetsFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
         })
     );

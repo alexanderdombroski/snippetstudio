@@ -105,6 +105,11 @@
         "icon": "$(book)"
       },
       {
+        "command": "snippetstudio.createGlobalSnippetsFile",
+        "title": "Create Global Mixed Snippets File",
+        "icon": "$(book)"
+      },
+      {
         "command": "snippetstudio.createLocalLangFile",
         "title": "Create Local Snippets File",
         "icon": "$(file-code)"
@@ -130,15 +135,20 @@
         {
           "command": "snippetstudio.createLocalLangFile",
           "group": "inline",
-          "when": "view == snippet-manager-view || view == location-manager"
+          "when": "view == location-manager"
         },
         {
           "command": "snippetstudio.createGlobalLangFile",
           "group": "inline",
-          "when": "view == snippet-manager-view || view == location-manager"
+          "when": "view == location-manager"
         },
         {
           "command": "snippetstudio.createLocalSnippetsFile",
+          "group": "inline",
+          "when": "view == location-manager"
+        },
+        {
+          "command": "snippetstudio.createGlobalSnippetsFile",
           "group": "inline",
           "when": "view == location-manager"
         }

@@ -22,9 +22,7 @@ async function locateSnippetFiles(): Promise<string[]> {
     const folder = getWorkspaceFolder();
     if (folder) {
         const global = getGlobalSnippetFiles(languageId);
-        if (global) {
-            filePaths.push(global);
-        }
+        filePaths.push(...global);
         
         const localPaths = getAllParentDirs(folder);
         
@@ -65,20 +63,22 @@ async function findWorkspaceSnippetFiles(folderPath: string, languageId: string)
  * @param languageId 
  * @returns returns a global snippet filepath, or empty string if couldn't find it.
  */
-function getGlobalSnippetFiles(languageId: string): string {
+function getGlobalSnippetFiles(languageId: string): string[] {
+    const paths: string[] = [];
     const globalSnippetsPath = getGlobalSnippetFilesDir();
     if (!globalSnippetsPath) {
-        return "";
+        return [];
     }
     
-    let languageSnippetFilePath = "";
-    languageSnippetFilePath = path.join(globalSnippetsPath, `${languageId}.json`);
-
+    const languageSnippetFilePath = path.join(globalSnippetsPath, `${languageId}.json`);
     if (fs.existsSync(languageSnippetFilePath)) {
-        return languageSnippetFilePath;
-    } else {
-        return "";
+        paths.push(languageSnippetFilePath);
     }
+    const globalMixedSnippetsPath = path.join(globalSnippetsPath, "global.code-snippets");
+    if (fs.existsSync(globalMixedSnippetsPath)) {
+        paths.push(globalMixedSnippetsPath);
+    }
+    return paths;
 }
 
 function getAllParentDirs(filePath: string): string[] {

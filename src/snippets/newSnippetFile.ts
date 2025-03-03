@@ -46,7 +46,7 @@ async function createLocalLangFile(): Promise<void> {
     await createFile(filepath); // Async
 }
 
-async function createLocalSnippetFile(): Promise<void> {
+async function createLocalSnippetsFile(): Promise<void> {
     const cwd = getWorkspaceFolder();
     if (!(cwd)) {
         return;
@@ -75,4 +75,13 @@ async function createGlobalLangFile(): Promise<void> {
     await createFile(filepath);
 }
 
-export { createGlobalLangFile, createLocalLangFile, createLocalSnippetFile };
+async function createGlobalSnippetsFile(): Promise<void> {
+    const dir = getGlobalSnippetFilesDir();
+    if (!dir) {
+        return;
+    }
+    const filepath = path.join(dir, "global.code-snippets");
+    await createFile(filepath);
+}
+
+export { createGlobalLangFile, createLocalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile };
