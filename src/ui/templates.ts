@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import path from "path";
-import { VSCodeSnippet, VSCodeSnippets } from "../types/snippetTypes.js";
+import { VSCodeSnippet } from "../types/snippetTypes.js";
 
 /**
  * Creates a vscode.TreeItem from a VSCodeSnippet.
@@ -50,6 +50,7 @@ export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
     const treeItem = new vscode.TreeItem(path.basename(filepath));
     treeItem.description = filepath;
     treeItem.tooltip = filepath;
+    treeItem.contextValue = "snippet-filepath";
 
     return treeItem;
 }

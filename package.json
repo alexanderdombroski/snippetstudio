@@ -95,6 +95,11 @@
         "icon": "$(refresh)"
       },
       {
+        "command": "snippetstudio.refreshLocations",
+        "title": "Refresh Locations",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "snippetstudio.createGlobalLangFile",
         "title": "Create Global Snippets File",
         "icon": "$(file-code)"
@@ -130,6 +135,11 @@
         {
           "command": "snippetstudio.refresh",
           "when": "view == snippet-manager-view",
+          "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.refreshLocations",
+          "when": "view == location-manager",
           "group": "navigation"
         },
         {

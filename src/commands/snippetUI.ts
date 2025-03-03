@@ -16,10 +16,16 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
         })
     );
 
-    // Refresh
+    // Snippets Refresh
     context.subscriptions.push(
         vscode.commands.registerCommand("snippetstudio.refresh", () => {
             commandMap["snippetstudio.refresh"]();
+        })
+    );
+    // Locations Refresh
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.refreshLocations", () => {
+            commandMap["snippetstudio.refreshLocations"]();
         })
     );
 }

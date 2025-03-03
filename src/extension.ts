@@ -18,7 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
     const locationTreeProvider = new LocationTreeProvider();
 	vscode.window.createTreeView('location-manager', { treeDataProvider: locationTreeProvider });
 	
-	initSnippetUICommands(context, {"snippetstudio.refresh": treeDataProvider.debounceRefresh.bind(treeDataProvider)});
+	initSnippetUICommands(context, {
+		"snippetstudio.refresh": treeDataProvider.debounceRefresh.bind(treeDataProvider),
+		"snippetstudio.refreshLocations": locationTreeProvider.debounceRefresh.bind(locationTreeProvider)
+	});
 	initSnippetCommands(context);
 	initSnippetFileCommands(context);
 

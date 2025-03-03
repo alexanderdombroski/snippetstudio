@@ -26,6 +26,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("snippetstudio.createGlobalLangFile", () => {
             createGlobalLangFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
+            vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
     );
     // Create Local Language specific Snippet File
@@ -33,6 +34,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("snippetstudio.createLocalLangFile", () => {
             createLocalLangFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
+            vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
     );
     // Create Local Mixed Snippet File
@@ -40,6 +42,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("snippetstudio.createLocalSnippetsFile", () => {
             createLocalSnippetsFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
+            vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
     );
     // Create Global Mixed Snippet File
@@ -47,6 +50,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
         vscode.commands.registerCommand("snippetstudio.createGlobalSnippetsFile", () => {
             createGlobalSnippetsFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
+            vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
     );
 
@@ -86,6 +90,7 @@ async function deleteFile(filepath: string) {
         await fs.promises.unlink(filepath); // Use fs.promises.unlink
         vscode.window.showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
         vscode.commands.executeCommand("snippetstudio.refresh");
+        vscode.commands.executeCommand("snippetstudio.refreshLocations");
     } catch (error) {
         if (error instanceof Error) {
             vscode.window.showErrorMessage(`Error deleting file: ${error.message}`);
