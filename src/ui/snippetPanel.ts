@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import loadSnippets from '../snippets/loadSnippets.js';
 import { selectedLanguageTemplate } from './templates.js';
+import { getCurrentLanguage } from '../utils/language.js';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
@@ -12,12 +13,12 @@ export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeI
     
     // ---------- Constructor ---------- //
     constructor() {
-        this.langId = vscode.window.activeTextEditor?.document.languageId;
+        this.langId = getCurrentLanguage();
         this.refresh();
 
         vscode.window.onDidChangeActiveTextEditor(async () => {
-            const newLangId = vscode.window.activeTextEditor?.document.languageId;
-            if (this.langId !== newLangId) {
+            const newLangId = getCurrentLanguage();
+            if (newLangId && this.langId !== newLangId) {
                 this.langId = newLangId;
                 this.debounceRefresh();
             }

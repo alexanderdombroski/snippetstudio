@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import { glob } from "glob";
 import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo';
+import { getCurrentLanguage } from '../utils/language';
 
 /**
  * Finds all snippet files for a given language ID, starting from the workspace root and including global snippets. 
@@ -12,15 +13,13 @@ import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo';
  */
 async function locateSnippetFiles(): Promise<string[]> {
     const filePaths: string[] = [];
-    const editor = vscode.window.activeTextEditor;
-
-    if (editor === undefined) {
-        return [];
-    }
-    const languageId = editor.document.languageId;
-    
     const folder = getWorkspaceFolder();
     if (folder) {
+        const languageId = getCurrentLanguage();
+        if (languageId === undefined) {
+            return filePaths;
+        }
+        
         const global = getGlobalSnippetFiles(languageId);
         filePaths.push(...global);
         

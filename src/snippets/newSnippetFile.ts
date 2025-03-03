@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as vscode from 'vscode';
 import { getWorkspaceFolder, getGlobalSnippetFilesDir } from "../utils/fsInfo";
+import { getCurrentLanguage } from "../utils/language";
 
 async function createFile(filepath: string): Promise<void> {
     try {
@@ -35,12 +36,11 @@ async function getFileName(): Promise<string | undefined> {
 }
 
 async function createLocalLangFile(): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
     const cwd = getWorkspaceFolder();
-    if (!(cwd && editor)) {
+    const langId = getCurrentLanguage();
+    if (!(cwd && langId)) {
         return;
     }
-    const langId = editor.document.languageId;
     
     const filepath = path.join(cwd, '.vscode', `${langId}.json`);
     await createFile(filepath); // Async
@@ -61,16 +61,15 @@ async function createLocalSnippetsFile(): Promise<void> {
 }
 
 async function createGlobalLangFile(): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        vscode.window.showErrorMessage('No active text editor.');
+    const langId = getCurrentLanguage();
+    if (langId === undefined) {
+        vscode.window.showErrorMessage('No recently used language.');
         return;
     }
     const dir = getGlobalSnippetFilesDir();
     if (!dir) {
         return;
     }
-    const langId = editor.document.languageId;
     const filepath = path.join(dir, `${langId}.json`);
     await createFile(filepath);
 }
