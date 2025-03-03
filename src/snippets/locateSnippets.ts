@@ -1,9 +1,10 @@
 import * as path from 'path';
-import * as vscode from 'vscode';
 import fs from 'fs';
 import { glob } from "glob";
-import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo';
-import { getCurrentLanguage } from '../utils/language';
+import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo.js';
+import { getCurrentLanguage, langIds } from '../utils/language.js';
+
+// ---------------------------- Language Specfic ---------------------------- //
 
 /**
  * Finds all snippet files for a given language ID, starting from the workspace root and including global snippets. 
@@ -15,19 +16,13 @@ async function locateSnippetFiles(): Promise<string[]> {
     const filePaths: string[] = [];
     const folder = getWorkspaceFolder();
     if (folder) {
-        const languageId = getCurrentLanguage();
-        if (languageId === undefined) {
-            return filePaths;
-        }
+        const langId = getCurrentLanguage();
         
-        const global = getGlobalSnippetFiles(languageId);
+        const global = getGlobalSnippetFiles(langId);
         filePaths.push(...global);
         
-        const localPaths = getAllParentDirs(folder);
-        
-        const filePathPromises = localPaths.map(path => findWorkspaceSnippetFiles(path, languageId));
-        const workspaceSnippets = await Promise.all(filePathPromises);
-        filePaths.push(...workspaceSnippets.flat());
+        const workspaceSnippets = await findWorkspaceSnippetFiles(folder, langId);
+        filePaths.push(...workspaceSnippets);
         
     }
 
@@ -38,14 +33,14 @@ async function locateSnippetFiles(): Promise<string[]> {
  * Finds the snippet files in a workspace folder.
  *
  * @param folderPath The path to the workspace folder.
- * @param languageId The language ID to search for.
+ * @param langId The language ID to search for.
  * @param filePaths The array to store the found file paths.
  */
-async function findWorkspaceSnippetFiles(folderPath: string, languageId: string): Promise<string[]> {
+async function findWorkspaceSnippetFiles(folderPath: string, langId: string | undefined): Promise<string[]> {
     const snippetFiles: string[] = [];
     const configPath = path.join(folderPath, '.vscode');
-    const snippetFile = path.join(configPath, `${languageId}.json`);
-    if (fs.existsSync(snippetFile)) {
+    const snippetFile = path.join(configPath, `${langId}.json`);
+    if (langId !== undefined && fs.existsSync(snippetFile)) {
         snippetFiles.push(snippetFile);
     }
     
@@ -59,18 +54,18 @@ async function findWorkspaceSnippetFiles(folderPath: string, languageId: string)
 /**
  * Searches and finds the global snippets file for a given language.
  * 
- * @param languageId 
+ * @param langId 
  * @returns returns a global snippet filepath, or empty string if couldn't find it.
  */
-function getGlobalSnippetFiles(languageId: string): string[] {
+function getGlobalSnippetFiles(langId: string | undefined): string[] {
     const paths: string[] = [];
     const globalSnippetsPath = getGlobalSnippetFilesDir();
     if (!globalSnippetsPath) {
         return [];
     }
     
-    const languageSnippetFilePath = path.join(globalSnippetsPath, `${languageId}.json`);
-    if (fs.existsSync(languageSnippetFilePath)) {
+    const languageSnippetFilePath = path.join(globalSnippetsPath, `${langId}.json`);
+    if (langId !== undefined && fs.existsSync(languageSnippetFilePath)) {
         paths.push(languageSnippetFilePath);
     }
     const globalMixedSnippetsPath = path.join(globalSnippetsPath, "global.code-snippets");
@@ -80,20 +75,51 @@ function getGlobalSnippetFiles(languageId: string): string[] {
     return paths;
 }
 
-function getAllParentDirs(filePath: string): string[] {
-    const directoryTree: string[] = [filePath];
-    let currentPath = filePath;
+// ---------------------------- Any Language ---------------------------- //
 
-    while (true) {
-        const parentPath = path.dirname(currentPath);
-        if (parentPath === currentPath) { // Reached the root directory or an invalid path
-            break;
-        }
-        directoryTree.push(parentPath);
-        currentPath = parentPath;
+/**
+ * Returns a tuple of local and global snippets of any language. [ LOCAL, GLOBAL ]
+ *
+ * @param folderPath The path to the workspace folder.
+ * @param filePaths The array to store the found file paths.
+ */
+async function locateAllSnippetFiles(): Promise<[string[], string[]]> {
+    let locals: string[] = [];
+    let globals: string[] = [];
+
+    const cwd = getWorkspaceFolder();
+    if (cwd !== undefined) {
+        locals = await findAllSnippetFilesInDir(path.join(cwd, ".vscode"));
     }
-    return directoryTree;
+    
+    const globalDir = getGlobalSnippetFilesDir();
+    if (globalDir !== undefined) {
+        globals = await findAllSnippetFilesInDir(globalDir);
+    }
+
+    return [locals, globals];
 }
 
+/**
+ * Finds all the snippet files in a workspace folder for any language.
+ *
+ * @param folderPath The path to the workspace folder.
+ * @param filePaths The array to store the found file paths.
+ */
+async function findAllSnippetFilesInDir(folderPath: string): Promise<string[]> {
+    const snippetFiles: string[] = [];
+    
+    for (var langId of langIds) {
+        const snippetFile = path.join(folderPath, `${langId}.json`);
+        if (fs.existsSync(snippetFile)) {
+            snippetFiles.push(snippetFile);
+        }
+    }
+    
+    const files = await glob(path.join(folderPath, '*.code-snippets'));
+    snippetFiles.push(...files);
+    
+    return snippetFiles;
+}
 
-export default locateSnippetFiles;
+export { locateSnippetFiles, locateAllSnippetFiles };

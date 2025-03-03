@@ -1,19 +1,12 @@
 import * as vscode from 'vscode';
 
-async function selectLanguage(): Promise<string | undefined> {
-    const languages = [
-        'JavaScript',
-        'TypeScript',
-        'Python',
-        'Java',
-        'C++',
-        'C#',
-        'Go',
-        'Rust',
-        // Add more languages as needed
-    ];
+let langIds: string[] = [];
+(async function loadLangs() {
+    langIds.push(...await vscode.languages.getLanguages());
+})();
 
-    return await vscode.window.showQuickPick(languages, {
+async function selectLanguage(): Promise<string | undefined> {
+    return await vscode.window.showQuickPick(langIds, {
         placeHolder: 'Select a language',
         canPickMany: false
     });
@@ -23,4 +16,4 @@ function getCurrentLanguage(): string | undefined {
     return vscode.window.activeTextEditor?.document.languageId;
 }
 
-export { selectLanguage, getCurrentLanguage };
+export { selectLanguage, getCurrentLanguage, langIds};

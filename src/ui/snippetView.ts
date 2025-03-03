@@ -5,11 +5,11 @@ import { getCurrentLanguage } from '../utils/language.js';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
-export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export default class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     // ---------- Attributes ---------- //
     private snippetTreeItems: ParentChildTreeItems | undefined;
     private langId: string | undefined;
-    private debounceTimer: NodeJS.Timeout | undefined; // Debounce timer
+    private debounceTimer: NodeJS.Timeout | undefined;
     
     // ---------- Constructor ---------- //
     constructor() {
@@ -50,18 +50,20 @@ export class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeI
             // Handle child items
             const parentChild = this.snippetTreeItems?.find(group => group[0].description === element.description);
             return parentChild ? parentChild[1] : undefined;
-        } else {
-            // Root level: Load snippet files and create parent items
-            if (!this.snippetTreeItems) {
-                this.snippetTreeItems = await loadSnippets();
-            }
-
-            if (!this.snippetTreeItems || this.snippetTreeItems.length === 0) {
-                return [selectedLanguageTemplate(this.langId)];
-            }
-
-            return this.snippetTreeItems.map(group => group[0]);
         }
+        // Root level: Load snippet files and create parent items
+        if (!this.snippetTreeItems) {
+            this.snippetTreeItems = await loadSnippets();
+        }
+
+        const rootItems: vscode.TreeItem[] = [selectedLanguageTemplate(this.langId)]; // Always add the template
+
+        if (this.snippetTreeItems && this.snippetTreeItems.length > 0) {
+            // Add the snippet groups if they exist
+            rootItems.push(...this.snippetTreeItems.map(group => group[0]));
+        }
+
+        return rootItems;
     }
 
 

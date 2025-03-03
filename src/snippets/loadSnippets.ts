@@ -1,6 +1,6 @@
 import readJsoncFilesAsync from "../utils/readJsoncFilesAsync.js";
 import { VSCodeSnippets } from "../types/snippetTypes.js";
-import locateSnippetFiles from "./locateSnippets.js";
+import { locateSnippetFiles } from "./locateSnippets.js";
 import * as vscode from "vscode";
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from "../ui/templates.js";
 

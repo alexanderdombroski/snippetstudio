@@ -2,6 +2,11 @@ import * as vscode from "vscode";
 import path from "path";
 import os from "os";
 
+/**
+ * Grabs the CWD workspace of VSCode
+ * 
+ * @returns The open workspace folder or undefinied
+ */
 function getWorkspaceFolder(): string | undefined {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {

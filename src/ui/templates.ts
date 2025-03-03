@@ -45,3 +45,11 @@ export function selectedLanguageTemplate(langId: string | undefined): vscode.Tre
     treeItem.tooltip = "The language of the open file";
     return treeItem;
 }
+
+export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
+    const treeItem = new vscode.TreeItem(path.basename(filepath));
+    treeItem.description = filepath;
+    treeItem.tooltip = filepath;
+
+    return treeItem;
+}
