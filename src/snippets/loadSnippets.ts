@@ -1,4 +1,4 @@
-import readJsoncFilesAsync from "../utils/readJsoncFilesAsync.js";
+import { readJsoncFilesAsync } from "../utils/jsoncFilesIO.js";
 import { VSCodeSnippets } from "../types/snippetTypes.js";
 import { locateSnippetFiles } from "./locateSnippets.js";
 import * as vscode from "vscode";

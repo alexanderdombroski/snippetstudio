@@ -118,9 +118,35 @@
         "command": "snippetstudio.createLocalLangFile",
         "title": "Create Local Snippets File",
         "icon": "$(file-code)"
+      },
+      {
+        "command": "snippetstudio.saveSnippet",
+        "title": "Save Snippet",
+        "icon": "$(check)"
+      },
+      {
+        "command": "snippetstudio.cancelSnippet",
+        "title": "Cancel Snippet",
+        "icon": "$(close)"
+      },
+      {
+        "command": "snippetstudio.openEditor",
+        "title": "Open Snippet Editor"
       }
     ],
     "menus": {
+      "editor/title": [
+        {
+          "command": "snippetstudio.saveSnippet",
+          "when": "resourceScheme == snippet-editor",
+          "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.cancelSnippet",
+          "when": "resourceScheme == snippet-editor",
+          "group": "navigation"
+        }
+      ],
       "view/title": [
         {
           "command": "snippetstudio.openSettings",

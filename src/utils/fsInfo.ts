@@ -14,6 +14,10 @@ function getWorkspaceFolder(): string | undefined {
         return undefined;
     }
 
+    if (editor.document.uri.scheme === 'snippetstudio') {
+        return undefined; // Temporary editor, no workspace folder
+    }
+
     const workspaceFolder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
     if (!workspaceFolder) {
         vscode.window.showErrorMessage('Workspace folder not found.');
