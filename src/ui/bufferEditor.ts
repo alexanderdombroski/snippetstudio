@@ -85,12 +85,18 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
         this._directories.get(parentPath)?.add(fileName);
     }
   
-    delete(uri: vscode.Uri, options: { recursive: boolean; }): void | Thenable<void> {
+    delete(uri: vscode.Uri, options: { recursive: boolean; } = { recursive: true }): void | Thenable<void> {
+        const parentPath = uri.path.substring(0, uri.path.lastIndexOf('/'));
+        const fileName = uri.path.substring(uri.path.lastIndexOf('/') + 1);
         if (this._files.has(uri.path)) {
             this._files.delete(uri.path);
+
+            if (this._directories.has(parentPath)) {
+                this._directories.get(parentPath)?.delete(fileName);
+            }
             this._emitter.fire([{ type: vscode.FileChangeType.Deleted, uri }]);
         } else {
-            vscode.window.showInformationMessage(`Tried to delete buffer ${uri.fsPath} but it doesn't exist.`);
+            vscode.window.showInformationMessage(`Tried to delete file buffer ${uri.fsPath} but it didn't exist in the first place.`);
         }
     }
     

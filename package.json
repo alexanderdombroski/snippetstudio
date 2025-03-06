@@ -121,13 +121,15 @@
       },
       {
         "command": "snippetstudio.saveSnippet",
-        "title": "Save Snippet",
+        "title": "Accept Snippet Changes",
+        "shortTitle": "Save Sippet",
         "icon": "$(check)"
       },
       {
         "command": "snippetstudio.cancelSnippet",
-        "title": "Cancel Snippet",
-        "icon": "$(close)"
+        "title": "Discard Snippet Changes",
+        "shortTitle": "Cancel Snippet",
+        "icon": "$(discard)"
       },
       {
         "command": "snippetstudio.openEditor",
@@ -138,12 +140,12 @@
       "editor/title": [
         {
           "command": "snippetstudio.saveSnippet",
-          "when": "resourceScheme == snippet-editor",
+          "when": "resourceScheme == snippetstudio",
           "group": "navigation"
         },
         {
           "command": "snippetstudio.cancelSnippet",
-          "when": "resourceScheme == snippet-editor",
+          "when": "resourceScheme == snippetstudio",
           "group": "navigation"
         }
       ],
