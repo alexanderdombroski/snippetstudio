@@ -8,7 +8,6 @@ import initSnippetCommands from './commands/snippet.js';
 import initSnippetFileCommands from './commands/snippetFile.js';
 import initSnippetUICommands from './commands/snippetUI.js';
 import initSnippetEditorCommands from './commands/snippetEditor.js';
-import { getFileExtensions } from './utils/language.js';
 import SnippetEditorProvider from './ui/bufferEditor.js';
 
 // This method is called when your extension is activated
