@@ -56,4 +56,8 @@ async function openTempEditor(provider: SnippetEditorProvider, langId: string, c
     }
 }
 
+async function loadSnippet() {
+    
+}
+
 export default initSnippetEditorCommands;

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { SnippetData } from "../types/snippetTypes";
 
 export default class SnippetEditorProvider implements vscode.FileSystemProvider {
     private _emitter: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
@@ -6,6 +7,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
     
     private _files = new Map<string, Uint8Array>();
     private _directories = new Map<string, Set<string>>();
+    private _snippetData = new Map<string, SnippetData>();
 
     public scheme: string = "";
 
@@ -84,6 +86,11 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
         }
         this._directories.get(parentPath)?.add(fileName);
     }
+
+    async mountSnippet(uri: vscode.Uri, body: string | undefined = undefined, snippetData: SnippetData | undefined = undefined) {
+        this._snippetData.set(uri.path, snippetData ?? { snippetTitle: "", prefix: "" });
+        await this.createFile(uri, body ?? "");
+    }
   
     delete(uri: vscode.Uri, options: { recursive: boolean; } = { recursive: true }): void | Thenable<void> {
         const parentPath = uri.path.substring(0, uri.path.lastIndexOf('/'));
@@ -93,6 +100,9 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 
             if (this._directories.has(parentPath)) {
                 this._directories.get(parentPath)?.delete(fileName);
+            }
+            if (this._snippetData.has(uri.path)) {
+                this._snippetData.delete(uri.path);
             }
             this._emitter.fire([{ type: vscode.FileChangeType.Deleted, uri }]);
         } else {
