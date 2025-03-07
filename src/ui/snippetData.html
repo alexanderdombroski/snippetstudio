@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Snippet Details</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <form id="snippetForm">
+        <label for="snippetTitle">Title:</label>
+        <input type="text" id="snippetTitle" required><br><br>
+    
+        <label for="prefix">Prefix:</label>
+        <input type="text" id="prefix" required><br><br>
+    
+        <label for="description">Description:</label>
+        <textarea id="description"></textarea><br><br>
+    
+        <label for="scope">Scope:</label>
+        <input type="text" id="scope"><br><br>
+    
+        <button type="submit" id="saveButton">Save</button>
+    </form>
+
+    <script>
+        // JavaScript to populate input fields and handle save button clicks
+    </script>
+
+    <style>
+        body {
+            background-color: var(--vscode-activityBar-background);
+            margin: 0;
+        }
+
+        label {
+            color: var(--vscode-activityBar-foreground);
+        }
+        input, textarea {
+            background-color: var(--vscode-settings-textInputBackground);
+            color: var(--vscode-settings-textInputForeground);
+            border-color: var(--vscode-settings-textInputBorder);
+            border-style: solid;
+            margin-top: 2px;
+            width: 100%;
+        }
+        button {
+            background-color: var(--vscode-button-background);
+            color: var(--vscode-button-foreground);
+            border-color: var(--vscode-button-border);
+        }
+        button:hover {
+            background-color: var(--vscode-button-hoverBackground);
+        }
+    </style>
+</body>
+</html>

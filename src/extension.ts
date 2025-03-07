@@ -9,6 +9,7 @@ import initSnippetFileCommands from './commands/snippetFile.js';
 import initSnippetUICommands from './commands/snippetUI.js';
 import initSnippetEditorCommands from './commands/snippetEditor.js';
 import SnippetEditorProvider from './ui/bufferEditor.js';
+import SnippetDataWebViewProvider from './ui/snippetDataView.js';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -19,6 +20,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
     const locationTreeProvider = new LocationTreeProvider();
 	vscode.window.createTreeView('location-manager', { treeDataProvider: locationTreeProvider });
+	// Create web view
+	const snippetDataView = new SnippetDataWebViewProvider(context);
+	vscode.window.registerWebviewViewProvider("snippet-data", snippetDataView);
 
 	// Startup bufferEd
 	const snippetEditorProvider = new SnippetEditorProvider("snippetstudio");

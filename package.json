@@ -24,27 +24,28 @@
     "views": {
       "snippet-manager-view-container": [
         {
-          "id": "overview",
-          "name": "Snippets Studio"
+          "id": "snippet-data",
+          "name": "Snippet Editor",
+          "icon": "wrench",
+          "type": "webview",
+          "when": "snippetstudio.editorVisible"
         },
         {
           "id": "snippet-manager-view",
           "name": "Snippets",
-          "type": "tree"
+          "type": "tree",
+          "icon": "list-tree"
         },
         {
           "id": "location-manager",
           "name": "Locations Manager",
           "type": "tree",
-          "visibility": "collapsed"
+          "visibility": "collapsed",
+          "icon": "database"
         }
       ]
     },
     "viewsWelcome": [
-      {
-        "view": "overview",
-        "contents": "To start managing your snippets, please open a project or file.\n[Open Folder](command:vscode.openFolder)\n"
-      },
       {
         "view": "location-manager",
         "contents": "This is where snippets of ALL languages being loaded in will appear!"
@@ -213,6 +214,16 @@
           "group": "inline"
         }
       ]
+    },
+    "configuration": {
+      "title": "Your Extension Configuration",
+      "properties": {
+        "snippetstudio.editorVisible": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indicates whether the snippet editor view is visible."
+        }
+      }
     }
   },
   "scripts": {

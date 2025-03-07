@@ -35,6 +35,13 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
             provider.delete(document.uri);
         }
     });
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+        vscode.commands.executeCommand(
+            'setContext', 
+            'snippetstudio.editorVisible', 
+            editor?.document.uri.scheme === "snippetstudio"
+        );
+    });
 }
 
 async function openTempEditor(provider: SnippetEditorProvider, langId: string, content: string[] = []) {
