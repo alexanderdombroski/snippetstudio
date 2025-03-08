@@ -26,6 +26,10 @@ function getWorkspaceFolder(): string | undefined {
     return workspaceFolder.uri.fsPath;
 }
 
+function getCurrentUri(): vscode.Uri | undefined {
+    return vscode.window.activeTextEditor?.document.uri;
+}
+
 function getGlobalSnippetFilesDir(): string | undefined {
     let globalSnippetsPath: string = "";
         switch (process.platform) {
@@ -45,4 +49,4 @@ function getGlobalSnippetFilesDir(): string | undefined {
     return globalSnippetsPath;
 }
 
-export { getWorkspaceFolder, getGlobalSnippetFilesDir };
+export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri };

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import SnippetEditorProvider from "../ui/bufferEditor";
+import { getCurrentUri } from "../utils/fsInfo";
 
 
 let editorCount = 0;
@@ -21,7 +22,7 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
             }
         }),
         vscode.commands.registerCommand('snippetstudio.cancelSnippet', () => {
-            const uri = vscode.window.activeTextEditor?.document.uri;
+            const uri = getCurrentUri();
             
             if (uri) {
                 provider.delete(uri);
@@ -44,12 +45,12 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
     });
 }
 
-async function openTempEditor(provider: SnippetEditorProvider, langId: string, content: string[] = []) {
+async function openTempEditor(provider: SnippetEditorProvider, langId: string, content: string[] = [], showScope: boolean = true) {
     try {
         const uri = vscode.Uri.from({
             scheme: "snippetstudio",
             path: `/snippets/snippet-${++editorCount}`,
-            query: `type=${langId}`
+            query: `type=${langId}&showScope=${showScope}`
         });
 
         provider.createFile(uri, content.join('\n'));

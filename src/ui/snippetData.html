@@ -15,13 +15,23 @@
         <label for="description">Description:</label>
         <textarea id="description"></textarea><br><br>
     
-        <label for="scope">Scope:</label>
-        <input type="text" id="scope"><br><br>
-    
+        <div id="scopeContainer">
+            <label for="scope">Scope:</label>
+            <input type="text" id="scope"><br><br>
+        </div>
+
         <button type="submit" id="saveButton">Save</button>
     </form>
 
     <script>
+        // Show/Hide Scope Input
+        window.addEventListener('message', event => {
+            const message = event.data;
+            if (message.command === 'updateScope') {
+                document.getElementById('scopeContainer').style.display = message.showScope ? 'block' : 'none';
+            }
+        });
+
         // JavaScript to populate input fields and handle save button clicks
     </script>
 
