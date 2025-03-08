@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import onDoubleClick from "./doubleClickHandler";
+import { deleteSnippet } from "../snippets/updateSnippets";
+import { TreeSnippet } from "../ui/templates";
 
 function initSnippetCommands(context: vscode.ExtensionContext) {
     // Show Snippet Body
@@ -27,8 +29,12 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
     );
     // Delete Snippet
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.deleteSnippet", () => {
-            vscode.window.showErrorMessage("Not implimented yet!");
+        vscode.commands.registerCommand("snippetstudio.deleteSnippet", (item: TreeSnippet) => {
+            if (item === undefined || item.description === undefined) {
+                return;
+            }
+            deleteSnippet(item.path, item.description.toString());
+            vscode.commands.executeCommand("snippetstudio.refresh");
         })
     );
 

@@ -60,3 +60,5 @@ async function getSnippetContent(langId: string, prevContent: string[] = []): Pr
         });
     });
 }
+
+export { deleteSnippet };

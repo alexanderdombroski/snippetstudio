@@ -54,10 +54,12 @@ export async function readJsoncFilesAsync(filePaths: string[]): Promise<[string,
 export async function readSnippetFile(filepath: string): Promise<VSCodeSnippets | undefined> {
     try {
         const jsonc = await fs.readFile(filepath, 'utf-8');
-        const cleanedJson =  await processJsonWithComments(jsonc);
-        return JSON.parse(cleanedJson) as VSCodeSnippets;
+        console.log(jsonc);
+        const cleanedJson: VSCodeSnippets =  await processJsonWithComments(jsonc);
+        console.log(cleanedJson);
+        return cleanedJson;
     } catch {
-        vscode.window.showErrorMessage(`Unable to read file ${path.dirname(filepath)}\n\n${filepath}`);
+        vscode.window.showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
     }
 }
 

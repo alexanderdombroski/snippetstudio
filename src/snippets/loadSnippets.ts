@@ -10,7 +10,7 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
     const treeItems: [vscode.TreeItem, vscode.TreeItem[]][] = snippetGroups.map(([filePath, group]) => {
         const dropdown = createTreeItemFromFilePath(filePath);
         const snippets = Object.entries(group).map(([k, v]) => {
-            return createTreeItemFromSnippet(k, v);
+            return createTreeItemFromSnippet(k, v, filePath);
         });
         return [dropdown, snippets];
     });

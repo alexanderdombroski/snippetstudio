@@ -2,6 +2,19 @@ import * as vscode from "vscode";
 import path from "path";
 import { VSCodeSnippet } from "../types/snippetTypes.js";
 
+export class TreeSnippet extends vscode.TreeItem {
+    public snippetPath: string = "";
+    
+    constructor(
+        public readonly label: string,
+        public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+        public readonly path: string
+    ) {
+        super(label, collapsibleState);
+        this.snippetPath = path;
+    }
+}
+
 /**
  * Creates a vscode.TreeItem from a VSCodeSnippet.
  *
@@ -9,9 +22,9 @@ import { VSCodeSnippet } from "../types/snippetTypes.js";
  * @param snippet The VSCodeSnippet object.
  * @returns A vscode.TreeItem representing the snippet.
  */
-export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeSnippet): vscode.TreeItem {
+export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeSnippet, path: string): TreeSnippet {
     const prefix = Array.isArray(snippet.prefix) ? snippet.prefix[0] : snippet.prefix;
-    const treeItem = new vscode.TreeItem(prefix, vscode.TreeItemCollapsibleState.None);
+    const treeItem = new TreeSnippet(prefix, vscode.TreeItemCollapsibleState.None, path);
 
     treeItem.description = snippetTitle;
     treeItem.contextValue = "snippet";
