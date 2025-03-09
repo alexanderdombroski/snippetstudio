@@ -51,6 +51,11 @@ interface SnippetData {
      * The scope(s) in which the snippet is valid.
      */
     scope?: string;
+
+    /**
+     * File the snippet will be stored in
+     */
+    filename: string;
 }
 
 export { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData };

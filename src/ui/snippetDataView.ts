@@ -1,11 +1,15 @@
 import * as vscode from "vscode";
 import fs from 'fs';
 import { getCurrentUri } from "../utils/fsInfo";
+import SnippetDataManager from "../snippets/snippetDataManager";
 
 export default class SnippetDataWebViewProvider implements vscode.WebviewViewProvider {
     private _view?: vscode.WebviewView;
+    private _snippetDataManager: SnippetDataManager;
 
-    constructor(private readonly _context: vscode.ExtensionContext) {}
+    constructor(private readonly _context: vscode.ExtensionContext, manager: SnippetDataManager) {
+        this._snippetDataManager = manager;
+    }
     
     async resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, token: vscode.CancellationToken): Promise<void> {
         this._view = webviewView;
@@ -37,7 +41,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
     private async setUpMessages(webviewView: vscode.WebviewView) {
         const uri = getCurrentUri();
         if (uri) {
-            this.updateScopeVisibility(uri.query.includes('showScope=true'));
+            this.initMessages(uri);
         }
 
         // webviewView.webview.onDidReceiveMessage(message => {
@@ -45,9 +49,12 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
         // });
     }
 
-    public updateScopeVisibility(showScope: boolean) {
-        if (this._view) {
-            this._view.webview.postMessage({ command: 'updateScope', showScope });
+    public initMessages(uri: vscode.Uri) {
+        const view = this._view?.webview;
+        if (view) {
+            view.postMessage({ command: 'updateScope', showScope: uri.query.includes('showScope=true') });
+            view.postMessage({ command: 'setFilename', filename: this._snippetDataManager.getData(uri.path)?.filename });
+
         }
     }
 }

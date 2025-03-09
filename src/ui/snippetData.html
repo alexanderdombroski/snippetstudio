@@ -21,14 +21,28 @@
         </div>
 
         <button type="submit" id="saveButton">Save</button>
+
+        <p>Snippet will be stored at: <span id="filename"></span></p>
     </form>
 
     <script>
         // Show/Hide Scope Input
         window.addEventListener('message', event => {
             const message = event.data;
-            if (message.command === 'updateScope') {
-                document.getElementById('scopeContainer').style.display = message.showScope ? 'block' : 'none';
+            switch (message.command) {
+                case 'updateScope':
+                    document.getElementById('scopeContainer').style.display = message.showScope ? 'block' : 'none';
+                    break;
+
+                case 'setFilename':
+                    document.getElementById('filename').innerHTML = message.filename
+                    break;
+                case 'getFilename':
+                    
+                    break;
+            
+                default:
+                    break;
             }
         });
 
@@ -59,6 +73,9 @@
         }
         button:hover {
             background-color: var(--vscode-button-hoverBackground);
+        }
+        p {
+            font-style: italic;
         }
     </style>
 </body>
