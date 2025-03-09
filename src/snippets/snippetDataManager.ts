@@ -20,4 +20,8 @@ export default class snippetDataManager {
         }
     }
 
+    hasKey(uri: string) {
+        return this._dataMap.has(uri);
+    }
+
 }

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { SnippetData } from "../types/snippetTypes";
 import SnippetDataManager from "../snippets/snippetDataManager";
+import { getCurrentUri } from "../utils/fsInfo";
 
 export default class SnippetEditorProvider implements vscode.FileSystemProvider {
     private _emitter: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
@@ -107,6 +108,13 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
             this._emitter.fire([{ type: vscode.FileChangeType.Deleted, uri }]);
         } else {
             vscode.window.showInformationMessage(`Tried to delete file buffer ${uri.fsPath} but it didn't exist in the first place.`);
+        }
+    }
+
+    getSnippetData(): SnippetData | undefined {
+        const uri = getCurrentUri();
+        if (uri) {
+            return this._snippetDataManager.getData(uri.path);
         }
     }
     

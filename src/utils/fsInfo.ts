@@ -49,4 +49,12 @@ function getGlobalSnippetFilesDir(): string | undefined {
     return globalSnippetsPath;
 }
 
-export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri };
+function getGlobalLangFile(langId: string): string {
+    const dir = getGlobalSnippetFilesDir();
+    if (dir === undefined) {
+        return "";
+    }
+    return path.join(dir, `${langId}.json`);
+}
+
+export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri, getGlobalLangFile };

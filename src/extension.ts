@@ -33,11 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.registerFileSystemProvider("snippetstudio", snippetEditorProvider, {isReadonly: false})
 	);
 
+	// Register Commands
 	initSnippetUICommands(context, {
 		"snippetstudio.refresh": treeDataProvider.debounceRefresh.bind(treeDataProvider),
 		"snippetstudio.refreshLocations": locationTreeProvider.debounceRefresh.bind(locationTreeProvider)
 	});
-	initSnippetCommands(context);
+	initSnippetCommands(context, snippetEditorProvider);
 	initSnippetFileCommands(context);
 	initSnippetEditorCommands(context, snippetEditorProvider);
 

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import fs from 'fs';
 import { getCurrentUri } from "../utils/fsInfo";
 import SnippetDataManager from "../snippets/snippetDataManager";
+import { SnippetData } from "../types/snippetTypes";
 
 export default class SnippetDataWebViewProvider implements vscode.WebviewViewProvider {
     private _view?: vscode.WebviewView;
@@ -44,9 +45,21 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
             this.initMessages(uri);
         }
 
-        // webviewView.webview.onDidReceiveMessage(message => {
-        //     // Handle messages from the webview
-        // });
+        webviewView.webview.onDidReceiveMessage(message => {
+            switch (message.command) {
+                case 'updateSnippetData':
+                    // Change the saveable context to prevent preemptive saving
+                    const snippetData: SnippetData = message.data;
+                    const uriKey = getCurrentUri()?.path;
+                    if (uriKey) {
+                        this._snippetDataManager.setData(uriKey, snippetData);
+                    }
+                    break;
+                default:
+                    console.warn(`Unknown message passed to snippetData Form WebView ${message.command}`);
+                    break;
+            }
+        });
     }
 
     public initMessages(uri: vscode.Uri) {
@@ -54,7 +67,9 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
         if (view) {
             view.postMessage({ command: 'updateScope', showScope: uri.query.includes('showScope=true') });
             view.postMessage({ command: 'setFilename', filename: this._snippetDataManager.getData(uri.path)?.filename });
-
+            if (this._snippetDataManager.hasKey(uri.path)) {                
+                view.postMessage({ command: 'initForm', data: this._snippetDataManager.getData(uri.path) });
+            }
         }
     }
 }

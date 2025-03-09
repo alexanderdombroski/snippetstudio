@@ -2,22 +2,24 @@
 <html>
 <head>
     <title>Snippet Details</title>
-    <link rel="stylesheet" href="./styles.css">
+    <script>
+        const vscode = acquireVsCodeApi();
+    </script>
 </head>
 <body>
     <form id="snippetForm">
         <label for="snippetTitle">Title:</label>
-        <input type="text" id="snippetTitle" required><br><br>
+        <input type="text" id="snippetTitle" name="snippetTitle" required><br><br>
     
         <label for="prefix">Prefix:</label>
-        <input type="text" id="prefix" required><br><br>
+        <input type="text" id="prefix" name="prefix" required><br><br>
     
         <label for="description">Description:</label>
-        <textarea id="description"></textarea><br><br>
+        <textarea id="description" name="description"></textarea><br><br>
     
         <div id="scopeContainer">
             <label for="scope">Scope:</label>
-            <input type="text" id="scope"><br><br>
+            <input type="text" id="scope" name="scope"><br><br>
         </div>
 
         <button type="submit" id="saveButton">Save</button>
@@ -25,28 +27,53 @@
         <p>Snippet will be stored at: <span id="filename"></span></p>
     </form>
 
+
     <script>
-        // Show/Hide Scope Input
+        let scope;
+
         window.addEventListener('message', event => {
             const message = event.data;
             switch (message.command) {
                 case 'updateScope':
-                    document.getElementById('scopeContainer').style.display = message.showScope ? 'block' : 'none';
+                    scope = message.showScope
+                    document.getElementById('scopeContainer').style.display = scope ? 'block' : 'none';
                     break;
 
                 case 'setFilename':
-                    document.getElementById('filename').innerHTML = message.filename
+                    document.getElementById('filename').innerText = message.filename
                     break;
-                case 'getFilename':
-                    
+                case 'returnData':
+                    document.getElementById("snippetForm").submit();
                     break;
+                
+                case 'initForm':
+                    const data = message.data;
+                    document.getElementById("snippetTitle").value = data.snippetTitle;
+                    document.getElementById("prefix").value = data.prefix;
+                    if (data.description) document.getElementById("description").innerText = data.description;
+                    if (scope && data.scope) document.getElementById("scope").value = data.scope;
+                    break
             
                 default:
                     break;
             }
         });
 
-        // JavaScript to populate input fields and handle save button clicks
+        document.getElementById("snippetForm").addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const data = {
+                snippetTitle: formData.get('snippetTitle'),
+                prefix: formData.get('prefix'),
+                filename: document.getElementById("filename").innerText
+            }
+            const desc = formData.get('description')?.trim();
+            if (desc) data.description = desc;
+            if (scope) data.scope = formData.get('scope');
+
+            vscode.postMessage({ command: "updateSnippetData", data: data })
+        });
+
     </script>
 
     <style>
@@ -66,6 +93,12 @@
             margin-top: 2px;
             width: 100%;
         }
+        input {
+            font-size: 0.7rem;
+        }
+        textarea {
+            font-size: 0.6rem;
+        }
         button {
             background-color: var(--vscode-button-background);
             color: var(--vscode-button-foreground);
@@ -74,8 +107,12 @@
         button:hover {
             background-color: var(--vscode-button-hoverBackground);
         }
-        p {
+        p, span {
             font-style: italic;
+            font-size: 0.5rem;
+        }
+        span {
+            word-break: break-all;
         }
     </style>
 </body>

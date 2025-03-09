@@ -7,13 +7,12 @@ import { getCurrentLanguage } from "../utils/language";
 async function createFile(filepath: string): Promise<void> {
     try {
         await fs.promises.access(filepath); // Check if the file exists
-        vscode.window.showInformationMessage("File already exists!");
+        vscode.window.showInformationMessage("File already exists! " + path.basename(filepath));
     } catch (error) {
         if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
             // File doesn't exist, create it
             await fs.promises.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
             await fs.promises.writeFile(filepath, '{}'); // Create an empty JSON file
-            console.log(`File created: ${path.basename(filepath)}`);
         } else {
             vscode.window.showErrorMessage(`Error checking/creating file: ${error}`);
         }
