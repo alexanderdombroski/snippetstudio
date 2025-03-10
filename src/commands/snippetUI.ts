@@ -12,7 +12,7 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
     // Open Settings
     context.subscriptions.push(
         vscode.commands.registerCommand("snippetstudio.openSettings", () => {
-            vscode.window.showErrorMessage("Not implimented yet!");
+            vscode.commands.executeCommand('workbench.action.openSettings', 'snippetstudio');
         })
     );
 

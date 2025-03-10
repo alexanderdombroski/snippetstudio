@@ -3,6 +3,7 @@ import SnippetEditorProvider from "../ui/bufferEditor";
 import { getCurrentUri } from "../utils/fsInfo";
 import { writeSnippet } from "../snippets/updateSnippets";
 import { VSCodeSnippet } from "../types/snippetTypes";
+import { titleCase } from "../utils/string";
 
 function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: SnippetEditorProvider) {
     context.subscriptions.push(
@@ -22,7 +23,8 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
                 if (data.scope) {
                     snippet.scope = data.scope;
                 }
-                writeSnippet(data.filename, data.snippetTitle, snippet);
+                const capitalize = vscode.workspace.getConfiguration("snippetstudio").get<boolean>("autoCapitalizeSnippetName");
+                writeSnippet(data.filename, capitalize ? titleCase(data.snippetTitle) : data.snippetTitle, snippet);
                 vscode.commands.executeCommand('workbench.action.closeActiveEditor');
                 vscode.commands.executeCommand("snippetstudio.refresh");
             }

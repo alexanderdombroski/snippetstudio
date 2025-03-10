@@ -8,6 +8,7 @@ import { newSnippetEditorUri } from "./snippetEditor";
 import { getGlobalLangFile, getLangFromSnippetFilePath } from "../utils/fsInfo";
 import path from "path";
 import { SnippetData } from "../types/snippetTypes";
+import { getConfirmation } from "../utils/user";
 
 function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProvider: SnippetEditorProvider) {
     // Show Snippet Body
@@ -29,7 +30,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
             await editSnippet(snippetEditorProvider, langId, {
                 filename: getGlobalLangFile(langId),
                 snippetTitle: "",
-                prefix: ""
+                prefix: defaultPrefix()
             });
         })
     );
@@ -44,7 +45,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
             await editSnippet(snippetEditorProvider, langId, {
                 filename,
                 snippetTitle: "",
-                prefix: "",
+                prefix: defaultPrefix(),
                 scope: langId
             });
         })
@@ -74,9 +75,13 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
     );
     // Delete Snippet
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.deleteSnippet", (item: TreeSnippet) => {
+        vscode.commands.registerCommand("snippetstudio.deleteSnippet", async (item: TreeSnippet) => {
             if (item === undefined || item.description === undefined) {
                 return;
+            }
+            if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("confirmSnippetDeletion")
+                && !await getConfirmation(`Are you sure you want to delete "${item.description}"?`)) {
+                    return;
             }
 
             deleteSnippet(item.path, item.description.toString());
@@ -102,6 +107,10 @@ async function editSnippet(provider: SnippetEditorProvider, langId: string, snip
         vscode.window.showErrorMessage(`Error creating temp editor: ${error}`);
         return undefined;
     }
+}
+
+function defaultPrefix(): string {
+    return vscode.workspace.getConfiguration("snippetstudio")?.get<string>("defaultSnippetPrefix") ?? "";
 }
 
 export default initSnippetCommands;

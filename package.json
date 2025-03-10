@@ -228,12 +228,22 @@
       ]
     },
     "configuration": {
-      "title": "Your Extension Configuration",
+      "title": "SnippetStudio Configuration",
       "properties": {
-        "snippetstudio.editorVisible": {
+        "snippetstudio.confirmSnippetDeletion": {
           "type": "boolean",
-          "default": true,
-          "description": "Indicates whether the snippet editor view is visible."
+          "default": false,
+          "description": "Indicates whether to show a warning before deleting a snippet."
+        },
+        "snippetstudio.defaultSnippetPrefix": {
+          "type": "string",
+          "default": "",
+          "description": "Set a default placeholder prefix for new snippets"
+        },
+        "snippetstudio.autoCapitalizeSnippetName": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically Capitalize a Snippet's TitleKey"
         }
       }
     }
