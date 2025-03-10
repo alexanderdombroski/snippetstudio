@@ -15,6 +15,12 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
     async resolveWebviewView(webviewView: vscode.WebviewView, context: vscode.WebviewViewResolveContext, token: vscode.CancellationToken): Promise<void> {
         this._view = webviewView;
 
+        webviewView.onDidChangeVisibility(() => {
+            if (webviewView.visible) {
+                this.setUpMessages(webviewView);
+            }
+        });
+
         webviewView.webview.options = {
             enableForms: true,
             enableScripts: true,
@@ -47,14 +53,24 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 
         webviewView.webview.onDidReceiveMessage(message => {
             switch (message.command) {
-                case 'updateSnippetData':
+                case 'updateSnippetData': {
                     // Change the saveable context to prevent preemptive saving
                     const snippetData: SnippetData = message.data;
                     const uriKey = getCurrentUri()?.path;
                     if (uriKey) {
                         this._snippetDataManager.setData(uriKey, snippetData);
                     }
+                    vscode.commands.executeCommand("snippetstudio.saveSnippet");
                     break;
+                }
+                case 'updatePartialSnippetData': {
+                    const { data, type }: {data: string, type: keyof SnippetData} = message.data;
+                    const uriKey = getCurrentUri()?.path;
+                    if (uriKey) {
+                        this._snippetDataManager.setPartialData(uriKey, type, data);
+                    }
+                    break;
+                }
                 default:
                     console.warn(`Unknown message passed to snippetData Form WebView ${message.command}`);
                     break;
@@ -66,7 +82,6 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
         const view = this._view?.webview;
         if (view) {
             view.postMessage({ command: 'updateScope', showScope: uri.query.includes('showScope=true') });
-            view.postMessage({ command: 'setFilename', filename: this._snippetDataManager.getData(uri.path)?.filename });
             if (this._snippetDataManager.hasKey(uri.path)) {                
                 view.postMessage({ command: 'initForm', data: this._snippetDataManager.getData(uri.path) });
             }

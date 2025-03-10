@@ -14,6 +14,13 @@ export default class snippetDataManager {
         this._dataMap.set(uri, snippetData);
     }
 
+    setPartialData(uri: string, part: keyof SnippetData, value: string) {
+        const snippetData = this._dataMap.get(uri);
+        if (snippetData) {
+            snippetData[part] = value;
+        }
+    }
+
     deleteData(uri: string) {
         if (this._dataMap.has(uri)) {
             this._dataMap.delete(uri);

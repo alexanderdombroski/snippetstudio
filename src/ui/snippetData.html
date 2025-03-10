@@ -39,9 +39,6 @@
                     document.getElementById('scopeContainer').style.display = scope ? 'block' : 'none';
                     break;
 
-                case 'setFilename':
-                    document.getElementById('filename').innerText = message.filename
-                    break;
                 case 'returnData':
                     document.getElementById("snippetForm").submit();
                     break;
@@ -52,6 +49,7 @@
                     document.getElementById("prefix").value = data.prefix;
                     if (data.description) document.getElementById("description").innerText = data.description;
                     if (scope && data.scope) document.getElementById("scope").value = data.scope;
+                    document.getElementById('filename').innerText = data.filename
                     break
             
                 default:
@@ -73,6 +71,29 @@
 
             vscode.postMessage({ command: "updateSnippetData", data: data })
         });
+
+        function listenForChanges(id) {
+            document.getElementById(id).addEventListener("input", (event) => {
+                debounce((event) => {
+                    const data = event.target.value.trim()
+                    vscode.postMessage({ command: "updatePartialSnippetData", data: { data: data, type: id }})
+                }, 300)(event);
+            });
+        }
+        listenForChanges("snippetTitle");
+        listenForChanges("prefix");
+        listenForChanges("description");
+        listenForChanges("scope");
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                }, delay);
+            };
+        }
 
     </script>
 
