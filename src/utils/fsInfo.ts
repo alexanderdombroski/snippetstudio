@@ -57,4 +57,18 @@ function getGlobalLangFile(langId: string): string {
     return path.join(dir, `${langId}.json`);
 }
 
-export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri, getGlobalLangFile };
+function getLangFromSnippetFilePath(filepath: string): string | undefined {
+    if (path.extname(filepath) === ".code-snippets") {
+        return;
+    }
+
+    const base = path.basename(filepath);
+    const dotIndex = base.indexOf('.')
+    if (dotIndex === -1) {
+        return;
+    }
+
+    return base.substring(0, dotIndex);
+}
+
+export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri, getGlobalLangFile, getLangFromSnippetFilePath };

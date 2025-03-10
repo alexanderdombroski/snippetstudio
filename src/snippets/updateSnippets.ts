@@ -27,4 +27,15 @@ async function deleteSnippet(filepath: string, titleKey: string) {
     }
 }
 
-export { deleteSnippet, writeSnippet };
+
+async function readSnippet(filepath: string, snippetTitle: string): Promise<VSCodeSnippet | undefined> {
+    const snippets = await readSnippetFile(filepath);
+    if (snippets === undefined || snippets[snippetTitle] === undefined) {
+        console.error(`Read Operation failed. Could not find ${snippetTitle} inside of ${path.basename(filepath)}.`);
+        return;
+    }
+
+    return snippets[snippetTitle];
+}
+
+export { deleteSnippet, writeSnippet, readSnippet };

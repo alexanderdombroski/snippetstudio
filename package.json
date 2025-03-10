@@ -136,6 +136,12 @@
       {
         "command": "snippetstudio.openEditor",
         "title": "Open Snippet Editor"
+      },
+      {
+        "command": "snippetstudio.createSnippetAtLocation",
+        "title": "Create Snippet at the given file",
+        "icon": "$(plus)",
+        "when": "false"
       }
     ],
     "menus": {
@@ -212,6 +218,11 @@
         {
           "command": "snippetstudio.editSnippet",
           "when": "viewItem == snippet",
+          "group": "inline"
+        },
+        {
+          "command": "snippetstudio.createSnippetAtLocation",
+          "when": "viewItem == snippet-filepath",
           "group": "inline"
         }
       ]

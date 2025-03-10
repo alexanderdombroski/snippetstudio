@@ -24,7 +24,7 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
                 }
                 writeSnippet(data.filename, data.snippetTitle, snippet);
                 vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-                
+                vscode.commands.executeCommand("snippetstudio.refresh");
             }
         }),
         vscode.commands.registerCommand('snippetstudio.cancelSnippet', () => {
