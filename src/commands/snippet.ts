@@ -5,10 +5,10 @@ import { TreeSnippet } from "../ui/templates";
 import { getCurrentLanguage, selectLanguage } from "../utils/language";
 import SnippetEditorProvider from "../ui/bufferEditor";
 import { newSnippetEditorUri } from "./snippetEditor";
-import { getGlobalLangFile, getLangFromSnippetFilePath } from "../utils/fsInfo";
+import { getGlobalLangFile, getGlobalSnippetFilesDir, getLangFromSnippetFilePath } from "../utils/fsInfo";
 import path from "path";
 import { SnippetData } from "../types/snippetTypes";
-import { getConfirmation } from "../utils/user";
+import { getConfirmation, getSelection } from "../utils/user";
 
 function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProvider: SnippetEditorProvider) {
     // Show Snippet Body
@@ -31,7 +31,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 filename: getGlobalLangFile(langId),
                 snippetTitle: "",
                 prefix: defaultPrefix()
-            });
+            }, getSelection() ?? "");
         })
     );
     context.subscriptions.push(
@@ -47,7 +47,34 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 snippetTitle: "",
                 prefix: defaultPrefix(),
                 scope: langId
-            });
+            }, getSelection() ?? "");
+        })
+    );
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.createGlobalLangSnippetFromSelection",  async () => {
+            const langId = getCurrentLanguage() ?? "plaintext";
+            const filename = getGlobalLangFile(langId);
+
+            await editSnippet(snippetEditorProvider, langId, {
+                filename,
+                snippetTitle: "",
+                prefix: defaultPrefix()
+            }, getSelection() ?? "");
+        }),
+        vscode.commands.registerCommand("snippetstudio.createGlobalMixedSnippetFromSelection",  async () => {
+            const langId = await selectLanguage() ?? getCurrentLanguage() ?? "plaintext";
+            const base = getGlobalSnippetFilesDir();
+            if (base === undefined) {
+                return;
+            }
+            const filename = path.join(base, "global.code-snippets");
+
+            await editSnippet(snippetEditorProvider, langId, {
+                filename,
+                snippetTitle: "",
+                prefix: defaultPrefix(),
+                scope: langId
+            }, getSelection() ?? "");
         })
     );
     // Edit Snippet

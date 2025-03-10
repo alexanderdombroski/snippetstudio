@@ -11,4 +11,13 @@ async function getConfirmation(question: string): Promise<boolean> {
     return (confirmation === 'Yes');
 }
 
-export { getConfirmation };
+function getSelection(): string | undefined {
+    const editor = vscode.window.activeTextEditor;
+    if (editor === undefined || editor.selection.isEmpty) {
+        return;
+    }
+
+    return editor.document.getText(editor.selection);
+}
+
+export { getConfirmation, getSelection };
