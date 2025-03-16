@@ -1,15 +1,39 @@
 {
   "name": "snippetstudio",
   "displayName": "SnippetStudio",
-  "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets.",
-  "version": "0.0.1",
+  "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
+  "version": "1.0.0",
+  "publisher": "Alex Dombroski",
+  "author": {
+    "name": "Alex Dombroski",
+    "email": "alexdombroski1@gmail.com",
+    "url": "https://github.com/alexanderdombroski"
+  },
   "engines": {
     "vscode": "^1.97.0",
     "node": "^20.0.0"
   },
+  "capabilities": {
+    "virtualWorkspaces": {
+      "supported": "limited",
+      "description": "Needs to access a file system and node.js file related modules like fs, path, and glob."
+    }
+  },
+  "license": "MIT",
   "categories": [
+    "Snippets",
+    "Visualization",
     "Other"
   ],
+  "keywords": [
+    "snippets",
+    "snippet editor",
+    "snippet manager",
+    "gui editor",
+    "code completion"
+  ],
+  "preview": true,
+  "pricing": "Free",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
@@ -70,27 +94,31 @@
       },
       {
         "command": "snippetstudio.showSnippetBody",
-        "title": "Show Snippet Body"
+        "title": "Show Snippet Body",
+        "when": false
       },
       {
         "command": "snippetstudio.openSnippetFile",
-        "title": "Open Snippet File"
+        "title": "Open Snippet File",
+        "when": false
       },
       {
         "command": "snippetstudio.deleteSnippetFile",
         "title": "Delete Snippet File",
-        "icon": "$(trash)"
+        "icon": "$(trash)",
+        "when": false
       },
       {
         "command": "snippetstudio.editSnippet",
         "title": "Edit Snippet File",
-        "icon": "$(pencil)"
+        "icon": "$(pencil)",
+        "when": false
       },
       {
         "command": "snippetstudio.deleteSnippet",
         "title": "Delete Snippet",
         "icon": "$(trash)",
-        "when": "false"
+        "when": false
       },
       {
         "command": "snippetstudio.refresh",
@@ -126,23 +154,21 @@
         "command": "snippetstudio.saveSnippet",
         "title": "Accept Snippet Changes",
         "shortTitle": "Save Sippet",
-        "icon": "$(check)"
+        "icon": "$(check)",
+        "when": false
       },
       {
         "command": "snippetstudio.cancelSnippet",
         "title": "Discard Snippet Changes",
         "shortTitle": "Cancel Snippet",
-        "icon": "$(discard)"
-      },
-      {
-        "command": "snippetstudio.openEditor",
-        "title": "Open Snippet Editor"
+        "icon": "$(discard)",
+        "when": false
       },
       {
         "command": "snippetstudio.createSnippetAtLocation",
         "title": "Create Snippet at the given file",
         "icon": "$(plus)",
-        "when": "false"
+        "when": false
       },
       {
         "command": "snippetstudio.createGlobalLangSnippetFromSelection",
@@ -186,7 +212,7 @@
         {
           "command": "snippetstudio.openSettings",
           "when": "view == snippet-manager-view",
-          "group": "inline"
+          "group": "navigation"
         },
         {
           "command": "snippetstudio.addGlobalSnippet",
