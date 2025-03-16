@@ -4,7 +4,8 @@
   "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.97.0"
+    "vscode": "^1.97.0",
+    "node": "^20.0.0"
   },
   "categories": [
     "Other"
