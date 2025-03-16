@@ -3,15 +3,16 @@ import { VSCodeSnippets } from "../types/snippetTypes.js";
 import { locateSnippetFiles } from "./locateSnippets.js";
 import * as vscode from "vscode";
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from "../ui/templates.js";
+import { getCurrentLanguage } from "../utils/language.js";
 
 export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.TreeItem[]][]>  {
     const snippetFiles: string[] = await locateSnippetFiles();
     const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(snippetFiles);
     const treeItems: [vscode.TreeItem, vscode.TreeItem[]][] = snippetGroups.map(([filePath, group]) => {
         const dropdown = createTreeItemFromFilePath(filePath);
-        const snippets = Object.entries(group).map(([k, v]) => {
-            return createTreeItemFromSnippet(k, v, filePath);
-        });
+        const snippets = Object.entries(group)
+            .filter(([_, v]) => v.scope === undefined || v.scope === getCurrentLanguage())
+            .map(([k, v]) => createTreeItemFromSnippet(k, v, filePath));
         return [dropdown, snippets];
     });
 
