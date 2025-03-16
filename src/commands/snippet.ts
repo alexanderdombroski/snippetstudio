@@ -31,7 +31,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 filename: getGlobalLangFile(langId),
                 snippetTitle: "",
                 prefix: defaultPrefix()
-            }, getSelection() ?? "");
+            }, await getSelection() ?? "");
         })
     );
     context.subscriptions.push(
@@ -47,7 +47,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 snippetTitle: "",
                 prefix: defaultPrefix(),
                 scope: langId
-            }, getSelection() ?? "");
+            }, await getSelection() ?? "");
         })
     );
     context.subscriptions.push(
@@ -59,7 +59,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 filename,
                 snippetTitle: "",
                 prefix: defaultPrefix()
-            }, getSelection() ?? "");
+            }, await getSelection() ?? "");
         }),
         vscode.commands.registerCommand("snippetstudio.createGlobalMixedSnippetFromSelection",  async () => {
             const langId = await selectLanguage() ?? getCurrentLanguage() ?? "plaintext";
@@ -74,7 +74,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 snippetTitle: "",
                 prefix: defaultPrefix(),
                 scope: langId
-            }, getSelection() ?? "");
+            }, await getSelection() ?? "");
         })
     );
     // Edit Snippet
