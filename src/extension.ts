@@ -12,6 +12,7 @@ import initSnippetEditorCommands from './commands/snippetEditor.js';
 import SnippetEditorProvider from './ui/bufferEditor.js';
 import SnippetDataWebViewProvider from './ui/snippetDataView.js';
 import SnippetDataManager from './snippets/snippetDataManager.js';
+import createStatusBar from './ui/statusBar.js';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -41,6 +42,8 @@ export function activate(context: vscode.ExtensionContext) {
 	initSnippetCommands(context, snippetEditorProvider);
 	initSnippetFileCommands(context);
 	initSnippetEditorCommands(context, snippetEditorProvider);
+
+	createStatusBar(context);
 
 	console.log('The extension "snippetstudio" is now active!');
 }

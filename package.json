@@ -311,6 +311,16 @@
           "type": "boolean",
           "default": true,
           "description": "If mulitple lines are selected, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces. This only changes behavior when a snippet is being created from a selection."
+        },
+          "snippetstudio.statusBarPriority": {
+          "type": "integer",
+          "default": 30,
+          "description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
+        },
+        "snippetstudio.showStatusBarItem": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the snippet indicator status bar item."
         }
       }
     }

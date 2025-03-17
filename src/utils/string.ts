@@ -49,4 +49,4 @@ function countMinSpaces(lines: string[]): number {
     return minCount;
 }
 
-export { titleCase, unTabMultiline };
+export { titleCase, unTabMultiline, capitalize };
