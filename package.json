@@ -42,7 +42,7 @@
         {
           "id": "snippet-manager-view-container",
           "title": "Snippet Studio Manager",
-          "icon": "src/assets/bookCode.svg"
+          "icon": "$(repo)"
         }
       ]
     },
@@ -51,22 +51,21 @@
         {
           "id": "snippet-data",
           "name": "Snippet Editor",
-          "icon": "wrench",
           "type": "webview",
-          "when": "snippetstudio.editorVisible"
+          "when": "snippetstudio.editorVisible",
+          "icon": "$(book)"
         },
         {
           "id": "snippet-manager-view",
           "name": "Snippets",
           "type": "tree",
-          "icon": "list-tree"
+          "icon": "$(repo)"
         },
         {
           "id": "location-manager",
           "name": "Locations Manager",
           "type": "tree",
-          "visibility": "collapsed",
-          "icon": "database"
+          "icon": "$(database)"
         }
       ]
     },
@@ -85,12 +84,14 @@
         "command": "snippetstudio.addGlobalSnippet",
         "title": "Add Global Snippet",
         "icon": "$(plus)",
-        "shortTitle": "Add Snippet"
+        "shortTitle": "Add Snippet",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.openSettings",
         "title": "Open Snippet Studio Settings",
-        "icon": "$(gear)"
+        "icon": "$(gear)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.showSnippetBody",
@@ -123,32 +124,38 @@
       {
         "command": "snippetstudio.refresh",
         "title": "Refresh Snippets",
-        "icon": "$(refresh)"
+        "icon": "$(refresh)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.refreshLocations",
         "title": "Refresh Locations",
-        "icon": "$(refresh)"
+        "icon": "$(refresh)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.createGlobalLangFile",
         "title": "Create Global Snippets File",
-        "icon": "$(file-code)"
+        "icon": "$(file-code)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.createLocalSnippetsFile",
         "title": "Create Local Mixed Snippets File",
-        "icon": "$(book)"
+        "icon": "$(book)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.createGlobalSnippetsFile",
         "title": "Create Global Mixed Snippets File",
-        "icon": "$(book)"
+        "icon": "$(book)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.createLocalLangFile",
         "title": "Create Local Snippets File",
-        "icon": "$(file-code)"
+        "icon": "$(file-code)",
+        "category": "snippetstudio"
       },
       {
         "command": "snippetstudio.saveSnippet",
