@@ -8,22 +8,15 @@ import os from "os";
  * @returns The open workspace folder or undefinied
  */
 function getWorkspaceFolder(): string | undefined {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-        vscode.window.showErrorMessage('No active text editor.');
-        return undefined;
-    }
-
-    if (editor.document.uri.scheme === 'snippetstudio') {
-        return undefined; // Temporary editor, no workspace folder
-    }
-
-    const workspaceFolder = vscode.workspace.getWorkspaceFolder(editor.document.uri);
-    if (!workspaceFolder) {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    
+    if (!workspaceFolders || workspaceFolders.length === 0) {
         vscode.window.showErrorMessage('Workspace folder not found.');
         return undefined;
     }
-    return workspaceFolder.uri.fsPath;
+
+    // Index 0 is root folder
+    return workspaceFolders[0].uri.fsPath;
 }
 
 function getCurrentUri(): vscode.Uri | undefined {
@@ -63,7 +56,7 @@ function getLangFromSnippetFilePath(filepath: string): string | undefined {
     }
 
     const base = path.basename(filepath);
-    const dotIndex = base.indexOf('.')
+    const dotIndex = base.indexOf('.');
     if (dotIndex === -1) {
         return;
     }
