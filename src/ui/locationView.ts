@@ -50,8 +50,8 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
             return [];
         }
         return [
-            new vscode.TreeItem("Global Snippets", vscode.TreeItemCollapsibleState.Collapsed),
-            new vscode.TreeItem("Local Snippets", vscode.TreeItemCollapsibleState.Collapsed)
+            new vscode.TreeItem("Global Snippets", this.globalTreeItems.length === 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed),
+            new vscode.TreeItem("Local Snippets", this.localTreeItems.length === 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed)
         ];
     }
 

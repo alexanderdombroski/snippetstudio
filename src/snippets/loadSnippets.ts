@@ -9,10 +9,10 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
     const snippetFiles: string[] = await locateSnippetFiles();
     const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(snippetFiles);
     const treeItems: [vscode.TreeItem, vscode.TreeItem[]][] = snippetGroups.map(([filePath, group]) => {
-        const dropdown = createTreeItemFromFilePath(filePath);
         const snippets = Object.entries(group)
             .filter(([_, v]) => v.scope === undefined || v.scope === getCurrentLanguage())
             .map(([k, v]) => createTreeItemFromSnippet(k, v, filePath));
+        const dropdown = createTreeItemFromFilePath(filePath, snippets.length === 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed);
         return [dropdown, snippets];
     });
 

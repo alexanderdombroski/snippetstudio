@@ -43,9 +43,9 @@ export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeS
     return treeItem;
 }
 
-export function createTreeItemFromFilePath(filepath: string): vscode.TreeItem {
+export function createTreeItemFromFilePath(filepath: string, collapsibleState: vscode.TreeItemCollapsibleState): vscode.TreeItem {
     const filename = path.basename(filepath);
-    const treeItem = new vscode.TreeItem(filename, vscode.TreeItemCollapsibleState.Collapsed);
+    const treeItem = new vscode.TreeItem(filename, collapsibleState);
     treeItem.description = filepath;
     treeItem.tooltip = "Snippets from this dropdown are found in " + filepath + "\n\nRight Click to open the file!";
     treeItem.contextValue = "snippet-filepath";
