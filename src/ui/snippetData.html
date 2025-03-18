@@ -32,6 +32,12 @@
         let scope;
 
         window.addEventListener('message', event => {
+            
+            if (!event.origin.startsWith('vscode-webview://')) {
+                console.warn('Received message from an unexpected origin:', event.origin);
+                return;
+            }
+
             const message = event.data;
             switch (message.command) {
                 case 'updateScope':
