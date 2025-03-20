@@ -4,10 +4,12 @@ import * as vscode from 'vscode';
 import { getWorkspaceFolder, getGlobalSnippetFilesDir } from "../utils/fsInfo";
 import { getCurrentLanguage } from "../utils/language";
 
-async function createFile(filepath: string): Promise<void> {
+async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {
     try {
         await fs.promises.access(filepath); // Check if the file exists
-        vscode.window.showInformationMessage("File already exists! " + path.basename(filepath));
+        if (showInformationMessage) {
+            vscode.window.showInformationMessage("File already exists! " + path.basename(filepath));
+        }
     } catch (error) {
         if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
             // File doesn't exist, create it
@@ -82,4 +84,4 @@ async function createGlobalSnippetsFile(): Promise<void> {
     await createFile(filepath);
 }
 
-export { createGlobalLangFile, createLocalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile };
+export { createGlobalLangFile, createLocalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile };

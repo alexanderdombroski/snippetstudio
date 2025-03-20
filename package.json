@@ -321,6 +321,11 @@
           "type": "boolean",
           "default": true,
           "description": "Show the snippet indicator status bar item."
+        },
+        "snippetstudio.autoCreateSnippetFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
         }
       }
     }
