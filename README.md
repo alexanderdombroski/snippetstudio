@@ -1,71 +1,146 @@
-# snippetstudio README
+# Snippet Studio
 
-This is the README for your extension "snippetstudio". After writing up a brief description, we recommend including the following sections.
+This VSCode extension provides a GUI for easy CRUD operations on [VSCode snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) and VSCode snippet files. It allows you to see a list of custom snippets of the current language, edit them and create new ones.
+
+[![Version](https://vsmarketplacebadges.dev/version/AlexDombroski.snippetstudio)]() [![Installs](https://vsmarketplacebadges.dev/installs/AlexDombroski.snippetstudio)]()
+
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio)
+
+## Table of Contents
+
+- [Features](#features)
+    - [Managing Snippets](#managing-snippets)
+    - [Managing Snippet Files](#managing-snippet-files)
+    - [Creating Snippets](#creating-snippets)
+- [Requirements](#requirements)
+- [Extension Settings](#extension-settings)
+- [Disclaimers](#disclaimers)
+- [Known Issues](#known-issues)
+- [Release Notes](#release-notes)
+- [Liscense & Contributions](#liscense--contributions)
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Managing Snippets
 
-For example if there is an image subfolder under your extension project workspace:
+The **Snippets** tree view loads all snippets of the current language. Whenever the current active language changes, the view updates.
 
-\!\[feature X\]\(images/feature-x.png\)
+* Click the `+` in the title menu to add a global snippet of the current language.
+* Click the pencil to edit an existing snippet
+* Right click to delete a snippet or snippet file.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/edit.gif)
+
+### Managing Snippet Files
+
+The **Locations Manager** tree view shows you all snippet files found on your filesystem. 
+
+**View Options**
+* **Create Global Snippets File** - Creates a snippet file of the current language to load sippets anytime accessing that language in VSCode.
+* **Create Global Mixed Snippets File** - Creates a `global.code-snippets` snippet file that can hold snippets of any language, to always be loaded.
+* **Create Local Snippets File** - Creates a snippet file of the current language in the .vscode folder local to the current open project.
+* **Create Global Mixed Snippets File** - Creates a project snippets file in the .vscode folder local to the current open project.
+
+You can also open or delete language files by right clicking, or add snippets to the selected location.
+
+### Creating Snippets
+
+The **Snippet Editor** webview only appears when creating snippets.
+
+![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/selection.gif)
+
+1. Write the snippet code in the open buffer. Closing the editor will discard snippet changes and delete the buffer.
+2. Fill out the form and click save. The snippet works if you can type the prefix in a file of the language and it appears in the autocomplete box. The title is the hint, the prefix appears on the left, and the snippet code and description show when interacting with the autocomplete menu. Type TAB to load the snippet's code into your code.
+
+![Delete Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/delete.gif)
+
+Read more about vscode snippets the [vscode snippet documentation](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* **VS Code Version:** This extension requires VS Code version 1.97.0 or higher.
+* **Node.js Version:** This extension requires Node.js version 20.0.0 or higher.
+* **Virtual Workspaces:** This extension has limited support for virtual workspaces. It relies on accessing the file system and Node.js file-related modules (fs, path, glob), which may not be fully available in virtual workspace environments.
+* **File System Access:** This extension requires access to your local file system to manage VS Code snippets and snippet files.
+* **Web Version:** This extension is not compatible with the web version of VS Code due to its reliance on Node.js file system APIs.
+
+This extension isn't yet tested on the web version of vsocde and likely won't work. The web version operates in a sandboxed browser environment that restricts direct file system interactions.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+This extension contributes the following settings to enhance your SnippetStudio experience:
 
-For example:
+### Snippet Behavior
 
-This extension contributes the following settings:
+* `snippetstudio.confirmSnippetDeletion`:
+    * **Type:** `boolean`
+    * **Default:** `false`
+    * **Description:** Indicates whether to show a warning dialog before deleting a snippet.
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `snippetstudio.defaultSnippetPrefix`:
+    * **Type:** `string`
+    * **Description:** Sets a default placeholder prefix that will be suggested when creating new snippets.
+
+* `snippetstudio.autoCapitalizeSnippetName`:
+    * **Type:** `boolean`
+    * **Default:** `false`
+    * **Description:** Automatically capitalizes the first letter of a snippet's Title Key when it is created.
+
+* `snippetstudio.cleanupSnippetSelection`:
+    * **Type:** `boolean`
+    * **Default:** `true`
+    * **Description:** When creating a snippet from a multi-line selection, this setting controls the following adjustments:
+        * Ensures the selection includes the entirety of each selected line.
+        * Converts leading tabs within the selection to spaces.
+        * Evenly removes any shared leading tabs/spaces present across all selected lines.
+        This setting only affects the behavior during snippet creation from a text selection.
+
+### User Interface
+
+* `snippetstudio.showStatusBarItem`:
+    * **Type:** `boolean`
+    * **Default:** `true`
+    * **Description:** Controls the visibility of the SnippetStudio indicator in the VS Code status bar.
+
+* `snippetstudio.statusBarPriority`:
+    * **Type:** `integer`
+    * **Default:** `30`
+    * **Description:** Determines the priority of the SnippetStudio status bar item. Higher numerical values result in the item appearing further to the left in the status bar.
+
+### Snippet File
+
+* `snippetstudio.autoCreateSnippetFiles`:
+    * **Type:** `boolean`
+    * **Default:** `true`
+    * **Description:** Automatically creates a snippet file when saving a snippet if it doesn't exist.
+
+## Disclaimers
+
+Having comments in your snippet json files will not break this extension, but the extension will delete the comments of every single snippet file it reads.
+
+Titles of snippets must be unique, due to the format VSCode uses for storing snippet files in json. Changing a snippet title will create a copy of the snippet, and the old one can be deleted. Creating a new snippet with a duplicate snippet titlekey will delete the old snippet of the duplicate name.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Record your issues in the q&a or in the github repository
+
+[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues)
+
+[![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+See the changelog [here](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)!
 
-### 1.0.0
+## Liscense & Contributions
 
-Initial release of ...
+This extension is open source! Feel free to add [github](https://github.com/alexanderdombroski/snippetstudio) issues and recommondations. I am open to ideas of how you can collaborate.
 
-### 1.0.1
+<!-- https://code.visualstudio.com/api/working-with-extensions/publishing-extension -->
+<!-- https://code.visualstudio.com/api/working-with-extensions/continuous-integration -->
 
-Fixed issue #.
+[![License](https://img.shields.io/github/license/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio?tab=MIT-1-ov-file#readme)
 
-### 1.1.0
+**Star this project!**
 
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+[![GitHub Stars](https://img.shields.io/github/stars/alexanderdombroski/snippetstudio?style=social)](https://github.com/alexanderdombroski/snippetstudio)
