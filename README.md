@@ -12,7 +12,6 @@ This VSCode extension provides a GUI for easy CRUD operations on [VSCode snippet
     - [Creating Snippets](#creating-snippets)
 - [Requirements](#requirements)
 - [Extension Settings](#extension-settings)
-- [Disclaimers](#disclaimers)
 - [Known Issues](#known-issues)
 - [Release Notes](#release-notes)
 - [Liscense & Contributions](#liscense--contributions)
@@ -112,19 +111,19 @@ This extension contributes the following settings to enhance your SnippetStudio 
     * **Default:** `true`
     * **Description:** Automatically creates a snippet file when saving a snippet if it doesn't exist.
 
-## Disclaimers
-
-Having comments in your snippet json files will not break this extension, but the extension will delete the comments of every single snippet file it reads.
-
-Titles of snippets must be unique, due to the format VSCode uses for storing snippet files in json. Changing a snippet title will create a copy of the snippet, and the old one can be deleted. Creating a new snippet with a duplicate snippet titlekey will delete the old snippet of the duplicate name.
-
 ## Known Issues
 
-Record your issues in the q&a or in the github repository
+Record your issues in the q&a or in the github repository.
 
 [![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
+
+### Important Notes
+
+Having comments in your snippet json files will not break this extension, but the extension will delete the comments of every single snippet file it reads.
+
+Titles of snippets must be unique, due to the format VSCode uses for storing snippet files in json. Changing a snippet title will create a copy of the snippet, and the old one can be deleted. Creating a new snippet with a duplicate snippet titlekey will delete the old snippet of the duplicate name.
 
 ## Release Notes
 

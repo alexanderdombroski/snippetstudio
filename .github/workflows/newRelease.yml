@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -40,9 +41,17 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         run: |
+
+          curl -s https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/main/CHANGELOG.md -o CHANGELOG.md  
+          TAG_HEADER="## [${{ github.ref_name }}] -"
+          RELEASE_NOTES=$(sed -n "/$TAG_HEADER/,/^## / { /$TAG_HEADER/d; /^## /q; p; }" CHANGELOG.md)
+
+          COMMIT_LINK="https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}"
+          CHANGELOG="See the full changelog in [CHANGELOG.md](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)."
+          RELEASE_BODY=$(printf "%s\n\n%s\n\n%s" "$COMMIT_LINK" "$RELEASE_NOTES" "$CHANGELOG")
           gh release create ${{ github.ref_name }} \
             --title "Release ${{ github.ref_name }}" \
-            --generate-notes
+            --notes "$RELEASE_BODY"
 
           echo "RELEASE_ID=${{ github.ref_name }}" >> $GITHUB_ENV
         env:
@@ -55,7 +64,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish extension to VS Code Marketplace
-        run: npx @vscode/vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
-        env:
-          VSCODE_MARKETPLACE_TOKEN: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+
+ 
