@@ -328,7 +328,61 @@
           "description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
         }
       }
-    }
+    },
+    "walkthroughs": [
+      {
+        "id": "snippetStudioWalkthrough",
+        "title": "Snippet Studio Quick Start",
+        "description": "Learn how to manage your snippets with this extension.",
+        "steps": [
+          {
+            "id": "openSnippetStudio",
+            "title": "Open Snippet Studio",
+            "media": {
+              "markdown": "src/assets/walkthroughs/openSnippetStudio.md"
+            },
+            "completionEvents": [
+              "onView:snippet-manager-view-container",
+              "onCommand:snippetstudio.openView",
+              "onCommand:snippetstudio.openSettings",
+              "onCommand:snippetstudio.refresh",
+              "onCommand:snippetstudio.refreshLocations"
+            ]
+          },
+          {
+            "id": "newGlobalSnippetFile",
+            "title": "Create a Global Snippet File",
+            "media": {
+              "markdown": "src/assets/walkthroughs/newGlobalSnippetFile.md"
+            },
+            "completionEvents": [
+              "onCommand:snippetstudio.createGlobalSnippetsFile",
+              "onCommand:snippetstudio.createGlobalLangFile"
+            ]
+          },
+          {
+            "id": "firstSnippet",
+            "title": "Create Your First Snippet",
+            "media": {
+              "markdown": "src/assets/walkthroughs/firstSnippet.md"
+            },
+            "completionEvents": [
+              "onCommand:snippetstudio.saveSnippet",
+              "onCommand:snippetstudio.editSnippet",
+              "onContext:snippetstudio.editorVisible"
+            ]
+          },
+          {
+            "id": "editSnippet",
+            "title": "Edit an Existing Snippet",
+            "media": {
+              "markdown": "src/assets/walkthroughs/editSnippet.md"
+            },
+            "completionEvents": ["onCommand:snippetstudio.editSnippet"]
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "pnpm run package",

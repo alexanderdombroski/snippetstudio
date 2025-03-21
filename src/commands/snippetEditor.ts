@@ -26,7 +26,7 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
                 }
                 const capitalize = vscode.workspace.getConfiguration("snippetstudio").get<boolean>("autoCapitalizeSnippetName");
                 if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("autoCreateSnippetFiles")) {
-                    await createFile(data.filename);
+                    await createFile(data.filename, false);
                 }
                 writeSnippet(data.filename, capitalize ? titleCase(data.snippetTitle) : data.snippetTitle, snippet);
                 vscode.commands.executeCommand('workbench.action.closeActiveEditor');
