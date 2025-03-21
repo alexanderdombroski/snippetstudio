@@ -9,6 +9,7 @@
     "email": "alexdombroski1@gmail.com",
     "url": "https://github.com/alexanderdombroski"
   },
+  "icon": "public/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/alexanderdombroski/snippetstudio.git"
