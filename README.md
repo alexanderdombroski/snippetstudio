@@ -2,9 +2,7 @@
 
 This VSCode extension provides a GUI for easy CRUD operations on [VSCode snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) and VSCode snippet files. It allows you to see a list of custom snippets of the current language, edit them and create new ones.
 
-[![Version](https://vsmarketplacebadges.dev/version/AlexDombroski.snippetstudio)]() [![Installs](https://vsmarketplacebadges.dev/installs/AlexDombroski.snippetstudio)]()
-
-[![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio) [![Version](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio.svg)](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio)
 
 ## Table of Contents
 
@@ -137,7 +135,6 @@ See the changelog [here](https://github.com/alexanderdombroski/snippetstudio/blo
 This extension is open source! Feel free to add [github](https://github.com/alexanderdombroski/snippetstudio) issues and recommondations. I am open to ideas of how you can collaborate.
 
 <!-- https://code.visualstudio.com/api/working-with-extensions/publishing-extension -->
-<!-- https://code.visualstudio.com/api/working-with-extensions/continuous-integration -->
 
 [![License](https://img.shields.io/github/license/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio?tab=MIT-1-ov-file#readme)
 
