@@ -1,0 +1,61 @@
+name: Publish VS Code Extension
+
+on:
+  push:
+    tags:
+      - '*.*.*' # Trigger on tags like 1.0.0
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install @vscode/vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Compile extension
+        run: npm run package
+
+      - name: Package extension
+        id: package
+        run: |
+          npx @vscode/vsce package
+          echo "VSIX_PATH=$(ls *.vsix)" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        id: create_release
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --title "Release ${{ github.ref_name }}" \
+            --generate-notes
+
+          echo "RELEASE_ID=${{ github.ref_name }}" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload .vsix to release
+        run: |
+          gh release upload ${{ env.RELEASE_ID }} ${{ env.VSIX_PATH }} \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish extension to VS Code Marketplace
+        run: npx @vscode/vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        env:
+          VSCODE_MARKETPLACE_TOKEN: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}

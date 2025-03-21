@@ -16,3 +16,4 @@ vsc-extension-quickstart.md
 .env
 *.log
 public/examples/**.gif
+.github/
