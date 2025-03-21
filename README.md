@@ -29,7 +29,7 @@ The **Snippets** tree view loads all snippets of the current language. Whenever 
 * Click the pencil to edit an existing snippet
 * Right click to delete a snippet or snippet file.
 
-![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/edit.gif)
+![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/edit.gif)
 
 ### Managing Snippet Files
 
@@ -47,12 +47,12 @@ You can also open or delete language files by right clicking, or add snippets to
 
 The **Snippet Editor** webview only appears when creating snippets.
 
-![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/selection.gif)
+![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/selection.gif)
 
 1. Write the snippet code in the open buffer. Closing the editor will discard snippet changes and delete the buffer.
 2. Fill out the form and click save. The snippet works if you can type the prefix in a file of the language and it appears in the autocomplete box. The title is the hint, the prefix appears on the left, and the snippet code and description show when interacting with the autocomplete menu. Type TAB to load the snippet's code into your code.
 
-![Delete Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/src/assets/examples/delete.gif)
+![Delete Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/delete.gif)
 
 Read more about vscode snippets the [vscode snippet documentation](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
 

@@ -33,7 +33,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
     }
 
     private async _getHtmlForWebview(webview: vscode.Webview) {
-        const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'src', 'ui', 'snippetData.html');
+        const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
         
         try {
             return await fs.promises.readFile(htmlPath.fsPath, 'utf8');

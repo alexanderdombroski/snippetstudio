@@ -9,6 +9,10 @@
     "email": "alexdombroski1@gmail.com",
     "url": "https://github.com/alexanderdombroski"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderdombroski/snippetstudio.git"
+  },
   "engines": {
     "vscode": "^1.97.0",
     "node": "^20.0.0"
@@ -339,7 +343,7 @@
             "id": "openSnippetStudio",
             "title": "Open Snippet Studio",
             "media": {
-              "markdown": "src/assets/walkthroughs/openSnippetStudio.md"
+              "markdown": "public/walkthroughs/openSnippetStudio.md"
             },
             "completionEvents": [
               "onView:snippet-manager-view-container",
@@ -353,7 +357,7 @@
             "id": "newGlobalSnippetFile",
             "title": "Create a Global Snippet File",
             "media": {
-              "markdown": "src/assets/walkthroughs/newGlobalSnippetFile.md"
+              "markdown": "public/walkthroughs/newGlobalSnippetFile.md"
             },
             "completionEvents": [
               "onCommand:snippetstudio.createGlobalSnippetsFile",
@@ -364,7 +368,7 @@
             "id": "firstSnippet",
             "title": "Create Your First Snippet",
             "media": {
-              "markdown": "src/assets/walkthroughs/firstSnippet.md"
+              "markdown": "public/walkthroughs/firstSnippet.md"
             },
             "completionEvents": [
               "onCommand:snippetstudio.saveSnippet",
@@ -376,7 +380,7 @@
             "id": "editSnippet",
             "title": "Edit an Existing Snippet",
             "media": {
-              "markdown": "src/assets/walkthroughs/editSnippet.md"
+              "markdown": "public/walkthroughs/editSnippet.md"
             },
             "completionEvents": ["onCommand:snippetstudio.editSnippet"]
           }
