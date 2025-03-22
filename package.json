@@ -2,7 +2,7 @@
   "name": "snippetstudio",
   "displayName": "SnippetStudio",
   "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "AlexDombroski",
   "author": {
     "name": "Alex Dombroski",
@@ -39,7 +39,9 @@
   ],
   "preview": true,
   "pricing": "Free",
-  "activationEvents": [],
+  "activationEvents": [
+    "onFileSystem:snippetstudio"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -305,34 +307,35 @@
         "snippetstudio.defaultSnippetPrefix": {
           "type": "string",
           "default": "",
-          "description": "Set a default placeholder prefix for new snippets"
+          "description": "Sets a default placeholder prefix that will be suggested when creating new snippets."
         },
         "snippetstudio.autoCapitalizeSnippetName": {
           "type": "boolean",
           "default": false,
-          "description": "Automatically Capitalize a Snippet's TitleKey"
+          "description": "Automatically capitalizes the first letter of every word in the snippet's Title Key when it is created."
         },
         "snippetstudio.cleanupSnippetSelection": {
           "type": "boolean",
           "default": true,
-          "description": "If mulitple lines are selected, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces. This only changes behavior when a snippet is being created from a selection."
-        },
-        "snippetstudio.statusBarPriority": {
-          "type": "integer",
-          "default": 30,
-          "description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
+          "description": "When creating a snippet from a multi-line selection, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces evenly."
         },
         "snippetstudio.showStatusBarItem": {
           "type": "boolean",
           "default": true,
           "description": "Show the snippet indicator status bar item."
         },
+        "snippetstudio.statusBarPriority": {
+          "type": "integer",
+          "default": 30,
+          "description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
+        },
         "snippetstudio.autoCreateSnippetFiles": {
           "type": "boolean",
           "default": true,
           "description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
         }
-      }
+      },
+      "order": 0
     },
     "walkthroughs": [
       {
@@ -392,11 +395,11 @@
     ]
   },
   "scripts": {
-    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "compile": "npm run check-types && npm run lint && node esbuild.mjs",
     "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.js --watch",
+    "watch:esbuild": "node esbuild.mjs --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "package": "npm run check-types && npm run lint && node esbuild.mjs --production",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",

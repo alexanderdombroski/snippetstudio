@@ -1,6 +1,6 @@
 # Snippet Studio
 
-This VSCode extension provides a GUI for easy CRUD operations on [VSCode snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) and VSCode snippet files. It allows you to see a list of custom snippets of the current language, edit them and create new ones.
+This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski.snippetstudio) provides a GUI for easy CRUD operations on [vscode snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets) and vscode snippet files. It allows you to see a list of custom snippets of the current language, edit them and create new ones.
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio) [![Version](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio.svg)](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio)
 
@@ -67,49 +67,16 @@ This extension isn't yet tested on the web version of vsocde and likely won't wo
 
 This extension contributes the following settings to enhance your SnippetStudio experience:
 
-### Snippet Behavior
+**Snippet Creation Behavior**
+* confirmSnippetDeletion
+* defaultSnippetPrefix
+* autoCapitalizeSnippetName
+* cleanupSnippetSelection
+* autoCreateSnippetFiles
 
-* `snippetstudio.confirmSnippetDeletion`:
-    * **Type:** `boolean`
-    * **Default:** `false`
-    * **Description:** Indicates whether to show a warning dialog before deleting a snippet.
-
-* `snippetstudio.defaultSnippetPrefix`:
-    * **Type:** `string`
-    * **Description:** Sets a default placeholder prefix that will be suggested when creating new snippets.
-
-* `snippetstudio.autoCapitalizeSnippetName`:
-    * **Type:** `boolean`
-    * **Default:** `false`
-    * **Description:** Automatically capitalizes the first letter of a snippet's Title Key when it is created.
-
-* `snippetstudio.cleanupSnippetSelection`:
-    * **Type:** `boolean`
-    * **Default:** `true`
-    * **Description:** When creating a snippet from a multi-line selection, this setting controls the following adjustments:
-        * Ensures the selection includes the entirety of each selected line.
-        * Converts leading tabs within the selection to spaces.
-        * Evenly removes any shared leading tabs/spaces present across all selected lines.
-        This setting only affects the behavior during snippet creation from a text selection.
-
-### User Interface
-
-* `snippetstudio.showStatusBarItem`:
-    * **Type:** `boolean`
-    * **Default:** `true`
-    * **Description:** Controls the visibility of the SnippetStudio indicator in the VS Code status bar.
-
-* `snippetstudio.statusBarPriority`:
-    * **Type:** `integer`
-    * **Default:** `30`
-    * **Description:** Determines the priority of the SnippetStudio status bar item. Higher numerical values result in the item appearing further to the left in the status bar.
-
-### Snippet File
-
-* `snippetstudio.autoCreateSnippetFiles`:
-    * **Type:** `boolean`
-    * **Default:** `true`
-    * **Description:** Automatically creates a snippet file when saving a snippet if it doesn't exist.
+**User Interface**
+* showStatusBarItem
+* statusBarPriority
 
 ## Known Issues
 
@@ -121,8 +88,6 @@ Record your issues in the q&a or in the github repository.
 
 ### Important Notes
 
-Having comments in your snippet json files will not break this extension, but the extension will delete the comments of every single snippet file it reads.
-
 Titles of snippets must be unique, due to the format VSCode uses for storing snippet files in json. Changing a snippet title will create a copy of the snippet, and the old one can be deleted. Creating a new snippet with a duplicate snippet titlekey will delete the old snippet of the duplicate name.
 
 ## Release Notes
@@ -132,8 +97,6 @@ See the changelog [here](https://github.com/alexanderdombroski/snippetstudio/blo
 ## Liscense & Contributions
 
 This extension is open source! Feel free to add [github](https://github.com/alexanderdombroski/snippetstudio) issues and recommondations. I am open to ideas of how you can collaborate.
-
-<!-- https://code.visualstudio.com/api/working-with-extensions/publishing-extension -->
 
 [![License](https://img.shields.io/github/license/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio?tab=MIT-1-ov-file#readme)
 

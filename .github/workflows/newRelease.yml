@@ -41,14 +41,27 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         run: |
-
           curl -s https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/main/CHANGELOG.md -o CHANGELOG.md  
-          TAG_HEADER="## [${{ github.ref_name }}] -"
-          RELEASE_NOTES=$(sed -n "/$TAG_HEADER/,/^## / { /$TAG_HEADER/d; /^## /q; p; }" CHANGELOG.md)
+          if [ $? -ne 0 ]; then
+            echo "Failed to download CHANGELOG.md"
+            exit 1
+          fi
+          
+          # Use awk to extract the relevant section
+          awk -v tag="${{ github.ref_name }}" '
+            BEGIN { found=0; }
+            /^## \['"${{ github.ref_name }}"'\]/ { found=1; print; next; }
+            /^## \[/ { if (found==1) found=2; }
+            { if (found==1) print; }
+          ' CHANGELOG.md > release_notes.txt
 
-          COMMIT_LINK="https://github.com/${{ github.repository }}/commits/${{ github.ref_name }}"
-          CHANGELOG="See the full changelog in [CHANGELOG.md](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)."
-          RELEASE_BODY=$(printf "%s\n\n%s\n\n%s" "$COMMIT_LINK" "$RELEASE_NOTES" "$CHANGELOG")
+          TREE_LINK="[Tree](https://github.com/${{ github.repository }}/tree/${{ github.ref_name }})"
+          COMMIT_LINK="[Commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }})"
+          COMPARE_LINK="[Compare](https://github.com/${{ github.repository }}/compare/$(git describe --tags --abbrev=0 ${{ github.ref_name }}~1)...${{ github.ref_name }})"
+
+          CHANGELOG="See the full [changelog](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)."
+          RELEASE_BODY=$(printf "%s\n\n## GitHub Links\n\n%s\n\n%s ~ %s ~ %s" "$(cat release_notes.txt)" "$CHANGELOG" "$TREE_LINK" "$COMMIT_LINK" "$COMPARE_LINK")
+
           gh release create ${{ github.ref_name }} \
             --title "Release ${{ github.ref_name }}" \
             --notes "$RELEASE_BODY"
@@ -64,5 +77,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
+      - name: Publish extension to VS Code Marketplace
+        run: npx @vscode/vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        env:
+          VSCODE_MARKETPLACE_TOKEN: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
  

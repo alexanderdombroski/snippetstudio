@@ -5,7 +5,7 @@ node_modules/**
 src/**
 .gitignore
 .yarnrc
-esbuild.js
+esbuild.mjs
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/eslint.config.mjs
@@ -17,3 +17,4 @@ vsc-extension-quickstart.md
 *.log
 public/examples/**.gif
 .github/
+CHANGELOG.md

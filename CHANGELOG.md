@@ -10,6 +10,17 @@
 - Tools to assist in adding tabstops and tabstops w/ labels
 - Choose snippets to export to a single snippet file.
 
+## [1.0.2] - 2025-03-22
+
+### Fixed
+
+- Old snippet editors of deleted buffers from previous vscode sessions are automatically closed when the extension is loaded.
+
+### Changed
+
+- Simplified readme
+- Improved CI/CD
+
 ## [1.0.1] - 2025-03-21
 
 ### Added
@@ -19,7 +30,7 @@
 ### Fixed
 
 - Readme badges
-- Improved CI/CD
+- Fixed CI/CD
 
 ## [1.0.0] - 2025-03-21
 
