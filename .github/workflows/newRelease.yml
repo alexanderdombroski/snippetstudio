@@ -50,7 +50,7 @@ jobs:
           # Use awk to extract the relevant section
           awk -v tag="${{ github.ref_name }}" '
             BEGIN { found=0; }
-            /^## \['"${{ github.ref_name }}"'\]/ { found=1; print; next; }
+            /^## \['"${{ github.ref_name }}"'\]/ { found=1; next; }
             /^## \[/ { if (found==1) found=2; }
             { if (found==1) print; }
           ' CHANGELOG.md > release_notes.txt
@@ -60,7 +60,7 @@ jobs:
           COMPARE_LINK="[Compare](https://github.com/${{ github.repository }}/compare/$(git describe --tags --abbrev=0 ${{ github.ref_name }}~1)...${{ github.ref_name }})"
 
           CHANGELOG="See the full [changelog](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)."
-          RELEASE_BODY=$(printf "%s\n\n## GitHub Links\n\n%s\n\n%s ~ %s ~ %s" "$(cat release_notes.txt)" "$CHANGELOG" "$TREE_LINK" "$COMMIT_LINK" "$COMPARE_LINK")
+          RELEASE_BODY=$(printf "%s\n\n%s\n\n## GitHub Links\n\n%s - %s - %s" "$(cat release_notes.txt)" "$CHANGELOG" "$TREE_LINK" "$COMMIT_LINK" "$COMPARE_LINK")
 
           gh release create ${{ github.ref_name }} \
             --title "Release ${{ github.ref_name }}" \
