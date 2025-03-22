@@ -7,6 +7,13 @@ import { titleCase } from "../utils/string";
 import { createFile } from "../snippets/newSnippetFile";
 
 function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: SnippetEditorProvider) {
+    // Close old tabs
+    vscode.window.tabGroups.all.forEach(group => group.tabs.forEach(tab => {
+        if (tab.input instanceof vscode.TabInputText && tab.input.uri.scheme === "snippetstudio") {
+            vscode.window.tabGroups.close(tab);
+        }
+    }));
+    
     context.subscriptions.push(
         vscode.commands.registerCommand('snippetstudio.saveSnippet', async () => {
             if (vscode.window.activeTextEditor?.document.uri.scheme === 'snippetstudio') {
