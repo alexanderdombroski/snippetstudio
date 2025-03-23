@@ -14,16 +14,17 @@ import { getCurrentLanguage, langIds } from '../utils/language.js';
  */
 async function locateSnippetFiles(): Promise<string[]> {
     const filePaths: string[] = [];
+
+    // Global
+    const langId = getCurrentLanguage();
+    const global = getGlobalSnippetFiles(langId);
+    filePaths.push(...global);
+    
+    // Local
     const folder = getWorkspaceFolder();
-    if (folder) {
-        const langId = getCurrentLanguage();
-        
-        const global = getGlobalSnippetFiles(langId);
-        filePaths.push(...global);
-        
+    if (folder) {   
         const workspaceSnippets = await findWorkspaceSnippetFiles(folder, langId);
         filePaths.push(...workspaceSnippets);
-        
     }
 
     return filePaths;
