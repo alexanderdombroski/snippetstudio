@@ -62,6 +62,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
                 return;
             }
             deleteFile(treeItem.description.toString());
+            vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
     );
 }

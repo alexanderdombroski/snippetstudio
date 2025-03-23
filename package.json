@@ -293,6 +293,26 @@
           "command": "snippetstudio.createSnippetAtLocation",
           "when": "viewItem == snippet-filepath",
           "group": "inline"
+        },
+        {
+          "command": "snippetstudio.createLocalLangFile",
+          "group": "navigation",
+          "when": "viewItem == local-dropdown"
+        },
+        {
+          "command": "snippetstudio.createGlobalLangFile",
+          "group": "navigation",
+          "when": "viewItem == global-dropdown"
+        },
+        {
+          "command": "snippetstudio.createLocalSnippetsFile",
+          "group": "navigation",
+          "when": "viewItem == local-dropdown"
+        },
+        {
+          "command": "snippetstudio.createGlobalSnippetsFile",
+          "group": "navigation",
+          "when": "viewItem == global-dropdown"
         }
       ]
     },

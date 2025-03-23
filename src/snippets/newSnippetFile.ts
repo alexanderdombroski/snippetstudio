@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import * as vscode from 'vscode';
 import { getWorkspaceFolder, getGlobalSnippetFilesDir } from "../utils/fsInfo";
-import { getCurrentLanguage } from "../utils/language";
+import { getCurrentLanguage, selectLanguage } from "../utils/language";
 
 async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {
     try {
@@ -38,7 +38,7 @@ async function getFileName(): Promise<string | undefined> {
 
 async function createLocalLangFile(): Promise<void> {
     const cwd = getWorkspaceFolder();
-    const langId = getCurrentLanguage();
+    const langId = getCurrentLanguage() ?? await selectLanguage();
     if (!(cwd && langId)) {
         return;
     }
@@ -62,7 +62,7 @@ async function createLocalSnippetsFile(): Promise<void> {
 }
 
 async function createGlobalLangFile(): Promise<void> {
-    const langId = getCurrentLanguage();
+    const langId = getCurrentLanguage() ?? await selectLanguage();
     if (langId === undefined) {
         vscode.window.showErrorMessage('No recently used language.');
         return;
