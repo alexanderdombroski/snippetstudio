@@ -60,21 +60,6 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
                 snippetTitle: "",
                 prefix: defaultPrefix()
             }, await getSelection() ?? "");
-        }),
-        vscode.commands.registerCommand("snippetstudio.createGlobalMixedSnippetFromSelection",  async () => {
-            const langId = await selectLanguage() ?? getCurrentLanguage() ?? "plaintext";
-            const base = getGlobalSnippetFilesDir();
-            if (base === undefined) {
-                return;
-            }
-            const filename = path.join(base, "global.code-snippets");
-
-            await editSnippet(snippetEditorProvider, langId, {
-                filename,
-                snippetTitle: "",
-                prefix: defaultPrefix(),
-                scope: langId
-            }, await getSelection() ?? "");
         })
     );
     // Edit Snippet

@@ -36,17 +36,6 @@ async function getFileName(): Promise<string | undefined> {
     return name;
 }
 
-async function createLocalLangFile(): Promise<void> {
-    const cwd = getWorkspaceFolder();
-    const langId = getCurrentLanguage() ?? await selectLanguage();
-    if (!(cwd && langId)) {
-        return;
-    }
-    
-    const filepath = path.join(cwd, '.vscode', `${langId}.json`);
-    await createFile(filepath); // Async
-}
-
 async function createLocalSnippetsFile(): Promise<void> {
     const cwd = getWorkspaceFolder();
     if (!(cwd)) {
@@ -80,8 +69,13 @@ async function createGlobalSnippetsFile(): Promise<void> {
     if (!dir) {
         return;
     }
-    const filepath = path.join(dir, "global.code-snippets");
+    const name = await getFileName();
+    if (name === undefined) {
+        return;
+    }
+
+    const filepath = path.join(dir, `${name}.code-snippets`);
     await createFile(filepath);
 }
 
-export { createGlobalLangFile, createLocalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile };
+export { createGlobalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile };

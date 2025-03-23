@@ -152,7 +152,7 @@
       },
       {
         "command": "snippetstudio.createLocalSnippetsFile",
-        "title": "Create Local Mixed Snippets File",
+        "title": "Create Project Snippets File",
         "icon": "$(book)",
         "category": "snippetstudio"
       },
@@ -160,12 +160,6 @@
         "command": "snippetstudio.createGlobalSnippetsFile",
         "title": "Create Global Mixed Snippets File",
         "icon": "$(book)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.createLocalLangFile",
-        "title": "Create Local Snippets File",
-        "icon": "$(file-code)",
         "category": "snippetstudio"
       },
       {
@@ -192,13 +186,8 @@
         "command": "snippetstudio.createGlobalLangSnippetFromSelection",
         "title": "Create language-specific Snippet",
         "shortTitle": "Create Language Snippet",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.createGlobalMixedSnippetFromSelection",
-        "title": "Create mixed-language snippet",
-        "shortTitle": "Create Mixed Snippet",
-        "category": "snippetstudio"
+        "category": "snippetstudio",
+        "when": false
       }
     ],
     "menus": {
@@ -217,11 +206,6 @@
       "editor/context": [
         {
           "command": "snippetstudio.createGlobalLangSnippetFromSelection",
-          "when": "editor.hasSelection",
-          "group": "snippetstudio"
-        },
-        {
-          "command": "snippetstudio.createGlobalMixedSnippetFromSelection",
           "when": "editor.hasSelection",
           "group": "snippetstudio"
         }
@@ -246,11 +230,6 @@
           "command": "snippetstudio.refreshLocations",
           "when": "view == location-manager",
           "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.createLocalLangFile",
-          "group": "inline",
-          "when": "view == location-manager"
         },
         {
           "command": "snippetstudio.createGlobalLangFile",
@@ -293,11 +272,6 @@
           "command": "snippetstudio.createSnippetAtLocation",
           "when": "viewItem == snippet-filepath",
           "group": "inline"
-        },
-        {
-          "command": "snippetstudio.createLocalLangFile",
-          "group": "navigation",
-          "when": "viewItem == local-dropdown"
         },
         {
           "command": "snippetstudio.createGlobalLangFile",
