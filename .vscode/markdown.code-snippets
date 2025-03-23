@@ -1,0 +1,17 @@
+{
+  "Changelog Release": {
+    "prefix": "changelog",
+    "body": [
+      "## [VERSION_NUMBER] - DATE",
+      "",
+      "### Added",
+      "",
+      "### Fixed",
+      "",
+      "### Changed",
+      ""
+    ],
+    "description": "Creates a new section of a changelog.",
+    "scope": "markdown"
+  }
+}
