@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
-import { snippetLocationTemplate } from './templates';
+import { localGlobalDropdownTemplates, snippetLocationTemplate } from './templates';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     
@@ -42,17 +42,15 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
         }
         
         if (element) {
-            if (element.label === "Global Snippets") {
+            if (element.contextValue === "global-dropdown") {
                 return this.globalTreeItems;
-            } else if (element.label === "Local Snippets") {
+            } else if (element.contextValue === "local-dropdown") {
                 return this.localTreeItems;
             }
             return [];
         }
-        return [
-            new vscode.TreeItem("Global Snippets", this.globalTreeItems.length === 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed),
-            new vscode.TreeItem("Local Snippets", this.localTreeItems.length === 0 ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed)
-        ];
+
+        return localGlobalDropdownTemplates(this.globalTreeItems.length === 0, this.localTreeItems.length === 0);
     }
 
 

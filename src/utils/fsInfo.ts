@@ -11,7 +11,6 @@ function getWorkspaceFolder(): string | undefined {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     
     if (!workspaceFolders || workspaceFolders.length === 0) {
-        vscode.window.showErrorMessage('Workspace folder not found.');
         return undefined;
     }
 

@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import path from "path";
 import { VSCodeSnippet } from "../types/snippetTypes.js";
+import { getWorkspaceFolder } from "../utils/fsInfo.js";
 
 export class TreeSnippet extends vscode.TreeItem {
     public snippetPath: string = "";
@@ -66,4 +67,20 @@ export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
     treeItem.contextValue = "snippet-filepath";
 
     return treeItem;
+}
+
+export function localGlobalDropdownTemplates(global_collapsed: boolean, local_collapsed: boolean): vscode.TreeItem[] {
+    const global = new vscode.TreeItem("Global Snippets", global_collapsed ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed);
+    global.contextValue = "global-dropdown";
+    global.tooltip = "Global Snippets are availiable anywhere in vscode";
+    
+    if (getWorkspaceFolder() === undefined) {
+        return [ global ];
+    }
+    
+    const local = new vscode.TreeItem("Local Snippets", local_collapsed ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed);
+    local.contextValue = "local-dropdown";
+    local.tooltip = "Local Snippets are only loaded while open to this folder.";
+    
+    return [ global, local ];
 }
