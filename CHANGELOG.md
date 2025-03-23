@@ -9,6 +9,25 @@
 - Support for snippets to have multiple prefixes or languages 
 - Tools to assist in adding tabstops and tabstops w/ labels
 - Choose snippets to export to a single snippet file.
+- Tools for inserting snippet variables
+- Tools for inserting choice values
+
+## [1.0.3] - 2025-03-22
+
+### Added
+
+* Added right click commands for Global and Local Snippet File Dropdowns.
+
+### Fixed
+
+* Prompts you to select a language for creating language specific snippet files if none is being used.
+* Global Snippets still load if no workspace folder is open.
+* All *.code-snippets files are supported in the global dir, not just global.code-snippets
+* Removed tooling for unsupported Local language specific .json snippet files.
+
+### Changed
+
+* Local Snippets file dropdown doesn't render if no workspace folder is open.
 
 ## [1.0.2] - 2025-03-22
 
