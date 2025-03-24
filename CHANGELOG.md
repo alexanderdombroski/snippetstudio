@@ -2,15 +2,31 @@
 
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
-## [Unreleased]
+## [Unreleased] - Date
 
 ### Added
 
 - Support for snippets to have multiple prefixes or languages 
-- Tools to assist in adding tabstops and tabstops w/ labels
 - Choose snippets to export to a single snippet file.
-- Tools for inserting snippet variables
-- Tools for inserting choice values
+
+## [1.1.0] - 2025-04-24
+
+### Added
+
+* Added commands to insert [tabstops, placeholders, and choice placeholders](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax).
+* Added keyboard shortcuts for snippet insertion features.
+* Added optional setting to auto escape dollar signs to prevent creation of unintentional snippet insertion features.
+* Added tooling for snippet insertion [variables and variable placeholders](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_variables)
+
+### Fixed
+
+* Removed unnessary buffer information warning popups.
+* Settings gear now correctly shows settings only of this extension.
+
+### Changed
+
+* Added categories to group related settings
+* Added categories to group related commands
 
 ## [1.0.3] - 2025-03-22
 

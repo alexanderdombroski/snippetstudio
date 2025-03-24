@@ -2,7 +2,7 @@
   "name": "snippetstudio",
   "displayName": "SnippetStudio",
   "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "publisher": "AlexDombroski",
   "author": {
     "name": "Alex Dombroski",
@@ -37,7 +37,7 @@
     "gui editor",
     "code completion"
   ],
-  "preview": true,
+  "preview": false,
   "pricing": "Free",
   "activationEvents": [
     "onFileSystem:snippetstudio"
