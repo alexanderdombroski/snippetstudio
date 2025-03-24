@@ -31,7 +31,7 @@ function createSnippetIndicator() {
     snippetIndicator = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, priority);
 
     updateSnippetIndicatorText();
-    snippetIndicator.command = "snippetstudio.addGlobalSnippet";
+    snippetIndicator.command = "snippetstudio.snippet.addGlobal";
     snippetIndicator.tooltip = "Press to create new Snippet";
     snippetIndicator.show();
 

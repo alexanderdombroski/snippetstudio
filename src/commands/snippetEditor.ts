@@ -15,7 +15,7 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
     }));
     
     context.subscriptions.push(
-        vscode.commands.registerCommand('snippetstudio.saveSnippet', async () => {
+        vscode.commands.registerCommand('snippetstudio.editor.save', async () => {
             if (vscode.window.activeTextEditor?.document.uri.scheme === 'snippetstudio') {
                 const body = vscode.window.activeTextEditor.document.getText().split(/\r\n|\r|\n/);
                 const data = provider.getSnippetData();
@@ -40,7 +40,7 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
                 vscode.commands.executeCommand("snippetstudio.refresh");
             }
         }),
-        vscode.commands.registerCommand('snippetstudio.cancelSnippet', () => {
+        vscode.commands.registerCommand('snippetstudio.editor.cancel', () => {
             const uri = getCurrentUri();
             
             if (uri) {

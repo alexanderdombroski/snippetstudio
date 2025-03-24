@@ -16,7 +16,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
         vscode.window.showInformationMessage(item.tooltip?.toString() ?? "");
     });
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.showSnippetBody", (item: vscode.TreeItem) => {
+        vscode.commands.registerCommand("snippetstudio.snippet.showBody", (item: vscode.TreeItem) => {
             showSnippetOnDoubleClick(item);
         })
     );
@@ -24,7 +24,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
 
     // Add Global
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.addGlobalSnippet", async () => {
+        vscode.commands.registerCommand("snippetstudio.snippet.addGlobal", async () => {
             const langId = getCurrentLanguage() ?? "plaintext";
 
             await editSnippet(snippetEditorProvider, langId, {
@@ -35,7 +35,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
         })
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.createSnippetAtLocation",  async (item: TreeSnippet) => {
+        vscode.commands.registerCommand("snippetstudio.file.createSnippetAt",  async (item: TreeSnippet) => {
             if (item === undefined || item.description === undefined) {
                 return;
             }
@@ -51,7 +51,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
         })
     );
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.createGlobalLangSnippetFromSelection",  async () => {
+        vscode.commands.registerCommand("snippetstudio.snippet.createGlobalLangSnippetFromSelection",  async () => {
             const langId = getCurrentLanguage() ?? "plaintext";
             const filename = getGlobalLangFile(langId);
 
@@ -64,7 +64,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
     );
     // Edit Snippet
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.editSnippet", async (item: TreeSnippet) => {
+        vscode.commands.registerCommand("snippetstudio.snippet.edit", async (item: TreeSnippet) => {
             const langId = getCurrentLanguage() ?? "plaintext";
             const snippetTitle = item.description?.toString() ?? "";
             const snippet = await readSnippet(item.path, snippetTitle);
@@ -87,7 +87,7 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
     );
     // Delete Snippet
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.deleteSnippet", async (item: TreeSnippet) => {
+        vscode.commands.registerCommand("snippetstudio.snippet.delete", async (item: TreeSnippet) => {
             if (item === undefined || item.description === undefined) {
                 return;
             }

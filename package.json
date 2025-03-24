@@ -92,7 +92,7 @@
         "title": "Open Snippet Manager"
       },
       {
-        "command": "snippetstudio.addGlobalSnippet",
+        "command": "snippetstudio.snippet.addGlobal",
         "title": "Add Global Snippet",
         "icon": "$(plus)",
         "shortTitle": "Add Snippet",
@@ -105,29 +105,29 @@
         "category": "snippetstudio"
       },
       {
-        "command": "snippetstudio.showSnippetBody",
+        "command": "snippetstudio.snippet.showBody",
         "title": "Show Snippet Body",
         "when": false
       },
       {
-        "command": "snippetstudio.openSnippetFile",
+        "command": "snippetstudio.file.open",
         "title": "Open Snippet File",
         "when": false
       },
       {
-        "command": "snippetstudio.deleteSnippetFile",
+        "command": "snippetstudio.file.delete",
         "title": "Delete Snippet File",
         "icon": "$(trash)",
         "when": false
       },
       {
-        "command": "snippetstudio.editSnippet",
+        "command": "snippetstudio.snippet.edit",
         "title": "Edit Snippet File",
         "icon": "$(pencil)",
         "when": false
       },
       {
-        "command": "snippetstudio.deleteSnippet",
+        "command": "snippetstudio.snippet.delete",
         "title": "Delete Snippet",
         "icon": "$(trash)",
         "when": false
@@ -145,45 +145,45 @@
         "category": "snippetstudio"
       },
       {
-        "command": "snippetstudio.createGlobalLangFile",
+        "command": "snippetstudio.file.createGlobalLang",
         "title": "Create Global Snippets File",
         "icon": "$(file-code)",
         "category": "snippetstudio"
       },
       {
-        "command": "snippetstudio.createLocalSnippetsFile",
+        "command": "snippetstudio.file.createProjectSnippets",
         "title": "Create Project Snippets File",
         "icon": "$(book)",
         "category": "snippetstudio"
       },
       {
-        "command": "snippetstudio.createGlobalSnippetsFile",
+        "command": "snippetstudio.file.createGlobalSnippets",
         "title": "Create Global Mixed Snippets File",
         "icon": "$(book)",
         "category": "snippetstudio"
       },
       {
-        "command": "snippetstudio.saveSnippet",
+        "command": "snippetstudio.editor.save",
         "title": "Accept Snippet Changes",
         "shortTitle": "Save Sippet",
         "icon": "$(check)",
         "when": false
       },
       {
-        "command": "snippetstudio.cancelSnippet",
+        "command": "snippetstudio.editor.cancel",
         "title": "Discard Snippet Changes",
         "shortTitle": "Cancel Snippet",
         "icon": "$(discard)",
         "when": false
       },
       {
-        "command": "snippetstudio.createSnippetAtLocation",
+        "command": "snippetstudio.file.createSnippetAt",
         "title": "Create Snippet at the given file",
         "icon": "$(plus)",
         "when": false
       },
       {
-        "command": "snippetstudio.createGlobalLangSnippetFromSelection",
+        "command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
         "title": "Create language-specific Snippet",
         "shortTitle": "Create Language Snippet",
         "category": "snippetstudio",
@@ -193,19 +193,19 @@
     "menus": {
       "editor/title": [
         {
-          "command": "snippetstudio.saveSnippet",
+          "command": "snippetstudio.editor.save",
           "when": "resourceScheme == snippetstudio",
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.cancelSnippet",
+          "command": "snippetstudio.editor.cancel",
           "when": "resourceScheme == snippetstudio",
           "group": "navigation"
         }
       ],
       "editor/context": [
         {
-          "command": "snippetstudio.createGlobalLangSnippetFromSelection",
+          "command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
           "when": "editor.hasSelection",
           "group": "snippetstudio"
         }
@@ -217,7 +217,7 @@
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.addGlobalSnippet",
+          "command": "snippetstudio.snippet.addGlobal",
           "when": "view == snippet-manager-view",
           "group": "navigation"
         },
@@ -232,59 +232,59 @@
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.createGlobalLangFile",
+          "command": "snippetstudio.file.createGlobalLang",
           "group": "inline",
           "when": "view == location-manager"
         },
         {
-          "command": "snippetstudio.createLocalSnippetsFile",
+          "command": "snippetstudio.file.createProjectSnippets",
           "group": "inline",
           "when": "view == location-manager"
         },
         {
-          "command": "snippetstudio.createGlobalSnippetsFile",
+          "command": "snippetstudio.file.createGlobalSnippets",
           "group": "inline",
           "when": "view == location-manager"
         }
       ],
       "view/item/context": [
         {
-          "command": "snippetstudio.openSnippetFile",
+          "command": "snippetstudio.file.open",
           "when": "viewItem == snippet-filepath",
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.deleteSnippetFile",
+          "command": "snippetstudio.file.delete",
           "when": "viewItem == snippet-filepath",
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.deleteSnippet",
+          "command": "snippetstudio.snippet.delete",
           "when": "viewItem == snippet",
           "group": "navigation"
         },
         {
-          "command": "snippetstudio.editSnippet",
+          "command": "snippetstudio.snippet.edit",
           "when": "viewItem == snippet",
           "group": "inline"
         },
         {
-          "command": "snippetstudio.createSnippetAtLocation",
+          "command": "snippetstudio.file.createSnippetAt",
           "when": "viewItem == snippet-filepath",
           "group": "inline"
         },
         {
-          "command": "snippetstudio.createGlobalLangFile",
+          "command": "snippetstudio.file.createGlobalLang",
           "group": "navigation",
           "when": "viewItem == global-dropdown"
         },
         {
-          "command": "snippetstudio.createLocalSnippetsFile",
+          "command": "snippetstudio.file.createProjectSnippets",
           "group": "navigation",
           "when": "viewItem == local-dropdown"
         },
         {
-          "command": "snippetstudio.createGlobalSnippetsFile",
+          "command": "snippetstudio.file.createGlobalSnippets",
           "group": "navigation",
           "when": "viewItem == global-dropdown"
         }
@@ -363,8 +363,8 @@
               "markdown": "public/walkthroughs/newGlobalSnippetFile.md"
             },
             "completionEvents": [
-              "onCommand:snippetstudio.createGlobalSnippetsFile",
-              "onCommand:snippetstudio.createGlobalLangFile"
+              "onCommand:snippetstudio.file.createGlobalSnippets",
+              "onCommand:snippetstudio.file.createGlobalLang"
             ]
           },
           {
@@ -374,8 +374,8 @@
               "markdown": "public/walkthroughs/firstSnippet.md"
             },
             "completionEvents": [
-              "onCommand:snippetstudio.saveSnippet",
-              "onCommand:snippetstudio.editSnippet",
+              "onCommand:snippetstudio.editor.save",
+              "onCommand:snippetstudio.snippet.edit",
               "onContext:snippetstudio.editorVisible"
             ]
           },
@@ -386,7 +386,7 @@
               "markdown": "public/walkthroughs/editSnippet.md"
             },
             "completionEvents": [
-              "onCommand:snippetstudio.editSnippet"
+              "onCommand:snippetstudio.snippet.edit"
             ]
           }
         ]

@@ -7,7 +7,7 @@ import { createGlobalLangFile, createGlobalSnippetsFile, createLocalSnippetsFile
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
     // Open Snippets file
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.openSnippetFile", async (item: vscode.TreeItem) => {
+        vscode.commands.registerCommand("snippetstudio.file.open", async (item: vscode.TreeItem) => {
             try {
                 if (item.description) {
                     const document = await vscode.workspace.openTextDocument(vscode.Uri.file(`${item.description}`));
@@ -23,7 +23,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
     // Create Global Snippet File
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.createGlobalLangFile", () => {
+        vscode.commands.registerCommand("snippetstudio.file.createGlobalLang", () => {
             createGlobalLangFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
             vscode.commands.executeCommand("snippetstudio.refreshLocations");
@@ -31,7 +31,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
     );
     // Create Local Mixed Snippet File
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.createLocalSnippetsFile", async () => {
+        vscode.commands.registerCommand("snippetstudio.file.createProjectSnippets", async () => {
             await createLocalSnippetsFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
             vscode.commands.executeCommand("snippetstudio.refreshLocations");
@@ -39,7 +39,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
     );
     // Create Global Mixed Snippet File
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.createGlobalSnippetsFile", async () => {
+        vscode.commands.registerCommand("snippetstudio.file.createGlobalSnippets", async () => {
             await createGlobalSnippetsFile();
             vscode.commands.executeCommand("snippetstudio.refresh");
             vscode.commands.executeCommand("snippetstudio.refreshLocations");
@@ -48,7 +48,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
     // Delete Snippet File
     context.subscriptions.push(
-        vscode.commands.registerCommand("snippetstudio.deleteSnippetFile", async (treeItem: vscode.TreeItem) => {
+        vscode.commands.registerCommand("snippetstudio.file.delete", async (treeItem: vscode.TreeItem) => {
             if (!treeItem || !treeItem.description) {
                 vscode.window.showErrorMessage('File path not found.');
                 return;

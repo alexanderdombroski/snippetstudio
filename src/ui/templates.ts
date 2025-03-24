@@ -37,7 +37,7 @@ export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeS
     // Add a command to show the snippet body when clicked
     treeItem.command = {
         title: 'Show Snippet Body',
-        command: 'snippetstudio.showSnippetBody', // Replace with your command ID
+        command: 'snippetstudio.snippet.showBody', // Replace with your command ID
         arguments: [treeItem]
     };
 

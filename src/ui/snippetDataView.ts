@@ -60,7 +60,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
                     if (uriKey) {
                         this._snippetDataManager.setData(uriKey, snippetData);
                     }
-                    vscode.commands.executeCommand("snippetstudio.saveSnippet");
+                    vscode.commands.executeCommand("snippetstudio.editor.save");
                     break;
                 }
                 case 'updatePartialSnippetData': {
