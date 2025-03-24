@@ -49,4 +49,22 @@ function countMinSpaces(lines: string[]): number {
     return minCount;
 }
 
-export { titleCase, unTabMultiline, capitalize };
+
+/**
+ * Adds a backspace before a snippet tabstop, placeholder, or choice
+ * 
+ * @param text string to run the operation on
+ * @param offset the position of the number inside the potential tabstop/placeholder/choice
+ * @returns the updated text or undefined if nothing changed
+ */
+function escapeDollarSignIfNeeded(text: string, offset: number): string | undefined {
+    const testText = text.slice(offset - 2, offset);
+
+    if (/\$$/.test(testText)) { // Is a tabstop
+        return text.slice(0, offset - 1) + "\\" + text.slice(offset - 1);
+    } else if (/\$\{$/.test(testText)) { // Is a placeholder
+        return text.slice(0, offset - 2) + "\\" + text.slice(offset - 2);
+    }
+}
+
+export { titleCase, unTabMultiline, capitalize, escapeDollarSignIfNeeded };

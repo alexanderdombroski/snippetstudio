@@ -313,12 +313,12 @@
           "default": true,
           "description": "When creating a snippet from a multi-line selection, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces evenly."
         },
-        "snippetstudio.showStatusBarItem": {
+        "snippetstudio.statusBar.showItem": {
           "type": "boolean",
           "default": true,
           "description": "Show the snippet indicator status bar item."
         },
-        "snippetstudio.statusBarPriority": {
+        "snippetstudio.statusBar.priority": {
           "type": "integer",
           "default": 30,
           "description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
@@ -327,6 +327,11 @@
           "type": "boolean",
           "default": true,
           "description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
+        },
+        "snippetstudio.editor.autoEscapeDollarSigns": {
+          "type": "boolean",
+          "default": true,
+          "description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops."
         }
       },
       "order": 0

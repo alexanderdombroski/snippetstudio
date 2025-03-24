@@ -6,7 +6,7 @@ import { capitalize } from "../utils/string";
 let snippetIndicator: vscode.StatusBarItem;
 
 export default function createStatusBar(context: vscode.ExtensionContext) {
-    if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("showStatusBarItem") === false) {
+    if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("statusBar.showItem") === false) {
         return;
     }
     
@@ -27,7 +27,7 @@ export default function createStatusBar(context: vscode.ExtensionContext) {
 }
 
 function createSnippetIndicator() {
-    const priority = vscode.workspace.getConfiguration('snippetstudio').get<number>('statusBarPriority', 30);
+    const priority = vscode.workspace.getConfiguration('snippetstudio').get<number>('statusBar.priority', 30);
     snippetIndicator = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, priority);
 
     updateSnippetIndicatorText();

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { SnippetData } from "../types/snippetTypes";
 import SnippetDataManager from "../snippets/snippetDataManager";
 import { getCurrentUri } from "../utils/fsInfo";
+import { escapeDollarSignIfNeeded } from "../utils/string";
 
 export default class SnippetEditorProvider implements vscode.FileSystemProvider {
     private _emitter: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
@@ -19,24 +20,26 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
         this._snippetDataManager = manager;
     }
 
-    stat(uri: vscode.Uri): vscode.FileStat | Thenable<vscode.FileStat> {
-        const path = uri.path;
-        if (this._files.has(path)) {
-            return {
-                type: vscode.FileType.File,
-                ctime: Date.now(),
-                mtime: Date.now(),
-                size: this._files.get(path)!.length,
-            };
-        } else if (this._directories.has(path)) {
-            return {
-                type: vscode.FileType.Directory,
-                ctime: Date.now(),
-                mtime: Date.now(),
-                size: 0,
-            };
+    handleDocumentChange(changeEvent: vscode.TextDocumentChangeEvent): void {
+        if (changeEvent.document.uri.scheme !== this.scheme || changeEvent.contentChanges.length === 0) {
+            return;
         }
-        throw vscode.FileSystemError.FileNotFound();
+
+        const change = changeEvent.contentChanges[0];
+
+        // Test for unintential snippet tabstops, changes, and choices
+        if (change.text >= '0' && change.text <= '9') {            
+            const newText = escapeDollarSignIfNeeded(changeEvent.document.getText(), change.rangeOffset);
+            
+            if (newText === undefined) {
+                return;
+            }
+
+            // Replace the entire document with the updated text.
+            let edit = new vscode.WorkspaceEdit();
+            edit.replace(changeEvent.document.uri, new vscode.Range(0, 0, changeEvent.document.lineCount, changeEvent.document.getText().length), newText);
+            vscode.workspace.applyEdit(edit);
+        }
     }
 
     createDirectory(uri: vscode.Uri): void | Thenable<void> {
@@ -106,8 +109,6 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
             }
             this._snippetDataManager.deleteData(uri.path);
             this._emitter.fire([{ type: vscode.FileChangeType.Deleted, uri }]);
-        } else {
-            vscode.window.showInformationMessage(`Tried to delete file buffer ${uri.fsPath} but it didn't exist in the first place.`);
         }
     }
 
@@ -123,6 +124,25 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
     watch(uri: vscode.Uri, options: { recursive: boolean; excludes: string[]; }): vscode.Disposable {
         // Implement watch logic (e.g., for external changes).
         return new vscode.Disposable(() => {}); // Placeholder
+    }
+    stat(uri: vscode.Uri): vscode.FileStat | Thenable<vscode.FileStat> {
+        const path = uri.path;
+        if (this._files.has(path)) {
+            return {
+                type: vscode.FileType.File,
+                ctime: Date.now(),
+                mtime: Date.now(),
+                size: this._files.get(path)!.length,
+            };
+        } else if (this._directories.has(path)) {
+            return {
+                type: vscode.FileType.Directory,
+                ctime: Date.now(),
+                mtime: Date.now(),
+                size: 0,
+            };
+        }
+        throw vscode.FileSystemError.FileNotFound();
     }
 }
 
