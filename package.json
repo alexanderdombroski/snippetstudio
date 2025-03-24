@@ -177,6 +177,37 @@
         "when": false
       },
       {
+        "command": "snippetstudio.editor.insertTabStop",
+        "category": "snippetstudio",
+        "icon": "$(symbol-property)",
+        "title": "Insert Tabstop"
+      },
+      {
+        "command": "snippetstudio.editor.insertPlaceholder",
+        "category": "snippetstudio",
+        "icon": "$(symbol-constant)",
+        "title": "Insert Placeholder"
+      },
+      {
+        "command": "snippetstudio.editor.insertChoice",
+        "category": "snippetstudio",
+        "icon": "$(symbol-value)",
+        "title": "Insert Choice"
+      },
+      {
+        "command": "snippetstudio.editor.insertVariable",
+        "category": "snippetstudio",
+        "icon": "$(symbol-field)",
+        "title": "Insert Variable"
+      },
+      {
+        "command": "snippetstudio.editor.insertVariablePlaceholder",
+        "category": "snippetstudio",
+        "icon": "$(symbol-variable)",
+        "title": "Insert Variable with Placeholder",
+        "shortTitle": "Insert Variable Placeholder"
+      },
+      {
         "command": "snippetstudio.file.createSnippetAt",
         "title": "Create Snippet at the given file",
         "icon": "$(plus)",
@@ -201,6 +232,31 @@
           "command": "snippetstudio.editor.cancel",
           "when": "resourceScheme == snippetstudio",
           "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.editor.insertTabStop",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertPlaceholder",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertChoice",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertVariable",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertVariablePlaceholder",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
         }
       ],
       "editor/context": [
@@ -208,6 +264,31 @@
           "command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
           "when": "editor.hasSelection",
           "group": "snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertTabStop",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertPlaceholder",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertChoice",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertVariable",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertVariablePlaceholder",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
         }
       ],
       "view/title": [
@@ -290,6 +371,43 @@
         }
       ]
     },
+    "keybindings": [
+      {
+        "command": "snippetstudio.editor.insertTabStop",
+        "key": "ctrl+shift+1",
+        "mac": "cmd+alt+1",
+        "win": "alt+shift+1",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      },
+      {
+        "command": "snippetstudio.editor.insertPlaceholder",
+        "key": "ctrl+shift+2",
+        "mac": "cmd+alt+2",
+        "win": "alt+shift+2",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      },
+      {
+        "command": "snippetstudio.editor.insertChoice",
+        "key": "ctrl+shift+3",
+        "mac": "cmd+alt+3",
+        "win": "alt+shift+3",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      },
+      {
+        "command": "snippetstudio.editor.insertVariable",
+        "key": "ctrl+shift+4",
+        "mac": "cmd+alt+4",
+        "win": "alt+shift+4",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      },
+      {
+        "command": "snippetstudio.editor.insertVariablePlaceholder",
+        "key": "ctrl+shift+5",
+        "mac": "cmd+alt+5",
+        "win": "alt+shift+5",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      }
+    ],
     "configuration": {
       "title": "SnippetStudio Configuration",
       "properties": {
@@ -330,8 +448,13 @@
         },
         "snippetstudio.editor.autoEscapeDollarSigns": {
           "type": "boolean",
+          "default": false,
+          "description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops, placeholders, and choice placeholders. It may be useful to enable this only for specific languages match tabstop syntax ie $0, like in Swift or Bash."
+        },
+        "snippetstudio.editor.useQuickPickForVariableInsertion": {
+          "type": "boolean",
           "default": true,
-          "description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops."
+          "description": "When inserting a snippet variable, use a quick pick instead of a choice snippet. The quickpick has variable descriptions and may be preferred over a choice snippet."
         }
       },
       "order": 0

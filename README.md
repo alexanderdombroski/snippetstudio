@@ -53,6 +53,17 @@ The **Snippet Editor** webview only appears when creating snippets.
 
 Read more about vscode snippets the [vscode snippet documentation](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
 
+### Snippet Tabstops, Placeholders, Choices, and Variables
+
+The snippet buffer editor has extra tooling to assist in inserting [Tabstops, Placeholders, Choices, and Variables](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax).
+
+Tabstops, placeholders, and choices allow you to quickly modify a snippet after it was inserted in pre-determined areas. Variables allow you to insert values based on the context of the file, selected language or current time.
+
+Activate tooling for inserting these features by:
+* Right clicking in the snippet buffer editor
+* Selecting an insertion feature from the editor title's three-dot menu (...)
+* Using keyboard shortcuts to trigger insertion commands
+
 ## Requirements
 
 * **VS Code Version:** This extension requires VS Code version 1.97.0 or higher.
