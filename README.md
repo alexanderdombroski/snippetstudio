@@ -10,6 +10,7 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
     - [Managing Snippets](#managing-snippets)
     - [Managing Snippet Files](#managing-snippet-files)
     - [Creating Snippets](#creating-snippets)
+    - [Snippet Tabstops, Placeholders, Choices, and Variables](#snippet-tabstops-placeholders-choices-and-variables)
 - [Requirements](#requirements)
 - [Extension Settings](#extension-settings)
 - [Known Issues](#known-issues)
@@ -63,6 +64,8 @@ Activate tooling for inserting these features by:
 * Right clicking in the snippet buffer editor
 * Selecting an insertion feature from the editor title's three-dot menu (...)
 * Using keyboard shortcuts to trigger insertion commands
+
+![Snippet Placeholder Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/placeholder.gif)
 
 ## Requirements
 
