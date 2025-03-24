@@ -12,7 +12,7 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
     // Open Settings
     context.subscriptions.push(
         vscode.commands.registerCommand("snippetstudio.openSettings", () => {
-            vscode.commands.executeCommand('workbench.action.openSettings', 'snippetstudio');
+            vscode.commands.executeCommand('workbench.action.openSettings', '@ext:alexdombroski.snippetstudio');
         })
     );
 
