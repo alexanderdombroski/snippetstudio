@@ -31,13 +31,13 @@ export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeS
     treeItem.contextValue = "snippet";
 
     const body: string = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body;
-    treeItem.tooltip = `Keyword: ${snippet.prefix}\n${body}\n\n${snippet.description}`;
+    treeItem.tooltip = `Keyword: ${snippet.prefix}\n${body}${snippet.description ? "\n\n" + snippet.description : ""}`;
 
 
-    // Add a command to show the snippet body when clicked
+    // Command to show the snippet body when clicked
     treeItem.command = {
         title: 'Show Snippet Body',
-        command: 'snippetstudio.snippet.showBody', // Replace with your command ID
+        command: 'snippetstudio.snippet.showBody', 
         arguments: [treeItem]
     };
 
@@ -50,7 +50,7 @@ export function createTreeItemFromFilePath(filepath: string, collapsibleState: v
     treeItem.description = filepath;
     treeItem.tooltip = "Snippets from this dropdown are found in " + filepath + "\n\nRight Click to open the file!";
     treeItem.contextValue = "snippet-filepath";
-    
+
     return treeItem;
 }
 
@@ -63,8 +63,15 @@ export function selectedLanguageTemplate(langId: string | undefined): vscode.Tre
 export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
     const treeItem = new vscode.TreeItem(path.basename(filepath));
     treeItem.description = filepath;
-    treeItem.tooltip = filepath;
+    treeItem.tooltip = "Double click to open the file: " + filepath;
     treeItem.contextValue = "snippet-filepath";
+
+    // Command to open Snippet file when double clicked
+    treeItem.command = {
+        title: 'Open Snippet File',
+        command: 'snippetstudio.file.openFromDouble',
+        arguments: [treeItem]
+    };
 
     return treeItem;
 }

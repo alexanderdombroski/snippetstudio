@@ -115,6 +115,11 @@
         "when": false
       },
       {
+        "command": "snippetstudio.file.openFromDouble",
+        "title": "Open Snippet File",
+        "when": false
+      },
+      {
         "command": "snippetstudio.file.delete",
         "title": "Delete Snippet File",
         "icon": "$(trash)",
@@ -209,7 +214,7 @@
       },
       {
         "command": "snippetstudio.file.createSnippetAt",
-        "title": "Create Snippet at the given file",
+        "title": "New Snippet at the given file",
         "icon": "$(plus)",
         "when": false
       },
@@ -340,9 +345,19 @@
           "group": "navigation"
         },
         {
+          "command": "snippetstudio.file.delete",
+          "when": "viewItem == snippet-filepath",
+          "group": "inline"
+        },
+        {
           "command": "snippetstudio.snippet.delete",
           "when": "viewItem == snippet",
           "group": "navigation"
+        },
+        {
+          "command": "snippetstudio.snippet.delete",
+          "when": "viewItem == snippet",
+          "group": "inline"
         },
         {
           "command": "snippetstudio.snippet.edit",

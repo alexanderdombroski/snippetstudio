@@ -2,23 +2,19 @@ import * as vscode from "vscode";
 import fs from "fs";
 import path from "path";
 import { createGlobalLangFile, createGlobalSnippetsFile, createLocalSnippetsFile } from "../snippets/newSnippetFile";
+import onDoubleClick from "./doubleClickHandler";
 
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
     // Open Snippets file
     context.subscriptions.push(
         vscode.commands.registerCommand("snippetstudio.file.open", async (item: vscode.TreeItem) => {
-            try {
-                if (item.description) {
-                    const document = await vscode.workspace.openTextDocument(vscode.Uri.file(`${item.description}`));
-                    await vscode.window.showTextDocument(document);
-                } else {
-                    vscode.window.showErrorMessage("Could not find file path.");
-                }
-            } catch (error: any) {
-                vscode.window.showErrorMessage(`Failed to open snippet file: ${error.message}`);
-            }
-        })
+            await openSnippetFile(item.description);
+        }),
+        vscode.commands.registerCommand("snippetstudio.file.openFromDouble", onDoubleClick(async (item: vscode.TreeItem) => {
+            console.log("RAN");
+            await openSnippetFile(item.description);
+        }))
     );
 
     // Create Global Snippet File
@@ -90,6 +86,19 @@ async function deleteFile(filepath: string) {
         } else {
             vscode.window.showErrorMessage(`An unknown error occurred: ${error}`);
         }
+    }
+}
+
+async function openSnippetFile(filename: string|boolean|undefined) {
+    try {
+        if (filename) {
+            const document = await vscode.workspace.openTextDocument(vscode.Uri.file(`${filename}`));
+            await vscode.window.showTextDocument(document);
+        } else {
+            vscode.window.showErrorMessage("Could not find file path.");
+        }
+    } catch (error: any) {
+        vscode.window.showErrorMessage(`Failed to open snippet file: ${error.message}`);
     }
 }
 
