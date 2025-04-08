@@ -6,10 +6,24 @@
 
 ### Added
 
-- Support for snippets to have multiple prefixes or languages 
-- Choose snippets to export to a single snippet file.
+* Support for snippets to have multiple prefixes and languages 
+* Choose snippets to export to a single snippet file.
+* Snippet Sort Options
+* Use vscode.workspace.fs to allow web vscode to write create project snippets
 
-## [1.1.0] - 2025-04-24
+## [1.1.1] - 2025-04-08
+
+### Added
+
+* Double Click to open a snippet file
+* Trashcan to delete snippet or snippet file
+* Added snippet feature: [placeholder transformation](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_variable-transforms)
+
+### Fixed
+
+* Snippets without a description no longer have "undefined" at the end of the tooltip.
+
+## [1.1.0] - 2025-03-24
 
 ### Added
 
@@ -49,40 +63,40 @@
 
 ### Fixed
 
-- Old snippet editors of deleted buffers from previous vscode sessions are automatically closed when the extension is loaded.
+* Old snippet editors of deleted buffers from previous vscode sessions are automatically closed when the extension is loaded.
 
 ### Changed
 
-- Simplified readme
-- Improved CI/CD
+* Simplified readme
+* Improved CI/CD
 
 ## [1.0.1] - 2025-03-21
 
 ### Added
 
-- Logo
+* Logo
 
 ### Fixed
 
-- Readme badges
-- Fixed CI/CD
+* Readme badges
+* Fixed CI/CD
 
 ## [1.0.0] - 2025-03-21
 
 ### Added
 
-- **Snippet Management:**
-    - Create new snippets
-    - View snippets in the snippets tree view
-    - Update existing snippets
-    - Delete snippets
-- **Snippet File Management:**
-    - Create, View, and Delete Snippet Files
-- **User Interface:**
-    - Snippet Editor Webview
-    - Snippets Treeview
-    - Locations Manager Treeview
-    - Status Bar Snippet Indicator
-- **Snippet Editor Functionality:**
-    - Buffer System for editing snippet content
-    - Load content into buffer when creating a snippet from selection
+* **Snippet Management:**
+    * Create new snippets
+    * View snippets in the snippets tree view
+    * Update existing snippets
+    * Delete snippets
+* **Snippet File Management:**
+    * Create, View, and Delete Snippet Files
+* **User Interface:**
+    * Snippet Editor Webview
+    * Snippets Treeview
+    * Locations Manager Treeview
+    * Status Bar Snippet Indicator
+* **Snippet Editor Functionality:**
+    * Buffer System for editing snippet content
+    * Load content into buffer when creating a snippet from selection
