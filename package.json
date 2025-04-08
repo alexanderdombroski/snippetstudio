@@ -213,6 +213,13 @@
         "shortTitle": "Insert Variable Placeholder"
       },
       {
+        "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+        "category": "snippetstudio",
+        "icon": "$(symbol-event)",
+        "title": "Insert Placeholder with Transformation",
+        "shortTitle": "Insert Placeholder Transformation"
+      },
+      {
         "command": "snippetstudio.file.createSnippetAt",
         "title": "New Snippet at the given file",
         "icon": "$(plus)",
@@ -262,6 +269,11 @@
           "command": "snippetstudio.editor.insertVariablePlaceholder",
           "group": "inline",
           "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+          "group": "inline",
+          "when": "resourceScheme == snippetstudio"
         }
       ],
       "editor/context": [
@@ -292,6 +304,11 @@
         },
         {
           "command": "snippetstudio.editor.insertVariablePlaceholder",
+          "group": "snippetstudio",
+          "when": "resourceScheme == snippetstudio"
+        },
+        {
+          "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
           "group": "snippetstudio",
           "when": "resourceScheme == snippetstudio"
         }
@@ -420,6 +437,13 @@
         "key": "ctrl+shift+5",
         "mac": "cmd+alt+5",
         "win": "alt+shift+5",
+        "when": "editorTextFocus && resourceScheme == snippetstudio"
+      },
+      {
+        "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+        "key": "ctrl+shift+6",
+        "mac": "cmd+alt+6",
+        "win": "alt+shift+6",
         "when": "editorTextFocus && resourceScheme == snippetstudio"
       }
     ],
