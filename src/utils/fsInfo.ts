@@ -63,4 +63,8 @@ function getLangFromSnippetFilePath(filepath: string): string | undefined {
     return base.substring(0, dotIndex);
 }
 
-export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri, getGlobalLangFile, getLangFromSnippetFilePath };
+function getDownloadsDirPath(): string {
+    return path.join(os.homedir(), 'Downloads');
+}
+
+export { getWorkspaceFolder, getGlobalSnippetFilesDir, getCurrentUri, getGlobalLangFile, getLangFromSnippetFilePath, getDownloadsDirPath };

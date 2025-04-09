@@ -231,6 +231,12 @@
         "shortTitle": "Create Language Snippet",
         "category": "snippetstudio",
         "when": false
+      },
+      {
+        "command": "snippetstudio.snippet.export",
+        "title": "Export Snippets to Code Snippets File",
+        "shortTitle": "Export Snippets",
+        "category": "snippetstudio"
       }
     ],
     "menus": {
@@ -346,6 +352,11 @@
         },
         {
           "command": "snippetstudio.file.createGlobalSnippets",
+          "group": "inline",
+          "when": "view == location-manager"
+        },
+        {
+          "command": "snippetstudio.snippet.export",
           "group": "inline",
           "when": "view == location-manager"
         }
@@ -494,6 +505,26 @@
           "type": "boolean",
           "default": true,
           "description": "When inserting a snippet variable, use a quick pick instead of a choice snippet. The quickpick has variable descriptions and may be preferred over a choice snippet."
+        },
+        "snippetstudio.export.location": {
+          "type": "string",
+          "default": "choose",
+          "enum": [
+            "preconfigured",
+            "downloads",
+            "choose"
+          ],
+          "enumDescriptions": [
+            "Choose 'preconfigured' to use a custom path defined in settings",
+            "Choose 'downloads' to save to your OS's downloads directory",
+            "Choose 'choose' to be prompted with a file dialog each time"
+          ],
+          "description": "Location to export a merged code snippets file."
+        },
+        "snippetstudio.export.preconfiguredExportPath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "The custom file path to use when `#snippetstudio.export.location#` is set to `preconfigured`."
         }
       },
       "order": 0

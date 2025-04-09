@@ -82,15 +82,21 @@ This extension isn't yet tested on the web version of vsocde and likely won't wo
 This extension contributes the following settings to enhance your SnippetStudio experience:
 
 **Snippet Creation Behavior**
-* confirmSnippetDeletion
 * defaultSnippetPrefix
 * autoCapitalizeSnippetName
 * cleanupSnippetSelection
 * autoCreateSnippetFiles
+* editor.autoEscapeDollarSigns
+* editor.useQuickPickForVariableInsertion
 
 **User Interface**
-* showStatusBarItem
-* statusBarPriority
+* statusBar.showItem
+* statusBar.priority
+
+**Snippet Commands Behavior**
+* confirmSnippetDeletion
+* export.location
+* export.preconfiguredExportPath
 
 ## Known Issues
 

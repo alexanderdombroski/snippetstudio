@@ -2,7 +2,11 @@ import fs from "fs";
 import path from "path";
 import * as vscode from 'vscode';
 import { getWorkspaceFolder, getGlobalSnippetFilesDir } from "../utils/fsInfo";
-import { getCurrentLanguage, selectLanguage } from "../utils/language";
+import { getCurrentLanguage, langIds, selectLanguage } from "../utils/language";
+import { getSavePath } from "../utils/user";
+import { locateAllSnippetFiles } from "./locateSnippets";
+import { VSCodeSnippets } from "../types/snippetTypes";
+import { readJsoncFilesAsync, writeSnippetFile } from "../utils/jsoncFilesIO";
 
 async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {
     try {
@@ -21,7 +25,7 @@ async function createFile(filepath: string, showInformationMessage: boolean = tr
     }
 }
 
-async function getFileName(): Promise<string | undefined> {
+export async function getFileName(): Promise<string | undefined> {
     let name = await vscode.window.showInputBox({"prompt": "type a filename"});
     if (name === undefined) {
         vscode.window.showInformationMessage("Skipped file creation.");
@@ -78,4 +82,82 @@ async function createGlobalSnippetsFile(): Promise<void> {
     await createFile(filepath);
 }
 
-export { createGlobalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile };
+async function exportSnippets() {
+    const snippetFiles = (await locateAllSnippetFiles());
+    if (snippetFiles.flat().length === 0) {
+        vscode.window.showWarningMessage("You have no snippets to export. Operation cancelled");
+        return;
+    }
+    
+    // Select Save Paths
+    const savePath = await getSavePath();
+    if (savePath === undefined) {
+        return;
+    }
+
+    // Select Snippets Files
+    const fileItems = await vscode.window.showQuickPick(
+        snippetFiles.flatMap(fileList => fileList.map(filepath => { return { label: path.basename(filepath), description: filepath }; })), 
+        { canPickMany: true, title: "Choose Snippet Files to include in the Export" }
+    );
+    if (fileItems === undefined) {
+        return;
+    }
+    const selectedPaths = fileItems.map(item => item.description);
+
+    // Select Snippets
+    await mergeSnippetFiles(savePath, selectedPaths);
+}
+
+async function mergeSnippetFiles(savePath: string, filepaths: string[]) {
+    let snippetsToExport: VSCodeSnippets = {};
+    const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(filepaths);
+    for (const [filepath, fileSnippets] of snippetGroups) {        
+        const items = Object.entries(fileSnippets).map(([k, v]) => {
+            const desc = Array.isArray(v.prefix) ? v.prefix.join(", ") : v.prefix;
+            return { label: k, description: desc, picked: true };
+        });
+
+        if (items.length === 0) {
+            continue;
+        }
+        
+        // Select Snippets
+        const quickPick = vscode.window.createQuickPick();
+        quickPick.canSelectMany = true;
+        quickPick.title = "Pick Snippets to export";
+        quickPick.items = items;
+        quickPick.show();
+
+        const snippetKeys: string[]|undefined = await new Promise((resolve) => {
+            quickPick.onDidAccept(() => {
+                const selectedItems = quickPick.selectedItems.map(item => item.label);
+                quickPick.hide();
+                resolve(selectedItems);
+            });
+            quickPick.onDidHide(() => {
+                resolve(undefined);
+            });
+        });
+
+        // Add Snippets to export object
+        if (snippetKeys !== undefined) {
+            const langId = path.basename(filepath, path.extname(filepath));
+            snippetKeys.forEach(key => {
+                if (key in snippetsToExport) {
+                    vscode.window.showWarningMessage(`Two Snippets hold the same titleKey: ${key}. Only one will be used`);
+                }
+                const obj = fileSnippets[key];
+
+                if (obj.scope === undefined && path.extname(filepath) === ".json" && langIds.includes(langId)) {
+                    obj.scope = langId;
+                }
+                snippetsToExport[key] = obj;
+            });
+        }
+    }
+
+    await writeSnippetFile(savePath, snippetsToExport, `Snippets exported to ${savePath}`);
+}
+
+export { createGlobalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile, exportSnippets};

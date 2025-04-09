@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import fs from "fs";
 import path from "path";
-import { createGlobalLangFile, createGlobalSnippetsFile, createLocalSnippetsFile } from "../snippets/newSnippetFile";
+import { createGlobalLangFile, createGlobalSnippetsFile, createLocalSnippetsFile, exportSnippets } from "../snippets/newSnippetFile";
 import onDoubleClick from "./doubleClickHandler";
 
 
@@ -52,6 +52,11 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
             await deleteFile(treeItem.description.toString());
             vscode.commands.executeCommand("snippetstudio.refreshLocations");
         })
+    );
+
+    // Export Snippet Files
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.snippet.export", exportSnippets)
     );
 }
 

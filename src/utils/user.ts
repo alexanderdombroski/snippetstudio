@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 import { unTabMultiline } from "./string";
+import { getDownloadsDirPath } from "./fsInfo";
+import path from "path";
+import { getFileName } from "../snippets/newSnippetFile";
 
 async function getConfirmation(question: string): Promise<boolean> {
     // Confirmation message
@@ -76,4 +79,48 @@ async function showVariableQuickPick(): Promise<string | undefined> {
     return selectedVariable?.label;
 }
 
-export { getConfirmation, getSelection, showVariableQuickPick };
+async function getSavePathFromDialog(basename: string): Promise<string|undefined> {
+    const defaultUri = vscode.Uri.file(path.join(getDownloadsDirPath(), basename));
+
+    const options: vscode.SaveDialogOptions = {
+        title: `Save ${basename}`,
+        defaultUri: defaultUri,
+        saveLabel: 'Save',
+    };
+
+    const fileUri = await vscode.window.showSaveDialog(options);
+    return fileUri?.fsPath;
+}
+
+async function getSavePath() {
+    const filename = (await getFileName()) + ".code-snippets";
+    if (filename === undefined) {
+        return;
+    }
+
+    // Get Save Path
+    let savePath;
+    const config = vscode.workspace.getConfiguration('snippetstudio');
+    const location = config.get<string>('export.location');
+    switch (location) {
+        case "choose":
+            savePath = await getSavePathFromDialog(filename);
+            break;
+        case "downloads":
+            savePath = path.join(getDownloadsDirPath(), filename);
+            break;
+        case "preconfigured":
+            const dirname = config.get<string>('export.preconfiguredExportPath');
+            if (dirname === undefined) {
+                vscode.window.showErrorMessage("In settings, you must specificy a folder path to save exported snippets to");
+                break;
+            }
+            savePath = path.join(dirname, filename);
+            break;
+        default:
+            break;
+    }
+    return savePath;
+}
+
+export { getConfirmation, getSelection, showVariableQuickPick, getSavePath };
