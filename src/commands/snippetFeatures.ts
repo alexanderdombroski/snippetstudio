@@ -34,12 +34,6 @@ export default function initSnippetFeatureCommands(context: vscode.ExtensionCont
                 if (variable !== undefined) {
                     editor.insertSnippet(new vscode.SnippetString(`\\\${${variable}:\${1:placeholder}}$0`), editor.selection.active);
                 }
-            }),
-            vscode.commands.registerTextEditorCommand("snippetstudio.editor.insertPlaceholderWithTranformation", async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
-                const variable = await showVariableQuickPick();
-                if (variable !== undefined) {
-                    editor.insertSnippet(new vscode.SnippetString(`\\\${\${1:id}}$0`), editor.selection.active);
-                }
             })
         );
     } else {
