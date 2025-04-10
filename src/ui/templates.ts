@@ -24,7 +24,7 @@ export class TreeSnippet extends vscode.TreeItem {
  * @returns A vscode.TreeItem representing the snippet.
  */
 export function createTreeItemFromSnippet(snippetTitle: string, snippet: VSCodeSnippet, path: string): TreeSnippet {
-    const prefix = Array.isArray(snippet.prefix) ? snippet.prefix[0] : snippet.prefix;
+    const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(",") : snippet.prefix;
     const treeItem = new TreeSnippet(prefix, vscode.TreeItemCollapsibleState.None, path);
 
     treeItem.description = snippetTitle;

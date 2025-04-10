@@ -243,7 +243,7 @@
       "editor/title": [
         {
           "command": "snippetstudio.editor.save",
-          "when": "resourceScheme == snippetstudio",
+          "when": "resourceScheme == snippetstudio && config.snippetstudio.editor.enableEditorForceSaveButton",
           "group": "navigation"
         },
         {
@@ -505,6 +505,12 @@
           "type": "boolean",
           "default": true,
           "description": "When inserting a snippet variable, use a quick pick instead of a choice snippet. The quickpick has variable descriptions and may be preferred over a choice snippet."
+        },
+        "snippetstudio.editor.enableEditorForceSaveButton": {
+          "type": "boolean",
+          "default": false,
+          "description": "When editing snippets, add a force save snippet title button that can bypass form validation.",
+          "tags": ["experimental"]
         },
         "snippetstudio.export.location": {
           "type": "string",

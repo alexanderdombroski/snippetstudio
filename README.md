@@ -87,6 +87,7 @@ This extension contributes the following settings to enhance your SnippetStudio 
 * cleanupSnippetSelection
 * autoCreateSnippetFiles
 * editor.autoEscapeDollarSigns
+* editor.enableEditorForceSaveButton
 * editor.useQuickPickForVariableInsertion
 
 **User Interface**

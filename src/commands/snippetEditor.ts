@@ -23,19 +23,19 @@ function initSnippetEditorCommands(context: vscode.ExtensionContext, provider: S
                     vscode.window.showErrorMessage("Cannot save snippet without snippet data");
                     return;
                 }
-                
-                const snippet: VSCodeSnippet = { prefix: data.prefix, body };
+                const prefix = !Array.isArray(data.prefix) && data.prefix.includes(',') ? data.prefix.trim().split(',') : data.prefix;
+                const snippet: VSCodeSnippet = { prefix, body };
                 if (data.description) {
-                    snippet.description = data.description;
+                    snippet.description = data.description.trim();
                 }
                 if (data.scope) {
-                    snippet.scope = data.scope;
+                    snippet.scope = data.scope.trim();
                 }
                 const capitalize = vscode.workspace.getConfiguration("snippetstudio").get<boolean>("autoCapitalizeSnippetName");
                 if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("autoCreateSnippetFiles")) {
                     await createFile(data.filename, false);
                 }
-                writeSnippet(data.filename, capitalize ? titleCase(data.snippetTitle) : data.snippetTitle, snippet);
+                writeSnippet(data.filename, capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(), snippet);
                 vscode.commands.executeCommand('workbench.action.closeActiveEditor');
                 vscode.commands.executeCommand("snippetstudio.refresh");
             }

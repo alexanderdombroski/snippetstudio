@@ -29,7 +29,23 @@
 
 
     <script>
-        let scope;
+        let showScope;
+
+        document.getElementById("snippetForm").addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const data = {
+                snippetTitle: formData.get('snippetTitle'),
+                prefix: formData.get('prefix'),
+                filename: document.getElementById("filename").innerText
+            }
+            const desc = formData.get('description');
+            if (desc) data.description = desc;
+            const scope = formData.get('scope');
+            if (showScope && scope) data.scope = scope;
+
+            vscode.postMessage({ command: "updateSnippetData", data: data })
+        });
 
         window.addEventListener('message', event => {
             
@@ -41,41 +57,27 @@
             const message = event.data;
             switch (message.command) {
                 case 'updateScope':
-                    scope = message.showScope
-                    document.getElementById('scopeContainer').style.display = scope ? 'block' : 'none';
+                    showScope = message.showScope
+                    document.getElementById('scopeContainer').style.display = showScope ? 'block' : 'none';
                     break;
 
                 case 'returnData':
-                    document.getElementById("snippetForm").submit();
+                    document.getElementById("snippetForm").requestSubmit();
                     break;
                 
                 case 'initForm':
                     const data = message.data;
                     document.getElementById("snippetTitle").value = data.snippetTitle;
-                    document.getElementById("prefix").value = data.prefix;
+                    const prefix = Array.isArray(data.prefix) ? data.prefix.join(',') : data.prefix
+                    document.getElementById("prefix").value = prefix;
                     if (data.description) document.getElementById("description").innerText = data.description;
-                    if (scope && data.scope) document.getElementById("scope").value = data.scope;
+                    if (showScope && data.scope) document.getElementById("scope").value = data.scope;
                     document.getElementById('filename').innerText = data.filename
                     break
             
                 default:
                     break;
             }
-        });
-
-        document.getElementById("snippetForm").addEventListener('submit', (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const data = {
-                snippetTitle: formData.get('snippetTitle'),
-                prefix: formData.get('prefix'),
-                filename: document.getElementById("filename").innerText
-            }
-            const desc = formData.get('description')?.trim();
-            if (desc) data.description = desc;
-            if (scope) data.scope = formData.get('scope');
-
-            vscode.postMessage({ command: "updateSnippetData", data: data })
         });
 
         function listenForChanges(id) {

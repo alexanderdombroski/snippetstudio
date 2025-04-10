@@ -12,7 +12,6 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
             await openSnippetFile(item.description);
         }),
         vscode.commands.registerCommand("snippetstudio.file.openFromDouble", onDoubleClick(async (item: vscode.TreeItem) => {
-            console.log("RAN");
             await openSnippetFile(item.description);
         }))
     );
