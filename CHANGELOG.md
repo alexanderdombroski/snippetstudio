@@ -2,14 +2,38 @@
 
 <!-- Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file. -->
 
+## Table of Contents
+
+- [Unreleased](#unreleased---date)
+- [1.2](#120---date) - Export Snippets
+- [1.1](#111---2025-04-08) - Snippet Insertion Features
+- [1.0](#103---2025-03-22) - Initial Release
+
 ## [Unreleased] - Date
 
 ### Added
 
-* Support for snippets to have multiple prefixes and languages 
-* Choose snippets to export to a single snippet file.
-* Snippet Sort Options
-* Use vscode.workspace.fs to allow web vscode to write create project snippets
+* Snippet Sort/Filter Options
+* Snippet Insertions Features Snippets
+* Share, backup, and/or export snippet files through github gists & octokit
+* Use vscode.workspace.fs to allow web vscode to write create project snippets (v2.0)
+
+## [1.2.0] - 2025-04-11
+
+### Added
+
+* Command to merge and export snippet files
+* Settings to preconfigure save desinations of snippet file exports
+* Support for multiple prefixes and scopes by using comma delimiters.
+
+### Fixed
+
+* Snippets added manually with mutliple scopes now correctly load when the language is open.
+* insertPlaceholderWithTranformation now works properly when insertVariable is set to use quick picks.
+
+### Changed
+
+* Hid accept icon behind experimental setting because it bypasses form validation. 
 
 ## [1.1.1] - 2025-04-08
 
