@@ -10,13 +10,13 @@ export default function initSnippetFeatureCommands(context: vscode.ExtensionCont
     // Tabstops, Placeholders, and Choices
     context.subscriptions.push(
         vscode.commands.registerTextEditorCommand("snippetstudio.editor.insertTabStop", (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
-            edit.insert(editor.selection.active, `$${getNextFeatureNumber(editor)}`);
+            editor.insertSnippet(new vscode.SnippetString(`\\\$${getNextFeatureNumber(editor)}$0`), editor.selection.active);
         }),
         vscode.commands.registerTextEditorCommand("snippetstudio.editor.insertPlaceholder", (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
-            editor.insertSnippet(new vscode.SnippetString(`\\\${${getNextFeatureNumber(editor)}:\${1:placeholder}}$0`), editor.selection.active);
+            editor.insertSnippet(new vscode.SnippetString(`\\\${${getNextFeatureNumber(editor)}:\${2:placeholder}}$0`), editor.selection.active);
         }),
         vscode.commands.registerTextEditorCommand("snippetstudio.editor.insertChoice", (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
-            editor.insertSnippet(new vscode.SnippetString(`\\\${${getNextFeatureNumber(editor)}|\${1:choice},\${2:choice}|}$0`), editor.selection.active);
+            editor.insertSnippet(new vscode.SnippetString(`\\\${${getNextFeatureNumber(editor)}|\${2:choice},\${3:choice}|}$0`), editor.selection.active);
         })
     );
 
@@ -48,12 +48,13 @@ export default function initSnippetFeatureCommands(context: vscode.ExtensionCont
     }
     context.subscriptions.push(
         vscode.commands.registerTextEditorCommand("snippetstudio.editor.insertPlaceholderWithTranformation", async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
-            editor.insertSnippet(new vscode.SnippetString(`\\\${\${1:id}/(.*)/\\\${\${1:id}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`), editor.selection.active);
+            const featureId = getNextFeatureNumber(editor);
+            editor.insertSnippet(new vscode.SnippetString(`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`), editor.selection.active);
         })
     );
 }
 
-function getNextFeatureNumber(editor: vscode.TextEditor): number {
+function getNextFeatureNumber(editor: vscode.TextEditor): string | number {
     const regex = /(?<!\\)\$\{?(\d{1,2})/g;
     const text = editor.document.getText();
 
@@ -65,7 +66,11 @@ function getNextFeatureNumber(editor: vscode.TextEditor): number {
         }
     }
 
-    return max + 1;
+    if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("editor.autoFillSnippetFeatureIds")) {
+        return max + 1;
+    }
+
+    return `\${1:${max + 1}}`;
 }
 
 function variableList(): string {

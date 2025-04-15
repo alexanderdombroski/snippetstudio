@@ -522,6 +522,11 @@
           "description": "When editing snippets, add a force save snippet title button that can bypass form validation.",
           "tags": ["experimental"]
         },
+        "snippetstudio.editor.autoFillSnippetFeatureIds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically determine and add the next id number for tabstops, placeholders, and choice snipppet insertion features."
+        },
         "snippetstudio.export.location": {
           "type": "string",
           "default": "choose",
