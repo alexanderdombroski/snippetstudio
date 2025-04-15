@@ -24,8 +24,8 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
 The **Snippets** tree view loads all snippets of the current language. Whenever the current active language changes, the view updates.
 
 * Click the `+` in the title menu to add a global snippet of the current language.
-* Click the pencil to edit an existing snippet
-* Right click to delete a snippet or snippet file.
+* Click the pencil to edit a the snippet.
+* Click the trash can to delete the snippet.
 
 ![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/edit.gif)
 
@@ -35,15 +35,16 @@ The **Locations Manager** tree view shows you all snippet files found on your fi
 
 **View Options**
 * **Create Global Snippets File** - Creates a snippet file of the current language to load sippets anytime accessing that language in VSCode.
-* **Create Global Mixed Snippets File** - Creates a `global.code-snippets` snippet file that can hold snippets of any language, to always be loaded.
-* **Create Local Snippets File** - Creates a snippet file of the current language in the .vscode folder local to the current open project.
-* **Create Global Mixed Snippets File** - Creates a project snippets file in the .vscode folder local to the current open project.
+* **Create Global Mixed Snippets File** - Creates a snippet file that can hold snippets of one or more languages
+* **Create Projects Snippets File** - Creates a project snippets file in the .vscode folder local to the current open project. Snippets can be one or more languages.
 
-You can also open or delete language files by right clicking, or add snippets to the selected location.
+* Double click a snippet file to open it.
+* Click the `+` to add a snippet to the snippet file.
+* Click the trash can to delete the snippet file.
 
 ### Creating Snippets
 
-The **Snippet Editor** webview only appears when creating snippets.
+The **Snippet Editor** webview only appears when creating or editing snippets.
 
 ![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/selection.gif)
 
@@ -66,6 +67,16 @@ Activate tooling for inserting these features by:
 * Using keyboard shortcuts to trigger insertion commands
 
 ![Snippet Placeholder Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/placeholder.gif)
+
+### Exporting Snippets
+
+You can share snippets easily with others by selecting which snippets you need and transfering them to a single `.code-snippets` file.
+
+1. Click `export snippets` in the location manager's three-dot menu (...)
+2. Specify a filename and save location.
+3. Choose which snippet files to export
+4. Choose which snippets from each file to export
+5. Share the merged snippet file with someone who could benefit from it
 
 ## Requirements
 

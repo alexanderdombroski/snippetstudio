@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [1.2](#120---date) - Export Snippets
+- [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
@@ -13,10 +13,22 @@
 
 ### Added
 
-* Snippet Sort/Filter Options
-* Snippet Insertions Features Snippets
+* Snippet Insertion Feature Snippets
 * Share, backup, and/or export snippet files through github gists & octokit
 * Use vscode.workspace.fs to allow web vscode to write create project snippets (v2.0)
+
+## [1.2.1] - 2025-04-15
+
+### Added
+
+* Setting to show project snippet files with no dropdown when there are no snippets of the active language
+* Setting to show active language in status bar
+* Setting to add placeholders for snippet insertion feature IDs
+
+### Changed
+
+* Project Snippet files are hidden by default in the snippet view if they contain no snippets of the active language
+* Active language no longer shows in status bar by default, as vscode has a statusbar item built in for it
 
 ## [1.2.0] - 2025-04-11
 
