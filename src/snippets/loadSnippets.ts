@@ -17,5 +17,9 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
         return [dropdown, snippets];
     });
 
+    if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("alwaysShowProjectSnippetFiles") === false) {
+        return treeItems.filter(([dropdown, _]) => dropdown.collapsibleState !== vscode.TreeItemCollapsibleState.None);
+    }
+
     return treeItems;
 }

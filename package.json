@@ -481,6 +481,11 @@
           "default": true,
           "description": "When creating a snippet from a multi-line selection, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces evenly."
         },
+        "snippetstudio.alwaysShowProjectSnippetFiles": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show .code-snippets files in the snippet view without a dropdown if there are no snippets of the current language."
+        },
         "snippetstudio.statusBar.showItem": {
           "type": "boolean",
           "default": true,
