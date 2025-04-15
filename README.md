@@ -92,6 +92,7 @@ This extension contributes the following settings to enhance your SnippetStudio 
 
 **User Interface**
 * statusBar.showItem
+* statusBar.showLanguage
 * statusBar.priority
 * alwaysShowProjectSnippetFiles
 

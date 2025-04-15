@@ -42,7 +42,7 @@ function updateSnippetIndicatorText() {
     const langId = getCurrentLanguage();
     let icon: string = langId === "snippets" ?  "$(database)" :
         getCurrentUri()?.scheme === "snippetstudio" ? "$(book)" : "$(repo)";
-    if (langId !== undefined) {
+    if (vscode.workspace.getConfiguration("snippetstudio").get<boolean>("statusBar.showLanguage") && langId !== undefined) {
         icon += "  " + capitalize(langId);
     }
     snippetIndicator.text = icon;

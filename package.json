@@ -491,6 +491,11 @@
           "default": true,
           "description": "Show the snippet indicator status bar item."
         },
+        "snippetstudio.statusBar.showLanguage": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show the active language after the status bar item."
+        },
         "snippetstudio.statusBar.priority": {
           "type": "integer",
           "default": 30,
