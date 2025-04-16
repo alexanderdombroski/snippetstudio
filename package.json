@@ -520,7 +520,9 @@
           "type": "boolean",
           "default": false,
           "description": "When editing snippets, add a force save snippet title button that can bypass form validation.",
-          "tags": ["experimental"]
+          "tags": [
+            "experimental"
+          ]
         },
         "snippetstudio.editor.autoFillSnippetFeatureIds": {
           "type": "boolean",
@@ -635,6 +637,8 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "@octokit/auth-oauth-device": "^7.1.5",
+    "@octokit/rest": "^21.1.1",
     "glob": "^11.0.1",
     "strip-json-comments": "^5.0.1"
   }
