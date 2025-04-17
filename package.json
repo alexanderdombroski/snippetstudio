@@ -237,6 +237,12 @@
         "title": "Export Snippets to Code Snippets File",
         "shortTitle": "Export Snippets",
         "category": "snippetstudio"
+      },
+      {
+        "command": "snippetstudio.github.export",
+        "title": "Export Snippets to a GitHub gist",
+        "shortTitle": "Export Snippets To GitHub",
+        "category": "snippetstudio-github"
       }
     ],
     "menus": {
@@ -358,6 +364,11 @@
         {
           "command": "snippetstudio.snippet.export",
           "group": "inline",
+          "when": "view == location-manager"
+        },
+        {
+          "command": "snippetstudio.github.export",
+          "group": "inline_github",
           "when": "view == location-manager"
         }
       ],

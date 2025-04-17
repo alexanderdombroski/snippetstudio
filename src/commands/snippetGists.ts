@@ -1,10 +1,12 @@
 import * as vscode from "vscode";
-import getOctokitClient from "../utils/octokit";
+import { createGist } from "../snippets/snippetGists";
 
-async function initSnippetGistsCommands(context: vscode.ExtensionContext) {
-    const client = await getOctokitClient(context);
-
-
+async function initSnippetGistsCommands(context: vscode.ExtensionContext) {    
+    context.subscriptions.push(
+        vscode.commands.registerCommand("snippetstudio.github.export", async () => {
+            createGist(context);
+        })
+    );
 }
 
 export default initSnippetGistsCommands;

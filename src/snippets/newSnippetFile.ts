@@ -25,8 +25,8 @@ async function createFile(filepath: string, showInformationMessage: boolean = tr
     }
 }
 
-export async function getFileName(): Promise<string | undefined> {
-    let name = await vscode.window.showInputBox({"prompt": "type a filename"});
+async function getFileName(): Promise<string | undefined> {
+    let name = await vscode.window.showInputBox({prompt: "type a filename"});
     if (name === undefined) {
         vscode.window.showInformationMessage("Skipped file creation.");
         return undefined;
@@ -82,34 +82,31 @@ async function createGlobalSnippetsFile(): Promise<void> {
     await createFile(filepath);
 }
 
-async function exportSnippets() {
-    const snippetFiles = (await locateAllSnippetFiles());
-    if (snippetFiles.flat().length === 0) {
-        vscode.window.showWarningMessage("You have no snippets to export. Operation cancelled");
-        return;
-    }
-    
+async function exportSnippets() {    
     // Select Save Paths
     const savePath = await getSavePath();
     if (savePath === undefined) {
         return;
     }
 
-    // Select Snippets Files
-    const fileItems = await vscode.window.showQuickPick(
-        snippetFiles.flatMap(fileList => fileList.map(filepath => { return { label: path.basename(filepath), description: filepath }; })), 
-        { canPickMany: true, title: "Choose Snippet Files to include in the Export" }
-    );
-    if (fileItems === undefined) {
+    const snippetsToExport = await mergeSnippetFiles();
+    if (snippetsToExport === undefined) {
         return;
     }
-    const selectedPaths = fileItems.map(item => item.description);
-
+    
     // Select Snippets
-    await mergeSnippetFiles(savePath, selectedPaths);
+    await writeSnippetFile(savePath, snippetsToExport, `Snippets exported to ${savePath}`);
 }
 
-async function mergeSnippetFiles(savePath: string, filepaths: string[]) {
+/**
+ * Lets the user pick snippets from each file and merges them into one object
+ */
+async function mergeSnippetFiles(): Promise<VSCodeSnippets|undefined> {
+    const filepaths = await chooseSnippetFiles();
+    if (filepaths === undefined) {
+        return;
+    }
+    
     let snippetsToExport: VSCodeSnippets = {};
     const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(filepaths);
     for (const [filepath, fileSnippets] of snippetGroups) {        
@@ -157,7 +154,28 @@ async function mergeSnippetFiles(savePath: string, filepaths: string[]) {
         }
     }
 
-    await writeSnippetFile(savePath, snippetsToExport, `Snippets exported to ${savePath}`);
+    return snippetsToExport;
 }
 
-export { createGlobalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile, exportSnippets};
+/**
+ * Uses a quickpick to allow the user select one or more snippet paths
+ */
+async function chooseSnippetFiles(): Promise<string[]|undefined> {
+    const snippetFiles = (await locateAllSnippetFiles());
+    if (snippetFiles.flat().length === 0) {
+        vscode.window.showWarningMessage("You have no snippets to export. Operation cancelled");
+        return;
+    }
+
+    // Select Snippets Files
+    const fileItems = await vscode.window.showQuickPick(
+        snippetFiles.flatMap(fileList => fileList.map(filepath => { return { label: path.basename(filepath), description: filepath }; })), 
+        { canPickMany: true, title: "Choose Snippet Files to include in the Export" }
+    );
+    if (fileItems === undefined) {
+        return;
+    }
+    return fileItems.map(item => item.description);
+}
+
+export { createGlobalLangFile, createLocalSnippetsFile, createGlobalSnippetsFile, createFile, exportSnippets, mergeSnippetFiles, getFileName };
