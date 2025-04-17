@@ -14,6 +14,7 @@ import SnippetDataWebViewProvider from './ui/snippetDataView.js';
 import SnippetDataManager from './snippets/snippetDataManager.js';
 import createStatusBar from './ui/statusBar.js';
 import initSnippetFeatureCommands from './commands/snippetFeatures.js';
+import initSnippetGistsCommands from './commands/snippetGists.js';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -44,6 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
 	initSnippetFileCommands(context);
 	initSnippetEditorCommands(context, snippetEditorProvider);
 	initSnippetFeatureCommands(context, snippetEditorProvider);
+	initSnippetGistsCommands(context);
 
 	createStatusBar(context);
 
