@@ -15,7 +15,7 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
 - [Extension Settings](#extension-settings)
 - [Known Issues](#known-issues)
 - [Release Notes](#release-notes)
-- [Liscense & Contributions](#liscense--contributions)
+- [License & Contributions](#license--contributions)
 
 ## Features
 
@@ -112,6 +112,7 @@ This extension contributes the following settings to enhance your SnippetStudio 
 * confirmSnippetDeletion
 * export.location
 * export.preconfiguredExportPath
+* gists.onlySnippets
 
 ## Known Issues
 
@@ -129,7 +130,7 @@ Titles of snippets must be unique, due to the format VSCode uses for storing sni
 
 See the changelog [here](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)!
 
-## Liscense & Contributions
+## License & Contributions
 
 This extension is open source! Feel free to add [github](https://github.com/alexanderdombroski/snippetstudio) issues and recommondations. I am open to ideas of how you can collaborate.
 

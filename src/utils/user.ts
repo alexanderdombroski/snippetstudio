@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { unTabMultiline } from "./string";
-import { getDownloadsDirPath } from "./fsInfo";
+import { getDownloadsDirPath, getGlobalSnippetFilesDir, getWorkspaceFolder } from "./fsInfo";
 import path from "path";
 import { getFileName } from "../snippets/newSnippetFile";
 
@@ -79,8 +79,8 @@ async function showVariableQuickPick(): Promise<string | undefined> {
     return selectedVariable?.label;
 }
 
-async function getSavePathFromDialog(basename: string): Promise<string|undefined> {
-    const defaultUri = vscode.Uri.file(path.join(getDownloadsDirPath(), basename));
+async function getSavePathFromDialog(basename: string, startingDir = getDownloadsDirPath()): Promise<string|undefined> {
+    const defaultUri = vscode.Uri.file(path.join(startingDir, basename));
 
     const options: vscode.SaveDialogOptions = {
         title: `Save ${basename}`,
@@ -123,4 +123,18 @@ async function getSavePath() {
     return savePath;
 }
 
-export { getConfirmation, getSelection, showVariableQuickPick, getSavePath };
+async function chooseLocalGlobal(): Promise<string|undefined> {
+    const locations = [{ label: 'Downloads', description: getDownloadsDirPath() }];
+    const globalPath = getGlobalSnippetFilesDir();
+    if (globalPath !== undefined) {
+        locations.push({ label: 'Global', description: globalPath });
+    }
+    const projectPath = getWorkspaceFolder(); 
+    if (projectPath !== undefined) {
+        locations.push({ label: 'Project', description: path.join(projectPath, ".vscode") });
+    }
+    const choice = await vscode.window.showQuickPick(locations);
+    return choice?.description;
+}
+
+export { getConfirmation, getSelection, showVariableQuickPick, getSavePath, chooseLocalGlobal, getSavePathFromDialog };

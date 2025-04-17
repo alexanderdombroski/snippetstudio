@@ -243,6 +243,12 @@
         "title": "Export Snippets to a GitHub gist",
         "shortTitle": "Export Snippets To GitHub",
         "category": "snippetstudio-github"
+      },
+      {
+        "command": "snippetstudio.github.import",
+        "title": "Import Snippet Files From GitHub",
+        "shortTitle": "Import Snippets From GitHub",
+        "category": "snippetstudio-github"
       }
     ],
     "menus": {
@@ -368,6 +374,11 @@
         },
         {
           "command": "snippetstudio.github.export",
+          "group": "inline_github",
+          "when": "view == location-manager"
+        },
+        {
+          "command": "snippetstudio.github.import",
           "group": "inline_github",
           "when": "view == location-manager"
         }
@@ -559,6 +570,11 @@
           "type": "string",
           "default": "",
           "markdownDescription": "The custom file path to use when `#snippetstudio.export.location#` is set to `preconfigured`."
+        },
+        "snippetstudio.gists.onlySnippets": {
+          "type": "boolean",
+          "default": "true",
+          "markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
         }
       },
       "order": 0
