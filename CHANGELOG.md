@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [1.3](#130---2025-04-17) - Export Snippets
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
@@ -13,9 +14,25 @@
 
 ### Added
 
-* Snippet Insertion Feature Snippets
-* Share, backup, and/or export snippet files through github gists & octokit
-* Use vscode.workspace.fs to allow web vscode to write create project snippets (v2.0)
+* **Web Support** (v2.0)
+    * Use vscode.workspace.fs to create project snippets
+    * Global Snippet Commands not visible to web users
+* **Global Snippet Backup and Collaboration** (v1.4)
+    * Backup global snippets to github repo
+    * Use the same global snippets on multiple computers
+    * Push and Pull snippet changes
+    * Combine all snippets from two repositories
+    * Several Git workflows handled by simple-git
+* **Other**
+    * Snippet Insertion Feature Snippets
+
+## [1.3.0] - 2025-04-17
+
+### Added
+
+* Export to GitHub Gist Command
+* Import from GitHub Gist Command
+* Setting to only import snippet files, or all files
 
 ## [1.2.1] - 2025-04-15
 
