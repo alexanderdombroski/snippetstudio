@@ -249,6 +249,12 @@
         "title": "Import Snippet Files From GitHub",
         "shortTitle": "Import Snippets From GitHub",
         "category": "snippetstudio-github"
+      },
+      {
+        "command": "snippetstudio.github.browse",
+        "title": "Browse Snippet Gists on GitHub",
+        "shortTitle": "Browse Snippet Gists",
+        "category": "snippetstudio-github"
       }
     ],
     "menus": {
@@ -379,6 +385,11 @@
         },
         {
           "command": "snippetstudio.github.import",
+          "group": "inline_github",
+          "when": "view == location-manager"
+        },
+        {
+          "command": "snippetstudio.github.browse",
           "group": "inline_github",
           "when": "view == location-manager"
         }
