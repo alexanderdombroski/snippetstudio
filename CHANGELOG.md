@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [1.3](#130---2025-04-17) - Export Snippets
+- [1.3](#131---2025-05-03) - Export Snippets
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
@@ -17,14 +17,21 @@
 * **Web Support** (v2.0)
     * Use vscode.workspace.fs to create project snippets
     * Global Snippet Commands not visible to web users
-* **Global Snippet Backup and Collaboration** (v1.4)
+* **Global Snippet Backup and Collaboration** (v1.5)
     * Backup global snippets to github repo
     * Use the same global snippets on multiple computers
     * Push and Pull snippet changes
     * Combine all snippets from two repositories
     * Several Git workflows handled by simple-git
-* **Other**
+* **Snippet Editor Upgrade** (v1.4)
     * Snippet Insertion Feature Snippets
+    * Snippet Insertion Feature Syntax Highlighting
+
+## [1.3.1] - 2025-05-03
+
+### Added
+
+* Added button to browse snippets gists created by anyone using this extension.
 
 ## [1.3.0] - 2025-04-17
 

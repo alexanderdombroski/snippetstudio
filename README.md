@@ -11,6 +11,7 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
     - [Managing Snippet Files](#managing-snippet-files)
     - [Creating Snippets](#creating-snippets)
     - [Snippet Tabstops, Placeholders, Choices, and Variables](#snippet-tabstops-placeholders-choices-and-variables)
+    - [Exporting Snippets](#exporting-snippets)
 - [Requirements](#requirements)
 - [Extension Settings](#extension-settings)
 - [Known Issues](#known-issues)
@@ -77,6 +78,8 @@ You can share snippets easily with others by selecting which snippets you need a
 3. Choose which snippet files to export
 4. Choose which snippets from each file to export
 5. Share the merged snippet file with someone who could benefit from it
+
+You can follow a similar process, and save your snippets to Github on a shareable gist.
 
 ## Requirements
 
