@@ -14,6 +14,15 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 
     public scheme: string = "";
 
+    private _lspDebounce: NodeJS.Timeout | undefined;
+    private _insertionFeatureDecorationType = vscode.window.createTextEditorDecorationType({
+        color: '#FFF', // White in Dark+
+        fontWeight: 'bold',
+        light: {
+            color: '#D801F8', // Purple for Light+
+        },
+    });
+
     constructor(scheme: string, manager: SnippetDataManager) {
         this._directories.set('/snippets', new Set());
         this.scheme = scheme;
@@ -26,6 +35,11 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
         }
 
         const change = changeEvent.contentChanges[0];
+
+        if (this._lspDebounce) {
+            clearTimeout(this._lspDebounce);
+        }
+        this._lspDebounce = setTimeout(() => this._highlightSnippetInsertionFeatures(changeEvent.document), 400);
 
         // Test for unintential snippet tabstops, changes, and choices
         if (change.text >= '0' && change.text <= '9') {            
@@ -117,6 +131,37 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
         if (uri) {
             return this._snippetDataManager.getData(uri.path);
         }
+    }
+
+    private _highlightSnippetInsertionFeatures(document: vscode.TextDocument) {
+        const editor = vscode.window.visibleTextEditors.find(
+            e => e.document.uri.toString() === document.uri.toString()
+        );
+        if (editor === undefined) {
+            return;
+        }
+        
+        const text = document.getText();
+        const regexes = [
+            /(?<!\\)\$\d+/g, // $0, $1
+            /(?<!\\)\$\{\d+:[^}]*\}/g, // ${1:placeholder}
+            /(?<!\\)\$\{\d+\|[^}]+\|\}/g, // ${2|choice1,choice2|}
+            /(?<!\\)\$((TM_(SELECTED_TEXT|CURRENT_(LINE|WORD)|LINE_(INDEX|NUMBER)|FILE(NAME(_BASE)?|PATH)|DIRECTORY))|CLIPBOARD|RELATIVE_FILEPATH|(WORKSPACE_(NAME|FOLDER))|CURSOR_(INDEX|NUMBER)|CURRENT_(YEAR(_SHORT)?|MONTH(_NAME(_SHORT)?)?|DA(TE|Y_NAME(_SHORT)?)|HOUR|MINUTE|SECOND(S_UNIX)?|TIMEZONE_OFFSET)|RANDOM(_HEX)?|UUID|BLOCK_COMMENT_(START|END)|LINE_COMMENT)/g,
+            /(?<!\\)\$\{((TM_(SELECTED_TEXT|CURRENT_(LINE|WORD)|LINE_(INDEX|NUMBER)|FILE(NAME(_BASE)?|PATH)|DIRECTORY))|CLIPBOARD|RELATIVE_FILEPATH|(WORKSPACE_(NAME|FOLDER))|CURSOR_(INDEX|NUMBER)|CURRENT_(YEAR(_SHORT)?|MONTH(_NAME(_SHORT)?)?|DA(TE|Y_NAME(_SHORT)?)|HOUR|MINUTE|SECOND(S_UNIX)?|TIMEZONE_OFFSET)|RANDOM(_HEX)?|UUID|BLOCK_COMMENT_(START|END)|LINE_COMMENT):([^}]*)\}/g,
+            /(?<!\\)\$\{\d+\/.*?\/.*?\/[gimsuy]*\}/g
+        ];
+        const decorations: vscode.DecorationOptions[] = [];
+
+        for (const match of regexes.flatMap(regex => Array.from(text.matchAll(regex)))) {
+            if (match.index) {
+                const startPos = document.positionAt(match.index);
+                const endPos = document.positionAt(match.index + match[0].length);
+                decorations.push({ range: new vscode.Range(startPos, endPos) });
+            };
+
+        }
+        
+        editor.setDecorations(this._insertionFeatureDecorationType, decorations);
     }
     
     // Not needed
