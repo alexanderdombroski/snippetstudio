@@ -52,6 +52,55 @@ export default function initSnippetFeatureCommands(context: vscode.ExtensionCont
             editor.insertSnippet(new vscode.SnippetString(`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`), editor.selection.active);
         })
     );
+
+    // Feature Snippets
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider({scheme: "snippetstudio"}, {
+            provideCompletionItems(document, position, token, context) {
+                const id = "${1:id}";
+                const source = "[Source: VS Code Documentation](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_snippet-syntax)";
+                
+                const tabstop = new vscode.CompletionItem('tabstop', vscode.CompletionItemKind.Event);
+                tabstop.insertText = new vscode.SnippetString(`\\\$${id}$0`);
+                tabstop.detail = "tabstop snippet insertion feature";
+                tabstop.documentation = new vscode.MarkdownString(`With tabstops, you can make the editor cursor move inside a snippet. Use $1, $2 to specify cursor locations. The number is the order in which tabstops will be visited, whereas $0 denotes the final cursor position. Multiple occurrences of the same tabstop are linked and updated in sync. ${source}`);
+
+                const placeholder = new vscode.CompletionItem('placeholder', vscode.CompletionItemKind.Event);
+                placeholder.insertText = new vscode.SnippetString(`\\\${${id}:\${2:placeholder}}$0`);
+                placeholder.detail = "placeholder snippet insertion feature";
+                placeholder.documentation = new vscode.MarkdownString(`Placeholders are tabstops with values, like \${1:foo}. The placeholder text will be inserted and selected such that it can be easily changed. Placeholders can be nested, like \${1:another \${2:placeholder}}. ${source}`);
+
+                const choice = new vscode.CompletionItem('choice', vscode.CompletionItemKind.Event);
+                choice.insertText = new vscode.SnippetString(`\\\${${id}|\${2:choice},\${3:choice}|}$0`);
+                choice.detail = "choice snippet insertion feature";
+                choice.documentation = new vscode.MarkdownString(`Placeholders can have choices as values. The syntax is a comma-separated enumeration of values, enclosed with the pipe-character, for example \${1|one,two,three|}. When the snippet is inserted and the placeholder selected, choices will prompt the user to pick one of the values. ${source}`);
+
+                const variable = new vscode.CompletionItem('variable', vscode.CompletionItemKind.Event);
+                variable.insertText = new vscode.SnippetString(`$\${1|${variableList()}|}$0`);
+                variable.detail = "variable snippet insertion feature";
+                variable.documentation = new vscode.MarkdownString(`With $name, you can insert the value of a variable. When a variable is unknown (that is, its name isn't defined) the name of the variable is inserted and it is transformed into a placeholder. ${source}`);
+
+                const variablePlaceholder = new vscode.CompletionItem('variablePlaceholder', vscode.CompletionItemKind.Event);
+                variablePlaceholder.insertText = new vscode.SnippetString(`\\\${\${1|${variableList()}|}:\${2:placeholder}}$0`);
+                variablePlaceholder.detail = "variablePlaceholder snippet insertion feature";
+                variablePlaceholder.documentation = new vscode.MarkdownString(`With \${name:default}, you can insert the value of a variable. When a variable isn't set, its default or the empty string is inserted. When a variable is unknown (that is, its name isn't defined) the name of the variable is inserted and it is transformed into a placeholder. ${source}`);
+
+                const placeholderTransform = new vscode.CompletionItem('placeholderTransform', vscode.CompletionItemKind.Event);
+                placeholderTransform.insertText = new vscode.SnippetString(`\\\${${id}/(.*)/\\\${${id}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`);
+                placeholderTransform.detail = "placeholderTransform snippet insertion feature";
+                placeholderTransform.documentation = new vscode.MarkdownString(`A transformation of a placeholder allows changing the inserted text for the placeholder when moving to the next tab stop. The inserted text is matched with the regular expression and the match or matches - depending on the options - are replaced with the specified replacement format text. Every occurrence of a placeholder can define its own transformation independently using the value of the first placeholder. ${source}`);
+
+                return [
+                    tabstop,
+                    placeholder,
+                    choice,
+                    variable,
+                    variablePlaceholder,
+                    placeholderTransform
+                ];
+            },
+        })
+    );
 }
 
 function getNextFeatureNumber(editor: vscode.TextEditor): string | number {
