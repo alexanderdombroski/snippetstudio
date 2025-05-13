@@ -67,4 +67,17 @@ function escapeDollarSignIfNeeded(text: string, offset: number): string | undefi
     }
 }
 
-export { titleCase, unTabMultiline, capitalize, escapeDollarSignIfNeeded };
+/**
+ * Escapes all instances of placholders and tabstops
+ */
+function escapeAllSnippetInsertionFeatures(str: string): string {
+    // Escape tabstops
+    let escapedString = str.replace(/\$(\d+)/g, '\\$$$1');
+
+    // Escape choice/placeholder
+    escapedString = escapedString.replace(/\$\{(\d+)(\||:)/g, '\\$${$1$2');
+
+    return escapedString;
+}
+
+export { titleCase, unTabMultiline, capitalize, escapeDollarSignIfNeeded, escapeAllSnippetInsertionFeatures };

@@ -544,6 +544,11 @@
           "default": false,
           "description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops, placeholders, and choice placeholders. It may be useful to enable this only for specific languages match tabstop syntax ie $0, like in Swift or Bash."
         },
+        "snippetstudio.editor.autoEscapeDollarSignsFromSelection": {
+          "type": "boolean",
+          "default": false,
+          "description": "When creating a snippet from a selection, escape existing code that might match a snippet insertion feature."
+        },
         "snippetstudio.editor.useQuickPickForVariableInsertion": {
           "type": "boolean",
           "default": true,

@@ -5,10 +5,11 @@ import { TreeSnippet } from "../ui/templates";
 import { getCurrentLanguage, selectLanguage } from "../utils/language";
 import SnippetEditorProvider from "../ui/bufferEditor";
 import { newSnippetEditorUri } from "./snippetEditor";
-import { getGlobalLangFile, getGlobalSnippetFilesDir, getLangFromSnippetFilePath } from "../utils/fsInfo";
+import { getGlobalLangFile, getLangFromSnippetFilePath } from "../utils/fsInfo";
 import path from "path";
 import { SnippetData } from "../types/snippetTypes";
 import { getConfirmation, getSelection } from "../utils/user";
+import { escapeAllSnippetInsertionFeatures } from "../utils/string";
 
 function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProvider: SnippetEditorProvider) {
     // Show Snippet Body
@@ -104,6 +105,9 @@ function initSnippetCommands(context: vscode.ExtensionContext, snippetEditorProv
 
 async function editSnippet(provider: SnippetEditorProvider, langId: string, snippetData: SnippetData, body: string = "") {
     try {
+        if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSignsFromSelection')) {
+            body = escapeAllSnippetInsertionFeatures(body);
+        }
         const uri = newSnippetEditorUri(langId, path.extname(snippetData.filename) === ".code-snippets");
         await provider.mountSnippet(uri, snippetData, body);
         const doc = await vscode.workspace.openTextDocument(uri);
