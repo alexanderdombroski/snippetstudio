@@ -23,9 +23,16 @@
     * Push and Pull snippet changes
     * Combine all snippets from two repositories
     * Several Git workflows handled by simple-git
-* **Snippet Editor Upgrade** (v1.4)
-    * Snippet Insertion Feature Snippets
-    * Snippet Insertion Feature Syntax Highlighting
+* **Misc**
+    * More commands and extension resources are lazily loaded, to improve performance.
+
+## [1.4.0] - 2025-05-12
+
+### Added
+
+* Added snippet completion items for snippet insertion features useable in the snippet editor.
+* Snippet Insertion Feature Syntax Highlighting
+* Setting to enable more autoescape. When creating a snippet from a selection, patterns that would unintentionally become a tabstop are automatically escaped.
 
 ## [1.3.1] - 2025-05-03
 
