@@ -8,7 +8,7 @@ function onDoubleClick(callback: (item: vscode.TreeItem) => void): (item: vscode
         if (item && item.label) {
             const now = Date.now();
             const lastClick = clickTimestamps[item.label.toString()] || 0;
-            
+
             if (now - lastClick < doubleClickThreshold) {
                 callback(item); // Execute callback on double-click
                 clickTimestamps[item.label.toString()] = 0; // Reset timestamp

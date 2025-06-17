@@ -1,8 +1,8 @@
 import * as path from 'path';
 import fs from 'fs';
 import { glob } from "glob";
-import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo.js';
-import { getCurrentLanguage, langIds } from '../utils/language.js';
+import { getGlobalSnippetFilesDir, getWorkspaceFolder } from '../utils/fsInfo';
+import { getCurrentLanguage, langIds } from '../utils/language';
 
 // ---------------------------- Language Specfic ---------------------------- //
 

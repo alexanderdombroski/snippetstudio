@@ -1,5 +1,5 @@
 import * as fs from 'fs/promises'; // Import fs/promises for async file operations
-import { VSCodeSnippets } from '../types/snippetTypes.js';
+import { VSCodeSnippets } from '../types/snippetTypes';
 import * as vscode from "vscode";
 import path from "path";
 

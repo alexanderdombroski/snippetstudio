@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import loadSnippets from '../snippets/loadSnippets.js';
-import { selectedLanguageTemplate } from './templates.js';
-import { getCurrentLanguage } from '../utils/language.js';
+import loadSnippets from '../snippets/loadSnippets';
+import { selectedLanguageTemplate } from './templates';
+import { getCurrentLanguage } from '../utils/language';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
