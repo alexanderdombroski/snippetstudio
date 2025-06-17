@@ -24,24 +24,25 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
 
 The **Snippets** tree view loads all snippets of the current language. Whenever the current active language changes, the view updates.
 
-* Click the `+` in the title menu to add a global snippet of the current language.
-* Click the pencil to edit a the snippet.
-* Click the trash can to delete the snippet.
+- Click the `+` in the title menu to add a global snippet of the current language.
+- Click the pencil to edit a the snippet.
+- Click the trash can to delete the snippet.
 
 ![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/edit.gif)
 
 ### Managing Snippet Files
 
-The **Locations Manager** tree view shows you all snippet files found on your filesystem. 
+The **Locations Manager** tree view shows you all snippet files found on your filesystem.
 
 **View Options**
-* **Create Global Snippets File** - Creates a snippet file of the current language to load sippets anytime accessing that language in VSCode.
-* **Create Global Mixed Snippets File** - Creates a snippet file that can hold snippets of one or more languages
-* **Create Projects Snippets File** - Creates a project snippets file in the .vscode folder local to the current open project. Snippets can be one or more languages.
 
-* Double click a snippet file to open it.
-* Click the `+` to add a snippet to the snippet file.
-* Click the trash can to delete the snippet file.
+- **Create Global Snippets File** - Creates a snippet file of the current language to load sippets anytime accessing that language in VSCode.
+- **Create Global Mixed Snippets File** - Creates a snippet file that can hold snippets of one or more languages
+- **Create Projects Snippets File** - Creates a project snippets file in the .vscode folder local to the current open project. Snippets can be one or more languages.
+
+- Double click a snippet file to open it.
+- Click the `+` to add a snippet to the snippet file.
+- Click the trash can to delete the snippet file.
 
 ### Creating Snippets
 
@@ -63,9 +64,10 @@ The snippet buffer editor has extra tooling to assist in inserting [Tabstops, Pl
 Tabstops, placeholders, and choices allow you to quickly modify a snippet after it was inserted in pre-determined areas. Variables allow you to insert values based on the context of the file, selected language or current time.
 
 Activate tooling for inserting these features by:
-* Right clicking in the snippet buffer editor
-* Selecting an insertion feature from the editor title's three-dot menu (...)
-* Using keyboard shortcuts to trigger insertion commands
+
+- Right clicking in the snippet buffer editor
+- Selecting an insertion feature from the editor title's three-dot menu (...)
+- Using keyboard shortcuts to trigger insertion commands
 
 ![Snippet Placeholder Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/placeholder.gif)
 
@@ -83,11 +85,11 @@ You can follow a similar process, and save your snippets to Github on a shareabl
 
 ## Requirements
 
-* **VS Code Version:** This extension requires VS Code version 1.97.0 or higher.
-* **Node.js Version:** This extension requires Node.js version 20.0.0 or higher.
-* **Virtual Workspaces:** This extension has limited support for virtual workspaces. It relies on accessing the file system and Node.js file-related modules (fs, path, glob), which may not be fully available in virtual workspace environments.
-* **File System Access:** This extension requires access to your local file system to manage VS Code snippets and snippet files.
-* **Web Version:** This extension is not compatible with the web version of VS Code due to its reliance on Node.js file system APIs.
+- **VS Code Version:** This extension requires VS Code version 1.97.0 or higher.
+- **Node.js Version:** This extension requires Node.js version 20.0.0 or higher.
+- **Virtual Workspaces:** This extension has limited support for virtual workspaces. It relies on accessing the file system and Node.js file-related modules (fs, path, glob), which may not be fully available in virtual workspace environments.
+- **File System Access:** This extension requires access to your local file system to manage VS Code snippets and snippet files.
+- **Web Version:** This extension is not compatible with the web version of VS Code due to its reliance on Node.js file system APIs.
 
 This extension isn't yet tested on the web version of vsocde and likely won't work. The web version operates in a sandboxed browser environment that restricts direct file system interactions.
 
@@ -96,26 +98,29 @@ This extension isn't yet tested on the web version of vsocde and likely won't wo
 This extension contributes the following settings to enhance your SnippetStudio experience:
 
 **Snippet Creation Behavior**
-* defaultSnippetPrefix
-* autoCapitalizeSnippetName
-* cleanupSnippetSelection
-* autoCreateSnippetFiles
-* editor.autoEscapeDollarSigns
-* editor.enableEditorForceSaveButton
-* editor.useQuickPickForVariableInsertion
-* editor.autoFillSnippetFeatureIds
+
+- defaultSnippetPrefix
+- autoCapitalizeSnippetName
+- cleanupSnippetSelection
+- autoCreateSnippetFiles
+- editor.autoEscapeDollarSigns
+- editor.enableEditorForceSaveButton
+- editor.useQuickPickForVariableInsertion
+- editor.autoFillSnippetFeatureIds
 
 **User Interface**
-* statusBar.showItem
-* statusBar.showLanguage
-* statusBar.priority
-* alwaysShowProjectSnippetFiles
+
+- statusBar.showItem
+- statusBar.showLanguage
+- statusBar.priority
+- alwaysShowProjectSnippetFiles
 
 **Snippet Commands Behavior**
-* confirmSnippetDeletion
-* export.location
-* export.preconfiguredExportPath
-* gists.onlySnippets
+
+- confirmSnippetDeletion
+- export.location
+- export.preconfiguredExportPath
+- gists.onlySnippets
 
 ## Known Issues
 

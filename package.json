@@ -1,692 +1,692 @@
 {
-  "name": "snippetstudio",
-  "displayName": "SnippetStudio",
-  "description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
-  "version": "1.4.0",
-  "publisher": "AlexDombroski",
-  "author": {
-    "name": "Alex Dombroski",
-    "email": "alexdombroski1@gmail.com",
-    "url": "https://github.com/alexanderdombroski"
-  },
-  "icon": "public/logo.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alexanderdombroski/snippetstudio.git"
-  },
-  "engines": {
-    "vscode": ">=1.97.0",
-    "node": ">=20.0.0"
-  },
-  "capabilities": {
-    "virtualWorkspaces": {
-      "supported": "limited",
-      "description": "Needs to access a file system and node.js file related modules like fs, path, and glob."
-    }
-  },
-  "license": "MIT",
-  "categories": [
-    "Snippets",
-    "Visualization",
-    "Other"
-  ],
-  "keywords": [
-    "snippets",
-    "snippet editor",
-    "snippet manager",
-    "gui editor",
-    "code completion"
-  ],
-  "preview": false,
-  "pricing": "Free",
-  "activationEvents": [
-    "onFileSystem:snippetstudio"
-  ],
-  "main": "./dist/extension.js",
-  "contributes": {
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "snippet-manager-view-container",
-          "title": "Snippet Studio Manager",
-          "icon": "$(repo)"
-        }
-      ]
-    },
-    "views": {
-      "snippet-manager-view-container": [
-        {
-          "id": "snippet-data",
-          "name": "Snippet Editor",
-          "type": "webview",
-          "when": "snippetstudio.editorVisible",
-          "icon": "$(book)"
-        },
-        {
-          "id": "snippet-manager-view",
-          "name": "Snippets",
-          "type": "tree",
-          "icon": "$(repo)"
-        },
-        {
-          "id": "location-manager",
-          "name": "Locations Manager",
-          "type": "tree",
-          "icon": "$(database)"
-        }
-      ]
-    },
-    "viewsWelcome": [
-      {
-        "view": "snippet-manager-view",
-        "contents": "Snippets of the active language will appear here!"
-      },
-      {
-        "view": "location-manager",
-        "contents": "This is where snippet files of ALL languages being loaded in will appear!"
-      }
-    ],
-    "commands": [
-      {
-        "command": "snippetstudio.openView",
-        "title": "Open Snippet Manager"
-      },
-      {
-        "command": "snippetstudio.snippet.addGlobal",
-        "title": "Add Global Snippet",
-        "icon": "$(plus)",
-        "shortTitle": "Add Snippet",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.openSettings",
-        "title": "Open Snippet Studio Settings",
-        "icon": "$(gear)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.snippet.showBody",
-        "title": "Show Snippet Body",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.file.open",
-        "title": "Open Snippet File",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.file.openFromDouble",
-        "title": "Open Snippet File",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.file.delete",
-        "title": "Delete Snippet File",
-        "icon": "$(trash)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.snippet.edit",
-        "title": "Edit Snippet File",
-        "icon": "$(pencil)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.snippet.delete",
-        "title": "Delete Snippet",
-        "icon": "$(trash)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.refresh",
-        "title": "Refresh Snippets",
-        "icon": "$(refresh)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.refreshLocations",
-        "title": "Refresh Locations",
-        "icon": "$(refresh)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.file.createGlobalLang",
-        "title": "Create Global Snippets File",
-        "icon": "$(file-code)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.file.createProjectSnippets",
-        "title": "Create Project Snippets File",
-        "icon": "$(book)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.file.createGlobalSnippets",
-        "title": "Create Global Mixed Snippets File",
-        "icon": "$(book)",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.save",
-        "title": "Accept Snippet Changes",
-        "shortTitle": "Save Sippet",
-        "icon": "$(check)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.editor.cancel",
-        "title": "Discard Snippet Changes",
-        "shortTitle": "Cancel Snippet",
-        "icon": "$(discard)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.editor.insertTabStop",
-        "category": "snippetstudio",
-        "icon": "$(symbol-property)",
-        "title": "Insert Tabstop"
-      },
-      {
-        "command": "snippetstudio.editor.insertPlaceholder",
-        "category": "snippetstudio",
-        "icon": "$(symbol-constant)",
-        "title": "Insert Placeholder"
-      },
-      {
-        "command": "snippetstudio.editor.insertChoice",
-        "category": "snippetstudio",
-        "icon": "$(symbol-value)",
-        "title": "Insert Choice"
-      },
-      {
-        "command": "snippetstudio.editor.insertVariable",
-        "category": "snippetstudio",
-        "icon": "$(symbol-field)",
-        "title": "Insert Variable"
-      },
-      {
-        "command": "snippetstudio.editor.insertVariablePlaceholder",
-        "category": "snippetstudio",
-        "icon": "$(symbol-variable)",
-        "title": "Insert Variable with Placeholder",
-        "shortTitle": "Insert Variable Placeholder"
-      },
-      {
-        "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
-        "category": "snippetstudio",
-        "icon": "$(symbol-event)",
-        "title": "Insert Placeholder with Transformation",
-        "shortTitle": "Insert Placeholder Transformation"
-      },
-      {
-        "command": "snippetstudio.file.createSnippetAt",
-        "title": "New Snippet at the given file",
-        "icon": "$(plus)",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
-        "title": "Create language-specific Snippet",
-        "shortTitle": "Create Language Snippet",
-        "category": "snippetstudio",
-        "when": false
-      },
-      {
-        "command": "snippetstudio.snippet.export",
-        "title": "Export Snippets to Code Snippets File",
-        "shortTitle": "Export Snippets",
-        "category": "snippetstudio"
-      },
-      {
-        "command": "snippetstudio.github.export",
-        "title": "Export Snippets to a GitHub gist",
-        "shortTitle": "Export Snippets To GitHub",
-        "category": "snippetstudio-github"
-      },
-      {
-        "command": "snippetstudio.github.import",
-        "title": "Import Snippet Files From GitHub",
-        "shortTitle": "Import Snippets From GitHub",
-        "category": "snippetstudio-github"
-      },
-      {
-        "command": "snippetstudio.github.browse",
-        "title": "Browse Snippet Gists on GitHub",
-        "shortTitle": "Browse Snippet Gists",
-        "category": "snippetstudio-github"
-      }
-    ],
-    "menus": {
-      "editor/title": [
-        {
-          "command": "snippetstudio.editor.save",
-          "when": "resourceScheme == snippetstudio && config.snippetstudio.editor.enableEditorForceSaveButton",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.editor.cancel",
-          "when": "resourceScheme == snippetstudio",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.editor.insertTabStop",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertPlaceholder",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertChoice",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertVariable",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertVariablePlaceholder",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
-          "group": "inline",
-          "when": "resourceScheme == snippetstudio"
-        }
-      ],
-      "editor/context": [
-        {
-          "command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
-          "when": "editor.hasSelection",
-          "group": "snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertTabStop",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertPlaceholder",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertChoice",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertVariable",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertVariablePlaceholder",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        },
-        {
-          "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
-          "group": "snippetstudio",
-          "when": "resourceScheme == snippetstudio"
-        }
-      ],
-      "view/title": [
-        {
-          "command": "snippetstudio.openSettings",
-          "when": "view == snippet-manager-view",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.snippet.addGlobal",
-          "when": "view == snippet-manager-view",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.refresh",
-          "when": "view == snippet-manager-view",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.refreshLocations",
-          "when": "view == location-manager",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.file.createGlobalLang",
-          "group": "inline",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.file.createProjectSnippets",
-          "group": "inline",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.file.createGlobalSnippets",
-          "group": "inline",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.snippet.export",
-          "group": "inline",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.github.export",
-          "group": "inline_github",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.github.import",
-          "group": "inline_github",
-          "when": "view == location-manager"
-        },
-        {
-          "command": "snippetstudio.github.browse",
-          "group": "inline_github",
-          "when": "view == location-manager"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "snippetstudio.file.open",
-          "when": "viewItem == snippet-filepath",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.file.delete",
-          "when": "viewItem == snippet-filepath",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.file.delete",
-          "when": "viewItem == snippet-filepath",
-          "group": "inline"
-        },
-        {
-          "command": "snippetstudio.snippet.delete",
-          "when": "viewItem == snippet",
-          "group": "navigation"
-        },
-        {
-          "command": "snippetstudio.snippet.delete",
-          "when": "viewItem == snippet",
-          "group": "inline"
-        },
-        {
-          "command": "snippetstudio.snippet.edit",
-          "when": "viewItem == snippet",
-          "group": "inline"
-        },
-        {
-          "command": "snippetstudio.file.createSnippetAt",
-          "when": "viewItem == snippet-filepath",
-          "group": "inline"
-        },
-        {
-          "command": "snippetstudio.file.createGlobalLang",
-          "group": "navigation",
-          "when": "viewItem == global-dropdown"
-        },
-        {
-          "command": "snippetstudio.file.createProjectSnippets",
-          "group": "navigation",
-          "when": "viewItem == local-dropdown"
-        },
-        {
-          "command": "snippetstudio.file.createGlobalSnippets",
-          "group": "navigation",
-          "when": "viewItem == global-dropdown"
-        }
-      ]
-    },
-    "keybindings": [
-      {
-        "command": "snippetstudio.editor.insertTabStop",
-        "key": "ctrl+shift+1",
-        "mac": "cmd+alt+1",
-        "win": "alt+shift+1",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.insertPlaceholder",
-        "key": "ctrl+shift+2",
-        "mac": "cmd+alt+2",
-        "win": "alt+shift+2",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.insertChoice",
-        "key": "ctrl+shift+3",
-        "mac": "cmd+alt+3",
-        "win": "alt+shift+3",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.insertVariable",
-        "key": "ctrl+shift+4",
-        "mac": "cmd+alt+4",
-        "win": "alt+shift+4",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.insertVariablePlaceholder",
-        "key": "ctrl+shift+5",
-        "mac": "cmd+alt+5",
-        "win": "alt+shift+5",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      },
-      {
-        "command": "snippetstudio.editor.insertPlaceholderWithTranformation",
-        "key": "ctrl+shift+6",
-        "mac": "cmd+alt+6",
-        "win": "alt+shift+6",
-        "when": "editorTextFocus && resourceScheme == snippetstudio"
-      }
-    ],
-    "configuration": {
-      "title": "SnippetStudio Configuration",
-      "properties": {
-        "snippetstudio.confirmSnippetDeletion": {
-          "type": "boolean",
-          "default": false,
-          "description": "Indicates whether to show a warning before deleting a snippet."
-        },
-        "snippetstudio.defaultSnippetPrefix": {
-          "type": "string",
-          "default": "",
-          "description": "Sets a default placeholder prefix that will be suggested when creating new snippets."
-        },
-        "snippetstudio.autoCapitalizeSnippetName": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically capitalizes the first letter of every word in the snippet's Title Key when it is created."
-        },
-        "snippetstudio.cleanupSnippetSelection": {
-          "type": "boolean",
-          "default": true,
-          "description": "When creating a snippet from a multi-line selection, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces evenly."
-        },
-        "snippetstudio.alwaysShowProjectSnippetFiles": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show .code-snippets files in the snippet view without a dropdown if there are no snippets of the current language."
-        },
-        "snippetstudio.statusBar.showItem": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show the snippet indicator status bar item."
-        },
-        "snippetstudio.statusBar.showLanguage": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show the active language after the status bar item."
-        },
-        "snippetstudio.statusBar.priority": {
-          "type": "integer",
-          "default": 30,
-          "description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
-        },
-        "snippetstudio.autoCreateSnippetFiles": {
-          "type": "boolean",
-          "default": true,
-          "description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
-        },
-        "snippetstudio.editor.autoEscapeDollarSigns": {
-          "type": "boolean",
-          "default": false,
-          "description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops, placeholders, and choice placeholders. It may be useful to enable this only for specific languages match tabstop syntax ie $0, like in Swift or Bash."
-        },
-        "snippetstudio.editor.autoEscapeDollarSignsFromSelection": {
-          "type": "boolean",
-          "default": false,
-          "description": "When creating a snippet from a selection, escape existing code that might match a snippet insertion feature."
-        },
-        "snippetstudio.editor.useQuickPickForVariableInsertion": {
-          "type": "boolean",
-          "default": true,
-          "description": "When inserting a snippet variable, use a quick pick instead of a choice snippet. The quickpick has variable descriptions and may be preferred over a choice snippet."
-        },
-        "snippetstudio.editor.enableEditorForceSaveButton": {
-          "type": "boolean",
-          "default": false,
-          "description": "When editing snippets, add a force save snippet title button that can bypass form validation.",
-          "tags": [
-            "experimental"
-          ]
-        },
-        "snippetstudio.editor.autoFillSnippetFeatureIds": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically determine and add the next id number for tabstops, placeholders, and choice snipppet insertion features."
-        },
-        "snippetstudio.export.location": {
-          "type": "string",
-          "default": "choose",
-          "enum": [
-            "preconfigured",
-            "downloads",
-            "choose"
-          ],
-          "enumDescriptions": [
-            "Choose 'preconfigured' to use a custom path defined in settings",
-            "Choose 'downloads' to save to your OS's downloads directory",
-            "Choose 'choose' to be prompted with a file dialog each time"
-          ],
-          "description": "Location to export a merged code snippets file."
-        },
-        "snippetstudio.export.preconfiguredExportPath": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "The custom file path to use when `#snippetstudio.export.location#` is set to `preconfigured`."
-        },
-        "snippetstudio.gists.onlySnippets": {
-          "type": "boolean",
-          "default": "true",
-          "markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
-        }
-      },
-      "order": 0
-    },
-    "walkthroughs": [
-      {
-        "id": "snippetStudioWalkthrough",
-        "title": "Snippet Studio Quick Start",
-        "description": "Learn how to manage your snippets with this extension.",
-        "steps": [
-          {
-            "id": "openSnippetStudio",
-            "title": "Open Snippet Studio",
-            "media": {
-              "markdown": "public/walkthroughs/openSnippetStudio.md"
-            },
-            "completionEvents": [
-              "onView:snippet-manager-view-container",
-              "onCommand:snippetstudio.openView",
-              "onCommand:snippetstudio.openSettings",
-              "onCommand:snippetstudio.refresh",
-              "onCommand:snippetstudio.refreshLocations"
-            ]
-          },
-          {
-            "id": "newGlobalSnippetFile",
-            "title": "Create a Global Snippet File",
-            "media": {
-              "markdown": "public/walkthroughs/newGlobalSnippetFile.md"
-            },
-            "completionEvents": [
-              "onCommand:snippetstudio.file.createGlobalSnippets",
-              "onCommand:snippetstudio.file.createGlobalLang"
-            ]
-          },
-          {
-            "id": "firstSnippet",
-            "title": "Create Your First Snippet",
-            "media": {
-              "markdown": "public/walkthroughs/firstSnippet.md"
-            },
-            "completionEvents": [
-              "onCommand:snippetstudio.editor.save",
-              "onCommand:snippetstudio.snippet.edit",
-              "onContext:snippetstudio.editorVisible"
-            ]
-          },
-          {
-            "id": "editSnippet",
-            "title": "Edit an Existing Snippet",
-            "media": {
-              "markdown": "public/walkthroughs/editSnippet.md"
-            },
-            "completionEvents": [
-              "onCommand:snippetstudio.snippet.edit"
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  "scripts": {
-    "compile": "npm run check-types && npm run lint && node esbuild.mjs",
-    "watch": "npm-run-all -p watch:*",
-    "watch:esbuild": "node esbuild.mjs --watch",
-    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package": "npm run check-types && npm run lint && node esbuild.mjs --production",
-    "compile-tests": "tsc -p . --outDir out",
-    "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "npm run compile-tests && npm run compile && npm run lint",
-    "check-types": "tsc --noEmit",
-    "lint": "eslint src",
-    "test": "vscode-test",
-    "prepare": "husky"
-  },
-  "devDependencies": {
-    "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "@types/vscode": "^1.97.0",
-    "@typescript-eslint/eslint-plugin": "^8.22.0",
-    "@typescript-eslint/parser": "^8.22.0",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1",
-    "@vscode/vsce": "^3.3.0",
-    "esbuild": "^0.25.1",
-    "eslint": "^9.19.0",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.1.2",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^3.5.3",
-    "typescript": "^5.7.3"
-  },
-  "dependencies": {
-    "@octokit/auth-oauth-device": "^7.1.5",
-    "@octokit/rest": "^21.1.1",
-    "glob": "^11.0.1",
-    "strip-json-comments": "^5.0.1"
-  }
+	"name": "snippetstudio",
+	"displayName": "SnippetStudio",
+	"description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
+	"version": "1.4.0",
+	"publisher": "AlexDombroski",
+	"author": {
+		"name": "Alex Dombroski",
+		"email": "alexdombroski1@gmail.com",
+		"url": "https://github.com/alexanderdombroski"
+	},
+	"icon": "public/logo.png",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/alexanderdombroski/snippetstudio.git"
+	},
+	"engines": {
+		"vscode": ">=1.97.0",
+		"node": ">=20.0.0"
+	},
+	"capabilities": {
+		"virtualWorkspaces": {
+			"supported": "limited",
+			"description": "Needs to access a file system and node.js file related modules like fs, path, and glob."
+		}
+	},
+	"license": "MIT",
+	"categories": [
+		"Snippets",
+		"Visualization",
+		"Other"
+	],
+	"keywords": [
+		"snippets",
+		"snippet editor",
+		"snippet manager",
+		"gui editor",
+		"code completion"
+	],
+	"preview": false,
+	"pricing": "Free",
+	"activationEvents": [
+		"onFileSystem:snippetstudio"
+	],
+	"main": "./dist/extension.js",
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "snippet-manager-view-container",
+					"title": "Snippet Studio Manager",
+					"icon": "$(repo)"
+				}
+			]
+		},
+		"views": {
+			"snippet-manager-view-container": [
+				{
+					"id": "snippet-data",
+					"name": "Snippet Editor",
+					"type": "webview",
+					"when": "snippetstudio.editorVisible",
+					"icon": "$(book)"
+				},
+				{
+					"id": "snippet-manager-view",
+					"name": "Snippets",
+					"type": "tree",
+					"icon": "$(repo)"
+				},
+				{
+					"id": "location-manager",
+					"name": "Locations Manager",
+					"type": "tree",
+					"icon": "$(database)"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "snippet-manager-view",
+				"contents": "Snippets of the active language will appear here!"
+			},
+			{
+				"view": "location-manager",
+				"contents": "This is where snippet files of ALL languages being loaded in will appear!"
+			}
+		],
+		"commands": [
+			{
+				"command": "snippetstudio.openView",
+				"title": "Open Snippet Manager"
+			},
+			{
+				"command": "snippetstudio.snippet.addGlobal",
+				"title": "Add Global Snippet",
+				"icon": "$(plus)",
+				"shortTitle": "Add Snippet",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.openSettings",
+				"title": "Open Snippet Studio Settings",
+				"icon": "$(gear)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.snippet.showBody",
+				"title": "Show Snippet Body",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.open",
+				"title": "Open Snippet File",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.openFromDouble",
+				"title": "Open Snippet File",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.delete",
+				"title": "Delete Snippet File",
+				"icon": "$(trash)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.snippet.edit",
+				"title": "Edit Snippet File",
+				"icon": "$(pencil)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.snippet.delete",
+				"title": "Delete Snippet",
+				"icon": "$(trash)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.refresh",
+				"title": "Refresh Snippets",
+				"icon": "$(refresh)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.refreshLocations",
+				"title": "Refresh Locations",
+				"icon": "$(refresh)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.createGlobalLang",
+				"title": "Create Global Snippets File",
+				"icon": "$(file-code)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.createProjectSnippets",
+				"title": "Create Project Snippets File",
+				"icon": "$(book)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.createGlobalSnippets",
+				"title": "Create Global Mixed Snippets File",
+				"icon": "$(book)",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.save",
+				"title": "Accept Snippet Changes",
+				"shortTitle": "Save Sippet",
+				"icon": "$(check)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.editor.cancel",
+				"title": "Discard Snippet Changes",
+				"shortTitle": "Cancel Snippet",
+				"icon": "$(discard)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.editor.insertTabStop",
+				"category": "snippetstudio",
+				"icon": "$(symbol-property)",
+				"title": "Insert Tabstop"
+			},
+			{
+				"command": "snippetstudio.editor.insertPlaceholder",
+				"category": "snippetstudio",
+				"icon": "$(symbol-constant)",
+				"title": "Insert Placeholder"
+			},
+			{
+				"command": "snippetstudio.editor.insertChoice",
+				"category": "snippetstudio",
+				"icon": "$(symbol-value)",
+				"title": "Insert Choice"
+			},
+			{
+				"command": "snippetstudio.editor.insertVariable",
+				"category": "snippetstudio",
+				"icon": "$(symbol-field)",
+				"title": "Insert Variable"
+			},
+			{
+				"command": "snippetstudio.editor.insertVariablePlaceholder",
+				"category": "snippetstudio",
+				"icon": "$(symbol-variable)",
+				"title": "Insert Variable with Placeholder",
+				"shortTitle": "Insert Variable Placeholder"
+			},
+			{
+				"command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+				"category": "snippetstudio",
+				"icon": "$(symbol-event)",
+				"title": "Insert Placeholder with Transformation",
+				"shortTitle": "Insert Placeholder Transformation"
+			},
+			{
+				"command": "snippetstudio.file.createSnippetAt",
+				"title": "New Snippet at the given file",
+				"icon": "$(plus)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+				"title": "Create language-specific Snippet",
+				"shortTitle": "Create Language Snippet",
+				"category": "snippetstudio",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.snippet.export",
+				"title": "Export Snippets to Code Snippets File",
+				"shortTitle": "Export Snippets",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.github.export",
+				"title": "Export Snippets to a GitHub gist",
+				"shortTitle": "Export Snippets To GitHub",
+				"category": "snippetstudio-github"
+			},
+			{
+				"command": "snippetstudio.github.import",
+				"title": "Import Snippet Files From GitHub",
+				"shortTitle": "Import Snippets From GitHub",
+				"category": "snippetstudio-github"
+			},
+			{
+				"command": "snippetstudio.github.browse",
+				"title": "Browse Snippet Gists on GitHub",
+				"shortTitle": "Browse Snippet Gists",
+				"category": "snippetstudio-github"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "snippetstudio.editor.save",
+					"when": "resourceScheme == snippetstudio && config.snippetstudio.editor.enableEditorForceSaveButton",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.editor.cancel",
+					"when": "resourceScheme == snippetstudio",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.editor.insertTabStop",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholder",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertChoice",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariable",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariablePlaceholder",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+					"group": "inline",
+					"when": "resourceScheme == snippetstudio"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+					"when": "editor.hasSelection",
+					"group": "snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertTabStop",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholder",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertChoice",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariable",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariablePlaceholder",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+					"group": "snippetstudio",
+					"when": "resourceScheme == snippetstudio"
+				}
+			],
+			"view/title": [
+				{
+					"command": "snippetstudio.openSettings",
+					"when": "view == snippet-manager-view",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.snippet.addGlobal",
+					"when": "view == snippet-manager-view",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.refresh",
+					"when": "view == snippet-manager-view",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.refreshLocations",
+					"when": "view == location-manager",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.createGlobalLang",
+					"group": "inline",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.file.createProjectSnippets",
+					"group": "inline",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.file.createGlobalSnippets",
+					"group": "inline",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.snippet.export",
+					"group": "inline",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.github.export",
+					"group": "inline_github",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.github.import",
+					"group": "inline_github",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.github.browse",
+					"group": "inline_github",
+					"when": "view == location-manager"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "snippetstudio.file.open",
+					"when": "viewItem == snippet-filepath",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.delete",
+					"when": "viewItem == snippet-filepath",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.delete",
+					"when": "viewItem == snippet-filepath",
+					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.snippet.delete",
+					"when": "viewItem == snippet",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.snippet.delete",
+					"when": "viewItem == snippet",
+					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.snippet.edit",
+					"when": "viewItem == snippet",
+					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.file.createSnippetAt",
+					"when": "viewItem == snippet-filepath",
+					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.file.createGlobalLang",
+					"group": "navigation",
+					"when": "viewItem == global-dropdown"
+				},
+				{
+					"command": "snippetstudio.file.createProjectSnippets",
+					"group": "navigation",
+					"when": "viewItem == local-dropdown"
+				},
+				{
+					"command": "snippetstudio.file.createGlobalSnippets",
+					"group": "navigation",
+					"when": "viewItem == global-dropdown"
+				}
+			]
+		},
+		"keybindings": [
+			{
+				"command": "snippetstudio.editor.insertTabStop",
+				"key": "ctrl+shift+1",
+				"mac": "cmd+alt+1",
+				"win": "alt+shift+1",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.insertPlaceholder",
+				"key": "ctrl+shift+2",
+				"mac": "cmd+alt+2",
+				"win": "alt+shift+2",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.insertChoice",
+				"key": "ctrl+shift+3",
+				"mac": "cmd+alt+3",
+				"win": "alt+shift+3",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.insertVariable",
+				"key": "ctrl+shift+4",
+				"mac": "cmd+alt+4",
+				"win": "alt+shift+4",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.insertVariablePlaceholder",
+				"key": "ctrl+shift+5",
+				"mac": "cmd+alt+5",
+				"win": "alt+shift+5",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			},
+			{
+				"command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+				"key": "ctrl+shift+6",
+				"mac": "cmd+alt+6",
+				"win": "alt+shift+6",
+				"when": "editorTextFocus && resourceScheme == snippetstudio"
+			}
+		],
+		"configuration": {
+			"title": "SnippetStudio Configuration",
+			"properties": {
+				"snippetstudio.confirmSnippetDeletion": {
+					"type": "boolean",
+					"default": false,
+					"description": "Indicates whether to show a warning before deleting a snippet."
+				},
+				"snippetstudio.defaultSnippetPrefix": {
+					"type": "string",
+					"default": "",
+					"description": "Sets a default placeholder prefix that will be suggested when creating new snippets."
+				},
+				"snippetstudio.autoCapitalizeSnippetName": {
+					"type": "boolean",
+					"default": false,
+					"description": "Automatically capitalizes the first letter of every word in the snippet's Title Key when it is created."
+				},
+				"snippetstudio.cleanupSnippetSelection": {
+					"type": "boolean",
+					"default": true,
+					"description": "When creating a snippet from a multi-line selection, adjusts the selection to be each full line. Convert's a selections tabs to spaces and removes shared leading spaces evenly."
+				},
+				"snippetstudio.alwaysShowProjectSnippetFiles": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show .code-snippets files in the snippet view without a dropdown if there are no snippets of the current language."
+				},
+				"snippetstudio.statusBar.showItem": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show the snippet indicator status bar item."
+				},
+				"snippetstudio.statusBar.showLanguage": {
+					"type": "boolean",
+					"default": false,
+					"description": "Show the active language after the status bar item."
+				},
+				"snippetstudio.statusBar.priority": {
+					"type": "integer",
+					"default": 30,
+					"description": "Priority of the snippet indicator status bar item (higher values appear further to the left)."
+				},
+				"snippetstudio.autoCreateSnippetFiles": {
+					"type": "boolean",
+					"default": true,
+					"description": "When saving a snippet, automatically creates a snippet file if it doesn't already exist."
+				},
+				"snippetstudio.editor.autoEscapeDollarSigns": {
+					"type": "boolean",
+					"default": false,
+					"description": "When editing the body of a snippet, automatically escapes '$' to prevent accidentally creating tabstops, placeholders, and choice placeholders. It may be useful to enable this only for specific languages match tabstop syntax ie $0, like in Swift or Bash."
+				},
+				"snippetstudio.editor.autoEscapeDollarSignsFromSelection": {
+					"type": "boolean",
+					"default": false,
+					"description": "When creating a snippet from a selection, escape existing code that might match a snippet insertion feature."
+				},
+				"snippetstudio.editor.useQuickPickForVariableInsertion": {
+					"type": "boolean",
+					"default": true,
+					"description": "When inserting a snippet variable, use a quick pick instead of a choice snippet. The quickpick has variable descriptions and may be preferred over a choice snippet."
+				},
+				"snippetstudio.editor.enableEditorForceSaveButton": {
+					"type": "boolean",
+					"default": false,
+					"description": "When editing snippets, add a force save snippet title button that can bypass form validation.",
+					"tags": [
+						"experimental"
+					]
+				},
+				"snippetstudio.editor.autoFillSnippetFeatureIds": {
+					"type": "boolean",
+					"default": true,
+					"description": "Automatically determine and add the next id number for tabstops, placeholders, and choice snipppet insertion features."
+				},
+				"snippetstudio.export.location": {
+					"type": "string",
+					"default": "choose",
+					"enum": [
+						"preconfigured",
+						"downloads",
+						"choose"
+					],
+					"enumDescriptions": [
+						"Choose 'preconfigured' to use a custom path defined in settings",
+						"Choose 'downloads' to save to your OS's downloads directory",
+						"Choose 'choose' to be prompted with a file dialog each time"
+					],
+					"description": "Location to export a merged code snippets file."
+				},
+				"snippetstudio.export.preconfiguredExportPath": {
+					"type": "string",
+					"default": "",
+					"markdownDescription": "The custom file path to use when `#snippetstudio.export.location#` is set to `preconfigured`."
+				},
+				"snippetstudio.gists.onlySnippets": {
+					"type": "boolean",
+					"default": "true",
+					"markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
+				}
+			},
+			"order": 0
+		},
+		"walkthroughs": [
+			{
+				"id": "snippetStudioWalkthrough",
+				"title": "Snippet Studio Quick Start",
+				"description": "Learn how to manage your snippets with this extension.",
+				"steps": [
+					{
+						"id": "openSnippetStudio",
+						"title": "Open Snippet Studio",
+						"media": {
+							"markdown": "public/walkthroughs/openSnippetStudio.md"
+						},
+						"completionEvents": [
+							"onView:snippet-manager-view-container",
+							"onCommand:snippetstudio.openView",
+							"onCommand:snippetstudio.openSettings",
+							"onCommand:snippetstudio.refresh",
+							"onCommand:snippetstudio.refreshLocations"
+						]
+					},
+					{
+						"id": "newGlobalSnippetFile",
+						"title": "Create a Global Snippet File",
+						"media": {
+							"markdown": "public/walkthroughs/newGlobalSnippetFile.md"
+						},
+						"completionEvents": [
+							"onCommand:snippetstudio.file.createGlobalSnippets",
+							"onCommand:snippetstudio.file.createGlobalLang"
+						]
+					},
+					{
+						"id": "firstSnippet",
+						"title": "Create Your First Snippet",
+						"media": {
+							"markdown": "public/walkthroughs/firstSnippet.md"
+						},
+						"completionEvents": [
+							"onCommand:snippetstudio.editor.save",
+							"onCommand:snippetstudio.snippet.edit",
+							"onContext:snippetstudio.editorVisible"
+						]
+					},
+					{
+						"id": "editSnippet",
+						"title": "Edit an Existing Snippet",
+						"media": {
+							"markdown": "public/walkthroughs/editSnippet.md"
+						},
+						"completionEvents": [
+							"onCommand:snippetstudio.snippet.edit"
+						]
+					}
+				]
+			}
+		]
+	},
+	"scripts": {
+		"compile": "npm run check-types && npm run lint && node esbuild.mjs",
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.mjs --watch",
+		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+		"package": "npm run check-types && npm run lint && node esbuild.mjs --production",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "npm run compile-tests && npm run compile && npm run lint",
+		"check-types": "tsc --noEmit",
+		"lint": "eslint src",
+		"test": "vscode-test",
+		"prepare": "husky"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.10",
+		"@types/node": "20.x",
+		"@types/vscode": "^1.97.0",
+		"@typescript-eslint/eslint-plugin": "^8.22.0",
+		"@typescript-eslint/parser": "^8.22.0",
+		"@vscode/test-cli": "^0.0.10",
+		"@vscode/test-electron": "^2.4.1",
+		"@vscode/vsce": "^3.3.0",
+		"esbuild": "^0.25.1",
+		"eslint": "^9.19.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.1.2",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^3.5.3",
+		"typescript": "^5.7.3"
+	},
+	"dependencies": {
+		"@octokit/auth-oauth-device": "^7.1.5",
+		"@octokit/rest": "^21.1.1",
+		"glob": "^11.0.1",
+		"strip-json-comments": "^5.0.1"
+	}
 }

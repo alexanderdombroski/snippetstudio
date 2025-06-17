@@ -1,7 +1,5 @@
-
-
 interface CommandMap {
-    [command: string]: () => void;
+	[command: string]: () => void;
 }
 
 export { CommandMap };

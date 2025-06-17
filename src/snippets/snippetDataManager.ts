@@ -1,34 +1,32 @@
-import { SnippetData } from "../types/snippetTypes";
+import { SnippetData } from '../types/snippetTypes';
 
 export default class snippetDataManager {
+	private _dataMap: Map<string, SnippetData> = new Map();
 
-    private _dataMap: Map<string, SnippetData> = new Map();
+	constructor() {}
 
-    constructor() {}
+	getData(uri: string): SnippetData | undefined {
+		return this._dataMap.get(uri);
+	}
 
-    getData(uri: string): SnippetData | undefined {
-        return this._dataMap.get(uri);
-    }
+	setData(uri: string, snippetData: SnippetData) {
+		this._dataMap.set(uri, snippetData);
+	}
 
-    setData(uri: string, snippetData: SnippetData) {
-        this._dataMap.set(uri, snippetData);
-    }
+	setPartialData(uri: string, part: keyof SnippetData, value: string) {
+		const snippetData = this._dataMap.get(uri);
+		if (snippetData) {
+			snippetData[part] = value;
+		}
+	}
 
-    setPartialData(uri: string, part: keyof SnippetData, value: string) {
-        const snippetData = this._dataMap.get(uri);
-        if (snippetData) {
-            snippetData[part] = value;
-        }
-    }
+	deleteData(uri: string) {
+		if (this._dataMap.has(uri)) {
+			this._dataMap.delete(uri);
+		}
+	}
 
-    deleteData(uri: string) {
-        if (this._dataMap.has(uri)) {
-            this._dataMap.delete(uri);
-        }
-    }
-
-    hasKey(uri: string) {
-        return this._dataMap.has(uri);
-    }
-
+	hasKey(uri: string) {
+		return this._dataMap.has(uri);
+	}
 }
