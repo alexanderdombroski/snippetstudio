@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import onDoubleClick from './doubleClickHandler';
-import { deleteSnippet, readSnippet } from '../snippets/updateSnippets';
 import { TreeSnippet } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import SnippetEditorProvider from '../ui/bufferEditor';
@@ -98,6 +97,7 @@ function initSnippetCommands(
 		vscode.commands.registerCommand('snippetstudio.snippet.edit', async (item: TreeSnippet) => {
 			const langId = getCurrentLanguage() ?? 'plaintext';
 			const snippetTitle = item.description?.toString() ?? '';
+			const { readSnippet } = await import('../snippets/updateSnippets.js');
 			const snippet = await readSnippet(item.path, snippetTitle);
 			const snippetData: SnippetData = {
 				filename: item.path,
@@ -137,6 +137,7 @@ function initSnippetCommands(
 					return;
 				}
 
+				const { deleteSnippet } = await import('../snippets/updateSnippets.js');
 				deleteSnippet(item.path, item.description.toString());
 				vscode.commands.executeCommand('snippetstudio.refresh');
 			}

@@ -1,12 +1,6 @@
 import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
-import {
-	createGlobalLangFile,
-	createGlobalSnippetsFile,
-	createLocalSnippetsFile,
-	exportSnippets,
-} from '../snippets/newSnippetFile';
 import onDoubleClick from './doubleClickHandler';
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
@@ -28,7 +22,8 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
 	// Create Global Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.createGlobalLang', () => {
+		vscode.commands.registerCommand('snippetstudio.file.createGlobalLang', async () => {
+			const { createGlobalLangFile } = await import('../snippets/newSnippetFile.js');
 			createGlobalLangFile();
 			vscode.commands.executeCommand('snippetstudio.refresh');
 			vscode.commands.executeCommand('snippetstudio.refreshLocations');
@@ -37,6 +32,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Create Local Mixed Snippet File
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.file.createProjectSnippets', async () => {
+			const { createLocalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createLocalSnippetsFile();
 			vscode.commands.executeCommand('snippetstudio.refresh');
 			vscode.commands.executeCommand('snippetstudio.refreshLocations');
@@ -45,6 +41,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Create Global Mixed Snippet File
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.file.createGlobalSnippets', async () => {
+			const { createGlobalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createGlobalSnippetsFile();
 			vscode.commands.executeCommand('snippetstudio.refresh');
 			vscode.commands.executeCommand('snippetstudio.refreshLocations');
@@ -68,7 +65,10 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
 	// Export Snippet Files
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.snippet.export', exportSnippets)
+		vscode.commands.registerCommand('snippetstudio.snippet.export', async () => {
+			const { exportSnippets } = await import('../snippets/newSnippetFile.js');
+			exportSnippets();
+		})
 	);
 }
 

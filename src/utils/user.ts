@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getGlobalSnippetFilesDir, getWorkspaceFolder } from './fsInfo';
 import path from 'path';
-import { getFileName } from '../snippets/newSnippetFile';
 
 async function getConfirmation(question: string): Promise<boolean> {
 	// Confirmation message
@@ -122,6 +121,7 @@ async function getSavePathFromDialog(
 }
 
 async function getSavePath() {
+	const { getFileName } = await import('../snippets/newSnippetFile.js');
 	const filename = (await getFileName()) + '.code-snippets';
 	if (filename === undefined) {
 		return;

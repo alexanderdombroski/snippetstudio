@@ -36,6 +36,8 @@
 
 ### Changed
 
+- Lazy load snippet gist and snippet file related commands
+
 ## [1.4.0] - 2025-05-12
 
 ### Added

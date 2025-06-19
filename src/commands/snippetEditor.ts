@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
 import SnippetEditorProvider from '../ui/bufferEditor';
 import { getCurrentUri } from '../utils/fsInfo';
-import { writeSnippet } from '../snippets/updateSnippets';
 import { VSCodeSnippet } from '../types/snippetTypes';
 import { titleCase } from '../utils/string';
-import { createFile } from '../snippets/newSnippetFile';
 
 function initSnippetEditorCommands(
 	context: vscode.ExtensionContext,
@@ -50,8 +48,10 @@ function initSnippetEditorCommands(
 						.getConfiguration('snippetstudio')
 						.get<boolean>('autoCreateSnippetFiles')
 				) {
+					const { createFile } = await import('../snippets/newSnippetFile.js');
 					await createFile(data.filename, false);
 				}
+				const { writeSnippet } = await import('../snippets/updateSnippets.js');
 				writeSnippet(
 					data.filename,
 					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
