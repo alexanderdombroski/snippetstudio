@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
-import { createGist, importGist } from '../snippets/snippetGists';
 
 async function initSnippetGistsCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.github.export', () => {
+		vscode.commands.registerCommand('snippetstudio.github.export', async () => {
+			const { createGist } = await import('../snippets/snippetGists.js');
 			createGist(context);
 		}),
 		vscode.commands.registerCommand('snippetstudio.github.import', async () => {
+			const { importGist } = await import('../snippets/snippetGists.js');
 			await importGist(context);
 			vscode.commands.executeCommand('snippetstudio.refreshLocations');
 		}),
