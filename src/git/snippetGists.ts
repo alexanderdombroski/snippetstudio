@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import path from 'path';
 import fs from 'fs';
 
-import getOctokitClient from '../utils/octokit';
-import { getFileName, mergeSnippetFiles } from './newSnippetFile';
+import getOctokitClient from './octokit';
+import { getFileName, mergeSnippetFiles } from '../snippets/newSnippetFile';
 import { chooseLocalGlobal, getSavePathFromDialog } from '../utils/user';
 
 async function createGist(context: vscode.ExtensionContext) {
