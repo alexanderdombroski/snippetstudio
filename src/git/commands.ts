@@ -69,7 +69,14 @@ export async function hasChangesToCommit(repoPath: string): Promise<boolean> {
 	);
 }
 
-export async function commitSnippets(repoPath: string, committer: { name: string; email: string }) {
+export async function commitSnippets(
+	repoPath: string,
+	message: string,
+	committer: { name: string; email: string } = {
+		name: 'SnippetStudio[bot]',
+		email: 'snippetstudio@noreply.local',
+	}
+) {
 	const git = simpleGit(repoPath);
 
 	const ogName = process.env.GIT_COMMITTER_NAME;
@@ -81,7 +88,7 @@ export async function commitSnippets(repoPath: string, committer: { name: string
 		process.env.GIT_COMMITTER_NAME = committer.name;
 		process.env.GIT_COMMITTER_EMAIL = committer.email;
 
-		await git.commit('Modified global snippets for vscode');
+		await git.commit(message);
 	} catch {
 		vscode.window.showErrorMessage('Could not commit Snippets');
 	} finally {

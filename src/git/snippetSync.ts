@@ -15,6 +15,8 @@ import { commitSnippets, getOriginRemote, hasChangesToCommit, init, pull } from 
  * [X] Init local and remote repo
  * [X] Commit changes
  * [X] Ensure that the local repo matches
+ * [ ] JSON merge if new repo
+ * [ ] JSON merge if conflicts
  *
  */
 async function snippetSync(context: vscode.ExtensionContext) {
@@ -29,10 +31,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	init(repoPath, url);
 
 	if (await hasChangesToCommit(repoPath)) {
-		await commitSnippets(repoPath, {
-			name: 'SnippetStudio[bot]',
-			email: 'snippetstudio@noreply.local',
-		});
+		await commitSnippets(repoPath, 'Modified global snippets for vscode');
 	}
 
 	if (!(await doesRepoExist(client, user, repo))) {
@@ -54,11 +53,17 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	}
 
 	const success = await pull(repoPath);
-	if (!success) {
-		// TODO - Merge Repos!!
-		vscode.window.showWarningMessage('MERGE CONFLICT! MERGING NOT IMPLIMENTED YET!');
+	if (success) {
+		vscode.window.showInformationMessage(`Sucessfully synced with ${url} without conflicts`);
 		return;
 	}
+	// TODO - Merge Repos!!
+	vscode.window.showWarningMessage('MERGE CONFLICT! MERGING NOT IMPLIMENTED YET!');
+
+	await commitSnippets(
+		repoPath,
+		'Progmatically resolved merge conflicts through JSON object merging'
+	);
 }
 
 /**
