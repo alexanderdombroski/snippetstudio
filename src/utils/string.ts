@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { RepoData } from '../types/gitTypes';
 
 function titleCase(str: string): string {
 	return str
