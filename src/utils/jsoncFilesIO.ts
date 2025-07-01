@@ -69,12 +69,15 @@ export async function readSnippetFile(filepath: string): Promise<VSCodeSnippets 
 export async function writeSnippetFile(
 	filepath: string,
 	jsonObject: VSCodeSnippets,
-	successMessage: string = 'Snippet updated successfully!'
+	successMessage: string = 'Snippet updated successfully!',
+	silent: boolean = false
 ) {
 	try {
 		const jsonString = JSON.stringify(jsonObject, null, 2);
 		await fs.writeFile(filepath, jsonString);
-		vscode.window.showInformationMessage(successMessage);
+		if (!silent) {
+			vscode.window.showInformationMessage(successMessage);
+		}
 	} catch {
 		vscode.window.showErrorMessage(
 			`Unable to update file ${path.dirname(filepath)}\n\n${filepath}`

@@ -80,7 +80,8 @@ async function locateAllSnippetFiles(): Promise<[string[], string[]]> {
 		locals = await findCodeSnippetsFiles(path.join(cwd, '.vscode'));
 	}
 
-	globals = await findAllGlobalSnippetFiles();
+	const globalDir = getGlobalSnippetFilesDir();
+	globals = await findAllGlobalSnippetFiles(globalDir);
 
 	return [locals, globals];
 }
@@ -88,10 +89,9 @@ async function locateAllSnippetFiles(): Promise<[string[], string[]]> {
 /**
  * Finds all global snippet files.
  */
-async function findAllGlobalSnippetFiles(): Promise<string[]> {
+async function findAllGlobalSnippetFiles(globalDir: string | undefined): Promise<string[]> {
 	const snippetFiles: string[] = [];
 
-	const globalDir = getGlobalSnippetFilesDir();
 	if (globalDir !== undefined) {
 		for (var langId of langIds) {
 			const snippetFile = path.join(globalDir, `${langId}.json`);
@@ -107,4 +107,4 @@ async function findAllGlobalSnippetFiles(): Promise<string[]> {
 	return snippetFiles;
 }
 
-export { locateSnippetFiles, locateAllSnippetFiles };
+export { locateSnippetFiles, locateAllSnippetFiles, findAllGlobalSnippetFiles };
