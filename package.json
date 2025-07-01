@@ -240,20 +240,32 @@
 			},
 			{
 				"command": "snippetstudio.github.export",
-				"title": "Export Snippets to a GitHub gist",
-				"shortTitle": "Export Snippets To GitHub",
+				"title": "Export Snippets to a GitHub Gist",
+				"shortTitle": "Export Snippets To Gist",
 				"category": "snippetstudio-github"
 			},
 			{
 				"command": "snippetstudio.github.import",
-				"title": "Import Snippet Files From GitHub",
-				"shortTitle": "Import Snippets From GitHub",
+				"title": "Import Snippet Files From GitHub Gist",
+				"shortTitle": "Import Snippets From Gist",
 				"category": "snippetstudio-github"
 			},
 			{
 				"command": "snippetstudio.github.browse",
 				"title": "Browse Snippet Gists on GitHub",
 				"shortTitle": "Browse Snippet Gists",
+				"category": "snippetstudio-github"
+			},
+			{
+				"command": "snippetstudio.github.sync",
+				"title": "Sync Global Snippets to Github",
+				"shortTitle": "Sync Global Snippets",
+				"category": "snippetstudio-github"
+			},
+			{
+				"command": "snippetstudio.github.merge",
+				"title": "Merge Snippet Repository to Global Snippets",
+				"shortTitle": "Merge Snippet Repo",
 				"category": "snippetstudio-github"
 			}
 		],
@@ -380,16 +392,26 @@
 				},
 				{
 					"command": "snippetstudio.github.export",
-					"group": "inline_github",
+					"group": "inline_gist",
 					"when": "view == location-manager"
 				},
 				{
 					"command": "snippetstudio.github.import",
-					"group": "inline_github",
+					"group": "inline_gist",
 					"when": "view == location-manager"
 				},
 				{
 					"command": "snippetstudio.github.browse",
+					"group": "inline_gist",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.github.sync",
+					"group": "inline_github",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.github.merge",
 					"group": "inline_github",
 					"when": "view == location-manager"
 				}
@@ -589,8 +611,12 @@
 				},
 				"snippetstudio.gists.onlySnippets": {
 					"type": "boolean",
-					"default": "true",
+					"default": true,
 					"markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
+				},
+				"snippetstudio.github.globalSnippetsRepository": {
+					"type": "string",
+					"markdownDescription": "HTTPS Remote GitHub URL to store global snippets in. *This will be auto-created if left blank*\n\nChanging it later will merge your old snippets into the new cloned ones."
 				}
 			},
 			"order": 0
