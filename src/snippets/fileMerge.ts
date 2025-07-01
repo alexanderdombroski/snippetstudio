@@ -4,6 +4,7 @@ import { VSCodeSnippets } from '../types/snippetTypes';
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import { findAllGlobalSnippetFiles } from './locateSnippets';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
+import { isDeepStrictEqual } from 'util';
 
 /**
  * Merge all snippet files within a the temp folder into the global snippets directory.
@@ -66,11 +67,16 @@ async function mergeFiles(globalPath: string, mergePath: string) {
 	}
 
 	Object.keys(mergeSnippets).forEach((key) => {
-		if (baseSnippets[key]) {
-			const newName = getNewPropName(key, baseSnippets);
-			baseSnippets[newName] = mergeSnippets[key];
+		const incoming = mergeSnippets[key];
+		const existing = baseSnippets[key];
+
+		if (existing) {
+			if (!isDeepStrictEqual(existing, incoming)) {
+				const newName = getNewPropName(key, baseSnippets);
+				baseSnippets[newName] = incoming;
+			}
 		} else {
-			baseSnippets[key] = mergeSnippets[key];
+			baseSnippets[key] = incoming;
 		}
 	});
 

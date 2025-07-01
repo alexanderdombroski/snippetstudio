@@ -6,6 +6,7 @@ import { RepoData } from '../types/gitTypes';
 import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import { commitSnippets, getOriginRemote, hasChangesToCommit, init, pull } from './commands';
+import { collaborate } from './snippetMerge';
 
 /**
  * ENSURES THAT ALL REPOS ARE IN SYNC
@@ -20,11 +21,11 @@ import { commitSnippets, getOriginRemote, hasChangesToCommit, init, pull } from 
  *
  */
 async function snippetSync(context: vscode.ExtensionContext) {
-	const client = await getOctokitClient(context);
 	const repoPath = getGlobalSnippetFilesDir();
 	if (repoPath === undefined) {
 		return;
 	}
+	const client = await getOctokitClient(context);
 
 	const { user, repo, url } = await getPreferredRepo(client);
 
@@ -47,8 +48,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 
 	const currentRemote = await getOriginRemote(repoPath);
 	if (!currentRemote?.includes(`${user}/${repo}`)) {
-		// TODO - Merge Repos!!
-		vscode.window.showWarningMessage('MERGING NOT IMPLIMENTED YET!');
+		await collaborate({ user, repo, url });
 		return;
 	}
 
@@ -57,8 +57,8 @@ async function snippetSync(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage(`Sucessfully synced with ${url} without conflicts`);
 		return;
 	}
-	// TODO - Merge Repos!!
-	vscode.window.showWarningMessage('MERGE CONFLICT! MERGING NOT IMPLIMENTED YET!');
+
+	await collaborate({ user, repo, url });
 
 	await commitSnippets(
 		repoPath,

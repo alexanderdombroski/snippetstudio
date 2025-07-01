@@ -47,3 +47,24 @@ export function extractGitURL(url: string): RepoData | null {
 
 	return null;
 }
+
+/**
+ * Shows a input box and asks for a remote GitHub url
+ */
+export async function getRepoDataFromUser(prompt: string): Promise<RepoData | null> {
+	const url = await vscode.window.showInputBox({
+		prompt,
+		placeHolder: 'https://github.com/user/repo.git',
+	});
+	if (url === undefined) {
+		return null; // User pressed ESC
+	}
+
+	const urlData = extractGitURL(url);
+	if (urlData) {
+		return urlData;
+	}
+
+	vscode.window.showErrorMessage('Not a valid GitHub URL');
+	return null;
+}

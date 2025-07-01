@@ -2,6 +2,7 @@ import * as fs from 'fs/promises'; // Import fs/promises for async file operatio
 import { VSCodeSnippets } from '../types/snippetTypes';
 import * as vscode from 'vscode';
 import path from 'path';
+import { getGlobalSnippetFilesDir } from './fsInfo';
 
 async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
@@ -83,4 +84,18 @@ export async function writeSnippetFile(
 			`Unable to update file ${path.dirname(filepath)}\n\n${filepath}`
 		);
 	}
+}
+
+export async function resetGlobalSnippets() {
+	const deletePath = getGlobalSnippetFilesDir();
+	if (deletePath === undefined) {
+		return;
+	}
+
+	const entries = await fs.readdir(deletePath);
+	const deletePromises = entries.map((entry) =>
+		fs.rm(path.join(deletePath, entry), { recursive: true, force: true })
+	);
+
+	await Promise.all(deletePromises);
 }

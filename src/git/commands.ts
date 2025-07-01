@@ -2,20 +2,22 @@ import simpleGit from 'simple-git';
 import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
-import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
 
 /**
  * Inits a repo if necessary
  * @returns false if can't init sucessfully
  */
 export async function init(repoPath: string, url: string): Promise<boolean> {
-	expandGitignore(repoPath);
+	const git = simpleGit(repoPath);
 
 	if (fs.existsSync(path.join(repoPath, '.git'))) {
+		await pull(repoPath);
+		expandGitignore(repoPath);
 		return true;
 	}
 
-	const git = simpleGit(repoPath);
+	expandGitignore(repoPath);
+
 	try {
 		await git.init();
 		await git.addRemote('origin', url);
@@ -114,6 +116,17 @@ export async function pull(repoPath: string): Promise<boolean> {
 		await git.pull();
 		return true;
 	} catch {
+		return false;
+	}
+}
+
+export async function cloneIntoPath(clonePath: string, remoteUrl: string): Promise<boolean> {
+	const git = simpleGit();
+	try {
+		await git.clone(remoteUrl, clonePath);
+		return true;
+	} catch (error) {
+		vscode.window.showErrorMessage(`Failed to clone repository from ${remoteUrl}.`);
 		return false;
 	}
 }
