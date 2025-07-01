@@ -21,6 +21,14 @@ import {
 
 import SnippetDataManager from './snippets/snippetDataManager';
 
+if (process.env.SHOW_DEPRECATION_STACK === 'true') {
+	process.on('warning', (warning) => {
+		if (warning.name === 'DeprecationWarning') {
+			console.error(warning.stack);
+		}
+	});
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
