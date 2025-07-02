@@ -12,11 +12,11 @@ export async function init(repoPath: string, url: string): Promise<boolean> {
 
 	if (fs.existsSync(path.join(repoPath, '.git'))) {
 		await pull(repoPath);
-		expandGitignore(repoPath);
+		await expandGitignore(repoPath);
 		return true;
 	}
 
-	expandGitignore(repoPath);
+	Promise.allSettled([expandGitignore(repoPath), createReadme(repoPath)]);
 
 	try {
 		await git.init();
@@ -31,9 +31,9 @@ export async function init(repoPath: string, url: string): Promise<boolean> {
 	}
 }
 
-function expandGitignore(repoPath: string) {
+async function expandGitignore(repoPath: string) {
 	const ignorePath = path.join(repoPath, '.gitignore');
-	const entriesToAdd = ['.env', 'temp/'];
+	const entriesToAdd = ['.env', 'temp/', '.DS_Store'];
 
 	if (!fs.existsSync(ignorePath)) {
 		fs.writeFileSync(ignorePath, entriesToAdd.join('\n') + '\n');
@@ -43,7 +43,18 @@ function expandGitignore(repoPath: string) {
 			.split('\n')
 			.map((line) => line.trim());
 		const updated = [...new Set([...current, ...entriesToAdd])].filter(Boolean);
-		fs.writeFileSync(ignorePath, updated.join('\n') + '\n');
+		await fs.promises.writeFile(ignorePath, updated.join('\n') + '\n');
+	}
+}
+async function createReadme(repoPath: string) {
+	const readPath = path.join(repoPath, 'README.md');
+	if (!fs.existsSync(readPath)) {
+		const text = [
+			'# My VS Code Snippets',
+			'Read [documentation](https://code.visualstudio.com/docs/editing/userdefinedsnippets) to learn more about snippets!',
+			'Use the [SnippetStudio extension](https://marketplace.visualstudio.com/items?itemName=AlexDombroski.snippetstudio) to easier manage and create snippets! Or also check out the source code on [GitHub](https://github.com/alexanderdombroski/snippetstudio)',
+		].join('\n\n');
+		await fs.promises.writeFile(readPath, text);
 	}
 }
 
@@ -58,17 +69,31 @@ export async function getOriginRemote(repoPath: string): Promise<string | null> 
 	}
 }
 
+export async function getCurrentBranch(repoPath: string): Promise<string | null> {
+	const git = simpleGit(repoPath);
+	try {
+		const branchSummary = await git.branch();
+		return branchSummary.current;
+	} catch (error) {
+		return null;
+	}
+}
+
 export async function hasChangesToCommit(repoPath: string): Promise<boolean> {
 	const git = simpleGit(repoPath);
-	const status = await git.status();
-	return (
-		status.not_added.length > 0 ||
-		status.created.length > 0 ||
-		status.deleted.length > 0 ||
-		status.modified.length > 0 ||
-		status.renamed.length > 0 ||
-		status.staged.length > 0
-	);
+	try {
+		const status = await git.status();
+		return (
+			status.not_added.length > 0 ||
+			status.created.length > 0 ||
+			status.deleted.length > 0 ||
+			status.modified.length > 0 ||
+			status.renamed.length > 0 ||
+			status.staged.length > 0
+		);
+	} catch {
+		return false;
+	}
 }
 
 export async function commitSnippets(
@@ -105,6 +130,25 @@ export async function commitSnippets(
 			process.env.GIT_COMMITTER_EMAIL = ogEmail;
 		}
 	}
+}
+
+/**
+ * Try pushing, if failed, push and set upstream
+ * Returns true on success
+ */
+export async function push(repoPath: string): Promise<boolean> {
+	const git = simpleGit(repoPath);
+	const branch = (await getCurrentBranch(repoPath)) as string;
+	try {
+		await git.push('origin', branch);
+	} catch {
+		try {
+			await git.push(['-u', 'origin', branch]);
+		} catch {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**

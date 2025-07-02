@@ -4,8 +4,8 @@ import { buildGitURL, extractGitURL } from './utils';
 
 export function getPreferredGlobalSnippetsRepo(): RepoData | null {
 	const config = vscode.workspace.getConfiguration('snippetstudio.github');
-	const url = config.get<string>('globalSnippetsRepository');
-	if (url === undefined) {
+	const url = config.get<string>('globalSnippetsRepository')?.trim();
+	if (!url) {
 		return null;
 	}
 

@@ -35,14 +35,23 @@ export function buildGitURL(username: string, repoName: string): string {
 }
 
 /**
- * returns git https url parts, or null if git url is invalid
+ * returns git https/ssh url parts, or null if git url is invalid
  */
 export function extractGitURL(url: string): RepoData | null {
-	const pattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/i;
-	const match = url.match(pattern);
+	const httpPattern = /^https:\/\/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?\/?$/i;
+	const httpMatch = url.match(httpPattern);
 
-	if (match) {
-		return { url, user: match[1], repo: match[2] };
+	if (httpMatch) {
+		return { url, user: httpMatch[1], repo: httpMatch[2] };
+	}
+
+	const sshPattern = /^git@github\.com:([^/]+)\/([^/]+?)(?:\.git)?$/i;
+	const sshMatch = url.match(sshPattern);
+	if (sshMatch) {
+		const user = sshMatch[1];
+		const repo = sshMatch[2];
+		const url = `https://github.com/${user}/${repo}`;
+		return { url, user, repo };
 	}
 
 	return null;

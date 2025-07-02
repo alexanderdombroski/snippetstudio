@@ -15,10 +15,12 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
 
 	let token = await context.secrets.get('GITHUB_TOKEN');
-	if (token === undefined) {
+
+	if (token === undefined || (await isTokenRevoked(token))) {
 		const auth = createOAuthDeviceAuth({
-			clientType: 'github-app',
-			clientId: 'Iv23liJW3V8qIKvJzlgg',
+			clientType: 'oauth-app',
+			clientId: 'Ov23liGyCEoxLEkCgXTC',
+			scopes: ['public_repo', 'gist'],
 			onVerification: (verification) => {
 				const message = 'Copy Code & Open in Browser';
 				vscode.window
@@ -41,13 +43,24 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 			},
 		});
 
-		token = (await auth({ type: 'oauth' })).token;
-		if (token) {
-			context.secrets.store('GITHUB_TOKEN', token);
-		}
+		const { token: newToken } = await auth({ type: 'oauth', refresh: true });
+		await context.secrets.store('GITHUB_TOKEN', newToken);
+		token = newToken;
 	}
 
 	return new Octokit({ auth: token });
+}
+
+async function isTokenRevoked(token: string): Promise<boolean> {
+	const { Octokit } = await import('@octokit/rest');
+	const test = new Octokit({ auth: token });
+
+	try {
+		await test.rest.users.getAuthenticated();
+		return false;
+	} catch (error: any) {
+		return true;
+	}
 }
 
 export default getOctokitClient;

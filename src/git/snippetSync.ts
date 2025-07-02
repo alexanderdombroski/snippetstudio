@@ -5,7 +5,7 @@ import { getPreferredGlobalSnippetsRepo, setPreferredGlobalSnippetsRepo } from '
 import { RepoData } from '../types/gitTypes';
 import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
-import { commitSnippets, getOriginRemote, hasChangesToCommit, init, pull } from './commands';
+import { commitSnippets, getOriginRemote, hasChangesToCommit, init, pull, push } from './commands';
 import { collaborate } from './snippetMerge';
 
 /**
@@ -16,8 +16,8 @@ import { collaborate } from './snippetMerge';
  * [X] Init local and remote repo
  * [X] Commit changes
  * [X] Ensure that the local repo matches
- * [ ] JSON merge if new repo
- * [ ] JSON merge if conflicts
+ * [X] JSON merge if different repo
+ * [X] JSON merge if conflicts
  *
  */
 async function snippetSync(context: vscode.ExtensionContext) {
@@ -25,11 +25,15 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	if (repoPath === undefined) {
 		return;
 	}
+
 	const client = await getOctokitClient(context);
 
 	const { user, repo, url } = await getPreferredRepo(client);
+	vscode.window.showInformationMessage(`Started Sync to GitHub repo: ${user}/${repo}`);
 
-	init(repoPath, url);
+	if (!(await init(repoPath, url))) {
+		return;
+	}
 
 	if (await hasChangesToCommit(repoPath)) {
 		await commitSnippets(repoPath, 'Modified global snippets for vscode');
@@ -37,7 +41,17 @@ async function snippetSync(context: vscode.ExtensionContext) {
 
 	if (!(await doesRepoExist(client, user, repo))) {
 		if (user === (await getUsername(client))) {
-			await client.repos.createForAuthenticatedUser({ name: repo });
+			await client.repos.createForAuthenticatedUser({
+				name: repo,
+				description:
+					'Global VS Code snippets managed through SnippetStudio VS Code extension',
+			});
+			if (await push(repoPath)) {
+				vscode.window.showInformationMessage(
+					`Successfully created repo: ${user}/${repo} and pushed snippets!`
+				);
+				return;
+			}
 		} else {
 			vscode.window.showWarningMessage(
 				`Github remote ${url} doesn't exist. Tell ${user} to create it!`
@@ -49,10 +63,17 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	const currentRemote = await getOriginRemote(repoPath);
 	if (!currentRemote?.includes(`${user}/${repo}`)) {
 		await collaborate({ user, repo, url });
+		await commitSnippets(
+			repoPath,
+			currentRemote === null
+				? 'Progmatically resolved merge conflicts through JSON object merging'
+				: `Added Snippets from ${extractGitURL(currentRemote)?.url ?? 'a new source'} and resolved conflicts`
+		);
+		await push(repoPath);
 		return;
 	}
 
-	const success = await pull(repoPath);
+	const success = (await pull(repoPath)) && (await push(repoPath));
 	if (success) {
 		vscode.window.showInformationMessage(`Sucessfully synced with ${url} without conflicts`);
 		return;
@@ -64,6 +85,12 @@ async function snippetSync(context: vscode.ExtensionContext) {
 		repoPath,
 		'Progmatically resolved merge conflicts through JSON object merging'
 	);
+
+	if (await push(repoPath)) {
+		vscode.window.showInformationMessage(
+			`Sucessfully resolved conflicts and synced with ${url}`
+		);
+	}
 }
 
 /**
