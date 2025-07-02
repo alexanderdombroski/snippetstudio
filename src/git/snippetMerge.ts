@@ -5,7 +5,7 @@ import { doesRepoExist, extractGitURL, getRepoDataFromUser } from './utils';
 import { RepoData } from '../types/gitTypes';
 import { setPreferredGlobalSnippetsRepo, settingAndRemoteMatch } from './settings';
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
-import { cloneIntoPath, getOriginRemote } from './commands';
+import { cloneIntoPath, commitSnippets, getOriginRemote, push } from './commands';
 import getOctokitClient from './octokit';
 import { resetGlobalSnippets } from '../utils/jsoncFilesIO';
 import { mergeGlobals } from '../snippets/fileMerge';
@@ -16,7 +16,8 @@ import { mergeGlobals } from '../snippets/fileMerge';
  * Choose whether to use a github repo's snippets and start colaborating
  */
 async function snippetMerge(context: vscode.ExtensionContext) {
-	if (getGlobalSnippetFilesDir() === undefined) {
+	const repoPath = getGlobalSnippetFilesDir();
+	if (repoPath === undefined) {
 		return;
 	}
 
@@ -60,7 +61,13 @@ async function snippetMerge(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	selectedOption.run(remoteData);
+	await selectedOption.run(remoteData);
+
+	await commitSnippets(
+		repoPath,
+		`Performed Merge Operation: ${selectedOption.label}\n\n${selectedOption.description}`
+	);
+	await push(repoPath);
 
 	vscode.window.showInformationMessage(
 		`Successfully performed merge (${selectedOption.label}): ${selectedOption.description}`
@@ -102,19 +109,26 @@ export async function collaborate(remoteData: RepoData) {
 	const globalPath = getGlobalSnippetFilesDir() as string;
 
 	const mergePath = path.join(globalPath, 'temp');
-	await resetTempDir(mergePath);
-
-	await moveAllButTemp(globalPath, mergePath);
-
 	const clonePath = path.join(globalPath, 'cloneTemp');
-	await resetTempDir(clonePath);
 
-	if (!(await cloneIntoPath(clonePath, remoteData.url))) {
-		return;
+	const moveLocalPromise = (async () => {
+		await resetTempDir(mergePath);
+		await moveAllButTemp(globalPath, mergePath);
+	})();
+	const cloneRemotePromise = (async () => {
+		await resetTempDir(clonePath);
+		return await cloneIntoPath(clonePath, remoteData.url);
+	})();
+
+	const [, success] = await Promise.all([moveLocalPromise, cloneRemotePromise]);
+	if (!success) {
+		vscode.window.showWarningMessage(
+			`Couldn't clone remote GitHub: ${remoteData.user}/${remoteData.repo}. Snippets should be unaffected.`
+		);
 	}
 
 	await moveAllButTemp(clonePath, globalPath);
-	fs.promises.rm(clonePath, { recursive: true, force: true });
+	await fs.promises.rm(clonePath, { recursive: true, force: true });
 
 	await mergeGlobals();
 }
@@ -124,7 +138,7 @@ export async function collaborate(remoteData: RepoData) {
 async function moveAllButTemp(startDir: string, endDir: string) {
 	const items = await fs.promises.readdir(startDir);
 	const movePromises = items
-		.filter((item) => item !== 'temp')
+		.filter((item) => item !== 'temp' && item !== 'cloneTemp')
 		.map(async (item) => {
 			const srcPath = path.join(startDir, item);
 			const newPath = path.join(endDir, item);
