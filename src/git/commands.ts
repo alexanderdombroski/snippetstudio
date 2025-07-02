@@ -10,23 +10,17 @@ import path from 'path';
 export async function init(repoPath: string, url: string): Promise<boolean> {
 	const git = simpleGit(repoPath);
 
+	Promise.allSettled([expandGitignore(repoPath), createReadme(repoPath)]);
+
 	if (fs.existsSync(path.join(repoPath, '.git'))) {
-		await pull(repoPath);
-		await expandGitignore(repoPath);
 		return true;
 	}
-
-	Promise.allSettled([expandGitignore(repoPath), createReadme(repoPath)]);
 
 	try {
 		await git.init();
 		await git.addRemote('origin', url);
-
 		return true;
-	} catch (error) {
-		vscode.window.showErrorMessage(
-			'Failed to initialize repository. Make sure Git is installed.'
-		);
+	} catch {
 		return false;
 	}
 }
@@ -66,6 +60,19 @@ export async function getOriginRemote(repoPath: string): Promise<string | null> 
 		return origin?.refs?.fetch ?? null;
 	} catch {
 		return null;
+	}
+}
+
+/**
+ * Changes a remote. This will fail if the remote wasn't added in the first place.
+ */
+export async function changeRemote(repoPath: string, newRemote: string): Promise<boolean> {
+	const git = simpleGit(repoPath);
+	try {
+		await git.remote(['set-url', 'origin', newRemote]);
+		return true;
+	} catch {
+		return false;
 	}
 }
 
