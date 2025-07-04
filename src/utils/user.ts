@@ -168,6 +168,19 @@ async function chooseLocalGlobal(): Promise<string | undefined> {
 	return choice?.description;
 }
 
+async function showWarningWithFolderOpenButton(
+	warningMessage: string,
+	buttonText: string = 'Open Global Snippets',
+	folderPath: string = getGlobalSnippetFilesDir() as string
+) {
+	const selected = await vscode.window.showWarningMessage(warningMessage);
+
+	if (selected === buttonText) {
+		const folderUri = vscode.Uri.file(folderPath);
+		vscode.commands.executeCommand('revealFileInOS', folderUri);
+	}
+}
+
 export {
 	getConfirmation,
 	getSelection,
@@ -175,4 +188,5 @@ export {
 	getSavePath,
 	chooseLocalGlobal,
 	getSavePathFromDialog,
+	showWarningWithFolderOpenButton,
 };

@@ -17,6 +17,7 @@ import {
 {
 }
 import { collaborate } from './snippetMerge';
+import { showWarningWithFolderOpenButton } from '../utils/user';
 
 /**
  * ENSURES THAT ALL REPOS ARE IN SYNC
@@ -68,7 +69,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 					`Successfully created repo: ${user}/${repo} and pushed snippets!`
 				);
 			} else {
-				vscode.window.showWarningMessage(
+				await showWarningWithFolderOpenButton(
 					`Successfully created repo: ${user}/${repo} but failed to pushed snippets!`
 				);
 			}
@@ -88,7 +89,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 					'No snippets to send to github. Pulled in remote snippets if any.'
 				);
 			} else {
-				vscode.window.showWarningMessage('Nothing to push; Pull failed.');
+				showWarningWithFolderOpenButton('Nothing to push; Pull failed.');
 			}
 			return;
 		}
@@ -111,7 +112,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	}
 
 	if (!(await changeRemote(repoPath, url))) {
-		vscode.window.showErrorMessage(
+		showWarningWithFolderOpenButton(
 			`Failed to change the remote from ${currentRemote ?? 'unknown'} to ${url}`
 		);
 		return;
@@ -127,6 +128,10 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	if (await push(repoPath)) {
 		vscode.window.showInformationMessage(
 			`Sucessfully resolved conflicts and synced with ${user}/${repo}`
+		);
+	} else {
+		showWarningWithFolderOpenButton(
+			`Went through process to change the remote from ${currentRemote ?? 'unknown'} to ${url}, but final push failed after attempting to resolve conflicts.`
 		);
 	}
 }
