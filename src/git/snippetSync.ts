@@ -60,13 +60,25 @@ async function snippetSync(context: vscode.ExtensionContext) {
 
 	if (!(await doesRepoExist(client, user, repo))) {
 		if (user === (await getUsername(client))) {
-			Promise.allSettled([expandGitignore(repoPath), createReadme(repoPath)]);
+			if (!remoteIsSame && !(await changeRemote(repoPath, url))) {
+				showWarningWithFolderOpenButton(
+					`Failed to change the remote from ${currentRemote ?? 'unknown'} to ${url}. Didn't create repo on github.`
+				);
+				return;
+			}
 
-			await client.repos.createForAuthenticatedUser({
-				name: repo,
-				description:
-					'Global VS Code snippets managed through SnippetStudio VS Code extension',
-			});
+			await Promise.allSettled([
+				expandGitignore(repoPath),
+				createReadme(repoPath),
+				client.repos.createForAuthenticatedUser({
+					name: repo,
+					description:
+						'Global VS Code snippets managed through SnippetStudio VS Code extension',
+				}),
+			]);
+
+			await commitSnippets(repoPath, 'updated readme and gitignore');
+
 			if (await push(repoPath)) {
 				vscode.window.showInformationMessage(
 					`Successfully created repo: ${user}/${repo} and pushed snippets!`

@@ -27,7 +27,7 @@ export async function getOriginRemote(repoPath: string): Promise<string | null> 
 	const git = simpleGit(repoPath);
 	try {
 		const remotes = await git.getRemotes(true);
-		const origin = remotes.find((remote) => remote.name === 'origin');
+		const origin = remotes.find((remote: { name: string }) => remote.name === 'origin');
 		return origin?.refs?.fetch ?? null;
 	} catch {
 		return null;
