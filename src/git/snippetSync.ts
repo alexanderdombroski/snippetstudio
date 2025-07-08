@@ -18,6 +18,7 @@ import {
 }
 import { collaborate } from './snippetMerge';
 import { showWarningWithFolderOpenButton } from '../utils/user';
+import { createReadme, expandGitignore } from './file';
 
 /**
  * ENSURES THAT ALL REPOS ARE IN SYNC
@@ -59,6 +60,8 @@ async function snippetSync(context: vscode.ExtensionContext) {
 
 	if (!(await doesRepoExist(client, user, repo))) {
 		if (user === (await getUsername(client))) {
+			Promise.allSettled([expandGitignore(repoPath), createReadme(repoPath)]);
+
 			await client.repos.createForAuthenticatedUser({
 				name: repo,
 				description:
@@ -101,6 +104,10 @@ async function snippetSync(context: vscode.ExtensionContext) {
 			);
 			return;
 		}
+
+		vscode.window.showInformationMessage(
+			'Merge Conflict Detected. Starting with remote snippets and merging locals.'
+		);
 
 		await collaborate({ user, repo, url });
 		const message = `Added Snippets from ${user}/${repo} and resolved conflicts`;
