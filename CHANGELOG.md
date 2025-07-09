@@ -5,7 +5,9 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [1.3](#131---2025-05-03) - Export Snippets
+- [1.5](#150---2025-07-08) - Global Snippet Sync
+- [1.4](#140---2025-05-12) - Insertion Feature Upgrades
+- [1.3](#131---2025-05-03) - Github Gist Integration
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
@@ -17,18 +19,15 @@
 - **Web Support** (v2.0)
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
-- **Global Snippet Backup and Collaboration** (v1.5)
-    - Backup global snippets to github repo
-    - Use the same global snippets on multiple computers
-    - Push and Pull snippet changes
-    - Combine all snippets from two repositories
-    - Several Git workflows handled by simple-git
-- **Misc**
-    - More commands and extension resources are lazily loaded, to improve performance.
 
-## [1.4.1] - DATE
+## [1.5.0] - 2025-07-08
 
 ### Added
+
+- Sync snippet changes to github repo `<username>/snippetstudio-vscode-snippets`
+- Use the same global snippets on multiple computers
+- Merge your global snippets with another's
+- Choose to use their repo, or keep using your own
 
 ### Fixed
 
@@ -37,6 +36,8 @@
 ### Changed
 
 - Lazy load snippet gist and snippet file related commands
+- Added husky, prettier, lint-staged, and other development tools
+- Migrated from SnippetStudio GitHub App to OAuth App. Users will need to grant repo permissions.
 
 ## [1.4.0] - 2025-05-12
 
