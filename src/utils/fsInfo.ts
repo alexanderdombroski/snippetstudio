@@ -49,9 +49,20 @@ function getGlobalSnippetFilesDir(): string | undefined {
 			);
 			break;
 		default:
-			vscode.window.showErrorMessage(
-				`Unsupported platform: ${process.platform} Couldn't find global snippets file`
-			);
+			vscode.window
+				.showErrorMessage(
+					`Unsupported platform: ${process.platform}. Couldn't find global snippets file. Want to submit an issue to request support for your device?`,
+					'Open GitHub Issue'
+				)
+				.then((selection) => {
+					if (selection === 'Open GitHub Issue') {
+						vscode.env.openExternal(
+							vscode.Uri.parse(
+								'https://github.com/alexanderdombroski/snippetstudio/issues'
+							)
+						);
+					}
+				});
 			return undefined;
 	}
 	return globalSnippetsPath;
