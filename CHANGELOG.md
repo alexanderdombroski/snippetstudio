@@ -20,6 +20,16 @@
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
 
+## [1.5.1] - DATE
+
+### Added
+
+### Fixed
+
+- Commit messages no longer show `unverified` on GitHub
+
+### Changed
+
 ## [1.5.0] - 2025-07-08
 
 ### Added
