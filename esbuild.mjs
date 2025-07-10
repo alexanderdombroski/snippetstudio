@@ -29,6 +29,7 @@ async function main() {
 		bundle: true,
 		format: 'cjs',
 		minify: production,
+		treeShaking: production,
 		sourcemap: !production,
 		sourcesContent: false,
 		platform: 'node',

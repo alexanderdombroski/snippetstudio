@@ -19,6 +19,8 @@
 - **Web Support** (v2.0)
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
+- **Other**
+    - Switch to octokit/core to reduce bundle size
 
 ## [1.5.1] - DATE
 
@@ -29,6 +31,8 @@
 - Commit messages no longer show `unverified` on GitHub
 
 ### Changed
+
+- Added tree shaking, significantly reducing bundle size
 
 ## [1.5.0] - 2025-07-08
 

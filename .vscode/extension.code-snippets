@@ -1,0 +1,16 @@
+{
+  "show-deprecation-stack": {
+    "prefix": "verbose-logging",
+    "body": [
+      "if (process.env.SHOW_DEPRECATION_STACK === 'true') {",
+      "    process.on('warning', (warning) => {",
+      "        if (warning.name === 'DeprecationWarning') {",
+      "            console.error(warning.stack);",
+      "        }",
+      "    });",
+      "}"
+    ],
+    "description": "enable verbose logging for extension troubleshooting",
+    "scope": "typescript"
+  }
+}
