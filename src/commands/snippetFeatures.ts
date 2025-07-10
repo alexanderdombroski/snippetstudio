@@ -6,15 +6,9 @@ export default function initSnippetFeatureCommands(
 	context: vscode.ExtensionContext,
 	provider: SnippetEditorProvider
 ) {
-	if (
-		vscode.workspace
-			.getConfiguration('snippetstudio')
-			.get<boolean>('editor.autoEscapeDollarSigns')
-	) {
-		context.subscriptions.push(
-			vscode.workspace.onDidChangeTextDocument(provider.handleDocumentChange, provider)
-		);
-	}
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeTextDocument(provider.handleDocumentChange, provider)
+	);
 
 	// Tabstops, Placeholders, and Choices
 	context.subscriptions.push(

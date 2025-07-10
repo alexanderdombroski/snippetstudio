@@ -29,6 +29,7 @@
 ### Fixed
 
 - Commit messages no longer show `unverified` on GitHub
+- Snippet Insertion Feature Highlighting works on default settings
 
 ### Changed
 

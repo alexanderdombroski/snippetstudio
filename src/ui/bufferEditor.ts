@@ -50,7 +50,13 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		);
 
 		// Test for unintential snippet tabstops, changes, and choices
-		if (change.text >= '0' && change.text <= '9') {
+		if (
+			change.text >= '0' &&
+			change.text <= '9' &&
+			vscode.workspace
+				.getConfiguration('snippetstudio')
+				.get<boolean>('editor.autoEscapeDollarSigns')
+		) {
 			const newText = escapeDollarSignIfNeeded(
 				changeEvent.document.getText(),
 				change.rangeOffset
