@@ -35,6 +35,7 @@
 ### Fixed
 
 - Global Snippets GitHub url corrected to save in global configuration
+- Sync git flow now correctly detects if preferred remote has changed
 
 ### Changed
 

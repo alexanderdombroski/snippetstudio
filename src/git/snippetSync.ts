@@ -56,7 +56,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 	}
 
 	const currentRemote = await getOriginRemote(repoPath);
-	const remoteIsSame = currentRemote?.includes(`${user}/${repo}`) ?? false;
+	const remoteIsSame = currentRemote?.includes(`${user}/${repo}.git`) ?? false;
 
 	if (!(await doesRepoExist(client, user, repo))) {
 		if (user === (await getUsername(client))) {
