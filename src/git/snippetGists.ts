@@ -25,7 +25,7 @@ async function createGist(context: vscode.ExtensionContext) {
 	const msg = 'Created using SnippetStudio';
 	desc = desc ? `${desc.trim()} | ${msg}` : msg;
 
-	const response = await client.gists.create({
+	const response = await client.request('POST /gists', {
 		files: {
 			[filename]: {
 				content: fileContent,
@@ -62,7 +62,7 @@ async function saveCodeSnippets(
 	saveDir: string
 ): Promise<void> {
 	const client = await getOctokitClient(context);
-	const response = await client.gists.get({ gist_id });
+	const response = await client.request('GET /gists/{gist_id}', { gist_id });
 	if (response.data.files === undefined) {
 		vscode.window.showInformationMessage("Couldn't find any files in this gist.");
 		return;

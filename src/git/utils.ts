@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
+import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { isNotFoundError } from '../utils/error';
 import { RepoData } from '../types/gitTypes';
 
@@ -12,7 +12,7 @@ export async function doesRepoExist(
 	repo: string
 ): Promise<boolean> {
 	try {
-		await client.repos.get({ owner, repo });
+		await client.request('GET /repos/{owner}/{repo}', { owner, repo });
 		return true;
 	} catch (error) {
 		if (isNotFoundError(error)) {
@@ -26,7 +26,7 @@ export async function doesRepoExist(
 }
 
 export async function getUsername(client: Octokit): Promise<string> {
-	const { data } = await client.users.getAuthenticated();
+	const { data } = await client.request('GET /user');
 	return data.login;
 }
 

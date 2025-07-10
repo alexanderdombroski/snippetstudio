@@ -3,7 +3,7 @@ import { buildGitURL, doesRepoExist, extractGitURL, getUsername } from './utils'
 import getOctokitClient from './octokit';
 import { getPreferredGlobalSnippetsRepo, setPreferredGlobalSnippetsRepo } from './settings';
 import { RepoData } from '../types/gitTypes';
-import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
+import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import {
 	changeRemote,
@@ -70,7 +70,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 			await Promise.allSettled([
 				expandGitignore(repoPath),
 				createReadme(repoPath),
-				client.repos.createForAuthenticatedUser({
+				client.request('POST /user/repos', {
 					name: repo,
 					description:
 						'Global VS Code snippets managed through SnippetStudio VS Code extension',

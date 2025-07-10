@@ -1,4 +1,4 @@
-import type { Octokit } from '@octokit/rest' with { 'resolution-mode': 'import' };
+import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import * as vscode from 'vscode';
 
 let client: Octokit | null = null;
@@ -11,7 +11,7 @@ async function getOctokitClient(context: vscode.ExtensionContext): Promise<Octok
 }
 
 async function createOctokitClient(context: vscode.ExtensionContext): Promise<Octokit> {
-	const { Octokit } = await import('@octokit/rest');
+	const { Octokit } = await import('@octokit/core');
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
 
 	let token = await context.secrets.get('GITHUB_TOKEN');
@@ -52,11 +52,11 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 }
 
 async function isTokenRevoked(token: string): Promise<boolean> {
-	const { Octokit } = await import('@octokit/rest');
+	const { Octokit } = await import('@octokit/core');
 	const test = new Octokit({ auth: token });
 
 	try {
-		await test.rest.users.getAuthenticated();
+		await test.request('GET /user');
 		return false;
 	} catch (error: any) {
 		return true;

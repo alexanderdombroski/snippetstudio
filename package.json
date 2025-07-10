@@ -711,7 +711,7 @@
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.1",
-		"@octokit/rest": "^22.0.0",
+		"@octokit/core": "^7.0.2",
 		"glob": "^11.0.3",
 		"simple-git": "^3.28.0",
 		"strip-json-comments": "^5.0.2"
