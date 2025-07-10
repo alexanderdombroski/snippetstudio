@@ -24,7 +24,7 @@ export function getPreferredGlobalSnippetsRepo(): RepoData | null {
 export async function setPreferredGlobalSnippetsRepo(username: string, repoName: string) {
 	const config = vscode.workspace.getConfiguration('snippetstudio.github');
 	const url = buildGitURL(username, repoName);
-	await config.update('globalSnippetsRepository', url);
+	await config.update('globalSnippetsRepository', url, vscode.ConfigurationTarget.Global);
 }
 
 export function settingAndRemoteMatch(username: string, repoName: string): boolean {

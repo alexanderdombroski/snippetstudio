@@ -19,6 +19,25 @@
 - **Web Support** (v2.0)
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
+    - Modify CI/CD to package as separate extension, or Fork the repo?
+- **Other** 
+    - Update Readme
+    - Add docs/wiki
+    - Add "Needs Feedback" GitHub Tag (issues?)
+    - Add discussion tab
+    - Update Dev Dependencies
+    - Add contributing.md
+
+## [1.5.2] - DATE
+
+### Added
+
+### Fixed
+
+- Global Snippets GitHub url corrected to save in global configuration
+
+### Changed
+
 
 ## [1.5.1] - 2025-07-10
 
