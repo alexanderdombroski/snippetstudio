@@ -24,6 +24,8 @@
 
 ### Added
 
+- Added `Open Gist` button on gist creation success message
+
 ### Fixed
 
 - Commit messages no longer show `unverified` on GitHub

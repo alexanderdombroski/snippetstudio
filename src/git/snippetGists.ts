@@ -10,7 +10,7 @@ async function createGist(context: vscode.ExtensionContext) {
 	const client = await getOctokitClient(context);
 
 	const filename = (await getFileName()) + '.code-snippets';
-	if (filename === undefined) {
+	if (filename === 'undefined.code-snippets') {
 		return;
 	}
 
@@ -35,7 +35,14 @@ async function createGist(context: vscode.ExtensionContext) {
 		public: true,
 	});
 
-	vscode.window.showInformationMessage(`${filename} saved in ${response.data.html_url}.`);
+	const openInBrowser = 'Open Gist';
+	vscode.window
+		.showInformationMessage(`Successfully created gist '${filename}'`, openInBrowser)
+		.then((selection) => {
+			if (selection === openInBrowser && response.data.html_url) {
+				vscode.env.openExternal(vscode.Uri.parse(response.data.html_url));
+			}
+		});
 }
 
 async function importGist(context: vscode.ExtensionContext) {
