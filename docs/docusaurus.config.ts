@@ -132,8 +132,8 @@ const config: Config = {
               to: '/blog',
             },
             {
-              label: 'Docusaurus',
-              href: 'https://docusaurus.io/',
+              label: 'Attributions',
+              href: '/credits',
             },
           ],
         },

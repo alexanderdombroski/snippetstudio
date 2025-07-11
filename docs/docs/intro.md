@@ -4,18 +4,17 @@ sidebar_position: 1
 
 # Tutorial Intro
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover **SnippetStudio in less than 5 minutes**.
 
 ## Getting Started
 
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+1. Install SnippetStudio in the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=AlexDombroski.snippetstudio)
+2. Click on the Snippet Studio Manager <i class="codicon codicon-repo"></i> in the VS Code Activity Bar
+3. Highlight your favorite code and hit the <i class="codicon codicon-plus"></i> in the snippets view
 
 ### What you'll need
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- A desktop version of [VS Code](https://code.visualstudio.com/download). The extension isn't yet stable for web versions of VS Code <i class="codicon codicon-vscode"></i>
 
 ## Generate a new site
 
