@@ -1,0 +1,22 @@
+{
+  "sidebar-starter": {
+    "prefix": "sidebar",
+    "body": [
+      "---",
+      "title: ${1:Sidebar Title}",
+      "sidebar_label: ${1:Sidebar Title}",
+      "sidebar_position: ${2:1}",
+      "---",
+      "",
+      "# ${1:Sidebar Title}",
+      "",
+      "$0",
+      "",
+      "## ${3:Overview}",
+      "",
+      ""
+    ],
+    "description": "docusaurus sidebar configuration starter",
+    "scope": "markdown"
+  }
+}

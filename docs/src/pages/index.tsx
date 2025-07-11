@@ -20,8 +20,8 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/intro">
-            SnippetStudio Tutorial - 5min ⏱️
+            to="/docs/getting-started/installation">
+            SnippetStudio Tutorial - 10min ⏱️
           </Link>
         </div>
       </div>
