@@ -22,3 +22,4 @@ release_notes.txt
 .husky/
 lint-staged.config.cjs
 GEMINI.md
+docs/
