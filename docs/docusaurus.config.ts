@@ -146,8 +146,8 @@ const config: Config = {
       copyright: `Copyright © ${new Date().getFullYear()} SnippetStudio. Built with Docusaurus.`,
     },
     prism: {
-      theme: prismThemes.jettwaveLight,
-      darkTheme: prismThemes.jettwaveDark,
+      theme: prismThemes.github,
+      darkTheme: prismThemes.okaidia,
     },
   } satisfies Preset.ThemeConfig,
 };

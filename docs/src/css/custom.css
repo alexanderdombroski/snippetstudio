@@ -4,6 +4,9 @@
  * work well for content-centric websites.
  */
 
+/* Font Awesome Icons */
+@import "~@fortawesome/fontawesome-free/css/all.min.css";
+
 /* VSCode Extension Icons */
 @import "~@vscode/codicons/dist/codicon.css";
 .codicon {
