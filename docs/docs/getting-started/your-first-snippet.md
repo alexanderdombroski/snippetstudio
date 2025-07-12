@@ -12,11 +12,11 @@ The **Snippets** sidebar view loads all snippets of the current recognized langu
 
 ## Steps
 
-1. Click the <i class="codicon codicon-plus"></i> in the Snippets title menu to add a global snippet of the current active language
+1. Click the <i className="codicon codicon-plus"></i> in the Snippets title menu to add a global snippet of the current active language
 2. Add and modify snippet code in the new code editor
 3. Fill out the `title`, `prefix`, and optionally `description` fields in the **Snippet Editor** sidebar view
 4. Click `Save`
-5. The snippet <i class="codicon codicon-symbol-snippet"></i> will appear in the autocomplete box as you type the `prefix` in your editor. Click it or hit tab to expand the snippet
+5. The snippet <i className="codicon codicon-symbol-snippet"></i> will appear in the autocomplete box as you type the `prefix` in your editor. Click it or hit tab to expand the snippet
 
 ![Create Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/selection.gif)
 

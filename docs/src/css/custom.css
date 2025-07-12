@@ -8,10 +8,15 @@
 @import "~@vscode/codicons/dist/codicon.css";
 .codicon {
   vertical-align: middle;
-}
-.codicon:hover {
-  color: orange;
-  transition: color 0.2s ease;
+  padding-bottom: 0.15rem;
+
+  &.up {
+    padding-bottom: 0.3rem;
+  }
+  &:hover {
+    color: orange;
+    transition: color 0.2s ease;
+  }
 }
 
 /* Global CSS Variables */

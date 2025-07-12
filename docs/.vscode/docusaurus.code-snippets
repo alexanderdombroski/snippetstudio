@@ -18,5 +18,13 @@
     ],
     "description": "docusaurus sidebar configuration starter",
     "scope": "markdown"
+  },
+  "codicon": {
+    "prefix": "codicon",
+    "body": [
+      "<i className=\"codicon codicon-$1\"></i>$0"
+    ],
+    "description": "VS Code codicon icon. See https://microsoft.github.io/vscode-codicons/dist/codicon.html for possible icon list.",
+    "scope": "markdown,typescriptreact"
   }
 }
