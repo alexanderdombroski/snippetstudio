@@ -45,6 +45,9 @@
 .small {
   font-size: 0.75rem;
 }
+.text-center {
+  text-align: center;
+}
 
 .markdown img {
   display: block;
