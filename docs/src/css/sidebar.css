@@ -1,0 +1,9 @@
+
+
+.mermaid a::after, .diagram {
+  font-family: var(--font-awesome);
+  font-weight: 900;
+  content: "\f542";
+  margin-left: 0.5em;
+  color: var(--mermaid-pink);
+}

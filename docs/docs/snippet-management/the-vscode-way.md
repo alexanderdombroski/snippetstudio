@@ -23,7 +23,7 @@ FINE! You don't want help? Do it [the way Microsoft intended](https://code.visua
 5. Expand the `body` array and code inside as if each line of code is a string of the array.
 6. Go to a file of that language and see if you can type the prefix and expand the snippet. 
 
-If it worked you're good to go! If not, maybe ask AI? <i className="codicon codicon-copilot up"></i>
+If it worked you're good to go! If not, maybe ask AI? <i className="codicon codicon-copilot"></i>
 
 Was that painful? Yeah. IDEs like XCode and JetBrains help you quite a bit. <i className="codicon codicon-tools"></i> I don't know who decided it is a good idea to ask developers to manually code in a json file and stringify each line of code, but that's the way you'd have to do it without an extension.
 

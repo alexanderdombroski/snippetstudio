@@ -1,0 +1,12 @@
+
+
+.markdown img, .markdown svg {
+  display: block;
+  margin: 0 auto;
+}
+@media screen and (min-width: 30rem) {
+  .markdown img, .markdown svg {
+    max-width: 80%;
+  }
+}
+/*  */

@@ -4,60 +4,8 @@
  * work well for content-centric websites.
  */
 
-/* Font Awesome Icons */
-@import "~@fortawesome/fontawesome-free/css/all.min.css";
-
-/* VSCode Extension Icons */
-@import "~@vscode/codicons/dist/codicon.css";
-.codicon {
-  vertical-align: middle;
-  padding-bottom: 0.15rem;
-
-  &.up {
-    padding-bottom: 0.3rem;
-  }
-  &:hover {
-    color: orange;
-    transition: color 0.2s ease;
-  }
-}
-
-/* Global CSS Variables */
-:root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-}
-[data-theme="dark"] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-}
-
-.small {
-  font-size: 0.75rem;
-}
-.text-center {
-  text-align: center;
-}
-
-.markdown img {
-  display: block;
-  margin: 0 auto;
-}
-@media screen and (min-width: 30rem) {
-  .markdown img {
-    max-width: 80%;
-  }
-}
+@import url(./variables.css);
+@import url(./icons.css);
+@import url(./tweaks.css);
+@import url(./markdown.css);
+@import url(./sidebar.css);
