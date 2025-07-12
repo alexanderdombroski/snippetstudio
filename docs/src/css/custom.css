@@ -42,6 +42,10 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
+.small {
+  font-size: 0.75rem;
+}
+
 .markdown img {
   display: block;
   margin: 0 auto;
