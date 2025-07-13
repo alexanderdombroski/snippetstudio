@@ -9,7 +9,7 @@ sidebar_class_name: mermaid
 
 Sync Global Snippets uses the following logic to ensure your snippets can make it to GitHub and back.
 
-See a larger, connected version [here](/src/pages/snippet-sync-full.mdx)
+See a larger, connected version [here](/snippet-sync-full)
 
 ## Local Git
 
