@@ -1,5 +1,5 @@
 ---
-title: Markdown page example
+title: Attributions
 ---
 
 # A big thank you to

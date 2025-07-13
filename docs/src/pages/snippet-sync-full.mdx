@@ -1,0 +1,67 @@
+---
+title: Full Snippet Sync & Collaborate Flow
+---
+
+import ZoomableMermaid from '@site/src/components/ZoomableMermaid';
+
+# Full Snippet Sync & Collaborate Flow
+
+This diagram illustrates the complete workflow for synchronizing global snippets, including how merge conflicts are resolved using the collaboration flow.
+
+<ZoomableMermaid>
+  {`
+graph TD
+    subgraph "Sync Flow: Initial Checks"
+        A[Start Sync] --> A1{Is it a git repo?};
+        A1 -- No --> B(git init);
+        B -- success --> B1(git remote add);
+        A1 -- Yes --> C{git status};
+        B1 -- failed --> B_FAIL([End: Init failed]);
+        B -- failed --> B_FAIL;
+        B1 -- success --> C;
+        C --> C1{Has local changes?};
+        C1 -- Yes --> D[git commit];
+        C1 -- No --> E{Repo Exists on GitHub?};
+        D --> E;
+    end
+
+    subgraph "Sync Flow: New Remote Repo"
+        E -- No --> G{User is owner?};
+        G -- No --> G_NO([End: Tell owner to create repo]);
+        G -- Yes --> J(Create repo, .gitignore, README.md);
+        J --> K[git commit];
+        K --> L{git push};
+        L -- success --> L_OK([End: Success]);
+        L -- failed --> L_FAIL([End: Push failed]);
+    end
+
+    subgraph "Sync Flow: Existing Remote Repo"
+        E -- Yes --> N{Anything committed locally?};
+        N -- No --> O{git pull};
+        O -- success --> O_OK([End: Success, up-to-date]);
+        O -- failed --> R_MERGE_CONFLICT([Merge Conflict]);
+
+        N -- Yes --> P{git pull};
+        P -- success --> Q{git push};
+        Q -- success --> Q_OK([End: Success, synced]);
+        P -- failed --> R_MERGE_CONFLICT;
+        Q -- failed --> R_MERGE_CONFLICT;
+    end
+
+    R_MERGE_CONFLICT --> Collab_A[Start Collaborate Flow];
+
+    subgraph "Collaborate Flow: Merge Conflict Resolution"
+        Collab_A --> Collab_B{Create temp & clone directories};
+        Collab_B --> Collab_C1[Move local snippets to temp];
+        Collab_B --> Collab_C2[git clone remote repo];
+        Collab_C1 --> Collab_F{Clone successful?};
+        Collab_C2 --> Collab_F;
+        Collab_F -- No --> Collab_G_FAIL([End: warning shown]);
+        Collab_F -- Yes --> Collab_H[Move cloned snippets to global folder];
+        Collab_H --> Collab_J[Merge snippets from temp into global snippets];
+        Collab_J --> Collab_K["git commit -m &quot;chore: merge remote snippets&quot;"];
+        Collab_K --> Collab_L[git push];
+        Collab_L --> Collab_M([End: Success, Sync Complete]);
+    end
+`}
+</ZoomableMermaid>

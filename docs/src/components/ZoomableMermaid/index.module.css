@@ -1,0 +1,43 @@
+.zoomContainer {
+  width: 100%;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  overflow: hidden;
+  touch-action: none;
+  position: relative; /* Added for positioning the button */
+
+  & svg, & div {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+
+  & button {
+  position: absolute;
+  z-index: 10; /* Ensure button is above the SVG */
+  padding: 8px 12px;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  }
+}
+
+.resetButton {
+  bottom: 0.5rem;
+  right: 0.5rem;
+}
+
+.fullscreenButton {
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.fullscreenButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+
+  & i {
+    color: orange;
+  }
+}
