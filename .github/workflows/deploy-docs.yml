@@ -1,0 +1,32 @@
+
+name: Deploy Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.17.0'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./docs
+
+      - name: Build and deploy Docusaurus site
+        run: npm run deploy
+        working-directory: ./docs
+        env:
+          GIT_USER: github-actions
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
