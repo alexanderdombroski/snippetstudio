@@ -10,6 +10,10 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -24,9 +28,18 @@ jobs:
         run: npm install
         working-directory: ./docs
 
-      - name: Build and deploy Docusaurus site
-        run: npm run deploy
+      - name: Build Docusaurus site
+        run: npm run build
         working-directory: ./docs
-        env:
-          GIT_USER: github-actions
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./docs/build
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
