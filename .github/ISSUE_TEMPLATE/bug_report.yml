@@ -1,0 +1,56 @@
+name: "Bug Report"
+description: "Report a reproducible bug or regression"
+title: "[Bug]: "
+labels: ["bug", "needs triage"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the following details.
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      placeholder: "1. Do this, 2. Do that..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Computer
+      options:
+        - Apple
+        - Linux
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: os-other
+    attributes:
+      label: If Other, specify OS (optional)
+      placeholder: "e.g. ChromeOS, BSD"
+
+  - type: input
+    id: expected
+    attributes:
+      label: Expected Behavior
+
+  - type: input
+    id: actual
+    attributes:
+      label: Actual Behavior
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Medium
+        - High
+        - Critical

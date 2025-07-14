@@ -1,0 +1,18 @@
+name: "Question"
+description: "Ask a question about usage, behavior, or contribution"
+title: "[Question]: "
+labels: ["question"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide clear details to assist you better.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question(s)
+      placeholder: "What do you want to know?"
+    validations:
+      required: true
