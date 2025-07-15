@@ -170,12 +170,23 @@ async function chooseLocalGlobal(): Promise<string | undefined> {
 
 async function showWarningWithFolderOpenButton(
 	warningMessage: string,
-	buttonText: string = 'Open Global Snippets',
-	folderPath: string = getGlobalSnippetFilesDir() as string
+	folderPath: string = getGlobalSnippetFilesDir() as string,
+	terminalButton: string = 'Open New Terminal',
+	folderButton: string = 'Open File Manager'
 ) {
-	const selected = await vscode.window.showWarningMessage(warningMessage);
+	const selected = await vscode.window.showWarningMessage(
+		warningMessage,
+		terminalButton,
+		folderButton
+	);
 
-	if (selected === buttonText) {
+	if (selected === terminalButton) {
+		const terminal = vscode.window.createTerminal({
+			name: 'Global Snippets',
+			cwd: folderPath, // Automatically sets the working directory
+		});
+		terminal.show();
+	} else if (selected === folderButton) {
 		const folderUri = vscode.Uri.file(folderPath);
 		vscode.commands.executeCommand('revealFileInOS', folderUri);
 	}

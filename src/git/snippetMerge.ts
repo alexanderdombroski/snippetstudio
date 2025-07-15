@@ -9,6 +9,7 @@ import { cloneIntoPath, commitSnippets, getOriginRemote, push } from './commands
 import getOctokitClient from './octokit';
 import { resetGlobalSnippets } from '../utils/jsoncFilesIO';
 import { mergeGlobals } from '../snippets/fileMerge';
+import { showWarningWithFolderOpenButton } from '../utils/user';
 
 // ------------- ENTRY FUNCTION -------------
 
@@ -122,7 +123,7 @@ export async function collaborate(remoteData: RepoData) {
 
 	const [, success] = await Promise.all([moveLocalPromise, cloneRemotePromise]);
 	if (!success) {
-		vscode.window.showWarningMessage(
+		showWarningWithFolderOpenButton(
 			`Couldn't clone remote GitHub: ${remoteData.user}/${remoteData.repo}. Snippets should be unaffected.`
 		);
 	}

@@ -73,7 +73,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 				client.request('POST /user/repos', {
 					name: repo,
 					description:
-						'Global VS Code snippets managed through SnippetStudio VS Code extension',
+						'Global VS Code snippets managed through the SnippetStudio VS Code extension',
 				}),
 			]);
 
@@ -123,7 +123,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 		);
 
 		await collaborate({ user, repo, url });
-		const message = `Added Snippets from ${user}/${repo} and resolved conflicts`;
+		const message = `Added Snippets and programmatically resolved conflicts via json object merging`;
 		await commitSnippets(repoPath, message);
 		vscode.window.showInformationMessage(
 			`${(await push(repoPath)) ? '' : 'Failed'} Pushed; Last commit: ${message}`
@@ -142,7 +142,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 
 	await commitSnippets(
 		repoPath,
-		'Progmatically resolved merge conflicts through JSON object merging'
+		`Added Snippets from ${currentRemote} and resolved conflicts via json object merging`
 	);
 
 	if (await push(repoPath)) {
