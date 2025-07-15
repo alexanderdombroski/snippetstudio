@@ -22,6 +22,9 @@ function getCurrentUri(): vscode.Uri | undefined {
 	return vscode.window.activeTextEditor?.document.uri;
 }
 
+/**
+ * Returns the filepath of global snippets directory, if exists
+ */
 function getGlobalSnippetFilesDir(): string | undefined {
 	let globalSnippetsPath: string = '';
 	switch (process.platform) {

@@ -125,6 +125,16 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.file.openGlobals.Explorer",
+				"title": "Open Snippets Folder in File Manager",
+				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.openGlobals.Terminal",
+				"title": "Open Snippets Folder in Terminal",
+				"category": "snippetstudio"
+			},
+			{
 				"command": "snippetstudio.file.delete",
 				"title": "Delete Snippet File",
 				"icon": "$(trash)",
@@ -426,6 +436,16 @@
 					"command": "snippetstudio.file.open",
 					"when": "viewItem == snippet-filepath",
 					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.openGlobals.Explorer",
+					"when": "viewItem == global-dropdown",
+					"group": "navigation-open"
+				},
+				{
+					"command": "snippetstudio.file.openGlobals.Terminal",
+					"when": "viewItem == global-dropdown",
+					"group": "navigation-open"
 				},
 				{
 					"command": "snippetstudio.file.delete",
