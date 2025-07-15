@@ -83,6 +83,7 @@ async function snippetSync(context: vscode.ExtensionContext) {
 				vscode.window.showInformationMessage(
 					`Successfully created repo: ${user}/${repo} and pushed snippets!`
 				);
+				await addLicense(client, user);
 			} else {
 				await showWarningWithFolderOpenButton(
 					`Successfully created repo: ${user}/${repo} but failed to pushed snippets!`
@@ -184,6 +185,43 @@ async function getPreferredRepo(client: Octokit): Promise<RepoData> {
 	// User pressed ESC, using default
 	setPreferredGlobalSnippetsRepo(username, fallbackName);
 	return { user: username, repo: fallbackName, url: buildGitURL(username, fallbackName) };
+}
+
+async function addLicense(client: Octokit, user: string, repo: string = 'github-secrets-demo') {
+	const { data: licenses } = await client.request('GET /licenses');
+
+	const choices: vscode.QuickPickItem[] = licenses.map(({ name, key }) => ({
+		label: name,
+		description: key,
+	}));
+	choices.unshift({ label: 'none', description: "Don't add a license file right now." });
+
+	const selected = await vscode.window.showQuickPick(choices, {
+		placeHolder: `Choose a license to add to repo: ${user}/${repo}`,
+	});
+	if (!selected?.description || selected.label === 'none') {
+		return;
+	}
+
+	const {
+		data: { body },
+	} = await client.request('GET /licenses/{license}', {
+		license: selected.description,
+	});
+
+	const year = new Date().getFullYear();
+	const licenseText = body.replace(/\[year\]/gi, year.toString()).replace(/\[fullname\]/gi, user);
+
+	const contentBase64 = Buffer.from(licenseText).toString('base64');
+
+	await client.request('PUT /repos/{owner}/{repo}/contents/LICENSE', {
+		owner: user,
+		repo,
+		message: `Add ${selected.description.toUpperCase()} license`,
+		content: contentBase64,
+	});
+
+	vscode.window.showInformationMessage(`Added ${selected.label} license to ${repo}`);
 }
 
 export { snippetSync };
