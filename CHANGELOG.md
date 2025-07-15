@@ -20,6 +20,24 @@
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
     - Modify CI/CD to package as separate extension, or fork the repo?
+- **DOCS**
+    - Update homepage
+    - Add searchbar
+
+## [1.5.3] - DATE
+
+### Added
+
+- Added commands to open global snippets directory in a file manager or terminal
+
+### Fixed
+
+- If the git workflow fails, warning messages properly show button to inspect snippets
+
+### Changed
+
+- Improved commit messages
+- Increased walkthrough visibility
 
 ## [1.5.2] - 2025-07-14
 
@@ -33,10 +51,6 @@
 
 - Global Snippets GitHub url corrected to save in global configuration
 - Sync git flow now correctly detects if preferred remote has changed
-
-### Changed
-
-
 
 ## [1.5.1] - 2025-07-10
 

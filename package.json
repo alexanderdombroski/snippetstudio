@@ -651,6 +651,7 @@
 				"id": "snippetStudioWalkthrough",
 				"title": "Snippet Studio Quick Start",
 				"description": "Learn how to manage your snippets with this extension.",
+				"featuredFor": ["**/*.code-snippets"],
 				"steps": [
 					{
 						"id": "openSnippetStudio",

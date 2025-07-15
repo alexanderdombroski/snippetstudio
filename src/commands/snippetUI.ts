@@ -52,6 +52,25 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 			}
 		})
 	);
+
+	// Prompt a walkthrough
+	!context.globalState.get<boolean>('walkthrough-completed') &&
+		(async () => {
+			const answer = await vscode.window.showInformationMessage(
+				'New here? How about you take a look at the tutorials?',
+				'Open Walkthroughs',
+				"Don't ask again"
+			);
+			if (answer === 'Open Walkthroughs') {
+				vscode.commands.executeCommand(
+					'workbench.action.openWalkthrough',
+					'AlexDombroski.snippetstudio#snippetStudioWalkthrough'
+				);
+			}
+			if (answer) {
+				context.globalState.update('walkthrough-completed', true);
+			}
+		})();
 }
 
 export default initSnippetUICommands;
