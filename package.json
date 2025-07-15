@@ -2,7 +2,7 @@
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
 	"description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"publisher": "AlexDombroski",
 	"author": {
 		"name": "Alex Dombroski",
@@ -10,12 +10,17 @@
 		"url": "https://github.com/alexanderdombroski"
 	},
 	"icon": "public/logo.png",
+	"homepage": "https://alexanderdombroski.github.io/snippetstudio/",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/alexanderdombroski/snippetstudio.git"
 	},
+	"bugs": {
+		"url": "https://github.com/alexanderdombroski/snippetstudio/issues/new/choose"
+	},
+	"qna": "https://github.com/snippetstudio/discussions",
 	"engines": {
-		"vscode": ">=1.97.0",
+		"vscode": "^1.102.0",
 		"node": ">=20.0.0"
 	},
 	"capabilities": {

@@ -19,18 +19,15 @@
 - **Web Support** (v2.0)
     - Use vscode.workspace.fs to create project snippets
     - Global Snippet Commands not visible to web users
-    - Modify CI/CD to package as separate extension, or Fork the repo?
-- **Other** 
-    - Update Readme
-    - Add docs/wiki
-    - Add "Needs Feedback" GitHub Tag (issues?)
-    - Add discussion tab
-    - Update Dev Dependencies
-    - Add contributing.md
+    - Modify CI/CD to package as separate extension, or fork the repo?
 
-## [1.5.2] - DATE
+## [1.5.2] - 2025-07-14
 
 ### Added
+
+- Users can choose to add a license to their global snippets after creating a repo
+- Documentation site
+- Contributing.md and issue templates
 
 ### Fixed
 
@@ -38,6 +35,7 @@
 - Sync git flow now correctly detects if preferred remote has changed
 
 ### Changed
+
 
 
 ## [1.5.1] - 2025-07-10
