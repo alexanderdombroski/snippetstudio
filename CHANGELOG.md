@@ -23,6 +23,30 @@
 - **DOCS**
     - Update homepage
     - Add searchbar
+- **IMPORT SNIPPETS** (v1.6)
+    - **built in vscode snippets** https://github.com/microsoft/vscode/tree/main/extensions/\<language\>/snippets (vscode basics)
+    - **profile snippets** ~/Library/Application Support/Code/User/profiles/\<profile-id\>/snippets/python.json
+    - **downloaded extension snippets** ~/.vscode/extensions/ (for all profiles)
+    - **profile-backup** extract within .code-profile files
+    - Edit and Choose Snippets as you import them
+- **Snippet Actions** (v1.6)
+    - Import Snippets
+    - Move Snippets
+    - Enable/Disable Snippet Files
+- **Bugs**
+    - Edit Snippets allows you to change snippet key
+    - Create Snippets won't override keys
+- **Profile Support**
+    - Upgraded Location View with profile and extension snippets
+    - Display if snippet files are loadable
+    - Profile snippet support
+    - Toggle to view disabled/unloadable snippets
+- **Snippet Upgrade**
+    - Snippet isFileTemplate field
+    - Snippet Viewer
+- **Performance**
+    - Can I enable splitting?
+    - Can I enable type: module?
 
 ## [1.5.3] - DATE
 

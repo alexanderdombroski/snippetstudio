@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import path from 'path';
 import { getGlobalSnippetFilesDir } from './fsInfo';
 
-async function processJsonWithComments(jsonString: string): Promise<any> {
+export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
 		const stripJsonCommentsModule = await import('strip-json-comments');
 		const stripJsonComments = stripJsonCommentsModule.default; // Access the default export
