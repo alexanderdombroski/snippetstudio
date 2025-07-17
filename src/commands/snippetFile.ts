@@ -2,8 +2,13 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 import onDoubleClick from './doubleClickHandler';
+import { SnippetViewProvider } from '../ui';
+import { disableFile, enableAllFiles, enableFile } from '../snippets/fileDisabler';
 
-function initSnippetFileCommands(context: vscode.ExtensionContext) {
+function initSnippetFileCommands(
+	context: vscode.ExtensionContext,
+	snippetView: SnippetViewProvider
+) {
 	// Open Snippets file
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
@@ -25,8 +30,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('snippetstudio.file.createGlobalLang', async () => {
 			const { createGlobalLangFile } = await import('../snippets/newSnippetFile.js');
 			createGlobalLangFile();
-			vscode.commands.executeCommand('snippetstudio.refresh');
-			vscode.commands.executeCommand('snippetstudio.refreshLocations');
+			refreshAll();
 		})
 	);
 	// Create Local Mixed Snippet File
@@ -34,8 +38,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('snippetstudio.file.createProjectSnippets', async () => {
 			const { createLocalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createLocalSnippetsFile();
-			vscode.commands.executeCommand('snippetstudio.refresh');
-			vscode.commands.executeCommand('snippetstudio.refreshLocations');
+			refreshAll();
 		})
 	);
 	// Create Global Mixed Snippet File
@@ -43,8 +46,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('snippetstudio.file.createGlobalSnippets', async () => {
 			const { createGlobalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createGlobalSnippetsFile();
-			vscode.commands.executeCommand('snippetstudio.refresh');
-			vscode.commands.executeCommand('snippetstudio.refreshLocations');
+			refreshAll();
 		})
 	);
 
@@ -63,6 +65,42 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 		)
 	);
 
+	// Enable & Disable snippet files
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'snippetstudio.file.enable',
+			async (treeItem: vscode.TreeItem) => {
+				if (!treeItem || !treeItem.description) {
+					vscode.window.showErrorMessage('File path not found.');
+					return;
+				}
+				await enableFile(treeItem.description as string);
+				refreshAll();
+			}
+		),
+		vscode.commands.registerCommand(
+			'snippetstudio.file.disable',
+			async (treeItem: vscode.TreeItem) => {
+				if (!treeItem || !treeItem.description) {
+					vscode.window.showErrorMessage('File path not found.');
+					return;
+				}
+				await disableFile(treeItem.description as string);
+				refreshAll();
+			}
+		),
+		vscode.commands.registerCommand(
+			'snippetstudio.file.enableGroup',
+			async (treeItem: vscode.TreeItem) => {
+				const files = await snippetView.getChildren(treeItem);
+				await enableAllFiles(
+					files?.map((disabledItem) => disabledItem.description as string) ?? []
+				);
+				refreshAll();
+			}
+		)
+	);
+
 	// Export Snippet Files
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.snippet.export', async () => {
@@ -70,6 +108,11 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 			exportSnippets();
 		})
 	);
+}
+
+export function refreshAll() {
+	vscode.commands.executeCommand('snippetstudio.refresh');
+	vscode.commands.executeCommand('snippetstudio.refreshLocations');
 }
 
 async function deleteFile(filepath: string) {
@@ -94,8 +137,7 @@ async function deleteFile(filepath: string) {
 	try {
 		await fs.promises.unlink(filepath); // Use fs.promises.unlink
 		vscode.window.showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
-		vscode.commands.executeCommand('snippetstudio.refresh');
-		vscode.commands.executeCommand('snippetstudio.refreshLocations');
+		refreshAll();
 	} catch (error) {
 		if (error instanceof Error) {
 			vscode.window.showErrorMessage(`Error deleting file: ${error.message}`);

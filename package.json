@@ -141,6 +141,21 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.file.enable",
+				"title": "Enable Snippet File",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.disable",
+				"title": "Disable Snippet File",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.enableGroup",
+				"title": "Enable all Snippet Files",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.snippet.edit",
 				"title": "Edit Snippet File",
 				"icon": "$(pencil)",
@@ -434,7 +449,7 @@
 			"view/item/context": [
 				{
 					"command": "snippetstudio.file.open",
-					"when": "viewItem == snippet-filepath",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "navigation"
 				},
 				{
@@ -449,13 +464,28 @@
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "viewItem == snippet-filepath",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "viewItem == snippet-filepath",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.file.enable",
+					"when": "viewItem =~ /snippet-filepath/ && viewItem =~ /disabled/",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.disable",
+					"when": "viewItem == snippet-filepath",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.enableGroup",
+					"when": "viewItem == disabled-dropdown",
+					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.snippet.delete",
@@ -474,7 +504,7 @@
 				},
 				{
 					"command": "snippetstudio.file.createSnippetAt",
-					"when": "viewItem == snippet-filepath",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "inline"
 				},
 				{

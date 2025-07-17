@@ -51,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
 			locationTreeProvider.debounceRefresh.bind(locationTreeProvider),
 	});
 	initSnippetCommands(context, snippetEditorProvider);
-	initSnippetFileCommands(context);
+	initSnippetFileCommands(context, treeDataProvider);
 	initSnippetEditorCommands(context, snippetEditorProvider);
 	initSnippetFeatureCommands(context, snippetEditorProvider);
 	initSnippetGistsCommands(context);

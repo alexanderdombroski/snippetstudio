@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import loadSnippets from '../snippets/loadSnippets';
-import { selectedLanguageTemplate } from './templates';
+import { disabledDropdownTemplate, selectedLanguageTemplate } from './templates';
 import { getCurrentLanguage } from '../utils/language';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
@@ -46,13 +46,23 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	}
 
 	async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[] | undefined> {
+		// Handle child items
 		if (element) {
-			// Handle child items
+			if (element.contextValue === 'disabled-dropdown') {
+				const disabledItems = this.snippetTreeItems
+					?.map((group) => group[0])
+					.filter(
+						(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath disabled'
+					);
+				return disabledItems;
+			}
+
 			const parentChild = this.snippetTreeItems?.find(
 				(group) => group[0].description === element.description
 			);
 			return parentChild ? parentChild[1] : undefined;
 		}
+
 		// Root level: Load snippet files and create parent items
 		if (!this.snippetTreeItems) {
 			this.snippetTreeItems = await loadSnippets();
@@ -62,7 +72,16 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 
 		if (this.snippetTreeItems && this.snippetTreeItems.length > 0) {
 			// Add the snippet groups if they exist
-			rootItems.push(...this.snippetTreeItems.map((group) => group[0]));
+			const fileItems = this.snippetTreeItems.map((group) => group[0]);
+			rootItems.push(
+				...fileItems.filter(
+					(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath'
+				)
+			);
+			const disabledItems = fileItems.filter(
+				(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath disabled'
+			);
+			disabledItems.length && rootItems.push(disabledDropdownTemplate());
 		}
 
 		return rootItems;

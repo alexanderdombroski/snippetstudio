@@ -43,9 +43,15 @@ async function getGlobalSnippetFiles(langId: string | undefined): Promise<string
 		return [];
 	}
 
-	const languageSnippetFilePaths = path.join(globalSnippetsPath, `${langId}.json`);
-	if (langId !== undefined && fs.existsSync(languageSnippetFilePaths)) {
-		paths.push(languageSnippetFilePaths);
+	const languageSnippetFilePath = path.join(globalSnippetsPath, `${langId}.json`);
+	const disabledLanguageSnippetFilePath = path.join(
+		globalSnippetsPath,
+		`${langId}.json.disabled`
+	);
+	if (langId) {
+		fs.existsSync(languageSnippetFilePath) && paths.push(languageSnippetFilePath);
+		fs.existsSync(disabledLanguageSnippetFilePath) &&
+			paths.push(disabledLanguageSnippetFilePath);
 	}
 
 	const globalMixedSnippetsPaths = await findCodeSnippetsFiles(globalSnippetsPath);
@@ -57,12 +63,16 @@ async function getGlobalSnippetFiles(langId: string | undefined): Promise<string
 // ---------------------------- Any Language ---------------------------- //
 
 /**
- * Finds the snippet files in a workspace folder.
+ * Finds the code-snippets files in a workspace folder.
  *
  * @param folderPath The path to the workspace folder.
  */
 async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
-	return await glob(path.join(folderPath, '*.code-snippets'));
+	const [snippets, disabledSnippets] = await Promise.all([
+		glob(path.join(folderPath, '*.code-snippets')),
+		glob(path.join(folderPath, '*.code-snippets.disabled')),
+	]);
+	return [...snippets, ...disabledSnippets];
 }
 
 /**
@@ -95,9 +105,9 @@ async function findAllGlobalSnippetFiles(globalDir: string | undefined): Promise
 	if (globalDir !== undefined) {
 		for (var langId of langIds) {
 			const snippetFile = path.join(globalDir, `${langId}.json`);
-			if (fs.existsSync(snippetFile)) {
-				snippetFiles.push(snippetFile);
-			}
+			const disabledSnippetFile = path.join(globalDir, `${langId}.json.disabled`);
+			fs.existsSync(snippetFile) && snippetFiles.push(snippetFile);
+			fs.existsSync(disabledSnippetFile) && snippetFiles.push(disabledSnippetFile);
 		}
 
 		const files = await findCodeSnippetsFiles(globalDir);

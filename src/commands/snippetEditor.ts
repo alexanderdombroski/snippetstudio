@@ -3,6 +3,7 @@ import SnippetEditorProvider from '../ui/bufferEditor';
 import { getCurrentUri } from '../utils/fsInfo';
 import { VSCodeSnippet } from '../types/snippetTypes';
 import { titleCase } from '../utils/string';
+import { getFileToSave } from '../snippets/fileDisabler';
 
 function initSnippetEditorCommands(
 	context: vscode.ExtensionContext,
@@ -43,17 +44,19 @@ function initSnippetEditorCommands(
 				const capitalize = vscode.workspace
 					.getConfiguration('snippetstudio')
 					.get<boolean>('autoCapitalizeSnippetName');
+
+				const savePath = getFileToSave(data.filename);
 				if (
 					vscode.workspace
 						.getConfiguration('snippetstudio')
 						.get<boolean>('autoCreateSnippetFiles')
 				) {
 					const { createFile } = await import('../snippets/newSnippetFile.js');
-					await createFile(data.filename, false);
+					await createFile(savePath, false);
 				}
 				const { writeSnippet } = await import('../snippets/updateSnippets.js');
 				writeSnippet(
-					data.filename,
+					savePath,
 					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
 					snippet
 				);

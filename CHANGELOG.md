@@ -36,7 +36,6 @@
 - **Snippet Actions** (v1.6)
     - Import Snippets
     - Move Snippets
-    - Enable/Disable Snippet Files (lock icon?)
 - **Bugs**
     - Edit Snippets allows you to change snippet key
     - Create Snippets won't override keys
@@ -56,6 +55,8 @@
 ## [VERSION_NUMBER] - DATE
 
 ### Added
+
+- can enable & disable snippet files
 
 ### Fixed
 

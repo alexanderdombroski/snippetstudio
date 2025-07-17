@@ -58,7 +58,9 @@ export function createTreeItemFromFilePath(
 		'Snippets from this dropdown are found in ' +
 		filepath +
 		'\n\nRight Click to open the file!';
-	treeItem.contextValue = 'snippet-filepath';
+	treeItem.contextValue = filepath.endsWith('.disabled')
+		? 'snippet-filepath disabled'
+		: 'snippet-filepath';
 
 	return treeItem;
 }
@@ -71,11 +73,24 @@ export function selectedLanguageTemplate(langId: string | undefined): vscode.Tre
 	return treeItem;
 }
 
+export function disabledDropdownTemplate(): vscode.TreeItem {
+	const disabledDropdown = new vscode.TreeItem(
+		'Disabled',
+		vscode.TreeItemCollapsibleState.Collapsed
+	);
+	disabledDropdown.contextValue = 'disabled-dropdown';
+	disabledDropdown.tooltip = "Snippets in these files won't be expandable until you enable them";
+	return disabledDropdown;
+}
+
 export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
 	const treeItem = new vscode.TreeItem(path.basename(filepath));
 	treeItem.description = filepath;
 	treeItem.tooltip = 'Double click to open the file: ' + filepath;
-	treeItem.contextValue = 'snippet-filepath';
+
+	const disabled = filepath.endsWith('.disabled');
+	treeItem.contextValue = disabled ? 'snippet-filepath disabled' : 'snippet-filepath';
+	disabled && (treeItem.iconPath = new vscode.ThemeIcon('lock'));
 
 	// Command to open Snippet file when double clicked
 	treeItem.command = {
