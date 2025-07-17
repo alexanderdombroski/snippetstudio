@@ -3,7 +3,17 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import { processJsonWithComments } from '../src/utils/jsoncFilesIO';
+async function processJsonWithComments(jsonString: string): Promise<any> {
+	try {
+		const stripJsonCommentsModule = await import('strip-json-comments');
+		const stripJsonComments = stripJsonCommentsModule.default; // Access the default export
+		const cleanedJson = stripJsonComments(jsonString);
+		return JSON.parse(cleanedJson);
+	} catch (error) {
+		console.error('Error processing JSON with comments:', error);
+		return null; // Or throw an error if you prefer
+	}
+}
 
 async function fetchProfile(url: string): Promise<any> {
 	return new Promise((resolve, reject) => {
