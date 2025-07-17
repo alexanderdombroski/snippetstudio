@@ -29,6 +29,12 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		this._directories.set('/snippets', new Set());
 		this.scheme = scheme;
 		this._snippetDataManager = manager;
+
+		vscode.window.onDidChangeActiveTextEditor((editor) => {
+			if (editor?.document.uri.scheme === this.scheme) {
+				this._highlightSnippetInsertionFeatures(editor);
+			}
+		});
 	}
 
 	handleDocumentChange(changeEvent: vscode.TextDocumentChangeEvent): void {
@@ -44,10 +50,12 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		if (this._lspDebounce) {
 			clearTimeout(this._lspDebounce);
 		}
-		this._lspDebounce = setTimeout(
-			() => this._highlightSnippetInsertionFeatures(changeEvent.document),
-			400
-		);
+		this._lspDebounce = setTimeout(() => {
+			const editor = vscode.window.activeTextEditor;
+			if (editor) {
+				this._highlightSnippetInsertionFeatures(editor);
+			}
+		}, 400);
 
 		// Test for unintential snippet tabstops, changes, and choices
 		if (
@@ -175,11 +183,9 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		}
 	}
 
-	private _highlightSnippetInsertionFeatures(document: vscode.TextDocument) {
-		const editor = vscode.window.visibleTextEditors.find(
-			(e) => e.document.uri.toString() === document.uri.toString()
-		);
-		if (editor === undefined) {
+	private _highlightSnippetInsertionFeatures(editor: vscode.TextEditor) {
+		const document = editor?.document;
+		if (document === undefined) {
 			return;
 		}
 

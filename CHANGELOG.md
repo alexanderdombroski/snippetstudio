@@ -53,6 +53,16 @@
     - Can I enable splitting?
     - Can I enable type: module?
 
+## [VERSION_NUMBER] - DATE
+
+### Added
+
+### Fixed
+
+- snippet editor now highlights insertion feature on load and tab switch
+
+### Changed
+
 ## [1.5.3] - 2025-07-16
 
 ### Added
