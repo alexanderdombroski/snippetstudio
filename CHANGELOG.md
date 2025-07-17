@@ -28,11 +28,15 @@
     - **profile snippets** ~/Library/Application Support/Code/User/profiles/\<profile-id\>/snippets/python.json
     - **downloaded extension snippets** ~/.vscode/extensions/ (for all profiles)
     - **profile-backup** extract within .code-profile files
+        - 3 official .code-profile 
+        - gists
+        - rawFileUrl
+        - filepath
     - Edit and Choose Snippets as you import them
 - **Snippet Actions** (v1.6)
     - Import Snippets
     - Move Snippets
-    - Enable/Disable Snippet Files
+    - Enable/Disable Snippet Files (lock icon?)
 - **Bugs**
     - Edit Snippets allows you to change snippet key
     - Create Snippets won't override keys
@@ -40,6 +44,7 @@
     - Upgraded Location View with profile and extension snippets
     - Display if snippet files are loadable
     - Profile snippet support
+        - Get active profile from configuration > workbench > settings > profile
     - Toggle to view disabled/unloadable snippets
 - **Snippet Upgrade**
     - Snippet isFileTemplate field
@@ -57,6 +62,7 @@
 ### Fixed
 
 - If the git workflow fails, warning messages properly show button to inspect snippets
+- Snippet Insertion Features autocompletion properly replaces or uses highlighted selections
 
 ### Changed
 

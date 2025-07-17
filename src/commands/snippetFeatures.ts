@@ -17,7 +17,7 @@ export default function initSnippetFeatureCommands(
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(`\\\$${getNextFeatureNumber(editor)}$0`),
-					editor.selection.active
+					editor.selection
 				);
 			}
 		),
@@ -26,9 +26,9 @@ export default function initSnippetFeatureCommands(
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(
-						`\\\${${getNextFeatureNumber(editor)}:\${2:placeholder}}$0`
+						`\\\${${getNextFeatureNumber(editor)}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 					),
-					editor.selection.active
+					editor.selection
 				);
 			}
 		),
@@ -37,9 +37,9 @@ export default function initSnippetFeatureCommands(
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(
-						`\\\${${getNextFeatureNumber(editor)}|\${2:choice},\${3:choice}|}$0`
+						`\\\${${getNextFeatureNumber(editor)}|\${2:\${TM_SELECTED_TEXT:choice}},\${3:choice}|}$0`
 					),
-					editor.selection.active
+					editor.selection
 				);
 			}
 		)
@@ -59,7 +59,7 @@ export default function initSnippetFeatureCommands(
 					if (variable !== undefined) {
 						editor.insertSnippet(
 							new vscode.SnippetString(`\\\$${variable}`),
-							editor.selection.active
+							editor.selection
 						);
 					}
 				}
@@ -70,8 +70,10 @@ export default function initSnippetFeatureCommands(
 					const variable = await showVariableQuickPick();
 					if (variable !== undefined) {
 						editor.insertSnippet(
-							new vscode.SnippetString(`\\\${${variable}:\${1:placeholder}}$0`),
-							editor.selection.active
+							new vscode.SnippetString(
+								`\\\${${variable}:\${1:\${TM_SELECTED_TEXT:placeholder}}}$0`
+							),
+							editor.selection
 						);
 					}
 				}
@@ -84,7 +86,7 @@ export default function initSnippetFeatureCommands(
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					editor.insertSnippet(
 						new vscode.SnippetString(`$\${1|${variableList()}|}$0`),
-						editor.selection.active
+						editor.selection
 					);
 				}
 			),
@@ -93,9 +95,9 @@ export default function initSnippetFeatureCommands(
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					editor.insertSnippet(
 						new vscode.SnippetString(
-							`\\\${\${1|${variableList()}|}:\${2:placeholder}}$0`
+							`\\\${\${1|${variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 						),
-						editor.selection.active
+						editor.selection
 					);
 				}
 			)
@@ -110,7 +112,7 @@ export default function initSnippetFeatureCommands(
 					new vscode.SnippetString(
 						`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`
 					),
-					editor.selection.active
+					editor.selection
 				);
 			}
 		)
@@ -141,7 +143,7 @@ export default function initSnippetFeatureCommands(
 						vscode.CompletionItemKind.Event
 					);
 					placeholder.insertText = new vscode.SnippetString(
-						`\\\${${id}:\${2:placeholder}}$0`
+						`\\\${${id}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 					);
 					placeholder.detail = 'placeholder snippet insertion feature';
 					placeholder.documentation = new vscode.MarkdownString(
@@ -153,7 +155,7 @@ export default function initSnippetFeatureCommands(
 						vscode.CompletionItemKind.Event
 					);
 					choice.insertText = new vscode.SnippetString(
-						`\\\${${id}|\${2:choice},\${3:choice}|}$0`
+						`\\\${${id}|\${2:\${TM_SELECTED_TEXT:choice}},\${3:choice}|}$0`
 					);
 					choice.detail = 'choice snippet insertion feature';
 					choice.documentation = new vscode.MarkdownString(
@@ -175,7 +177,7 @@ export default function initSnippetFeatureCommands(
 						vscode.CompletionItemKind.Event
 					);
 					variablePlaceholder.insertText = new vscode.SnippetString(
-						`\\\${\${1|${variableList()}|}:\${2:placeholder}}$0`
+						`\\\${\${1|${variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 					);
 					variablePlaceholder.detail = 'variablePlaceholder snippet insertion feature';
 					variablePlaceholder.documentation = new vscode.MarkdownString(
