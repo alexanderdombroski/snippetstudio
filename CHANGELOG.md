@@ -53,7 +53,7 @@
     - Can I enable splitting?
     - Can I enable type: module?
 
-## [1.5.3] - DATE
+## [1.5.3] - 2025-07-16
 
 ### Added
 
