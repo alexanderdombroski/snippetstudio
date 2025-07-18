@@ -14,6 +14,7 @@ import { SnippetData, VSCodeSnippet } from '../types/snippetTypes';
 import { getConfirmation, getSelection } from '../utils/user';
 import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
+import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 
 function initSnippetCommands(
 	context: vscode.ExtensionContext,
@@ -126,7 +127,7 @@ function initSnippetCommands(
 		vscode.commands.registerCommand(
 			'snippetstudio.snippet.delete',
 			async (item: TreeSnippet) => {
-				if (item === undefined || item.description === undefined) {
+				if (item.description === undefined) {
 					return;
 				}
 				if (
@@ -146,17 +147,41 @@ function initSnippetCommands(
 			}
 		)
 	);
+	// Move Snippet
+	context.subscriptions.push(
+		vscode.commands.registerCommand('snippetstudio.snippet.move', async (item: TreeSnippet) => {
+			const files = (await locateAllSnippetFiles()).flat();
+			const options = files
+				.filter((file) => file !== item.path)
+				.map((file) => ({
+					label: path.basename(file),
+					description: file,
+				}));
+			const selected = await vscode.window.showQuickPick(options, {
+				title: 'Pick a snippet file to move the snippet to',
+			});
+			if (selected === undefined) {
+				return;
+			}
+
+			const snippetTitle = item.description?.toString() ?? '';
+			const { readSnippet, writeSnippet } = await import('../snippets/updateSnippets.js');
+			const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
+
+			await Promise.all([
+				writeSnippet(selected.description, snippetTitle, snippet),
+				vscode.commands.executeCommand('snippetstudio.snippet.delete', item),
+			]);
+			vscode.commands.executeCommand('snippetstudio.refresh');
+		})
+	);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand(
 			'snippetstudio.snippet.addKeybinding',
 			async (item: TreeSnippet) => {
 				const keyBindPath = getKeybindingsFilePath();
-				if (
-					item === undefined ||
-					item.description === undefined ||
-					keyBindPath === undefined
-				) {
+				if (item.description === undefined || keyBindPath === undefined) {
 					return;
 				}
 

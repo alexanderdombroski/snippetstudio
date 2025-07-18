@@ -168,6 +168,11 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.snippet.move",
+				"title": "Move Snippet",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.snippet.addKeybinding",
 				"title": "Add Keybinding",
 				"when": false
@@ -506,6 +511,11 @@
 					"command": "snippetstudio.snippet.edit",
 					"when": "viewItem == snippet",
 					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.snippet.move",
+					"when": "viewItem == snippet",
+					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.snippet.addKeybinding",

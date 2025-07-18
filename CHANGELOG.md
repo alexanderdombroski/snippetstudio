@@ -33,12 +33,6 @@
         - rawFileUrl
         - filepath
     - Edit and Choose Snippets as you import them
-- **Snippet Actions**
-    - Import Snippets
-    - Move Snippets
-- **Bugs**
-    - Edit Snippets allows you to change snippet key
-    - Create Snippets won't override keys
 - **Profile Support**
     - Upgraded Location View with profile and extension snippets
     - Display if snippet files are loadable
@@ -50,12 +44,13 @@
 
 ### Added
 
-- can enable & disable snippet files
-- add keybindings to existing snippets
+- Enable & disable snippet files
+- Add keybindings to existing snippets
+- Move snippets from one file to another
 
 ### Fixed
 
-- snippet editor now highlights insertion feature on load and tab switch
+- Snippet editor now highlights insertion feature on load and tab switch
 
 ## [1.5.3] - 2025-07-16
 
