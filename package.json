@@ -168,6 +168,11 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.snippet.addKeybinding",
+				"title": "Add Keybinding",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.refresh",
 				"title": "Refresh Snippets",
 				"icon": "$(refresh)",
@@ -501,6 +506,11 @@
 					"command": "snippetstudio.snippet.edit",
 					"when": "viewItem == snippet",
 					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.snippet.addKeybinding",
+					"when": "viewItem == snippet",
+					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.file.createSnippetAt",

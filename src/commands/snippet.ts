@@ -4,11 +4,16 @@ import { TreeSnippet } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import SnippetEditorProvider from '../ui/bufferEditor';
 import { newSnippetEditorUri } from './snippetEditor';
-import { getGlobalLangFile, getLangFromSnippetFilePath } from '../utils/fsInfo';
+import {
+	getGlobalLangFile,
+	getKeybindingsFilePath,
+	getLangFromSnippetFilePath,
+} from '../utils/fsInfo';
 import path from 'path';
-import { SnippetData } from '../types/snippetTypes';
+import { SnippetData, VSCodeSnippet } from '../types/snippetTypes';
 import { getConfirmation, getSelection } from '../utils/user';
-import { escapeAllSnippetInsertionFeatures } from '../utils/string';
+import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
+import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 
 function initSnippetCommands(
 	context: vscode.ExtensionContext,
@@ -112,9 +117,7 @@ function initSnippetCommands(
 					snippetData.scope = snippet.scope;
 				}
 			}
-			const body = Array.isArray(snippet?.body)
-				? snippet.body.join('\n')
-				: (snippet?.body ?? '');
+			const body = snippetBodyAsString(snippet?.body);
 			await editSnippet(snippetEditorProvider, langId, snippetData, body);
 		})
 	);
@@ -140,6 +143,59 @@ function initSnippetCommands(
 				const { deleteSnippet } = await import('../snippets/updateSnippets.js');
 				deleteSnippet(item.path, item.description.toString());
 				vscode.commands.executeCommand('snippetstudio.refresh');
+			}
+		)
+	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'snippetstudio.snippet.addKeybinding',
+			async (item: TreeSnippet) => {
+				const keyBindPath = getKeybindingsFilePath();
+				if (
+					item === undefined ||
+					item.description === undefined ||
+					keyBindPath === undefined
+				) {
+					return;
+				}
+
+				const snippetTitle = item.description?.toString() ?? '';
+				const { readSnippet } = await import('../snippets/updateSnippets.js');
+				const [snippet, keybindings] = await Promise.all([
+					readSnippet(item.path, snippetTitle) as Promise<VSCodeSnippet>,
+					readJsonC(keyBindPath),
+				]);
+
+				const langs: string[] = (
+					snippet?.scope ??
+					getCurrentLanguage() ??
+					'plaintext'
+				).split(',');
+				const placeholder = 'INSERT_KEY_BINDING_HERE';
+				(keybindings as Object[]).push({
+					key: placeholder,
+					command: 'editor.action.insertSnippet',
+					when: `editorTextFocus && (${langs.map((lang) => `editorLangId == ${lang}`).join(' || ')})`,
+					args: {
+						snippet: snippetBodyAsString(snippet.body),
+					},
+				});
+
+				await writeJson(keyBindPath, keybindings);
+				const doc = await vscode.workspace.openTextDocument(keyBindPath);
+				const editor = await vscode.window.showTextDocument(doc);
+				await vscode.commands.executeCommand('workbench.action.files.revert');
+
+				const text = doc.getText();
+				const index = text.indexOf(placeholder);
+				if (index === -1) {
+					return;
+				}
+				const position = doc.positionAt(index);
+				const range = new vscode.Range(position, position.translate(0, placeholder.length));
+				editor.selection = new vscode.Selection(range.start, range.end);
+				editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
 			}
 		)
 	);

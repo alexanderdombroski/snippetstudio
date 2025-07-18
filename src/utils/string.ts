@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { RepoData } from '../types/gitTypes';
 
 function titleCase(str: string): string {
 	return str
@@ -10,6 +9,10 @@ function titleCase(str: string): string {
 
 function capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function snippetBodyAsString(body: string | string[] | null | undefined) {
+	return Array.isArray(body) ? body.join('\n') : (body ?? '');
 }
 
 async function unTabMultiline(
@@ -93,6 +96,7 @@ function escapeAllSnippetInsertionFeatures(str: string): string {
 
 export {
 	titleCase,
+	snippetBodyAsString,
 	unTabMultiline,
 	capitalize,
 	escapeDollarSignIfNeeded,

@@ -3,8 +3,9 @@ import { VSCodeSnippets } from '../types/snippetTypes';
 import * as vscode from 'vscode';
 import path from 'path';
 import { getGlobalSnippetFilesDir } from './fsInfo';
+import { GenericJson } from '../types/fileIOTypes';
 
-export async function processJsonWithComments(jsonString: string): Promise<any> {
+async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
 		const stripJsonCommentsModule = await import('strip-json-comments');
 		const stripJsonComments = stripJsonCommentsModule.default; // Access the default export
@@ -12,7 +13,7 @@ export async function processJsonWithComments(jsonString: string): Promise<any> 
 		return JSON.parse(cleanedJson);
 	} catch (error) {
 		console.error('Error processing JSON with comments:', error);
-		return null; // Or throw an error if you prefer
+		return null;
 	}
 }
 
@@ -98,4 +99,14 @@ export async function resetGlobalSnippets() {
 	);
 
 	await Promise.all(deletePromises);
+}
+
+export async function readJsonC(filepath: string): Promise<GenericJson> {
+	const jsonc = await fs.readFile(filepath, 'utf-8');
+	return await processJsonWithComments(jsonc);
+}
+
+export async function writeJson(filepath: string, jsonObj: GenericJson) {
+	const content = Buffer.from(JSON.stringify(jsonObj, null, 4), 'utf-8');
+	await vscode.workspace.fs.writeFile(vscode.Uri.file(filepath), content);
 }
