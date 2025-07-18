@@ -40,6 +40,17 @@
         - Get active profile from configuration > workbench > settings > profile
     - Toggle to view disabled/unloadable snippets
 
+## [1.6.1] - DATE
+
+### Added
+
+### Fixed
+
+- Scopes correctly handled when moving snippets
+
+### Changed
+
+
 ## [1.6.0] - 2025-07-17
 
 ### Added

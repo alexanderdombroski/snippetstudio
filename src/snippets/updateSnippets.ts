@@ -1,6 +1,7 @@
 import { VSCodeSnippet } from '../types/snippetTypes';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'path';
+import { getCurrentLanguage } from '../utils/language';
 
 // -------------------------- CRUD operations --------------------------
 
@@ -11,6 +12,17 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 			`Read Operation failed. Write operation of ${titleKey} to ${path.basename(filepath)} canceled.`
 		);
 		return;
+	}
+
+	if (snippet.scope) {
+		if (path.extname(filepath) === '.json' || filepath.endsWith('.json.disabled')) {
+			delete snippet.scope;
+		}
+	} else if (
+		path.extname(filepath) === '.code-snippets' ||
+		filepath.endsWith('.code-snippets.disabled')
+	) {
+		snippet.scope = getCurrentLanguage() ?? 'plaintext';
 	}
 
 	snippets[titleKey] = snippet;
