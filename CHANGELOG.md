@@ -25,6 +25,7 @@
     - Add searchbar
 - **IMPORT SNIPPETS** (v1.7)
     - **built in vscode snippets** https://github.com/microsoft/vscode/tree/main/extensions/\<language\>/snippets (vscode basics)
+        - Allow the user to override these locally?
     - **profile snippets** ~/Library/Application Support/Code/User/profiles/\<profile-id\>/snippets/python.json
     - **downloaded extension snippets** ~/.vscode/extensions/ (for all profiles)
     - **profile-backup** extract within .code-profile files
@@ -40,9 +41,11 @@
         - Get active profile from configuration > workbench > settings > profile
     - Toggle to view disabled/unloadable snippets
 
-## [1.6.1] - DATE
+## [2.0.0] - DATE
 
 ### Added
+
+- TODO - Snippet folders in terminal and folder
 
 ### Fixed
 
@@ -50,6 +53,9 @@
 
 ### Changed
 
+### Removed
+
+- TODO - Removed sync and merge snippet repositories, as this feature is redundant with VS Code's [Settings Sync](https://code.visualstudio.com/docs/configure/settings-sync)
 
 ## [1.6.0] - 2025-07-17
 

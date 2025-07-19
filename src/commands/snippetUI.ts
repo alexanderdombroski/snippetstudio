@@ -47,6 +47,7 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 				const terminal = vscode.window.createTerminal({
 					name: 'Global Snippets',
 					cwd: globalsPath,
+					iconPath: new vscode.ThemeIcon('repo'),
 				});
 				terminal.show();
 			}
