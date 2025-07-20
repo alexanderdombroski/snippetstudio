@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SnippetData } from '../types/snippetTypes';
+import type { SnippetData } from '../types';
 import SnippetDataManager from '../snippets/snippetDataManager';
 import { getCurrentUri } from '../utils/fsInfo';
 import { escapeDollarSignIfNeeded } from '../utils/string';

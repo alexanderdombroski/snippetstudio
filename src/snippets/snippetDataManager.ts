@@ -1,4 +1,4 @@
-import { SnippetData } from '../types/snippetTypes';
+import type { SnippetData } from '../types';
 
 export default class snippetDataManager {
 	private _dataMap: Map<string, SnippetData> = new Map();

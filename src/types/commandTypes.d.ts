@@ -2,4 +2,4 @@ interface CommandMap {
 	[command: string]: () => void;
 }
 
-export { CommandMap };
+export type { CommandMap };

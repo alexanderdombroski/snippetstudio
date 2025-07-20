@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { VSCodeSnippets } from '../types/snippetTypes';
+import type { VSCodeSnippets } from '../types';
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import { findAllGlobalSnippetFiles } from './locateSnippets';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';

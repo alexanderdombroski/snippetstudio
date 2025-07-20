@@ -22,7 +22,7 @@ function getCurrentUri(): vscode.Uri | undefined {
 	return vscode.window.activeTextEditor?.document.uri;
 }
 
-function getUserPath(): string | undefined {
+export function getUserPath(): string | undefined {
 	let globalUserPath: string = '';
 	switch (process.platform) {
 		case 'win32':

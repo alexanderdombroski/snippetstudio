@@ -1,9 +1,8 @@
 import * as fs from 'fs/promises'; // Import fs/promises for async file operations
-import { VSCodeSnippets } from '../types/snippetTypes';
 import * as vscode from 'vscode';
 import path from 'path';
 import { getGlobalSnippetFilesDir } from './fsInfo';
-import { GenericJson } from '../types/fileIOTypes';
+import type { GenericJson, VSCodeSnippets } from '../types';
 
 async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {

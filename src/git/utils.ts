@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { isNotFoundError } from '../utils/error';
-import { RepoData } from '../types/gitTypes';
+import type { RepoData } from '../types';
 
 /**
  * Checks to see if repo exists on github

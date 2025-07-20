@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CommandMap } from '../types/commandTypes';
+import type { CommandMap } from '../types';
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 
 function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: CommandMap) {

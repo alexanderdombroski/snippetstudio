@@ -1,4 +1,4 @@
-import { VSCodeSnippet } from '../types/snippetTypes';
+import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'path';
 import { getCurrentLanguage } from '../utils/language';

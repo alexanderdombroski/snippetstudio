@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 import { doesRepoExist, extractGitURL, getRepoDataFromUser } from './utils';
-import { RepoData } from '../types/gitTypes';
+import type { RepoData } from '../types';
 import { setPreferredGlobalSnippetsRepo, settingAndRemoteMatch } from './settings';
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import { cloneIntoPath, commitSnippets, getOriginRemote, push } from './commands';

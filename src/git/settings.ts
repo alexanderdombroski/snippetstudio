@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { RepoData } from '../types/gitTypes';
+import type { RepoData } from '../types';
 import { buildGitURL, extractGitURL } from './utils';
 
 export function getPreferredGlobalSnippetsRepo(): RepoData | null {

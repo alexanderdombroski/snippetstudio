@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { buildGitURL, doesRepoExist, extractGitURL, getUsername } from './utils';
 import getOctokitClient from './octokit';
 import { getPreferredGlobalSnippetsRepo, setPreferredGlobalSnippetsRepo } from './settings';
-import { RepoData } from '../types/gitTypes';
+import type { RepoData } from '../types';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import {

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import SnippetEditorProvider from '../ui/bufferEditor';
 import { getCurrentUri } from '../utils/fsInfo';
-import { VSCodeSnippet } from '../types/snippetTypes';
+import type { VSCodeSnippet } from '../types';
 import { titleCase } from '../utils/string';
 import { getFileToSave } from '../snippets/fileDisabler';
 

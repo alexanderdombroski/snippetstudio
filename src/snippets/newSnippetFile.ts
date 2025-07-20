@@ -5,7 +5,7 @@ import { getWorkspaceFolder, getGlobalSnippetFilesDir } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds, selectLanguage } from '../utils/language';
 import { getSavePath } from '../utils/user';
 import { locateAllSnippetFiles } from './locateSnippets';
-import { VSCodeSnippets } from '../types/snippetTypes';
+import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 
 async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {

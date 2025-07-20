@@ -58,4 +58,4 @@ interface SnippetData {
 	filename: string;
 }
 
-export { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData };
+export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData };

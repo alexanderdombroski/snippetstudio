@@ -1,9 +1,9 @@
-import { readJsoncFilesAsync } from '../utils/jsoncFilesIO.js';
-import { VSCodeSnippets } from '../types/snippetTypes.js';
-import { locateSnippetFiles } from './locateSnippets.js';
+import { readJsoncFilesAsync } from '../utils/jsoncFilesIO';
+import type { VSCodeSnippets } from '../types';
+import { locateSnippetFiles } from './locateSnippets';
 import * as vscode from 'vscode';
-import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates.js';
-import { getCurrentLanguage } from '../utils/language.js';
+import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates';
+import { getCurrentLanguage } from '../utils/language';
 
 export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.TreeItem[]][]> {
 	const snippetFiles: string[] = await locateSnippetFiles();

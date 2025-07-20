@@ -791,5 +791,6 @@
 		"glob": "^11.0.3",
 		"simple-git": "^3.28.0",
 		"strip-json-comments": "^5.0.2"
-	}
+	},
+	"types": "src/types/index.d.ts"
 }

@@ -10,7 +10,7 @@ import {
 	getLangFromSnippetFilePath,
 } from '../utils/fsInfo';
 import path from 'path';
-import { SnippetData, VSCodeSnippet } from '../types/snippetTypes';
+import type { SnippetData, VSCodeSnippet } from '../types';
 import { getConfirmation, getSelection } from '../utils/user';
 import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';

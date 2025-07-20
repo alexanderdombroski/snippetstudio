@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import { VSCodeSnippet } from '../types/snippetTypes.js';
-import { getWorkspaceFolder } from '../utils/fsInfo.js';
+import type { VSCodeSnippet } from '../types';
+import { getWorkspaceFolder } from '../utils/fsInfo';
 
 export class TreeSnippet extends vscode.TreeItem {
 	public snippetPath: string = '';

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import { getCurrentUri } from '../utils/fsInfo';
 import SnippetDataManager from '../snippets/snippetDataManager';
-import { SnippetData } from '../types/snippetTypes';
+import type { SnippetData } from '../types';
 
 export default class SnippetDataWebViewProvider implements vscode.WebviewViewProvider {
 	private _view?: vscode.WebviewView;
