@@ -11,7 +11,7 @@
 			"request": "launch",
 			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
 			"env": {
-				"SHOW_DEPRECATION_STACK": "true"
+				"USE_VERBOSE_LOGGING": "true"
 			},
 			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
 			"preLaunchTask": "${defaultBuildTask}"

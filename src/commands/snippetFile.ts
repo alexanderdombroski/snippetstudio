@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import onDoubleClick from './doubleClickHandler';
 import { SnippetViewProvider } from '../ui';
-import { disableFile, enableAllFiles, enableFile } from '../snippets/fileDisabler';
 
 function initSnippetFileCommands(
 	context: vscode.ExtensionContext,
@@ -11,12 +10,9 @@ function initSnippetFileCommands(
 ) {
 	// Open Snippets file
 	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.file.open',
-			async (item: vscode.TreeItem) => {
-				await openSnippetFile(item.description);
-			}
-		),
+		vscode.commands.registerCommand('snippetstudio.file.open', async (item: vscode.TreeItem) => {
+			await openSnippetFile(item.description);
+		}),
 		vscode.commands.registerCommand(
 			'snippetstudio.file.openFromDouble',
 			onDoubleClick(async (item: vscode.TreeItem) => {
@@ -55,48 +51,8 @@ function initSnippetFileCommands(
 		vscode.commands.registerCommand(
 			'snippetstudio.file.delete',
 			async (treeItem: vscode.TreeItem) => {
-				if (!treeItem || !treeItem.description) {
-					vscode.window.showErrorMessage('File path not found.');
-					return;
-				}
-				await deleteFile(treeItem.description.toString());
+				await deleteFile(String(treeItem.description));
 				vscode.commands.executeCommand('snippetstudio.refreshLocations');
-			}
-		)
-	);
-
-	// Enable & Disable snippet files
-	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.file.enable',
-			async (treeItem: vscode.TreeItem) => {
-				if (!treeItem || !treeItem.description) {
-					vscode.window.showErrorMessage('File path not found.');
-					return;
-				}
-				await enableFile(treeItem.description as string);
-				refreshAll();
-			}
-		),
-		vscode.commands.registerCommand(
-			'snippetstudio.file.disable',
-			async (treeItem: vscode.TreeItem) => {
-				if (!treeItem || !treeItem.description) {
-					vscode.window.showErrorMessage('File path not found.');
-					return;
-				}
-				await disableFile(treeItem.description as string);
-				refreshAll();
-			}
-		),
-		vscode.commands.registerCommand(
-			'snippetstudio.file.enableGroup',
-			async (treeItem: vscode.TreeItem) => {
-				const files = await snippetView.getChildren(treeItem);
-				await enableAllFiles(
-					files?.map((disabledItem) => disabledItem.description as string) ?? []
-				);
-				refreshAll();
 			}
 		)
 	);
@@ -150,9 +106,7 @@ async function deleteFile(filepath: string) {
 async function openSnippetFile(filename: string | boolean | undefined) {
 	try {
 		if (filename) {
-			const document = await vscode.workspace.openTextDocument(
-				vscode.Uri.file(`${filename}`)
-			);
+			const document = await vscode.workspace.openTextDocument(vscode.Uri.file(`${filename}`));
 			await vscode.window.showTextDocument(document);
 		} else {
 			vscode.window.showErrorMessage('Could not find file path.');

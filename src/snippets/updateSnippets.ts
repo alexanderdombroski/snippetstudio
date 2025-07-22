@@ -15,13 +15,10 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 	}
 
 	if (snippet.scope) {
-		if (path.extname(filepath) === '.json' || filepath.endsWith('.json.disabled')) {
+		if (path.extname(filepath) === '.json') {
 			delete snippet.scope;
 		}
-	} else if (
-		path.extname(filepath) === '.code-snippets' ||
-		filepath.endsWith('.code-snippets.disabled')
-	) {
+	} else if (path.extname(filepath) === '.code-snippets') {
 		snippet.scope = getCurrentLanguage() ?? 'plaintext';
 	}
 

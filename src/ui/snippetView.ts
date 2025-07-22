@@ -1,7 +1,10 @@
 import * as vscode from 'vscode';
 import loadSnippets from '../snippets/loadSnippets';
-import { disabledDropdownTemplate, selectedLanguageTemplate } from './templates';
+import { unloadedDropdownTemplate, selectedLanguageTemplate } from './templates';
 import { getCurrentLanguage } from '../utils/language';
+import { getActiveProfileSnippetsDir } from '../utils/profile';
+import { getWorkspaceFolder } from '../utils/fsInfo';
+import path from 'path';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
@@ -10,11 +13,14 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	private snippetTreeItems: ParentChildTreeItems | undefined;
 	private langId: string | undefined;
 	private debounceTimer: NodeJS.Timeout | undefined;
+	private _activePaths: string[] = [];
 
 	// ---------- Constructor ---------- //
 	constructor() {
 		this.langId = getCurrentLanguage();
-		this.refresh();
+		this.initPaths().then(() => {
+			this.refresh();
+		});
 
 		vscode.window.onDidChangeActiveTextEditor(async () => {
 			const newLangId = getCurrentLanguage();
@@ -26,6 +32,12 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	}
 
 	// ---------- Refresh Methods ---------- //
+	private async initPaths() {
+		this._activePaths = [
+			await getActiveProfileSnippetsDir(),
+			path.join(getWorkspaceFolder() ?? 'not found', 'snippets'),
+		];
+	}
 	private async refresh() {
 		this.snippetTreeItems = await loadSnippets();
 		this._onDidChangeTreeData.fire();
@@ -49,12 +61,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		// Handle child items
 		if (element) {
 			if (element.contextValue === 'disabled-dropdown') {
-				const disabledItems = this.snippetTreeItems
-					?.map((group) => group[0])
-					.filter(
-						(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath disabled'
-					);
-				return disabledItems;
+				return this.snippetTreeItems?.map((group) => group[0]).filter((fp) => !this.isActive(fp));
 			}
 
 			const parentChild = this.snippetTreeItems?.find(
@@ -73,19 +80,15 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		if (this.snippetTreeItems && this.snippetTreeItems.length > 0) {
 			// Add the snippet groups if they exist
 			const fileItems = this.snippetTreeItems.map((group) => group[0]);
-			rootItems.push(
-				...fileItems.filter(
-					(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath'
-				)
-			);
-			const disabledItems = fileItems.filter(
-				(fileTreeItem) => fileTreeItem.contextValue === 'snippet-filepath disabled'
-			);
-			disabledItems.length && rootItems.push(disabledDropdownTemplate());
+			rootItems.push(...fileItems.filter(this.isActive));
+			rootItems.length !== fileItems.length + 1 && rootItems.push(unloadedDropdownTemplate());
 		}
 
 		return rootItems;
 	}
+
+	private isActive = (fileItem: vscode.TreeItem) =>
+		this._activePaths.includes(path.dirname(String(fileItem.description)));
 
 	// ---------- Event Emitters ---------- //
 	private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> =

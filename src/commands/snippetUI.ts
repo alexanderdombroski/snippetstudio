@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import type { CommandMap } from '../types';
-import { getGlobalSnippetFilesDir } from '../utils/fsInfo';
+import type { SnippetCategoryTreeItem } from '../ui/templates';
 
 function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: CommandMap) {
 	// Show Snippets view
@@ -35,23 +35,23 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 
 	// Open snippets file manager or terminal
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.openGlobals.Explorer', () => {
-			const globalsPath = getGlobalSnippetFilesDir();
-			if (globalsPath) {
-				vscode.env.openExternal(vscode.Uri.file(globalsPath));
+		vscode.commands.registerCommand(
+			'snippetstudio.file.open.Explorer',
+			(treeItem: SnippetCategoryTreeItem) => {
+				vscode.env.openExternal(vscode.Uri.file(treeItem.folderPath));
 			}
-		}),
-		vscode.commands.registerCommand('snippetstudio.file.openGlobals.Terminal', () => {
-			const globalsPath = getGlobalSnippetFilesDir();
-			if (globalsPath) {
+		),
+		vscode.commands.registerCommand(
+			'snippetstudio.file.open.Terminal',
+			(treeItem: SnippetCategoryTreeItem) => {
 				const terminal = vscode.window.createTerminal({
 					name: 'Global Snippets',
-					cwd: globalsPath,
+					cwd: treeItem.folderPath,
 					iconPath: new vscode.ThemeIcon('repo'),
 				});
 				terminal.show();
 			}
-		})
+		)
 	);
 
 	// Prompt a walkthrough

@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import { unTabMultiline } from './string';
-import { getDownloadsDirPath, getGlobalSnippetFilesDir, getWorkspaceFolder } from './fsInfo';
+import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'path';
+import { getActiveProfileSnippetsDir } from './profile';
 
 async function getConfirmation(question: string): Promise<boolean> {
 	// Confirmation message
@@ -156,40 +157,14 @@ async function getSavePath() {
 
 async function chooseLocalGlobal(): Promise<string | undefined> {
 	const locations = [{ label: 'Downloads', description: getDownloadsDirPath() }];
-	const globalPath = getGlobalSnippetFilesDir();
-	if (globalPath !== undefined) {
-		locations.push({ label: 'Global', description: globalPath });
-	}
+	const globalPath = await getActiveProfileSnippetsDir();
+	locations.push({ label: 'Global', description: globalPath });
 	const projectPath = getWorkspaceFolder();
 	if (projectPath !== undefined) {
 		locations.push({ label: 'Project', description: path.join(projectPath, '.vscode') });
 	}
 	const choice = await vscode.window.showQuickPick(locations);
 	return choice?.description;
-}
-
-async function showWarningWithFolderOpenButton(
-	warningMessage: string,
-	folderPath: string = getGlobalSnippetFilesDir() as string,
-	terminalButton: string = 'Open New Terminal',
-	folderButton: string = 'Open File Manager'
-) {
-	const selected = await vscode.window.showWarningMessage(
-		warningMessage,
-		terminalButton,
-		folderButton
-	);
-
-	if (selected === terminalButton) {
-		const terminal = vscode.window.createTerminal({
-			name: 'Global Snippets',
-			cwd: folderPath, // Automatically sets the working directory
-		});
-		terminal.show();
-	} else if (selected === folderButton) {
-		const folderUri = vscode.Uri.file(folderPath);
-		vscode.commands.executeCommand('revealFileInOS', folderUri);
-	}
 }
 
 export {
@@ -199,5 +174,4 @@ export {
 	getSavePath,
 	chooseLocalGlobal,
 	getSavePathFromDialog,
-	showWarningWithFolderOpenButton,
 };

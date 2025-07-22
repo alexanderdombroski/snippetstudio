@@ -36,26 +36,26 @@
     - Edit and Choose Snippets as you import them
 - **Profile Support**
     - Upgraded Location View with profile and extension snippets
-    - Display if snippet files are loadable
-    - Profile snippet support
-        - Get active profile from configuration > workbench > settings > profile
     - Toggle to view disabled/unloadable snippets
 
 ## [2.0.0] - DATE
 
 ### Added
 
-- TODO - Snippet folders in terminal and folder
+- Open Snippet folders in terminal and folder
+- See Snippets of other Profiles
 
 ### Fixed
 
 - Scopes correctly handled when moving snippets
+- Snippet creation is tied to the active profile
 
 ### Changed
 
 ### Removed
 
-- TODO - Removed sync and merge snippet repositories, as this feature is redundant with VS Code's [Settings Sync](https://code.visualstudio.com/docs/configure/settings-sync)
+- Removed sync and merge snippet repositories, as this feature is redundant with VS Code's [Settings Sync](https://code.visualstudio.com/docs/configure/settings-sync)
+- Removed disabling snippets, as [profiles](https://code.visualstudio.com/docs/configure/profiles) are a more sync friendly approach to further customize snippet scope
 
 ## [1.6.0] - 2025-07-17
 

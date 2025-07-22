@@ -16,14 +16,18 @@ import {
 	initSnippetFileCommands,
 	initSnippetGistsCommands,
 	initSnippetUICommands,
-	initSnippetGitCommands,
 } from './commands';
 
 import SnippetDataManager from './snippets/snippetDataManager';
+import { initGlobalStore } from './utils/context';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+	if (!(await initGlobalStore(context))) {
+		return;
+	}
+
 	// Create and register the Tree View
 	const treeDataProvider = new SnippetViewProvider();
 	vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
@@ -55,7 +59,6 @@ export function activate(context: vscode.ExtensionContext) {
 	initSnippetEditorCommands(context, snippetEditorProvider);
 	initSnippetFeatureCommands(context, snippetEditorProvider);
 	initSnippetGistsCommands(context);
-	initSnippetGitCommands(context);
 
 	createStatusBar(context);
 

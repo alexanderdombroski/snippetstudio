@@ -2,12 +2,12 @@
   "show-deprecation-stack": {
     "prefix": "verbose-logging",
     "body": [
-      "if (process.env.SHOW_DEPRECATION_STACK === 'true') {",
-      "    process.on('warning', (warning) => {",
-      "        if (warning.name === 'DeprecationWarning') {",
-      "            console.error(warning.stack);",
-      "        }",
-      "    });",
+      "if (process.env.USE_VERBOSE_LOGGING === 'true') {",
+      "\tprocess.on('warning', (warning) => {",
+      "\t\tif (warning.name === 'DeprecationWarning' || warning.name === 'ExperimentalWarning') {",
+      "\t\t\tconsole.error(warning.stack);",
+      "\t\t}",
+      "\t});",
       "}"
     ],
     "description": "enable verbose logging for extension troubleshooting",

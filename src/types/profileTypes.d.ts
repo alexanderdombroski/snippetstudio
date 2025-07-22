@@ -1,19 +1,25 @@
 type GlobalStorage = {
-	profileAssociations: {
-		workspaces: {
-			[workspaceUri: string]: string;
-		};
-		emptyWindows: {
-			[windowUUID: string]: string;
-		};
-	};
+	profileAssociations: ProfileAssociations;
 	userDataProfiles?: ProfileInfo[];
 };
 
+type ProfileAssociations = {
+	workspaces: {
+		[workspaceUri: string]: string;
+	};
+	emptyWindows: {
+		[windowUUID: string]: string;
+	};
+};
+
 type ProfileInfo = {
-	id: string;
+	location: string;
 	name: string;
 	icon?: string;
 };
 
-export type { GlobalStorage, ProfileInfo };
+type ProfileSnippetsMap = {
+	[location: string]: string[];
+};
+
+export type { GlobalStorage, ProfileInfo, ProfileSnippetsMap, ProfileAssociations };

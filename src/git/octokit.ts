@@ -20,7 +20,7 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 		const auth = createOAuthDeviceAuth({
 			clientType: 'oauth-app',
 			clientId: 'Ov23liGyCEoxLEkCgXTC',
-			scopes: ['public_repo', 'gist'],
+			scopes: ['gist'],
 			onVerification: (verification) => {
 				const message = 'Copy Code & Open in Browser';
 				vscode.window
@@ -31,9 +31,7 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 					)
 					.then((selection) => {
 						if (selection === message) {
-							vscode.env.openExternal(
-								vscode.Uri.parse(verification.verification_uri)
-							);
+							vscode.env.openExternal(vscode.Uri.parse(verification.verification_uri));
 							vscode.env.clipboard.writeText(verification.user_code);
 							vscode.window.showInformationMessage(
 								`${verification.user_code} copied to clipboard and redirected to ${verification.verification_uri}`

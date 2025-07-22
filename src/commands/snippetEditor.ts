@@ -3,19 +3,15 @@ import SnippetEditorProvider from '../ui/bufferEditor';
 import { getCurrentUri } from '../utils/fsInfo';
 import type { VSCodeSnippet } from '../types';
 import { titleCase } from '../utils/string';
-import { getFileToSave } from '../snippets/fileDisabler';
 
 function initSnippetEditorCommands(
 	context: vscode.ExtensionContext,
 	provider: SnippetEditorProvider
 ) {
-	// Close old tabs
+	// Close old tabs on startup
 	vscode.window.tabGroups.all.forEach((group) =>
 		group.tabs.forEach((tab) => {
-			if (
-				tab.input instanceof vscode.TabInputText &&
-				tab.input.uri.scheme === 'snippetstudio'
-			) {
+			if (tab.input instanceof vscode.TabInputText && tab.input.uri.scheme === 'snippetstudio') {
 				vscode.window.tabGroups.close(tab);
 			}
 		})
@@ -45,18 +41,15 @@ function initSnippetEditorCommands(
 					.getConfiguration('snippetstudio')
 					.get<boolean>('autoCapitalizeSnippetName');
 
-				const savePath = getFileToSave(data.filename);
 				if (
-					vscode.workspace
-						.getConfiguration('snippetstudio')
-						.get<boolean>('autoCreateSnippetFiles')
+					vscode.workspace.getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')
 				) {
 					const { createFile } = await import('../snippets/newSnippetFile.js');
-					await createFile(savePath, false);
+					await createFile(data.filename, false);
 				}
 				const { writeSnippet } = await import('../snippets/updateSnippets.js');
 				writeSnippet(
-					savePath,
+					data.filename,
 					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
 					snippet
 				);

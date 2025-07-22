@@ -4,17 +4,14 @@ import { TreeSnippet } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import SnippetEditorProvider from '../ui/bufferEditor';
 import { newSnippetEditorUri } from './snippetEditor';
-import {
-	getGlobalLangFile,
-	getKeybindingsFilePath,
-	getLangFromSnippetFilePath,
-} from '../utils/fsInfo';
+import { getLangFromSnippetFilePath } from '../utils/fsInfo';
 import path from 'path';
 import type { SnippetData, VSCodeSnippet } from '../types';
 import { getConfirmation, getSelection } from '../utils/user';
 import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
+import { getGlobalLangFile, getKeybindingsFilePath } from '../utils/profile';
 
 function initSnippetCommands(
 	context: vscode.ExtensionContext,
@@ -25,12 +22,9 @@ function initSnippetCommands(
 		vscode.window.showInformationMessage(item.tooltip?.toString() ?? '');
 	});
 	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.snippet.showBody',
-			(item: vscode.TreeItem) => {
-				showSnippetOnDoubleClick(item);
-			}
-		)
+		vscode.commands.registerCommand('snippetstudio.snippet.showBody', (item: vscode.TreeItem) => {
+			showSnippetOnDoubleClick(item);
+		})
 	);
 
 	// Add Global
@@ -42,7 +36,7 @@ function initSnippetCommands(
 				snippetEditorProvider,
 				langId,
 				{
-					filename: getGlobalLangFile(langId),
+					filename: await getGlobalLangFile(langId),
 					snippetTitle: '',
 					prefix: defaultPrefix(),
 				},
@@ -54,10 +48,7 @@ function initSnippetCommands(
 		vscode.commands.registerCommand(
 			'snippetstudio.file.createSnippetAt',
 			async (item: TreeSnippet) => {
-				if (item === undefined || item.description === undefined) {
-					return;
-				}
-				const filename = item.description.toString();
+				const filename = String(item.description);
 				const langId =
 					getLangFromSnippetFilePath(filename) ??
 					(await selectLanguage()) ??
@@ -83,7 +74,7 @@ function initSnippetCommands(
 			'snippetstudio.snippet.createGlobalLangSnippetFromSelection',
 			async () => {
 				const langId = getCurrentLanguage() ?? 'plaintext';
-				const filename = getGlobalLangFile(langId);
+				const filename = await getGlobalLangFile(langId);
 
 				await editSnippet(
 					snippetEditorProvider,
@@ -124,33 +115,27 @@ function initSnippetCommands(
 	);
 	// Delete Snippet
 	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.snippet.delete',
-			async (item: TreeSnippet) => {
-				if (item.description === undefined) {
-					return;
-				}
-				if (
-					vscode.workspace
-						.getConfiguration('snippetstudio')
-						.get<boolean>('confirmSnippetDeletion') &&
-					!(await getConfirmation(
-						`Are you sure you want to delete "${item.description}"?`
-					))
-				) {
-					return;
-				}
-
-				const { deleteSnippet } = await import('../snippets/updateSnippets.js');
-				deleteSnippet(item.path, item.description.toString());
-				vscode.commands.executeCommand('snippetstudio.refresh');
+		vscode.commands.registerCommand('snippetstudio.snippet.delete', async (item: TreeSnippet) => {
+			if (
+				vscode.workspace.getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
+				!(await getConfirmation(`Are you sure you want to delete "${item.description}"?`))
+			) {
+				return;
 			}
-		)
+
+			const { deleteSnippet } = await import('../snippets/updateSnippets.js');
+			deleteSnippet(item.path, String(item.description));
+			vscode.commands.executeCommand('snippetstudio.refresh');
+		})
 	);
 	// Move Snippet
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.snippet.move', async (item: TreeSnippet) => {
-			const files = (await locateAllSnippetFiles()).flat();
+			const [actives, locals, profiles] = await locateAllSnippetFiles();
+			const profileFiles = Object.values(profiles)
+				.map((files) => files)
+				.flat();
+			const files = [...actives, ...locals, ...profileFiles];
 			const options = files
 				.filter((file) => file !== item.path)
 				.map((file) => ({
@@ -180,10 +165,7 @@ function initSnippetCommands(
 		vscode.commands.registerCommand(
 			'snippetstudio.snippet.addKeybinding',
 			async (item: TreeSnippet) => {
-				const keyBindPath = getKeybindingsFilePath();
-				if (item.description === undefined || keyBindPath === undefined) {
-					return;
-				}
+				const keyBindPath = await getKeybindingsFilePath();
 
 				const snippetTitle = item.description?.toString() ?? '';
 				const { readSnippet } = await import('../snippets/updateSnippets.js');
@@ -192,11 +174,7 @@ function initSnippetCommands(
 					readJsonC(keyBindPath),
 				]);
 
-				const langs: string[] = (
-					snippet?.scope ??
-					getCurrentLanguage() ??
-					'plaintext'
-				).split(',');
+				const langs: string[] = (snippet?.scope ?? getCurrentLanguage() ?? 'plaintext').split(',');
 				const placeholder = 'INSERT_KEY_BINDING_HERE';
 				(keybindings as Object[]).push({
 					key: placeholder,
@@ -265,8 +243,7 @@ async function editSnippet(
 
 function defaultPrefix(): string {
 	return (
-		vscode.workspace.getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ??
-		''
+		vscode.workspace.getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? ''
 	);
 }
 

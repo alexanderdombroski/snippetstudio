@@ -1,7 +1,6 @@
 import * as fs from 'fs/promises'; // Import fs/promises for async file operations
 import * as vscode from 'vscode';
 import path from 'path';
-import { getGlobalSnippetFilesDir } from './fsInfo';
 import type { GenericJson, VSCodeSnippets } from '../types';
 
 async function processJsonWithComments(jsonString: string): Promise<any> {
@@ -61,9 +60,7 @@ export async function readSnippetFile(filepath: string): Promise<VSCodeSnippets 
 		const cleanedJson: VSCodeSnippets = await processJsonWithComments(jsonc);
 		return cleanedJson;
 	} catch {
-		vscode.window.showErrorMessage(
-			`Unable to read file ${path.basename(filepath)}\n\n${filepath}`
-		);
+		vscode.window.showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
 	}
 }
 
@@ -84,20 +81,6 @@ export async function writeSnippetFile(
 			`Unable to update file ${path.dirname(filepath)}\n\n${filepath}`
 		);
 	}
-}
-
-export async function resetGlobalSnippets() {
-	const deletePath = getGlobalSnippetFilesDir();
-	if (deletePath === undefined) {
-		return;
-	}
-
-	const entries = await fs.readdir(deletePath);
-	const deletePromises = entries.map((entry) =>
-		fs.rm(path.join(deletePath, entry), { recursive: true, force: true })
-	);
-
-	await Promise.all(deletePromises);
 }
 
 export async function readJsonC(filepath: string): Promise<GenericJson> {
