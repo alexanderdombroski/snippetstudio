@@ -4,12 +4,15 @@ import {
 	snippetLocationDropdownTemplates,
 	type SnippetCategoryTreeItem,
 	snippetLocationTemplate,
+	extensionTreeItems,
 } from './templates';
+import { findAllExtensionSnippets } from '../snippets/extension';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
 	private localTreeItems: vscode.TreeItem[] = [];
 	private globalTreeItems: vscode.TreeItem[] = [];
+	private extensionTreeItems: [vscode.TreeItem, vscode.TreeItem[]][] = [];
 	private profileDropdownItems: { [location: string]: vscode.TreeItem[] } = {};
 	private debounceTimer: NodeJS.Timeout | undefined;
 
@@ -28,6 +31,8 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 				return [location, paths.map((fp) => snippetLocationTemplate(fp))];
 			})
 		);
+		const extensionSnippetsMap = await findAllExtensionSnippets();
+		this.extensionTreeItems = extensionTreeItems(extensionSnippetsMap);
 		this._onDidChangeTreeData.fire();
 	}
 	public debounceRefresh() {
@@ -58,6 +63,12 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 				return this.localTreeItems;
 			} else if (element.contextValue === 'profile-dropdown') {
 				return this.profileDropdowns;
+			} else if (element.label === 'Extension Snippets') {
+				return this.extensionTreeItems.map((item) => item[0]);
+			} else if (element.contextValue === 'extension-dropdown') {
+				return (
+					this.extensionTreeItems.find(([fp]) => fp.description === element.description)?.[1] ?? []
+				);
 			} else if (element.contextValue?.includes('category-dropdown')) {
 				return this.profileDropdownItems[element.description as string];
 			}
@@ -67,6 +78,7 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 		const [topLevelDropdowns, profileDropdowns] = await snippetLocationDropdownTemplates(
 			this.globalTreeItems.length === 0,
 			this.localTreeItems.length === 0,
+			this.extensionTreeItems.length > 0,
 			Object.fromEntries(
 				Object.entries(this.profileDropdownItems).map(([location, items]) => [
 					location,

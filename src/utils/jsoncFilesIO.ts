@@ -88,6 +88,11 @@ export async function readJsonC(filepath: string): Promise<GenericJson> {
 	return await processJsonWithComments(jsonc);
 }
 
+export async function readJson(filepath: string): Promise<GenericJson> {
+	const jsonc = await fs.readFile(filepath, 'utf-8');
+	return JSON.parse(jsonc);
+}
+
 export async function writeJson(filepath: string, jsonObj: GenericJson) {
 	const content = Buffer.from(JSON.stringify(jsonObj, null, 4), 'utf-8');
 	await vscode.workspace.fs.writeFile(vscode.Uri.file(filepath), content);

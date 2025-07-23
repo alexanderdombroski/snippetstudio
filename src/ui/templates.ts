@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import type { VSCodeSnippet } from '../types';
+import type { VSCodeSnippet, ExtensionSnippetsMap } from '../types';
 import { getWorkspaceFolder } from '../utils/fsInfo';
 import {
 	getActiveProfile,
@@ -65,14 +65,15 @@ export function createTreeItemFromSnippet(
 
 export function createTreeItemFromFilePath(
 	filepath: string,
-	collapsibleState: vscode.TreeItemCollapsibleState
+	collapsibleState: vscode.TreeItemCollapsibleState,
+	contextValue: string = 'snippet-filepath'
 ): vscode.TreeItem {
 	const filename = path.basename(filepath);
 	const treeItem = new vscode.TreeItem(filename, collapsibleState);
 	treeItem.description = filepath;
 	treeItem.tooltip =
 		'Snippets from this dropdown are found in ' + filepath + '\n\nRight Click to open the file!';
-	treeItem.contextValue = 'snippet-filepath';
+	treeItem.contextValue = contextValue;
 
 	return treeItem;
 }
@@ -112,12 +113,35 @@ export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
 	return treeItem;
 }
 
+export function extensionTreeItems(
+	fileMap: ExtensionSnippetsMap
+): [vscode.TreeItem, vscode.TreeItem[]][] {
+	return Object.entries(fileMap).map(([identifier, ext]) => {
+		const treeItem = new vscode.TreeItem(ext.name, vscode.TreeItemCollapsibleState.Collapsed);
+		treeItem.description = identifier;
+		treeItem.contextValue = 'extension-dropdown';
+
+		const fileItems = ext.files.map((fp) => {
+			const item = createTreeItemFromFilePath(
+				fp.path,
+				vscode.TreeItemCollapsibleState.None,
+				'extension-snippet-filepath'
+			);
+			item.tooltip = `Extension Snippet file for ${fp.language}`;
+			return item;
+		});
+
+		return [treeItem, fileItems];
+	});
+}
+
 /**
  * returns [top level dropdowns, profile dropdowns]
  */
 export async function snippetLocationDropdownTemplates(
 	global_collapsed: boolean,
 	local_collapsed: boolean,
+	extension_showing: boolean,
 	profile_collapsed_map: { [location: string]: boolean }
 ): Promise<[SnippetCategoryTreeItem[] | vscode.TreeItem[], SnippetCategoryTreeItem[]]> {
 	const activePath = await getActiveProfileSnippetsDir();
@@ -125,6 +149,7 @@ export async function snippetLocationDropdownTemplates(
 	const getCollapsedState = (collapsed: boolean) =>
 		collapsed ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed;
 
+	// ------------------------- Global Dropdown -------------------------
 	const global = new SnippetCategoryTreeItem(
 		'Global Snippets',
 		getCollapsedState(global_collapsed),
@@ -136,6 +161,7 @@ export async function snippetLocationDropdownTemplates(
 
 	const topLevelDropdowns: vscode.TreeItem[] = [global];
 
+	// ------------------------- Local Dropdown -------------------------
 	const workspaceFolder = getWorkspaceFolder();
 	if (workspaceFolder) {
 		const local = new SnippetCategoryTreeItem(
@@ -149,6 +175,17 @@ export async function snippetLocationDropdownTemplates(
 		topLevelDropdowns.push(local);
 	}
 
+	// ------------------------- Extension Dropdown -------------------------
+	if (extension_showing) {
+		const extensionDropdown = new vscode.TreeItem(
+			'Extension Snippets',
+			vscode.TreeItemCollapsibleState.Collapsed
+		);
+		extensionDropdown.tooltip = 'Snippets that come packaged with extensions.';
+		topLevelDropdowns.push(extensionDropdown);
+	}
+
+	// ------------------------- Profile Dropdown -------------------------
 	const profiles = await getProfiles();
 	if (profiles.length < 2) {
 		return [topLevelDropdowns, []];
