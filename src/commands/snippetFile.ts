@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import onDoubleClick from './doubleClickHandler';
 import { SnippetViewProvider } from '../ui';
+import type { TreePathItem } from '../ui/templates';
 
 function initSnippetFileCommands(
 	context: vscode.ExtensionContext,
@@ -10,13 +11,13 @@ function initSnippetFileCommands(
 ) {
 	// Open Snippets file
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.open', async (item: vscode.TreeItem) => {
-			await openSnippetFile(item.description);
+		vscode.commands.registerCommand('snippetstudio.file.open', async (item: TreePathItem) => {
+			await openSnippetFile(item.path);
 		}),
 		vscode.commands.registerCommand(
 			'snippetstudio.file.openFromDouble',
-			onDoubleClick(async (item: vscode.TreeItem) => {
-				await openSnippetFile(item.description);
+			onDoubleClick(async (item: TreePathItem) => {
+				await openSnippetFile(item.path);
 			})
 		)
 	);
@@ -48,13 +49,10 @@ function initSnippetFileCommands(
 
 	// Delete Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.file.delete',
-			async (treeItem: vscode.TreeItem) => {
-				await deleteFile(String(treeItem.description));
-				vscode.commands.executeCommand('snippetstudio.refreshLocations');
-			}
-		)
+		vscode.commands.registerCommand('snippetstudio.file.delete', async (treeItem: TreePathItem) => {
+			await deleteFile(treeItem.path);
+			vscode.commands.executeCommand('snippetstudio.refreshLocations');
+		})
 	);
 
 	// Export Snippet Files

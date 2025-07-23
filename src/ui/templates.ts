@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import type { VSCodeSnippet, ExtensionSnippetsMap } from '../types';
-import { getWorkspaceFolder } from '../utils/fsInfo';
+import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import {
 	getActiveProfile,
 	getActiveProfileSnippetsDir,
@@ -9,16 +9,13 @@ import {
 	getProfiles,
 } from '../utils/profile';
 
-export class TreeSnippet extends vscode.TreeItem {
-	public snippetPath: string = '';
-
+export class TreePathItem extends vscode.TreeItem {
 	constructor(
 		public readonly label: string,
 		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
 		public readonly path: string
 	) {
 		super(label, collapsibleState);
-		this.snippetPath = path;
 	}
 }
 export class SnippetCategoryTreeItem extends vscode.TreeItem {
@@ -43,9 +40,9 @@ export function createTreeItemFromSnippet(
 	snippetTitle: string,
 	snippet: VSCodeSnippet,
 	path: string
-): TreeSnippet {
+): TreePathItem {
 	const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(',') : snippet.prefix;
-	const treeItem = new TreeSnippet(prefix, vscode.TreeItemCollapsibleState.None, path);
+	const treeItem = new TreePathItem(prefix, vscode.TreeItemCollapsibleState.None, path);
 
 	treeItem.description = snippetTitle;
 	treeItem.contextValue = 'snippet';
@@ -67,10 +64,10 @@ export function createTreeItemFromFilePath(
 	filepath: string,
 	collapsibleState: vscode.TreeItemCollapsibleState,
 	contextValue: string = 'snippet-filepath'
-): vscode.TreeItem {
+): TreePathItem {
 	const filename = path.basename(filepath);
-	const treeItem = new vscode.TreeItem(filename, collapsibleState);
-	treeItem.description = filepath;
+	const treeItem = new TreePathItem(filename, collapsibleState, filepath);
+	treeItem.description = shortenFullPath(filepath);
 	treeItem.tooltip =
 		'Snippets from this dropdown are found in ' + filepath + '\n\nRight Click to open the file!';
 	treeItem.contextValue = contextValue;
@@ -97,9 +94,13 @@ export function unloadedDropdownTemplate(): vscode.TreeItem {
 	return unloadedDropdown;
 }
 
-export function snippetLocationTemplate(filepath: string): vscode.TreeItem {
-	const treeItem = new vscode.TreeItem(path.basename(filepath));
-	treeItem.description = filepath;
+export function snippetLocationTemplate(filepath: string): TreePathItem {
+	const treeItem = new TreePathItem(
+		path.basename(filepath),
+		vscode.TreeItemCollapsibleState.None,
+		filepath
+	);
+	treeItem.description = shortenFullPath(filepath);
 	treeItem.tooltip = 'Double click to open the file: ' + filepath;
 	treeItem.contextValue = 'snippet-filepath';
 
@@ -203,7 +204,7 @@ export async function snippetLocationDropdownTemplates(
 	});
 	profileDropdowns.forEach((pd) => {
 		pd.contextValue = 'profile-dropdown category-dropdown';
-		pd.description = pd.location;
+		pd.description = shortenFullPath(pd.location);
 	});
 	const otherProfilesDropdown = new vscode.TreeItem(
 		'Profiles Snippets',

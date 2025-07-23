@@ -22,6 +22,18 @@ function getCurrentUri(): vscode.Uri | undefined {
 	return vscode.window.activeTextEditor?.document.uri;
 }
 
+export function shortenFullPath(fullPath: string): string {
+	const homeDir = os.homedir();
+	const resolvedhomeDir = path.resolve(homeDir);
+	const resolvedPath = path.resolve(fullPath);
+
+	if (resolvedPath.startsWith(resolvedhomeDir)) {
+		return `~${resolvedPath.slice(resolvedhomeDir.length)}`;
+	}
+
+	return fullPath;
+}
+
 function getLangFromSnippetFilePath(filepath: string): string | undefined {
 	if (path.extname(filepath) === '.code-snippets') {
 		return;

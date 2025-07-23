@@ -3,7 +3,7 @@ import loadSnippets from '../snippets/loadSnippets';
 import { unloadedDropdownTemplate, selectedLanguageTemplate } from './templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
-import { getWorkspaceFolder } from '../utils/fsInfo';
+import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import path from 'path';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
@@ -34,8 +34,8 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	// ---------- Refresh Methods ---------- //
 	private async initPaths() {
 		this._activePaths = [
-			await getActiveProfileSnippetsDir(),
-			path.join(getWorkspaceFolder() ?? 'not found', 'snippets'),
+			shortenFullPath(await getActiveProfileSnippetsDir()),
+			shortenFullPath(path.join(getWorkspaceFolder() ?? 'not found', 'snippets')),
 		];
 	}
 	private async refresh() {

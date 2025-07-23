@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
+import { TreePathItem } from '../ui/templates';
 
-function onDoubleClick(callback: (item: vscode.TreeItem) => void): (item: vscode.TreeItem) => void {
+function onDoubleClick(callback: (item: TreePathItem) => void): (item: TreePathItem) => void {
 	const clickTimestamps: { [key: string]: number } = {};
 	const doubleClickThreshold = 350; // Adjust as needed (milliseconds)
 
-	return (item: vscode.TreeItem) => {
+	return (item: TreePathItem) => {
 		if (item && item.label) {
 			const now = Date.now();
 			const lastClick = clickTimestamps[item.label.toString()] || 0;
