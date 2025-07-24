@@ -34,9 +34,8 @@
         - rawFileUrl
         - filepath
     - Edit and Choose Snippets as you import them
-- **Profile Support**
-    - Upgraded Location View with profile and extension snippets
-    - Toggle to view disabled/unloadable snippets
+- **Extension Support**
+    - Handle Glob patterns in extension snippet contributions
 
 ## [2.0.0] - DATE
 
@@ -44,6 +43,7 @@
 
 - Open Snippet folders in terminal and folder
 - See Snippets of other Profiles
+- Copy and Modify extension snippets
 
 ### Fixed
 

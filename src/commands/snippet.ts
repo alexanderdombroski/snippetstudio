@@ -7,11 +7,12 @@ import { newSnippetEditorUri } from './snippetEditor';
 import { getLangFromSnippetFilePath } from '../utils/fsInfo';
 import path from 'path';
 import type { SnippetData, VSCodeSnippet } from '../types';
-import { getConfirmation, getSelection } from '../utils/user';
+import { getConfirmation, getSelection, chooseSnippetFile } from '../utils/user';
 import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import { getGlobalLangFile, getKeybindingsFilePath } from '../utils/profile';
+import { getExtensionSnippetLangs } from '../snippets/extension';
 
 function initSnippetCommands(
 	context: vscode.ExtensionContext,
@@ -111,6 +112,7 @@ function initSnippetCommands(
 			}
 			const body = snippetBodyAsString(snippet?.body);
 			await editSnippet(snippetEditorProvider, langId, snippetData, body);
+			vscode.commands.executeCommand('snippetstudio.refresh');
 		})
 	);
 	// Delete Snippet
@@ -199,6 +201,44 @@ function initSnippetCommands(
 				const range = new vscode.Range(position, position.translate(0, placeholder.length));
 				editor.selection = new vscode.Selection(range.start, range.end);
 				editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+			}
+		)
+	);
+
+	// Extension Snippet Commands
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'snippetstudio.extension.modify',
+			async (item: TreePathItem) => {
+				const langs = await getExtensionSnippetLangs(item.path);
+				const savePath = await chooseSnippetFile(langs);
+				if (savePath === undefined) {
+					return;
+				}
+
+				const snippetTitle = item.description?.toString() ?? '';
+				const { readSnippet } = await import('../snippets/updateSnippets.js');
+				const snippet = await readSnippet(item.path, snippetTitle);
+				const snippetData: SnippetData = {
+					filename: savePath,
+					snippetTitle,
+					prefix: item.label,
+					description: snippet?.description ?? '',
+				};
+				if (savePath.includes('.code-snippets')) {
+					snippetData.scope = langs.join(',');
+				}
+
+				const active = String(getCurrentLanguage());
+				const langId = langs.includes(active) ? active : langs[0];
+
+				await editSnippet(
+					snippetEditorProvider,
+					langId,
+					snippetData,
+					snippetBodyAsString(snippet?.body)
+				);
+				vscode.commands.executeCommand('snippetstudio.refresh');
 			}
 		)
 	);

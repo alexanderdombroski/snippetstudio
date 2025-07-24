@@ -280,6 +280,20 @@
 				"title": "Browse Snippet Gists on GitHub",
 				"shortTitle": "Browse Snippet Gists",
 				"category": "snippetstudio-github"
+			},
+			{
+				"command": "snippetstudio.extension.modify",
+				"title": "Edit a Copy of Snippet",
+				"shortTitle": "Edit a Snippet Copy",
+				"icon": "$(pencil)",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.extension.extract",
+				"title": "Extract Snippets to a new File",
+				"shortTitle": "Extract Snippets",
+				"icon": "$(new-file)",
+				"when": false
 			}
 		],
 		"menus": {
@@ -489,6 +503,16 @@
 					"command": "snippetstudio.file.createGlobalSnippets",
 					"group": "navigation",
 					"when": "viewItem =~ /global-dropdown/"
+				},
+				{
+					"command": "snippetstudio.extension.modify",
+					"group": "inline",
+					"when": "viewItem == extension-snippet"
+				},
+				{
+					"command": "snippetstudio.extension.extract",
+					"group": "inline",
+					"when": "viewItem == extension-snippet-filepath"
 				}
 			]
 		},

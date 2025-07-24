@@ -20,8 +20,8 @@ import type { ProfileSnippetsMap } from '../types';
  *
  * @returns A promise that resolves to an array of file paths.
  */
-async function locateSnippetFiles(): Promise<string[]> {
-	const langId = getCurrentLanguage();
+async function locateSnippetFiles(langId?: string): Promise<string[]> {
+	langId ??= getCurrentLanguage();
 	const globalDirs = await getAllGlobalSnippetDirs();
 
 	const globalTasks = globalDirs.map((dir) => {
@@ -68,7 +68,7 @@ async function getGlobalLangSnippetFiles(
  *
  * @param folderPath The path to the workspace folder.
  */
-async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
+export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
 	return await glob(path.join(folderPath, '*.code-snippets'));
 }
 

@@ -3,6 +3,11 @@ import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'path';
 import { getActiveProfileSnippetsDir } from './profile';
+import {
+	findCodeSnippetsFiles,
+	locateAllSnippetFiles,
+	locateSnippetFiles,
+} from '../snippets/locateSnippets';
 
 async function getConfirmation(question: string): Promise<boolean> {
 	// Confirmation message
@@ -124,7 +129,7 @@ async function getSavePathFromDialog(
 async function getSavePath() {
 	const { getFileName } = await import('../snippets/newSnippetFile.js');
 	const filename = (await getFileName()) + '.code-snippets';
-	if (filename === undefined) {
+	if (filename === 'undefined.code-snippets') {
 		return;
 	}
 
@@ -155,6 +160,34 @@ async function getSavePath() {
 	return savePath;
 }
 
+/**
+ * Given a list of languages, have the user select an existing snipppet file
+ */
+export async function chooseSnippetFile(langs: string[]) {
+	let files;
+	if (langs.length === 1) {
+		files = await locateSnippetFiles(langs[0]);
+	} else {
+		const [workspaceFiles, profileFiles] = await Promise.all([
+			findCodeSnippetsFiles(path.join(getWorkspaceFolder() as string, '.vscode')),
+			findCodeSnippetsFiles(path.join(await getActiveProfileSnippetsDir())),
+		]);
+		files = [...workspaceFiles, ...profileFiles];
+	}
+
+	const options: vscode.QuickPickItem[] = files.map((fp) => ({
+		label: path.basename(fp),
+		description: fp,
+	}));
+	const selected = await vscode.window.showQuickPick(options, {
+		title: 'Pick a file to save this snippet to after editing',
+	});
+	return selected?.description;
+}
+
+/**
+ * Returns the base path to save a code snippets file
+ */
 async function chooseLocalGlobal(): Promise<string | undefined> {
 	const locations = [{ label: 'Downloads', description: getDownloadsDirPath() }];
 	const globalPath = await getActiveProfileSnippetsDir();

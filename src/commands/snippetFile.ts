@@ -4,6 +4,9 @@ import path from 'path';
 import onDoubleClick from './doubleClickHandler';
 import { SnippetViewProvider } from '../ui';
 import type { TreePathItem } from '../ui/templates';
+import { getExtensionSnippetLangs } from '../snippets/extension';
+import { chooseLocalGlobal } from '../utils/user';
+import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 
 function initSnippetFileCommands(
 	context: vscode.ExtensionContext,
@@ -61,6 +64,34 @@ function initSnippetFileCommands(
 			const { exportSnippets } = await import('../snippets/newSnippetFile.js');
 			exportSnippets();
 		})
+	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand(
+			'snippetstudio.extension.extract',
+			async (item: TreePathItem) => {
+				const { getFileName } = await import('../snippets/newSnippetFile.js');
+				const basename = (await getFileName()) + '.code-snippets';
+				const dirname = await chooseLocalGlobal();
+				if (dirname === undefined || basename === 'undefined.code-snippets') {
+					return;
+				}
+
+				const fp = path.join(dirname, basename);
+
+				const langs = await getExtensionSnippetLangs(item.path);
+				const scope = langs.join(',');
+
+				const snippets = await readSnippetFile(item.path);
+				if (snippets === undefined) {
+					return;
+				}
+				Object.values(snippets).forEach((obj) => (obj.scope = scope));
+				await writeSnippetFile(fp, snippets, 'Copied extension snippets for safe editing.');
+
+				refreshAll();
+			}
+		)
 	);
 }
 

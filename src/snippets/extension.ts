@@ -14,6 +14,26 @@ function getExtensionsDirPath(): string {
 	return path.join(os.homedir(), '.vscode', 'extensions');
 }
 
+function getPackagePathFromSnippetPath(snippetPath: string): string {
+	const extDirPath = getExtensionsDirPath();
+	const relative = path.relative(extDirPath, snippetPath);
+	const extensionFolder = relative.split(path.sep)[0];
+	return path.join(extDirPath, extensionFolder, 'package.json');
+}
+
+export async function getExtensionSnippetLangs(snippetPath: string): Promise<string[]> {
+	const pkgPath = getPackagePathFromSnippetPath(snippetPath);
+	const pkg = (await readJson(pkgPath)) as PackageJsonSnippetsSection;
+	const snippets = pkg.contributes?.snippets as SnippetContribution[];
+
+	const extPath = path.dirname(pkgPath);
+	return snippets
+		.filter(({ path: fp }) => snippetPath === path.resolve(extPath, fp))
+		.map(({ language }) => language);
+}
+
+// -------------------- All Extension Files --------------------
+
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
 	const dir = getExtensionsDirPath();
 	if (!fs.existsSync(dir)) {
