@@ -1,8 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-import { readJson } from '../utils/jsoncFilesIO';
+import { readJson, readJsoncFilesAsync } from '../utils/jsoncFilesIO';
 import type {
+	ExtensionSnippetFilesMap,
+	ExtensionSnippets,
 	ExtensionSnippetsMap,
 	PackageJsonSnippetsSection,
 	SnippetContribution,
@@ -12,7 +14,7 @@ function getExtensionsDirPath(): string {
 	return path.join(os.homedir(), '.vscode', 'extensions');
 }
 
-export async function findAllExtensionSnippets(): Promise<ExtensionSnippetsMap> {
+export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
 	const dir = getExtensionsDirPath();
 	if (!fs.existsSync(dir)) {
 		return {};
@@ -40,6 +42,44 @@ export async function findAllExtensionSnippets(): Promise<ExtensionSnippetsMap> 
 		}
 	);
 
-	const snippetPaths = (await Promise.all(tasks)).filter((res) => typeof res === 'object');
+	const snippetPaths = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
 	return Object.fromEntries(snippetPaths);
+}
+
+// -------------------- Get By Language --------------------
+
+type ExtensionSnippetsMapKVP = [string, { name: string; snippets: ExtensionSnippets[] }];
+type TaskResult = Promise<ExtensionSnippetsMapKVP | undefined>;
+
+export async function findAllExtensionSnipppetsByLang(
+	langId: string
+): Promise<ExtensionSnippetsMap> {
+	const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
+	if (Object.keys(extensionSnippetFilesMap).length === 0) {
+		return {};
+	}
+
+	const tasks: TaskResult[] = Object.entries(extensionSnippetFilesMap).map(
+		async ([extId, { name, files }]) => {
+			const filesToRead = files.filter(({ language }) => language === langId);
+			if (filesToRead.length === 0) {
+				return;
+			}
+
+			const snippets = await readJsoncFilesAsync(filesToRead.map(({ path }) => path));
+			const contributionsWithSnippets: ExtensionSnippets[] = snippets.map(([fp, s]) => ({
+				path: fp,
+				language: langId,
+				snippets: s,
+			}));
+			const result: ExtensionSnippetsMapKVP = [
+				extId,
+				{ name, snippets: contributionsWithSnippets },
+			];
+			return result;
+		}
+	);
+
+	const extensionSnippetMapKVPs = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
+	return Object.fromEntries(extensionSnippetMapKVPs);
 }

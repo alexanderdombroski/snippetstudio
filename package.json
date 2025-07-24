@@ -422,7 +422,7 @@
 			"view/item/context": [
 				{
 					"command": "snippetstudio.file.open",
-					"when": "viewItem == snippet-filepath",
+					"when": "(viewItem == snippet-filepath) || (viewItem == extension-snippet-filepath)",
 					"group": "navigation"
 				},
 				{

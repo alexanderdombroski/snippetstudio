@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import type { VSCodeSnippet, ExtensionSnippetsMap } from '../types';
+import type {
+	VSCodeSnippet,
+	ExtensionSnippetFilesMap,
+	SnippetContribution,
+	ExtensionSnippetsMap,
+} from '../types';
 import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import {
 	getActiveProfile,
@@ -39,13 +44,14 @@ export class SnippetCategoryTreeItem extends vscode.TreeItem {
 export function createTreeItemFromSnippet(
 	snippetTitle: string,
 	snippet: VSCodeSnippet,
-	path: string
+	path: string,
+	contextValue: string = 'snippet'
 ): TreePathItem {
 	const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(',') : snippet.prefix;
 	const treeItem = new TreePathItem(prefix, vscode.TreeItemCollapsibleState.None, path);
 
 	treeItem.description = snippetTitle;
-	treeItem.contextValue = 'snippet';
+	treeItem.contextValue = contextValue;
 
 	const body: string = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body;
 	treeItem.tooltip = `Keyword: ${snippet.prefix}\n${body}${snippet.description ? '\n\n' + snippet.description : ''}`;
@@ -94,15 +100,19 @@ export function unloadedDropdownTemplate(): vscode.TreeItem {
 	return unloadedDropdown;
 }
 
-export function snippetLocationTemplate(filepath: string): TreePathItem {
+export function snippetLocationTemplate(
+	filepath: string,
+	contextValue: string = 'snippet-filepath',
+	collapsible?: boolean
+): TreePathItem {
 	const treeItem = new TreePathItem(
 		path.basename(filepath),
-		vscode.TreeItemCollapsibleState.None,
+		collapsible ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
 		filepath
 	);
 	treeItem.description = shortenFullPath(filepath);
 	treeItem.tooltip = 'Double click to open the file: ' + filepath;
-	treeItem.contextValue = 'snippet-filepath';
+	treeItem.contextValue = contextValue;
 
 	// Command to open Snippet file when double clicked
 	treeItem.command = {
@@ -114,27 +124,67 @@ export function snippetLocationTemplate(filepath: string): TreePathItem {
 	return treeItem;
 }
 
-export function extensionTreeItems(
-	fileMap: ExtensionSnippetsMap
-): [vscode.TreeItem, vscode.TreeItem[]][] {
-	return Object.entries(fileMap).map(([identifier, ext]) => {
-		const treeItem = new vscode.TreeItem(ext.name, vscode.TreeItemCollapsibleState.Collapsed);
-		treeItem.description = identifier;
-		treeItem.contextValue = 'extension-dropdown';
+// ---------- Extension Dropdowns ----------
 
-		const fileItems = ext.files.map((fp) => {
-			const item = createTreeItemFromFilePath(
-				fp.path,
-				vscode.TreeItemCollapsibleState.None,
-				'extension-snippet-filepath'
-			);
-			item.tooltip = `Extension Snippet file for ${fp.language}`;
-			return item;
-		});
+export function extensionCategoryDropdown() {
+	const dropdown = new vscode.TreeItem(
+		'Extension Snippets',
+		vscode.TreeItemCollapsibleState.Collapsed
+	);
+	dropdown.tooltip = 'Snippets that come packaged with extensions.';
+	return dropdown;
+}
+function extensionDropdown(indentifer: string, name: string): vscode.TreeItem {
+	const treeItem = new vscode.TreeItem(name, vscode.TreeItemCollapsibleState.Collapsed);
+	treeItem.description = indentifer;
+	treeItem.contextValue = 'extension-dropdown';
+	return treeItem;
+}
+function extensionSnippetsDropdown(
+	contribution: SnippetContribution,
+	collapsible?: boolean
+): TreePathItem {
+	const item = snippetLocationTemplate(
+		contribution.path,
+		'extension-snippet-filepath',
+		collapsible
+	);
+	item.tooltip = `Extension Snippet file for ${contribution.language}. Edits will be overridden next extension update.`;
+	return item;
+}
 
-		return [treeItem, fileItems];
+type DropdownWithItems = [vscode.TreeItem, TreePathItem[]];
+export function extensionTreeItems(fileMap: ExtensionSnippetFilesMap): DropdownWithItems[] {
+	return Object.entries(fileMap).map(([identifier, ext]): DropdownWithItems => {
+		const dropdown = extensionDropdown(identifier, ext.name);
+		const fileItems = ext.files.map((contribution) => extensionSnippetsDropdown(contribution));
+
+		return [dropdown, fileItems];
 	});
 }
+
+type DropdownWithFileItems = [TreePathItem, TreePathItem[]];
+type DropdownWithDropdowns = [vscode.TreeItem, DropdownWithFileItems[]];
+export function extensionSnippetsTreeItems(
+	snippetsMap: ExtensionSnippetsMap
+): DropdownWithDropdowns[] {
+	return Object.entries(snippetsMap).map(
+		([identifier, { name, snippets }]): DropdownWithDropdowns => {
+			const extDropdown = extensionDropdown(identifier, name);
+			const fileDropdowns = snippets.map((contributes): DropdownWithFileItems => {
+				const snippetItems = Object.entries(contributes.snippets).map(([title, snippet]) =>
+					createTreeItemFromSnippet(title, snippet, contributes.path, 'extension-snippet')
+				);
+
+				return [extensionSnippetsDropdown(contributes, true), snippetItems];
+			});
+
+			return [extDropdown, fileDropdowns];
+		}
+	);
+}
+
+// ---------- Dropdowns for Snippet Location View ----------
 
 /**
  * returns [top level dropdowns, profile dropdowns]
@@ -178,11 +228,7 @@ export async function snippetLocationDropdownTemplates(
 
 	// ------------------------- Extension Dropdown -------------------------
 	if (extension_showing) {
-		const extensionDropdown = new vscode.TreeItem(
-			'Extension Snippets',
-			vscode.TreeItemCollapsibleState.Collapsed
-		);
-		extensionDropdown.tooltip = 'Snippets that come packaged with extensions.';
+		const extensionDropdown = extensionCategoryDropdown();
 		topLevelDropdowns.push(extensionDropdown);
 	}
 

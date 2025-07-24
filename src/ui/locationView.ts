@@ -6,7 +6,7 @@ import {
 	snippetLocationTemplate,
 	extensionTreeItems,
 } from './templates';
-import { findAllExtensionSnippets } from '../snippets/extension';
+import { findAllExtensionSnippetsFiles } from '../snippets/extension';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
@@ -31,8 +31,8 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 				return [location, paths.map((fp) => snippetLocationTemplate(fp))];
 			})
 		);
-		const extensionSnippetsMap = await findAllExtensionSnippets();
-		this.extensionTreeItems = extensionTreeItems(extensionSnippetsMap);
+		const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
+		this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
 		this._onDidChangeTreeData.fire();
 	}
 	public debounceRefresh() {

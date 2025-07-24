@@ -1,16 +1,24 @@
 import * as vscode from 'vscode';
 import loadSnippets from '../snippets/loadSnippets';
-import { unloadedDropdownTemplate, selectedLanguageTemplate } from './templates';
+import {
+	unloadedDropdownTemplate,
+	selectedLanguageTemplate,
+	extensionCategoryDropdown,
+	extensionSnippetsTreeItems,
+} from './templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import path from 'path';
+import { findAllExtensionSnipppetsByLang } from '../snippets/extension';
+import { group } from 'console';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
 export default class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	// ---------- Attributes ---------- //
 	private snippetTreeItems: ParentChildTreeItems | undefined;
+	private extensionDropdownsTuple: [vscode.TreeItem, ParentChildTreeItems][] | undefined;
 	private langId: string | undefined;
 	private debounceTimer: NodeJS.Timeout | undefined;
 	private _activePaths: string[] = [];
@@ -40,6 +48,12 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	}
 	private async refresh() {
 		this.snippetTreeItems = await loadSnippets();
+		if (this.langId) {
+			const extensionSnippetsMap = await findAllExtensionSnipppetsByLang(this.langId);
+			this.extensionDropdownsTuple = extensionSnippetsTreeItems(extensionSnippetsMap);
+		} else {
+			this.extensionDropdownsTuple = undefined;
+		}
 		this._onDidChangeTreeData.fire();
 	}
 	public debounceRefresh() {
@@ -64,6 +78,23 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 				return this.snippetTreeItems?.map((group) => group[0]).filter((fp) => !this.isActive(fp));
 			}
 
+			if (element.label === 'Extension Snippets') {
+				return this.extensionDropdownsTuple?.map((group) => group[0]);
+			}
+
+			if (element.contextValue === 'extension-dropdown') {
+				const match = this.extensionDropdownsTuple?.find(
+					([extDropdown]) => element.description === extDropdown.description
+				);
+				return match?.[1].map((group) => group[0]);
+			}
+
+			if (element.contextValue === 'extension-snippet-filepath') {
+				return this.extensionDropdownsTuple
+					?.flatMap(([, fileDropdowns]) => fileDropdowns)
+					.find(([fileDropdown]) => fileDropdown.description === element.description)?.[1];
+			}
+
 			const parentChild = this.snippetTreeItems?.find(
 				(group) => group[0].description === element.description
 			);
@@ -80,11 +111,25 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		if (this.snippetTreeItems && this.snippetTreeItems.length > 0) {
 			// Add the snippet groups if they exist
 			const fileItems = this.snippetTreeItems.map((group) => group[0]);
-			rootItems.push(...fileItems.filter(this.isActive));
-			rootItems.length !== fileItems.length + 1 && rootItems.push(unloadedDropdownTemplate());
+			const activeDropdowns = fileItems.filter(this.isActive);
+			rootItems.push(...activeDropdowns);
+			this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
+			fileItems.length !== activeDropdowns.length && rootItems.push(unloadedDropdownTemplate());
 		}
 
 		return rootItems;
+	}
+
+	private findExtensionSnippetsByElement(element: vscode.TreeItem): vscode.TreeItem[] | undefined {
+		if (this.extensionDropdownsTuple) {
+			for (let [_, fileDropdowns] of this.extensionDropdownsTuple) {
+				for (let [fileDropdown, snippets] of fileDropdowns) {
+					if (fileDropdown.description === element.description) {
+						return snippets;
+					}
+				}
+			}
+		}
 	}
 
 	private isActive = (fileItem: vscode.TreeItem) =>

@@ -5,5 +5,7 @@ export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData } from './s
 export type {
 	SnippetContribution,
 	PackageJsonSnippetsSection,
+	ExtensionSnippetFilesMap,
 	ExtensionSnippetsMap,
+	ExtensionSnippets,
 } from './extensionTypes';
