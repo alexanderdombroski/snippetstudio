@@ -679,7 +679,9 @@
 				"id": "snippetStudioWalkthrough",
 				"title": "Snippet Studio Quick Start",
 				"description": "Learn how to manage your snippets with this extension.",
-				"featuredFor": ["**/*.code-snippets"],
+				"featuredFor": [
+					"**/*.code-snippets"
+				],
 				"steps": [
 					{
 						"id": "openSnippetStudio",
@@ -748,14 +750,14 @@
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
-		"@types/node": "^24.0.13",
+		"@types/node": "^24.1.0",
 		"@types/vscode": "^1.100.0",
-		"@typescript-eslint/eslint-plugin": "^8.37.0",
-		"@typescript-eslint/parser": "^8.37.0",
+		"@typescript-eslint/eslint-plugin": "^8.38.0",
+		"@typescript-eslint/parser": "^8.38.0",
 		"@vscode/test-cli": "^0.0.11",
 		"@vscode/test-electron": "^2.5.2",
 		"@vscode/vsce": "^3.6.0",
-		"esbuild": "^0.25.6",
+		"esbuild": "^0.25.8",
 		"eslint": "^9.31.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.2",
@@ -765,9 +767,8 @@
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.1",
-		"@octokit/core": "^7.0.2",
+		"@octokit/core": "^7.0.3",
 		"glob": "^11.0.3",
-		"simple-git": "^3.28.0",
 		"strip-json-comments": "^5.0.2"
 	},
 	"types": "src/types/index.d.ts"
