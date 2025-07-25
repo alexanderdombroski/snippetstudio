@@ -218,7 +218,7 @@ function initSnippetCommands(
 
 				const snippetTitle = item.description?.toString() ?? '';
 				const { readSnippet } = await import('../snippets/updateSnippets.js');
-				const snippet = await readSnippet(item.path, snippetTitle);
+				const snippet = await readSnippet(item.path, snippetTitle, true);
 				const snippetData: SnippetData = {
 					filename: savePath,
 					snippetTitle,

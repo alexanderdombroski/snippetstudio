@@ -2,6 +2,7 @@ import * as fs from 'fs/promises'; // Import fs/promises for async file operatio
 import * as vscode from 'vscode';
 import path from 'path';
 import type { GenericJson, VSCodeSnippets } from '../types';
+import { flattenScopedExtensionSnippets } from '../snippets/extension';
 
 async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
@@ -54,11 +55,14 @@ export async function readJsoncFilesAsync(
 	return snippetMap;
 }
 
-export async function readSnippetFile(filepath: string): Promise<VSCodeSnippets | undefined> {
+export async function readSnippetFile(
+	filepath: string,
+	tryFlatten?: boolean
+): Promise<VSCodeSnippets | undefined> {
 	try {
 		const jsonc = await fs.readFile(filepath, 'utf-8');
 		const cleanedJson: VSCodeSnippets = await processJsonWithComments(jsonc);
-		return cleanedJson;
+		return tryFlatten ? flattenScopedExtensionSnippets(cleanedJson) : cleanedJson;
 	} catch {
 		vscode.window.showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
 	}

@@ -72,8 +72,11 @@ function initSnippetFileCommands(
 			async (item: TreePathItem) => {
 				const { getFileName } = await import('../snippets/newSnippetFile.js');
 				const basename = (await getFileName()) + '.code-snippets';
+				if (basename === 'undefined.code-snippets') {
+					return;
+				}
 				const dirname = await chooseLocalGlobal();
-				if (dirname === undefined || basename === 'undefined.code-snippets') {
+				if (dirname === undefined) {
 					return;
 				}
 
@@ -82,7 +85,7 @@ function initSnippetFileCommands(
 				const langs = await getExtensionSnippetLangs(item.path);
 				const scope = langs.join(',');
 
-				const snippets = await readSnippetFile(item.path);
+				const snippets = await readSnippetFile(item.path, true);
 				if (snippets === undefined) {
 					return;
 				}

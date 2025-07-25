@@ -23,7 +23,7 @@
 - **DOCS**
     - Update homepage
     - Add searchbar
-- **IMPORT SNIPPETS** (v1.7)
+- **IMPORT SNIPPETS** (v2.1)
     - **built in vscode snippets** https://github.com/microsoft/vscode/tree/main/extensions/\<language\>/snippets (vscode basics)
         - Allow the user to override these locally?
     - **profile snippets** ~/Library/Application Support/Code/User/profiles/\<profile-id\>/snippets/python.json

@@ -38,11 +38,15 @@ async function deleteSnippet(filepath: string, titleKey: string) {
 	}
 }
 
+/**
+ * Return a snippet from a snippet file. Use tryFlatten if the file is from an extension.
+ */
 async function readSnippet(
 	filepath: string,
-	snippetTitle: string
+	snippetTitle: string,
+	tryFlatten?: boolean
 ): Promise<VSCodeSnippet | undefined> {
-	const snippets = await readSnippetFile(filepath);
+	const snippets = await readSnippetFile(filepath, tryFlatten);
 	if (snippets === undefined || snippets[snippetTitle] === undefined) {
 		console.error(
 			`Read Operation failed. Could not find ${snippetTitle} inside of ${path.basename(filepath)}.`

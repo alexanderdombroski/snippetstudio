@@ -6,8 +6,11 @@ import type {
 	ExtensionSnippetFilesMap,
 	ExtensionSnippets,
 	ExtensionSnippetsMap,
+	JSONObject,
 	PackageJsonSnippetsSection,
 	SnippetContribution,
+	VSCodeSnippet,
+	VSCodeSnippets,
 } from '../types';
 
 function getExtensionsDirPath(): string {
@@ -30,6 +33,24 @@ export async function getExtensionSnippetLangs(snippetPath: string): Promise<str
 	return snippets
 		.filter(({ path: fp }) => snippetPath === path.resolve(extPath, fp))
 		.map(({ language }) => language);
+}
+
+/**
+ * Removes textmate snippet scopes from snippet objects
+ */
+export function flattenScopedExtensionSnippets(
+	snippets: VSCodeSnippets | JSONObject
+): VSCodeSnippets {
+	return Object.values(snippets).some((val) => 'prefix' in val && 'body' in val)
+		? (snippets as VSCodeSnippets)
+		: Object.values(snippets).reduce((acc: VSCodeSnippets, scopedSnippets) => {
+				if (typeof scopedSnippets === 'object' && scopedSnippets !== null) {
+					Object.entries(scopedSnippets).forEach(([key, snippet]) => {
+						acc[key] = snippet as VSCodeSnippet;
+					});
+				}
+				return acc;
+			}, {});
 }
 
 // -------------------- All Extension Files --------------------
@@ -87,11 +108,13 @@ export async function findAllExtensionSnipppetsByLang(
 			}
 
 			const snippets = await readJsoncFilesAsync(filesToRead.map(({ path }) => path));
-			const contributionsWithSnippets: ExtensionSnippets[] = snippets.map(([fp, s]) => ({
-				path: fp,
-				language: langId,
-				snippets: s,
-			}));
+			const contributionsWithSnippets: ExtensionSnippets[] = snippets.map(([fp, s]) => {
+				return {
+					path: fp,
+					language: langId,
+					snippets: flattenScopedExtensionSnippets(s),
+				};
+			});
 			const result: ExtensionSnippetsMapKVP = [
 				extId,
 				{ name, snippets: contributionsWithSnippets },
