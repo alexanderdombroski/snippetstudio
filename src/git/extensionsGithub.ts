@@ -2,6 +2,7 @@ import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' 
 import getOctokitClient from './octokit';
 import * as vscode from 'vscode';
 import path from 'path';
+import fs from 'fs';
 import { chooseLocalGlobal } from '../utils/user';
 import { getFileName } from '../snippets/newSnippetFile';
 import type { PackageJsonSnippetsSection, VSCodeSnippets } from '../types';
@@ -20,49 +21,65 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 		label: dir.name,
 		description: dir.path,
 	}));
-	const selected = await vscode.window.showQuickPick(options, {
+	const selections = await vscode.window.showQuickPick(options, {
 		title: 'Choose a built in extension to import snippets from.',
+		canPickMany: true,
 	});
-	if (selected === undefined) {
+	if (!selections?.length) {
 		return;
 	}
 
-	const snippetFiles = await folderRequest(client, `extensions/${selected.label}/snippets`);
-	if (snippetFiles === undefined) {
-		return vscode.window.showInformationMessage("Couldn't find any snippets");
-	}
-
-	const [pkgContent, dirpath] = await Promise.all([
-		fileTextRequest(client, `extensions/${selected.label}/package.json`),
-		chooseLocalGlobal(),
-	]);
+	const dirpath = await chooseLocalGlobal();
 	if (dirpath === undefined) {
 		return;
 	}
 
-	const pkg: PackageJsonSnippetsSection = JSON.parse(pkgContent);
+	for (const selection of selections) {
+		const [snippetFiles, pkgContent] = await Promise.all([
+			folderRequest(client, `extensions/${selection.label}/snippets`),
+			fileTextRequest(client, `extensions/${selection.label}/package.json`),
+		]);
 
-	const verifiedSnippetFiles = snippetFiles.filter((file) => {
-		const ext = path.extname(file.name);
-		return file.type === 'file' && (ext === '.code-snippets' || ext === '.json');
-	});
+		if (snippetFiles === undefined) {
+			vscode.window.showInformationMessage(`Couldn't find any snippets for ${selection.label}`);
+			continue;
+		}
 
-	for (const file of verifiedSnippetFiles) {
-		const basename =
-			((await getFileName(`Type a filename to copy ${file.name} into`, true)) ||
-				crypto.randomUUID()) + '.code-snippets';
+		const pkg: PackageJsonSnippetsSection = JSON.parse(pkgContent);
 
-		const langId = pkg.contributes?.snippets?.find(
-			({ path: fp }) => file.name === path.basename(fp)
-		)?.language;
+		const verifiedSnippetFiles = snippetFiles.filter((file) => {
+			const ext = path.extname(file.name);
+			return file.type === 'file' && (ext === '.code-snippets' || ext === '.json');
+		});
 
-		const snippets = flattenScopedExtensionSnippets(
-			(await processJsonWithComments(
-				await fileTextRequest(client, `extensions/${selected.label}/snippets/${file.name}`)
-			)) as VSCodeSnippets
+		const snippetContents = await Promise.all(
+			verifiedSnippetFiles.map((file) =>
+				fileTextRequest(client, `extensions/${selection.label}/snippets/${file.name}`)
+			)
 		);
-		Object.values(snippets).forEach((s) => (s.scope = langId));
-		await writeSnippetFile(path.join(dirpath, basename), snippets);
+
+		for (const [i, file] of verifiedSnippetFiles.entries()) {
+			const basename =
+				(await getFileName(
+					`Type a filename to copy ${file.name} from ${selection.label} into`,
+					true
+				)) + '.code-snippets';
+
+			const langId = pkg.contributes?.snippets?.find(
+				({ path: fp }) => file.name === path.basename(fp)
+			)?.language;
+
+			const snippets = flattenScopedExtensionSnippets(
+				(await processJsonWithComments(snippetContents[i])) as VSCodeSnippets
+			);
+
+			Object.values(snippets).forEach((s) => (s.scope = langId));
+			const fp = path.join(dirpath, basename);
+			await writeSnippetFile(
+				fs.existsSync(fp) ? path.join(dirpath, crypto.randomUUID() + '.code-snippets') : fp,
+				snippets
+			);
+		}
 	}
 }
 

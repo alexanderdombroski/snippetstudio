@@ -41,7 +41,9 @@ export async function getExtensionSnippetLangs(snippetPath: string): Promise<str
 export function flattenScopedExtensionSnippets(
 	snippets: VSCodeSnippets | JSONObject
 ): VSCodeSnippets {
-	return Object.values(snippets).some((val) => 'prefix' in val && 'body' in val)
+	return Object.values(snippets).some(
+		(val) => ('prefix' in val || 'isFileTemplate' in val) && 'body' in val
+	)
 		? (snippets as VSCodeSnippets)
 		: Object.values(snippets).reduce((acc: VSCodeSnippets, scopedSnippets) => {
 				if (typeof scopedSnippets === 'object' && scopedSnippets !== null) {
