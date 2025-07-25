@@ -294,6 +294,11 @@
 				"shortTitle": "Extract Snippets",
 				"icon": "$(new-file)",
 				"when": false
+			},
+			{
+				"command": "snippetstudio.extension.fetch",
+				"title": "Copy Built in Snippet Extension Files",
+				"category": "snippetstudio-github"
 			}
 		],
 		"menus": {
@@ -430,6 +435,11 @@
 				{
 					"command": "snippetstudio.github.browse",
 					"group": "inline_gist",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.extension.fetch",
+					"group": "inline_import",
 					"when": "view == location-manager"
 				}
 			],

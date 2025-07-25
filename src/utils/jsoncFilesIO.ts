@@ -4,7 +4,7 @@ import path from 'path';
 import type { GenericJson, VSCodeSnippets } from '../types';
 import { flattenScopedExtensionSnippets } from '../snippets/extension';
 
-async function processJsonWithComments(jsonString: string): Promise<any> {
+export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
 		const stripJsonCommentsModule = await import('strip-json-comments');
 		const stripJsonComments = stripJsonCommentsModule.default; // Access the default export

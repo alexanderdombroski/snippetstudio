@@ -24,18 +24,12 @@
     - Update homepage
     - Add searchbar
 - **IMPORT SNIPPETS** (v2.1)
-    - **built in vscode snippets** https://github.com/microsoft/vscode/tree/main/extensions/\<language\>/snippets (vscode basics)
-        - Allow the user to override these locally?
-    - **profile snippets** ~/Library/Application Support/Code/User/profiles/\<profile-id\>/snippets/python.json
-    - **downloaded extension snippets** ~/.vscode/extensions/ (for all profiles)
     - **profile-backup** extract within .code-profile files
         - 3 official .code-profile 
         - gists
         - rawFileUrl
         - filepath
     - Edit and Choose Snippets as you import them
-- **Extension Support**
-    - Handle Glob patterns in extension snippet contributions
 
 ## [2.0.0] - DATE
 
@@ -44,6 +38,7 @@
 - Open Snippet folders in terminal and folder
 - See Snippets of other Profiles
 - Copy and Modify extension snippets
+- Import built-in vscode extension snippets from github repo
 
 ### Fixed
 

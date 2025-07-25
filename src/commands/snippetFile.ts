@@ -2,16 +2,12 @@ import * as vscode from 'vscode';
 import fs from 'fs';
 import path from 'path';
 import onDoubleClick from './doubleClickHandler';
-import { SnippetViewProvider } from '../ui';
 import type { TreePathItem } from '../ui/templates';
 import { getExtensionSnippetLangs } from '../snippets/extension';
 import { chooseLocalGlobal } from '../utils/user';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 
-function initSnippetFileCommands(
-	context: vscode.ExtensionContext,
-	snippetView: SnippetViewProvider
-) {
+function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Open Snippets file
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.file.open', async (item: TreePathItem) => {
@@ -94,7 +90,12 @@ function initSnippetFileCommands(
 
 				refreshAll();
 			}
-		)
+		),
+		vscode.commands.registerCommand('snippetstudio.extension.fetch', async () => {
+			const { importBuiltinExtension } = await import('../git/extensionsGithub.js');
+			await importBuiltinExtension(context);
+			refreshAll();
+		})
 	);
 }
 

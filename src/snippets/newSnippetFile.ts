@@ -3,7 +3,6 @@ import path from 'path';
 import * as vscode from 'vscode';
 import { getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds, selectLanguage } from '../utils/language';
-import { getSavePath } from '../utils/user';
 import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
@@ -26,17 +25,21 @@ async function createFile(filepath: string, showInformationMessage: boolean = tr
 	}
 }
 
-async function getFileName(): Promise<string | undefined> {
-	let name = await vscode.window.showInputBox({ prompt: 'type a filename' });
+async function getFileName(
+	prompt: string = 'type a filename',
+	silent?: boolean
+): Promise<string | undefined> {
+	let name = await vscode.window.showInputBox({ prompt });
 	if (name === undefined) {
-		vscode.window.showInformationMessage('Skipped file creation.');
-		return undefined;
+		!silent && vscode.window.showInformationMessage('Skipped file creation.');
+		return;
 	}
 	name = name?.trim();
 	const regex = /^[a-zA-Z0-9_-]+$/;
 	if (name && !regex.test(name)) {
-		vscode.window.showErrorMessage('Only use characters, hyphens, numbers and/or underscores.');
-		return undefined;
+		!silent &&
+			vscode.window.showErrorMessage('Only use characters, hyphens, numbers and/or underscores.');
+		return;
 	}
 	return name;
 }
@@ -79,7 +82,7 @@ async function createGlobalSnippetsFile(): Promise<void> {
 
 async function exportSnippets() {
 	// Select Save Paths
-	const savePath = await getSavePath();
+	const savePath = await getFileName();
 	if (savePath === undefined) {
 		return;
 	}
