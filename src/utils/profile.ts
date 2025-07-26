@@ -1,9 +1,8 @@
 // Utilities for interacting with VS Code profiles
 import * as vscode from 'vscode';
 import path from 'path';
-import type { ProfileInfo } from '../types';
+import type { ProfileInfo, ProfileAssociations } from '../types';
 import { getExtensionContext, getUserPath } from './context';
-import { ProfileAssociations } from '../types/profileTypes';
 
 const DEFAULT_PROFILE_ID = '__default__profile__';
 const getDefaultProfile = () => ({ location: DEFAULT_PROFILE_ID, name: 'Default' }) as const;

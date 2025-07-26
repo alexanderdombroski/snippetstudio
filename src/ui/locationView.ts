@@ -38,7 +38,15 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 		);
 		this.profileDropdownItems = Object.fromEntries(
 			Object.entries(profiles).map(([location, paths]) => {
-				return [location, paths.map((fp) => snippetLocationTemplate(fp))];
+				return [
+					location,
+					paths.map((fp) =>
+						snippetLocationTemplate(
+							fp,
+							links.includes(path.basename(fp)) ? 'snippet-filepath linked' : 'snippet-filepath'
+						)
+					),
+				];
 			})
 		);
 		const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
