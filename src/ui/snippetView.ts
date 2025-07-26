@@ -19,6 +19,7 @@ type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 export default class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	// ---------- Attributes ---------- //
 	private snippetTreeItems: ParentChildTreeItems | undefined;
+	private activeDropdowns: vscode.TreeItem[] | undefined;
 	private extensionDropdownsTuple: [vscode.TreeItem, ParentChildTreeItems][] | undefined;
 	private langId: string | undefined;
 	private debounceTimer: NodeJS.Timeout | undefined;
@@ -52,6 +53,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	private async refresh() {
 		this._links = await getLinkedSnippets();
 		this.snippetTreeItems = await loadSnippets();
+		this.activeDropdowns = this.snippetTreeItems?.map((group) => group[0])?.filter(this.isActive);
 		if (this.langId) {
 			const extensionSnippetsMap = await findAllExtensionSnipppetsByLang(this.langId);
 			this.extensionDropdownsTuple = extensionSnippetsTreeItems(extensionSnippetsMap);
@@ -78,6 +80,10 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[] | undefined> {
 		// Handle child items
 		if (element) {
+			if (element.contextValue === 'active-snippets') {
+				return this.activeDropdowns;
+			}
+
 			if (element.contextValue === 'disabled-dropdown') {
 				return this.snippetTreeItems
 					?.map((group) => group[0])
@@ -107,23 +113,15 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 			return parentChild ? parentChild[1] : undefined;
 		}
 
-		// Root level: Load snippet files and create parent items
-		if (!this.snippetTreeItems) {
-			this.snippetTreeItems = await loadSnippets();
-		}
-
-		const rootItems: vscode.TreeItem[] = [selectedLanguageTemplate(this.langId)]; // Always add the template
-
-		if (this.snippetTreeItems && this.snippetTreeItems.length > 0) {
-			// Add the snippet groups if they exist
-			const fileItems = this.snippetTreeItems.map((group) => group[0]);
-			const activeDropdowns = fileItems.filter(this.isActive);
-			rootItems.push(...activeDropdowns);
-			this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
-			fileItems.filter((d) => this.isNotLinked(d) && this.isNotLocal(d)).length !==
-				activeDropdowns.filter(this.isNotLinked).length &&
-				rootItems.push(unloadedDropdownTemplate());
-		}
+		// Root level: Create parent items
+		const rootItems: vscode.TreeItem[] = [
+			selectedLanguageTemplate(this.langId, !!this.activeDropdowns?.length),
+		]; // Always add the template
+		this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
+		this.snippetTreeItems
+			?.map((group) => group[0])
+			?.filter((d) => this.isNotLinked(d) && this.isNotLocal(d) && !this.isActive(d))?.length &&
+			rootItems.push(unloadedDropdownTemplate());
 
 		return rootItems;
 	}
