@@ -97,6 +97,14 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 			refreshAll();
 		})
 	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('snippetstudio.profile.import', async () => {
+			const { importCodeProfileSnippets } = await import('../snippets/codeProfile.js');
+			await importCodeProfileSnippets(context);
+			refreshAll();
+		})
+	);
 }
 
 export function refreshAll() {

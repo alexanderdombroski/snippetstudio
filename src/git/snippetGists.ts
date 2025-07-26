@@ -2,9 +2,10 @@ import * as vscode from 'vscode';
 import path from 'path';
 import fs from 'fs';
 
-import getOctokitClient from './octokit';
+import { getOctokitClient } from './octokit';
 import { getFileName, mergeSnippetFiles } from '../snippets/newSnippetFile';
 import { chooseLocalGlobal, getSavePathFromDialog } from '../utils/user';
+import { getGistId } from './utils';
 
 async function createGist(context: vscode.ExtensionContext) {
 	const client = await getOctokitClient(context);
@@ -46,14 +47,10 @@ async function createGist(context: vscode.ExtensionContext) {
 }
 
 async function importGist(context: vscode.ExtensionContext) {
-	const identifier = await vscode.window.showInputBox({
-		title: 'Input a gist id, share url, or clone url',
-	});
-	if (identifier === undefined) {
+	const gistId = await getGistId();
+	if (gistId === undefined) {
 		return;
 	}
-
-	const gistId = extractGistId(identifier.trim());
 
 	const saveDir = await chooseLocalGlobal();
 	if (saveDir === undefined) {
@@ -102,39 +99,6 @@ async function saveCodeSnippets(
 	);
 
 	vscode.window.showInformationMessage(`Saved ${fileCount} files in ${saveDir}`);
-}
-
-function extractGistId(identifier: string): string {
-	// From share URL
-	const shareUrlRegex = /https:\/\/gist\.github\.com\/[\w-]+\/([a-f0-9]+)/i;
-	let match = identifier.match(shareUrlRegex);
-	if (match) {
-		return match[1];
-	}
-
-	// From Clone URL
-	const cloneUrlRegex = /https:\/\/gist\.github\.com\/([a-f0-9]+)\.git/i;
-	match = identifier.match(cloneUrlRegex);
-	if (match) {
-		return match[1];
-	}
-
-	// From SSH URL
-	const sshUrlRegex = /git@gist\.github\.com:([a-f0-9]+)\.git/i;
-	match = identifier.match(sshUrlRegex);
-	if (match) {
-		return match[1];
-	}
-
-	// (Gist ID itself)
-	const gistIdRegex = /^[a-f0-9]+$/i;
-	if (gistIdRegex.test(identifier)) {
-		return identifier;
-	}
-
-	const error = new Error(`Invalid Gist identifier: ${identifier}`);
-	vscode.window.showErrorMessage(error.message);
-	throw error;
 }
 
 export { createGist, importGist };

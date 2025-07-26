@@ -61,4 +61,4 @@ async function isTokenRevoked(token: string): Promise<boolean> {
 	}
 }
 
-export default getOctokitClient;
+export { getOctokitClient };

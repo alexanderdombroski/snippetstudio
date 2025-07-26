@@ -1,5 +1,5 @@
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
-import getOctokitClient from './octokit';
+import { getOctokitClient } from './octokit';
 import * as vscode from 'vscode';
 import path from 'path';
 import fs from 'fs';

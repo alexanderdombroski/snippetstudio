@@ -23,13 +23,6 @@
 - **DOCS**
     - Update homepage
     - Add searchbar
-- **IMPORT SNIPPETS** (v2.1)
-    - **profile-backup** extract within .code-profile files
-        - 3 official .code-profile 
-        - gists
-        - rawFileUrl
-        - filepath
-    - Edit and Choose Snippets as you import them
 
 ## [2.0.0] - DATE
 
@@ -39,6 +32,7 @@
 - See Snippets of other Profiles
 - Copy and Modify extension snippets
 - Import built-in vscode extension snippets from github repo
+- Import snippets from a `.code-profile` file
 
 ### Fixed
 
@@ -46,6 +40,8 @@
 - Snippet creation is tied to the active profile
 
 ### Changed
+
+- Updated snippet view and location manager view
 
 ### Removed
 
