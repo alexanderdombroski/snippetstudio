@@ -33,6 +33,7 @@
 - Copy and Modify extension snippets
 - Import built-in vscode extension snippets from github repo
 - Import snippets from a `.code-profile` file
+- Choose snippet files keep in sync across all profiles
 
 ### Fixed
 

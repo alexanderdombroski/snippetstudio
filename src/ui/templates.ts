@@ -113,6 +113,9 @@ export function snippetLocationTemplate(
 	treeItem.description = shortenFullPath(filepath);
 	treeItem.tooltip = 'Double click to open the file: ' + filepath;
 	treeItem.contextValue = contextValue;
+	if (treeItem.contextValue.includes('linked')) {
+		treeItem.iconPath = new vscode.ThemeIcon('link');
+	}
 
 	// Command to open Snippet file when double clicked
 	treeItem.command = {
@@ -144,11 +147,7 @@ function extensionSnippetsDropdown(
 	contribution: SnippetContribution,
 	collapsible?: boolean
 ): TreePathItem {
-	const item = snippetLocationTemplate(
-		contribution.path,
-		'extension-snippet-filepath',
-		collapsible
-	);
+	const item = snippetLocationTemplate(contribution.path, 'extension-snippet-path', collapsible);
 	item.tooltip = `Extension Snippet file for ${contribution.language}. Edits will be overridden next extension update.`;
 	return item;
 }

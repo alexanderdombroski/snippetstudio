@@ -73,7 +73,7 @@ async function saveCodeProfiles(
 			const parsed: VSCodeSnippets = await processJsonWithComments(fileContent);
 			const lang = path.basename(name, '.json');
 			Object.values(parsed).forEach((snippet) => (snippet.scope = lang));
-			fileContent = JSON.stringify(parsed, null, '\t');
+			fileContent = JSON.stringify(parsed, null, 2);
 		}
 		await fs.promises.writeFile(savePath, fileContent, 'utf-8');
 	});

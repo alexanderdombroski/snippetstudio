@@ -52,4 +52,15 @@ function getDownloadsDirPath(): string {
 	return path.join(os.homedir(), 'Downloads');
 }
 
-export { getWorkspaceFolder, getCurrentUri, getLangFromSnippetFilePath, getDownloadsDirPath };
+function isParentDir(parent: string, child: string): boolean {
+	const relative = path.relative(parent, child);
+	return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+}
+
+export {
+	getWorkspaceFolder,
+	getCurrentUri,
+	getLangFromSnippetFilePath,
+	getDownloadsDirPath,
+	isParentDir,
+};

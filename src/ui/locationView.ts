@@ -7,6 +7,8 @@ import {
 	extensionTreeItems,
 } from './templates';
 import { findAllExtensionSnippetsFiles } from '../snippets/extension';
+import { getLinkedSnippets } from '../snippets/links';
+import path from 'path';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
@@ -23,9 +25,17 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 
 	// ---------- Refresh Methods ---------- //
 	private async refresh() {
+		const links = await getLinkedSnippets();
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
 		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
-		this.globalTreeItems = globals.map((p) => snippetLocationTemplate(p));
+		this.globalTreeItems = globals.map((p) =>
+			snippetLocationTemplate(
+				p,
+				links.includes(path.basename(p))
+					? 'snippet-filepath global linked'
+					: 'snippet-filepath global'
+			)
+		);
 		this.profileDropdownItems = Object.fromEntries(
 			Object.entries(profiles).map(([location, paths]) => {
 				return [location, paths.map((fp) => snippetLocationTemplate(fp))];

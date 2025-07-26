@@ -251,6 +251,16 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.file.link.add",
+				"title": "Copy changes across all profiles",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.file.link.remove",
+				"title": "Stop syncing file for all profiles",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
 				"title": "Create language-specific Snippet",
 				"shortTitle": "Create Language Snippet",
@@ -456,7 +466,7 @@
 			"view/item/context": [
 				{
 					"command": "snippetstudio.file.open",
-					"when": "(viewItem == snippet-filepath) || (viewItem == extension-snippet-filepath)",
+					"when": "(viewItem =~ /snippet-filepath/) || (viewItem == extension-snippet-path)",
 					"group": "navigation"
 				},
 				{
@@ -471,12 +481,12 @@
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "viewItem == snippet-filepath",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
 					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "viewItem == snippet-filepath",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
 					"group": "inline"
 				},
 				{
@@ -506,7 +516,7 @@
 				},
 				{
 					"command": "snippetstudio.file.createSnippetAt",
-					"when": "viewItem == snippet-filepath",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "inline"
 				},
 				{
@@ -525,6 +535,16 @@
 					"when": "viewItem =~ /global-dropdown/"
 				},
 				{
+					"command": "snippetstudio.file.link.add",
+					"when": "(viewItem =~ /snippet-filepath/) && (viewItem =~ /global/) && !(viewItem =~ /linked/)",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.link.remove",
+					"when": "viewItem =~ /linked/",
+					"group": "navigation"
+				},
+				{
 					"command": "snippetstudio.extension.modify",
 					"group": "inline",
 					"when": "viewItem == extension-snippet"
@@ -532,7 +552,7 @@
 				{
 					"command": "snippetstudio.extension.extract",
 					"group": "inline",
-					"when": "viewItem == extension-snippet-filepath"
+					"when": "viewItem == extension-snippet-path"
 				}
 			]
 		},
@@ -680,6 +700,16 @@
 					"type": "boolean",
 					"default": true,
 					"markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
+				},
+				"snippetstudio.file.linkedFiles": {
+					"type": "array",
+					"default": [],
+					"markdownDescription": "Snippet files that are updated for every profile to use. **Change only through commands**",
+					"readOnly": true,
+					"items": {
+						"type": "string",
+						"pattern": ".*\\.(json|code-snippets)$"
+					}
 				}
 			},
 			"order": 0

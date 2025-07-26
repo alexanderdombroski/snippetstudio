@@ -89,7 +89,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 				return match?.[1].map((group) => group[0]);
 			}
 
-			if (element.contextValue === 'extension-snippet-filepath') {
+			if (element.contextValue === 'extension-snippet-path') {
 				return this.extensionDropdownsTuple
 					?.flatMap(([, fileDropdowns]) => fileDropdowns)
 					.find(([fileDropdown]) => fileDropdown.description === element.description)?.[1];

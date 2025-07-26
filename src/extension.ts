@@ -16,6 +16,7 @@ import {
 	initSnippetFileCommands,
 	initSnippetGistsCommands,
 	initSnippetUICommands,
+	initSnippetLinkCommands,
 } from './commands';
 
 import SnippetDataManager from './snippets/snippetDataManager';
@@ -59,6 +60,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	initSnippetEditorCommands(context, snippetEditorProvider);
 	initSnippetFeatureCommands(context, snippetEditorProvider);
 	initSnippetGistsCommands(context);
+	initSnippetLinkCommands(context);
 
 	createStatusBar(context);
 
