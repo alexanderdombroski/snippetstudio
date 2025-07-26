@@ -6,6 +6,7 @@ import type { TreePathItem } from '../ui/templates';
 import { getExtensionSnippetLangs } from '../snippets/extension';
 import { chooseLocalGlobal } from '../utils/user';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
+import { getLinkedSnippets } from '../snippets/links';
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Open Snippets file
@@ -49,6 +50,12 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Delete Snippet File
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.file.delete', async (treeItem: TreePathItem) => {
+			if ((await getLinkedSnippets()).includes(treeItem.label)) {
+				vscode.window.showWarningMessage(
+					"Don't delete a linked snippet file until you unlink it first!"
+				);
+				return;
+			}
 			await deleteFile(treeItem.path);
 			vscode.commands.executeCommand('snippetstudio.refreshLocations');
 		})
