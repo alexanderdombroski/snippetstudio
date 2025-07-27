@@ -43,6 +43,8 @@
 ### Changed
 
 - Updated snippet view and location manager view
+- Lazy load snippet editor until used
+- Added extension code splitting for better memory usage balancing
 
 ### Removed
 

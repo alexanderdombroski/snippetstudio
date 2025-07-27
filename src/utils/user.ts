@@ -3,11 +3,7 @@ import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'path';
 import { getActiveProfileSnippetsDir } from './profile';
-import {
-	findCodeSnippetsFiles,
-	locateAllSnippetFiles,
-	locateSnippetFiles,
-} from '../snippets/locateSnippets';
+import { findCodeSnippetsFiles, locateSnippetFiles } from '../snippets/locateSnippets';
 
 async function getConfirmation(question: string): Promise<boolean> {
 	// Confirmation message
@@ -36,80 +32,6 @@ async function getSelection(): Promise<string | undefined> {
 	}
 }
 
-async function showVariableQuickPick(): Promise<string | undefined> {
-	const variables = [
-		// TextMate Variables
-		{
-			label: 'TM_SELECTED_TEXT',
-			description: 'The currently selected text or the empty string',
-		},
-		{ label: 'TM_CURRENT_LINE', description: 'The contents of the current line' },
-		{
-			label: 'TM_CURRENT_WORD',
-			description: 'The contents of the word under cursor or the empty string',
-		},
-		{ label: 'TM_LINE_INDEX', description: 'The zero-index based line number' },
-		{ label: 'TM_LINE_NUMBER', description: 'The one-index based line number' },
-		{ label: 'TM_FILENAME', description: 'The filename of the current document' },
-		{
-			label: 'TM_FILENAME_BASE',
-			description: 'The filename of the current document without its extensions',
-		},
-		{ label: 'TM_DIRECTORY', description: 'The directory of the current document' },
-		{ label: 'TM_FILEPATH', description: 'The full file path of the current document' },
-		{
-			label: 'RELATIVE_FILEPATH',
-			description:
-				'The relative (to the opened workspace or folder) file path of the current document',
-		},
-		{ label: 'CLIPBOARD', description: 'The contents of your clipboard' },
-		{ label: 'WORKSPACE_NAME', description: 'The name of the opened workspace or folder' },
-		{ label: 'WORKSPACE_FOLDER', description: 'The path of the opened workspace or folder' },
-		{ label: 'CURSOR_INDEX', description: 'The zero-index based cursor number' },
-		{ label: 'CURSOR_NUMBER', description: 'The one-index based cursor number' },
-		// Time
-		{ label: 'CURRENT_YEAR', description: 'The current year' },
-		{ label: 'CURRENT_YEAR_SHORT', description: "The current year's last two digits" },
-		{ label: 'CURRENT_MONTH', description: "The month as two digits (example '02')" },
-		{ label: 'CURRENT_MONTH_NAME', description: "The full name of the month (example 'July')" },
-		{
-			label: 'CURRENT_MONTH_NAME_SHORT',
-			description: "The short name of the month (example 'Jul')",
-		},
-		{ label: 'CURRENT_DATE', description: "The day of the month as two digits (example '08')" },
-		{ label: 'CURRENT_DAY_NAME', description: "The name of day (example 'Monday')" },
-		{
-			label: 'CURRENT_DAY_NAME_SHORT',
-			description: "The short name of the day (example 'Mon')",
-		},
-		{ label: 'CURRENT_HOUR', description: 'The current hour in 24-hour clock format' },
-		{ label: 'CURRENT_MINUTE', description: 'The current minute as two digits' },
-		{ label: 'CURRENT_SECOND', description: 'The current second as two digits' },
-		{
-			label: 'CURRENT_SECONDS_UNIX',
-			description: 'The number of seconds since the Unix epoch',
-		},
-		{
-			label: 'CURRENT_TIMEZONE_OFFSET',
-			description: 'The current UTC time zone offset as +HH:MM or -HH:MM (example -07:00).',
-		},
-		// Random
-		{ label: 'RANDOM', description: '6 random Base-10 digits' },
-		{ label: 'RANDOM_HEX', description: '6 random Base-16 digits' },
-		{ label: 'UUID', description: 'A Version 4 UUID' },
-		// Comments
-		{ label: 'BLOCK_COMMENT_START', description: 'Example output: in PHP /* or in HTML <!--' },
-		{ label: 'BLOCK_COMMENT_END', description: 'Example output: in PHP */ or in HTML -->' },
-		{ label: 'LINE_COMMENT', description: 'Example output: in PHP //' },
-	];
-
-	const selectedVariable = await vscode.window.showQuickPick(variables, {
-		placeHolder: 'Select a snippet variable',
-	});
-
-	return selectedVariable?.label;
-}
-
 async function getSavePathFromDialog(
 	basename: string,
 	startingDir = getDownloadsDirPath()
@@ -126,8 +48,26 @@ async function getSavePathFromDialog(
 	return fileUri?.fsPath;
 }
 
+async function getFileName(
+	prompt: string = 'type a filename',
+	silent?: boolean
+): Promise<string | undefined> {
+	let name = await vscode.window.showInputBox({ prompt });
+	if (name === undefined) {
+		!silent && vscode.window.showInformationMessage('Skipped file creation.');
+		return;
+	}
+	name = name?.trim();
+	const regex = /^[a-zA-Z0-9_-]+$/;
+	if (name && !regex.test(name)) {
+		!silent &&
+			vscode.window.showErrorMessage('Only use characters, hyphens, numbers and/or underscores.');
+		return;
+	}
+	return name;
+}
+
 async function getSavePath() {
-	const { getFileName } = await import('../snippets/newSnippetFile.js');
 	const filename = (await getFileName()) + '.code-snippets';
 	if (filename === 'undefined.code-snippets') {
 		return;
@@ -203,7 +143,7 @@ async function chooseLocalGlobal(): Promise<string | undefined> {
 export {
 	getConfirmation,
 	getSelection,
-	showVariableQuickPick,
+	getFileName,
 	getSavePath,
 	chooseLocalGlobal,
 	getSavePathFromDialog,

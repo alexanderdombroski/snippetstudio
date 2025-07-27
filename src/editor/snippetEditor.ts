@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import SnippetEditorProvider from '../ui/bufferEditor';
+import type SnippetEditorProvider from './bufferEditor';
 import { getCurrentUri } from '../utils/fsInfo';
 import type { VSCodeSnippet } from '../types';
 import { titleCase } from '../utils/string';
@@ -8,15 +8,6 @@ function initSnippetEditorCommands(
 	context: vscode.ExtensionContext,
 	provider: SnippetEditorProvider
 ) {
-	// Close old tabs on startup
-	vscode.window.tabGroups.all.forEach((group) =>
-		group.tabs.forEach((tab) => {
-			if (tab.input instanceof vscode.TabInputText && tab.input.uri.scheme === 'snippetstudio') {
-				vscode.window.tabGroups.close(tab);
-			}
-		})
-	);
-
 	context.subscriptions.push(
 		vscode.commands.registerCommand('snippetstudio.editor.save', async () => {
 			if (vscode.window.activeTextEditor?.document.uri.scheme === 'snippetstudio') {
@@ -73,19 +64,6 @@ function initSnippetEditorCommands(
 			'snippetstudio.editorVisible',
 			editor?.document.uri.scheme === 'snippetstudio'
 		);
-	});
-}
-
-let editorCount = 0;
-
-export function newSnippetEditorUri(
-	langId: string = 'plaintext',
-	showScope: boolean = true
-): vscode.Uri {
-	return vscode.Uri.from({
-		scheme: 'snippetstudio',
-		path: `/snippets/snippet-${++editorCount}`,
-		query: `type=${langId}&showScope=${showScope}`,
 	});
 }
 

@@ -40,11 +40,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 	}
 
 	private async _getHtmlForWebview(webview: vscode.Webview) {
-		const htmlPath = vscode.Uri.joinPath(
-			this._context.extensionUri,
-			'public',
-			'snippetData.html'
-		);
+		const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 
 		try {
 			return await fs.promises.readFile(htmlPath.fsPath, 'utf8');
@@ -83,9 +79,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 					break;
 				}
 				default:
-					console.warn(
-						`Unknown message passed to snippetData Form WebView ${message.command}`
-					);
+					console.warn(`Unknown message passed to snippetData Form WebView ${message.command}`);
 					break;
 			}
 		});

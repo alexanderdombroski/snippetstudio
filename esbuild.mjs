@@ -64,7 +64,7 @@ async function main() {
 		platform: 'node',
 		outdir,
 		splitting: true,
-		external: ['vscode'],
+		external: ['vscode', ...(await import('module')).builtinModules],
 		logLevel: 'silent',
 		plugins: [
 			/* add to the end of plugins array */

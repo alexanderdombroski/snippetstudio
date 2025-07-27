@@ -25,10 +25,7 @@ async function unTabMultiline(
 
 	if (!selection.isSingleLine) {
 		const start = new vscode.Position(selection.start.line, 0);
-		selection = new vscode.Selection(
-			start,
-			editor.document.lineAt(selection.end.line).range.end
-		);
+		selection = new vscode.Selection(start, editor.document.lineAt(selection.end.line).range.end);
 	}
 
 	await vscode.commands.executeCommand('editor.action.indentationToSpaces');
@@ -63,25 +60,6 @@ function countMinSpaces(lines: string[]): number {
 }
 
 /**
- * Adds a backspace before a snippet tabstop, placeholder, or choice
- *
- * @param text string to run the operation on
- * @param offset the position of the number inside the potential tabstop/placeholder/choice
- * @returns the updated text or undefined if nothing changed
- */
-function escapeDollarSignIfNeeded(text: string, offset: number): string | undefined {
-	const testText = text.slice(offset - 2, offset);
-
-	if (/\$$/.test(testText)) {
-		// Is a tabstop
-		return text.slice(0, offset - 1) + '\\' + text.slice(offset - 1);
-	} else if (/\$\{$/.test(testText)) {
-		// Is a placeholder
-		return text.slice(0, offset - 2) + '\\' + text.slice(offset - 2);
-	}
-}
-
-/**
  * Escapes all instances of placholders and tabstops
  */
 function escapeAllSnippetInsertionFeatures(str: string): string {
@@ -99,6 +77,5 @@ export {
 	snippetBodyAsString,
 	unTabMultiline,
 	capitalize,
-	escapeDollarSignIfNeeded,
 	escapeAllSnippetInsertionFeatures,
 };

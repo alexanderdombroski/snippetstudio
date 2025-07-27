@@ -4,7 +4,7 @@ import path from 'path';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getExtensionSnippetLangs } from '../snippets/extension';
-import { chooseLocalGlobal } from '../utils/user';
+import { chooseLocalGlobal, getFileName } from '../utils/user';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getLinkedSnippets } from '../snippets/links';
 
@@ -73,7 +73,6 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand(
 			'snippetstudio.extension.extract',
 			async (item: TreePathItem) => {
-				const { getFileName } = await import('../snippets/newSnippetFile.js');
 				const basename = (await getFileName()) + '.code-snippets';
 				if (basename === 'undefined.code-snippets') {
 					return;

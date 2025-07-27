@@ -7,6 +7,7 @@ import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
+import { getFileName, getSavePath } from '../utils/user';
 
 async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {
 	try {
@@ -23,25 +24,6 @@ async function createFile(filepath: string, showInformationMessage: boolean = tr
 			vscode.window.showErrorMessage(`Error checking/creating file: ${error}`);
 		}
 	}
-}
-
-async function getFileName(
-	prompt: string = 'type a filename',
-	silent?: boolean
-): Promise<string | undefined> {
-	let name = await vscode.window.showInputBox({ prompt });
-	if (name === undefined) {
-		!silent && vscode.window.showInformationMessage('Skipped file creation.');
-		return;
-	}
-	name = name?.trim();
-	const regex = /^[a-zA-Z0-9_-]+$/;
-	if (name && !regex.test(name)) {
-		!silent &&
-			vscode.window.showErrorMessage('Only use characters, hyphens, numbers and/or underscores.');
-		return;
-	}
-	return name;
 }
 
 async function createLocalSnippetsFile(): Promise<void> {
@@ -82,7 +64,7 @@ async function createGlobalSnippetsFile(): Promise<void> {
 
 async function exportSnippets() {
 	// Select Save Paths
-	const savePath = await getFileName();
+	const savePath = await getSavePath();
 	if (savePath === undefined) {
 		return;
 	}
@@ -193,5 +175,4 @@ export {
 	createFile,
 	exportSnippets,
 	mergeSnippetFiles,
-	getFileName,
 };

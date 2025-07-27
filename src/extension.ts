@@ -1,25 +1,18 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import {
-	SnippetViewProvider,
-	LocationTreeProvider,
-	SnippetEditorProvider,
-	SnippetDataWebViewProvider,
-	createStatusBar,
-} from './ui';
+
+import SnippetViewProvider from './ui/snippetView';
+import LocationTreeProvider from './ui/locationView';
 
 import {
 	initSnippetCommands,
-	initSnippetEditorCommands,
-	initSnippetFeatureCommands,
 	initSnippetFileCommands,
 	initSnippetGistsCommands,
 	initSnippetUICommands,
 	initSnippetLinkCommands,
 } from './commands';
 
-import SnippetDataManager from './snippets/snippetDataManager';
 import { initGlobalStore } from './utils/context';
 
 // This method is called when your extension is activated
@@ -29,6 +22,15 @@ export async function activate(context: vscode.ExtensionContext) {
 		return;
 	}
 
+	// Close old tabs on startup
+	vscode.window.tabGroups.all.forEach((group) =>
+		group.tabs.forEach((tab) => {
+			if (tab.input instanceof vscode.TabInputText && tab.input.uri.scheme === 'snippetstudio') {
+				vscode.window.tabGroups.close(tab);
+			}
+		})
+	);
+
 	// Create and register the Tree View
 	const treeDataProvider = new SnippetViewProvider();
 	vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
@@ -37,32 +39,21 @@ export async function activate(context: vscode.ExtensionContext) {
 		treeDataProvider: locationTreeProvider,
 	});
 
-	// Create web view
-	const snippetDataManager = new SnippetDataManager();
-	const snippetDataView = new SnippetDataWebViewProvider(context, snippetDataManager);
-	vscode.window.registerWebviewViewProvider('snippet-data', snippetDataView);
-	// Startup bufferEditorManager
-	const snippetEditorProvider = new SnippetEditorProvider('snippetstudio', snippetDataManager);
-	context.subscriptions.push(
-		vscode.workspace.registerFileSystemProvider('snippetstudio', snippetEditorProvider, {
-			isReadonly: false,
-		})
-	);
-
 	// Register Commands
 	initSnippetUICommands(context, {
 		'snippetstudio.refresh': treeDataProvider.debounceRefresh.bind(treeDataProvider),
 		'snippetstudio.refreshLocations':
 			locationTreeProvider.debounceRefresh.bind(locationTreeProvider),
 	});
-	initSnippetCommands(context, snippetEditorProvider);
+	initSnippetCommands(context);
 	initSnippetFileCommands(context);
-	initSnippetEditorCommands(context, snippetEditorProvider);
-	initSnippetFeatureCommands(context, snippetEditorProvider);
 	initSnippetGistsCommands(context);
 	initSnippetLinkCommands(context);
 
-	createStatusBar(context);
+	if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
+		const { createStatusBar } = await import('./ui/statusBar.js');
+		createStatusBar(context);
+	}
 
 	console.log('The extension "snippetstudio" is now active!');
 }

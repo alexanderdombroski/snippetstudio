@@ -5,14 +5,7 @@ import { capitalize } from '../utils/string';
 
 let snippetIndicator: vscode.StatusBarItem;
 
-export default function createStatusBar(context: vscode.ExtensionContext) {
-	if (
-		vscode.workspace.getConfiguration('snippetstudio').get<boolean>('statusBar.showItem') ===
-		false
-	) {
-		return;
-	}
-
+export function createStatusBar(context: vscode.ExtensionContext) {
 	createSnippetIndicator();
 
 	vscode.workspace.onDidChangeConfiguration((event) => {
