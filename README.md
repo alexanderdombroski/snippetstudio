@@ -4,8 +4,6 @@ This [vscode extension](https://marketplace.visualstudio.com/items/AlexDombroski
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio) [![Version](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio.svg)](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio)
 
-
-
 Read [installation and getting started](https://alexanderdombroski.github.io/snippetstudio/docs/getting-started/installation) for more info
 
 ## Features
@@ -44,7 +42,17 @@ Share snippets easily by selecting which snippets you need and [transferring](ht
 
 Import and export snippets using [GitHub gists](https://alexanderdombroski.github.io/snippetstudio/docs/github-integration/gists)
 
-Use your global snippets on all your computers by [syncing to a GitHub](https://alexanderdombroski.github.io/snippetstudio/docs/category/global-snippet-repos) repo
+VS Code already has [powerful syncing](https://code.visualstudio.com/docs/configure/settings-sync) that provides a way to backup your snippets.
+
+### Profile Support
+
+Snippets added to the active profile, or choose files to sync across all profiles
+
+Import snippets from your friends profile backups, or profile templates
+
+### Extension Snippets
+
+Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and modify them to be more helpful
 
 ## Requirements
 

@@ -16,15 +16,19 @@
 
 ### Added
 
-- **Web Support** (v2.0)
-    - Use vscode.workspace.fs to create project snippets
-    - Global Snippet Commands not visible to web users
-    - Modify CI/CD to package as separate extension, or fork the repo?
+- **Web Support** (v3.0)
+  - Use vscode.workspace.fs to create project snippets
+  - Global Snippet Commands not visible to web users
+  - Modify CI/CD to package as separate extension, or fork repo?
 - **DOCS**
-    - Update homepage
-    - Add searchbar
+  - Update homepage
+  - Add searchbar
+  - Add 2.0.0 pages
+- **SnippetManagement** (2.1)
+  - Rename .code-snippets Files
+  - Move Snippet Files
 
-## [2.0.0] - DATE
+## [2.0.0] - 2025-07-26
 
 ### Added
 
@@ -254,17 +258,17 @@
 ### Added
 
 - **Snippet Management:**
-    - Create new snippets
-    - View snippets in the snippets tree view
-    - Update existing snippets
-    - Delete snippets
+  - Create new snippets
+  - View snippets in the snippets tree view
+  - Update existing snippets
+  - Delete snippets
 - **Snippet File Management:**
-    - Create, View, and Delete Snippet Files
+  - Create, View, and Delete Snippet Files
 - **User Interface:**
-    - Snippet Editor Webview
-    - Snippets Treeview
-    - Locations Manager Treeview
-    - Status Bar Snippet Indicator
+  - Snippet Editor Webview
+  - Snippets Treeview
+  - Locations Manager Treeview
+  - Status Bar Snippet Indicator
 - **Snippet Editor Functionality:**
-    - Buffer System for editing snippet content
-    - Load content into buffer when creating a snippet from selection
+  - Buffer System for editing snippet content
+  - Load content into buffer when creating a snippet from selection
