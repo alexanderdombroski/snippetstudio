@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'path';
@@ -8,7 +9,7 @@ import { getCurrentLanguage } from '../utils/language';
 async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
 	const snippets = await readSnippetFile(filepath);
 	if (snippets === undefined) {
-		console.error(
+		vscode.window.showWarningMessage(
 			`Read Operation failed. Write operation of ${titleKey} to ${path.basename(filepath)} canceled.`
 		);
 		return;

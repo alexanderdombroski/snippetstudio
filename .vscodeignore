@@ -24,3 +24,4 @@ lint-staged.config.cjs
 GEMINI.md
 docs/
 scripts/
+profile/
