@@ -28,6 +28,13 @@
   - Rename .code-snippets Files
   - Move Snippet Files
 
+## [2.0.1] - 2025-07-27
+
+### Fixed
+
+- Fix crash that occured when `.vscode` folder doesn't exist in workspace
+- Removed ability to link snippets if you only have one profile
+
 ## [2.0.0] - 2025-07-26
 
 ### Added
