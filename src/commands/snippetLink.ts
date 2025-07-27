@@ -15,10 +15,6 @@ async function initSnippetLinkCommands(context: vscode.ExtensionContext) {
 				await copyToOtherProfiles(item.path);
 				await addFileLink(item.label);
 				refreshAll();
-			} else {
-				vscode.window.showWarningMessage(
-					"It's not safe to watch for changes across all profiles when another file of it's same name exists in another profile."
-				);
 			}
 		}),
 		vscode.commands.registerCommand(
@@ -38,6 +34,10 @@ async function initSnippetLinkCommands(context: vscode.ExtensionContext) {
 
 async function canBeLinked(filename: string): Promise<boolean> {
 	const snippetDirs = await getOtherProfileSnippetFolders();
+	if (snippetDirs.length === 0) {
+		vscode.window.showInformationMessage('You have no other vscode profiles.');
+		return false;
+	}
 
 	const existenceChecks = await Promise.all(
 		snippetDirs.map(async (dir) => {
@@ -52,7 +52,13 @@ async function canBeLinked(filename: string): Promise<boolean> {
 	);
 
 	// Return true only if file does NOT exist in any of the snippetDirs
-	return existenceChecks.every((exists) => !exists);
+	const safe = existenceChecks.every((exists) => !exists);
+	if (!safe) {
+		vscode.window.showWarningMessage(
+			"It's not safe to watch for changes across all profiles when another file of it's same name exists in another profile."
+		);
+	}
+	return safe;
 }
 
 async function copyToOtherProfiles(filepath: string) {
