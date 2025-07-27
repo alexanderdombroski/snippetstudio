@@ -68,8 +68,11 @@ async function getGlobalLangSnippetFiles(
  * @param folderPath The path to the workspace folder.
  */
 export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
-	const files = await fs.promises.readdir(folderPath);
-	return files.filter((f) => f.endsWith('.code-snippets')).map((f) => path.join(folderPath, f));
+	if (fs.existsSync(folderPath)) {
+		const files = await fs.promises.readdir(folderPath);
+		return files.filter((f) => f.endsWith('.code-snippets')).map((f) => path.join(folderPath, f));
+	}
+	return [];
 }
 
 /**
