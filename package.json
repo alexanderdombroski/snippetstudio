@@ -811,7 +811,6 @@
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.1",
 		"@octokit/core": "^7.0.3",
-		"glob": "^11.0.3",
 		"strip-json-comments": "^5.0.2"
 	},
 	"types": "src/types/index.d.ts"

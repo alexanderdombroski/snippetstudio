@@ -1,6 +1,5 @@
-import * as path from 'path';
+import path from 'path';
 import fs from 'fs';
-import { glob } from 'glob';
 import { getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds } from '../utils/language';
 import {
@@ -69,7 +68,8 @@ async function getGlobalLangSnippetFiles(
  * @param folderPath The path to the workspace folder.
  */
 export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
-	return await glob(path.join(folderPath, '*.code-snippets'));
+	const files = await fs.promises.readdir(folderPath);
+	return files.filter((f) => f.endsWith('.code-snippets')).map((f) => path.join(folderPath, f));
 }
 
 /**
