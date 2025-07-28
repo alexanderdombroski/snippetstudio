@@ -5,6 +5,8 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.0](#201---2025-07-27) - Extension and Profile Snippets
+- [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
 - [1.5](#151---2025-07-10) - Global Snippet Sync
 - [1.4](#140---2025-05-12) - Insertion Feature Upgrades
 - [1.3](#131---2025-05-03) - Github Gist Integration
