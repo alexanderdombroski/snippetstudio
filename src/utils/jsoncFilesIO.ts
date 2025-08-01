@@ -83,6 +83,7 @@ export async function writeSnippetFile(
 			await Promise.all(
 				links.map(async (dir) => {
 					const fp = path.join(dir, basename);
+					await fs.mkdir(path.dirname(fp), { recursive: true });
 					await fs.writeFile(fp, jsonString);
 				})
 			);

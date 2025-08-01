@@ -2,10 +2,10 @@
   "Changelog Release": {
     "prefix": "changelog",
     "body": [
-      "## [${1:VERSION_NUMBER}] - DATE",
+      "## [${1:VERSION_NUMBER}] - ${2:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE}",
       "",
       "### Added",
-      "",
+      "$0",
       "### Fixed",
       "",
       "### Changed",

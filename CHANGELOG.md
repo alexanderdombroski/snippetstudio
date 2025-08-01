@@ -30,6 +30,13 @@
 - **SnippetManagement** (2.2)
   - Rename .code-snippets Files
 
+## [2.1.1] - DATE
+
+### Fixed
+
+- Saving Snippets won't crash if parent folder doesn't exist
+
+
 ## [2.1.0] - 2025-07-31
 
 ### Added
