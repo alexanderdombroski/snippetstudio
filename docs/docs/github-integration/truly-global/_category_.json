@@ -1,7 +1,7 @@
 {
-  "label": "Global Snippet Repos",
+  "label": "Global Snippet Repos (v1 only)",
   "position": 3,
-  "collapsible": false,
+  "collapsible": true,
   "link": {
     "type": "generated-index",
     "description": "For global snippets to TRULY be global, you should be able to use them on multiple computers. Some may also choose to collaborate with a friend to create a shared collection of global snippets."
