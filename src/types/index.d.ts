@@ -5,6 +5,7 @@ export type {
 	ProfileInfo,
 	ProfileSnippetsMap,
 	ProfileAssociations,
+	SnippetLinks,
 } from './profileTypes';
 export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData } from './snippetTypes';
 export type {

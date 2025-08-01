@@ -8,14 +8,28 @@ import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
+import { isSnippetLinked } from './links';
 
-async function createFile(filepath: string, showInformationMessage: boolean = true): Promise<void> {
+/**
+ * Creates an empty JSON file with {} and returns string alertStatus
+ */
+async function createFile(
+	filepath: string,
+	showInformationMessage: boolean = true,
+	notSnippetFile?: boolean
+): Promise<'skipped' | undefined> {
 	try {
 		await fs.promises.access(filepath); // Check if the file exists
 		if (showInformationMessage) {
 			vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
 		}
 	} catch (error) {
+		if (!notSnippetFile && (await isSnippetLinked(filepath, true))) {
+			vscode.window.showWarningMessage(
+				'Skipped File Creation. A linked snippet file of a matching filename exists already in some profile.'
+			);
+			return 'skipped';
+		}
 		if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
 			// File doesn't exist, create it
 			await fs.promises.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists

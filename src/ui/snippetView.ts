@@ -7,12 +7,13 @@ import {
 	extensionSnippetsTreeItems,
 } from './templates';
 import { getCurrentLanguage } from '../utils/language';
-import { getActiveProfileSnippetsDir } from '../utils/profile';
+import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, isParentDir, shortenFullPath } from '../utils/fsInfo';
 import path from 'path';
 import { findAllExtensionSnipppetsByLang } from '../snippets/extension';
 import { getLinkedSnippets } from '../snippets/links';
 import { getUserPath } from '../utils/context';
+import type { SnippetLinks } from '../types';
 
 type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
 
@@ -24,7 +25,8 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	private langId: string | undefined;
 	private debounceTimer: NodeJS.Timeout | undefined;
 	private _activePaths: string[] = [];
-	private _links: string[] = [];
+	private _activeProfileLocation: string = '';
+	private _links: SnippetLinks = {};
 	private _userPath = getUserPath();
 
 	// ---------- Constructor ---------- //
@@ -52,6 +54,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	}
 	private async refresh() {
 		this._links = await getLinkedSnippets();
+		this._activeProfileLocation = (await getActiveProfile()).location;
 		this.snippetTreeItems = await loadSnippets();
 		this.activeDropdowns = this.snippetTreeItems?.map((group) => group[0])?.filter(this.isActive);
 		if (this.langId) {
@@ -87,7 +90,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 			if (element.contextValue === 'disabled-dropdown') {
 				return this.snippetTreeItems
 					?.map((group) => group[0])
-					.filter((fp) => !this.isActive(fp) && !this._links.includes(fp.label as string));
+					.filter((fp) => !this.isActive(fp) && this.isNotLinked(fp));
 			}
 
 			if (element.label === 'Extension Snippets') {
@@ -129,7 +132,10 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	private isActive = (fileItem: vscode.TreeItem) =>
 		this._activePaths.includes(path.dirname(String(fileItem.description)));
 	private isNotLinked = (fileItem: vscode.TreeItem) =>
-		!this._links.includes(fileItem.label as string);
+		!(
+			(fileItem.label as string) in this._links &&
+			this._links[fileItem.label as string].includes(this._activeProfileLocation)
+		);
 	private isNotLocal = (fileItem: vscode.TreeItem) =>
 		!isParentDir(this._userPath, String(fileItem.description));
 

@@ -3,8 +3,7 @@ import * as vscode from 'vscode';
 import path from 'path';
 import type { GenericJson, VSCodeSnippets } from '../types';
 import { flattenScopedExtensionSnippets } from '../snippets/extension';
-import { fileIsLinked } from '../snippets/links';
-import { getAllGlobalSnippetDirs } from './profile';
+import { getLinkLocations } from '../snippets/links';
 
 export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
@@ -78,12 +77,12 @@ export async function writeSnippetFile(
 ) {
 	try {
 		const jsonString = JSON.stringify(jsonObject, null, 2);
-		if (await fileIsLinked(filepath)) {
-			const dirs = await getAllGlobalSnippetDirs();
-			const base = path.basename(filepath);
+		const links = await getLinkLocations(filepath);
+		if (links.length) {
+			const basename = path.basename(filepath);
 			await Promise.all(
-				dirs.map(async (dir) => {
-					const fp = path.join(dir, base);
+				links.map(async (dir) => {
+					const fp = path.join(dir, basename);
 					await fs.writeFile(fp, jsonString);
 				})
 			);

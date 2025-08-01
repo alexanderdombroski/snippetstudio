@@ -4,7 +4,7 @@ import { getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds } from '../utils/language';
 import {
 	getActiveProfileSnippetsDir,
-	getPathFromProfile,
+	getPathFromProfileLocation,
 	getAllGlobalSnippetDirs,
 	getProfiles,
 	getActiveProfile,
@@ -99,7 +99,7 @@ async function locateAllSnippetFiles(): Promise<[string[], string[], ProfileSnip
 		const tasks = profiles
 			.filter((p) => p.location !== active.location)
 			.map(async (p): Promise<[string, string[]]> => {
-				const path = getPathFromProfile(p);
+				const path = getPathFromProfileLocation(p.location);
 				return [p.location, await findAllGlobalSnippetFiles(path)];
 			});
 		const paths: [string, string[]][] = await Promise.all(tasks);

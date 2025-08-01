@@ -70,16 +70,34 @@ async function getGlobalLangFile(langId: string): Promise<string> {
  */
 async function getAllGlobalSnippetDirs(): Promise<string[]> {
 	const profiles = await getProfiles();
-	return profiles.map((p) => getPathFromProfile(p));
+	return profiles.map((p) => getPathFromProfileLocation(p.location));
 }
 
 /**
  * Returns the snippets path for the given profile
  */
-function getPathFromProfile(profile: ProfileInfo): string {
-	return profile.location === DEFAULT_PROFILE_ID
+function getPathFromProfileLocation(location: string): string {
+	return location === DEFAULT_PROFILE_ID
 		? path.join(getUserPath(), 'snippets')
-		: path.join(getUserPath(), 'profiles', profile.location, 'snippets');
+		: path.join(getUserPath(), 'profiles', location, 'snippets');
+}
+
+/**
+ * Extracts the profile id from the snippets path
+ */
+function getProfileIdFromPath(filePath: string): string {
+	const parts = filePath.split(path.sep);
+
+	const profilesIndex = parts.indexOf('profiles');
+	if (profilesIndex !== -1 && parts.length > profilesIndex + 1) {
+		return parts[profilesIndex + 1]; // returns profile hash
+	}
+
+	if (parts.includes('User')) {
+		return '__default__profile__';
+	}
+
+	throw new Error(`Invalid snippet path: ${filePath}`);
 }
 
 export {
@@ -88,6 +106,7 @@ export {
 	getGlobalLangFile,
 	getKeybindingsFilePath,
 	getActiveProfileSnippetsDir,
-	getPathFromProfile,
+	getPathFromProfileLocation,
+	getProfileIdFromPath,
 	getAllGlobalSnippetDirs,
 };

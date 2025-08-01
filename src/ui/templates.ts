@@ -10,7 +10,7 @@ import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import {
 	getActiveProfile,
 	getActiveProfileSnippetsDir,
-	getPathFromProfile,
+	getPathFromProfileLocation,
 	getProfiles,
 } from '../utils/profile';
 
@@ -251,7 +251,7 @@ export async function snippetLocationDropdownTemplates(
 		const item = new SnippetCategoryTreeItem(
 			`${profile.name}`,
 			getCollapsedState(profile_collapsed_map[profile.location]),
-			getPathFromProfile(profile),
+			getPathFromProfileLocation(profile.location),
 			profile.location
 		);
 		item.iconPath = new vscode.ThemeIcon(profile.icon ?? 'account');

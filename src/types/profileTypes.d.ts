@@ -22,4 +22,11 @@ type ProfileSnippetsMap = {
 	[location: string]: string[];
 };
 
-export type { GlobalStorage, ProfileInfo, ProfileSnippetsMap, ProfileAssociations };
+/**
+ * Linked snippet file basenames and which profile locations they're located in
+ */
+type SnippetLinks = {
+	[file: string]: string[];
+};
+
+export type { GlobalStorage, ProfileInfo, ProfileSnippetsMap, ProfileAssociations, SnippetLinks };

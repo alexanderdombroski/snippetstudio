@@ -1,16 +1,21 @@
 import path from 'path';
 import { getUserPath } from '../utils/context';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
-import type { JSONObject } from '../types';
-import { getProfiles } from '../utils/profile';
+import type { JSONObject, SnippetLinks } from '../types';
+import {
+	getActiveProfile,
+	getPathFromProfileLocation,
+	getProfileIdFromPath,
+	getProfiles,
+} from '../utils/profile';
 import { isParentDir } from '../utils/fsInfo';
 
 /**
  * Updates all settings.json files to add the target filename
  */
-export async function addFileLink(filename: string) {
+export async function addFileLink(filename: string, profileLocations: string[]) {
 	const links = await getLinkedSnippets();
-	links.push(filename);
+	links[filename] = profileLocations;
 
 	await updateAllSettings(links);
 }
@@ -20,21 +25,30 @@ export async function addFileLink(filename: string) {
  */
 export async function removeFileLink(filename: string) {
 	const links = await getLinkedSnippets();
-	const updated = links.filter((link) => link !== filename);
+	delete links[filename];
 
-	await updateAllSettings(updated);
+	await updateAllSettings(links);
 }
 
 /**
  * Returns the linked snippet file basenames
  */
-export async function getLinkedSnippets(): Promise<string[]> {
+export async function getLinkedSnippets(): Promise<SnippetLinks> {
 	const settingsPath = path.join(getUserPath(), 'settings.json');
 	const settings = (await readJsonC(settingsPath)) as JSONObject;
-	return (settings['snippetstudio.file.linkedFiles'] as string[]) ?? [];
+	let links = settings['snippetstudio.file.linkedFiles'] as string[] | SnippetLinks | undefined;
+	if (Array.isArray(links)) {
+		// TODO - remove in 3 months (for backwards compatibility)
+		const locations = (await getProfiles()).map(({ location }) => location);
+		links = Object.fromEntries(links.map((filename) => [filename, locations]));
+	}
+	return links ?? {};
 }
 
-async function updateAllSettings(newLinksValue: string[]) {
+/**
+ * Create or Read settings file, and write snippet links to settings
+ */
+async function updateAllSettings(newLinksValue: SnippetLinks) {
 	const { createFile } = await import('../snippets/newSnippetFile.js');
 	const profiles = await getProfiles();
 	const paths = profiles.map((p) => {
@@ -45,7 +59,7 @@ async function updateAllSettings(newLinksValue: string[]) {
 
 	await Promise.all(
 		paths.map(async (settingFile) => {
-			await createFile(settingFile, false);
+			await createFile(settingFile, false, true);
 			const settings = (await readJsonC(settingFile)) as JSONObject;
 			settings['snippetstudio.file.linkedFiles'] = newLinksValue;
 			await writeJson(settingFile, settings);
@@ -53,10 +67,35 @@ async function updateAllSettings(newLinksValue: string[]) {
 	);
 }
 
-export async function fileIsLinked(filepath: string): Promise<boolean> {
-	if (!isParentDir(getUserPath(), filepath)) {
-		return false;
+/**
+ * Gets the link paths for a given filepath
+ */
+export async function getLinkLocations(filepath: string): Promise<string[]> {
+	if (!isUserSnippet(filepath)) {
+		return [];
 	}
-	const links = await getLinkedSnippets();
-	return links.includes(path.basename(filepath));
+	const linkedSnippets = await getLinkedSnippets();
+	const links = linkedSnippets[path.basename(filepath)];
+	if (links?.includes(getProfileIdFromPath(filepath))) {
+		return links.map((location) => getPathFromProfileLocation(location));
+	}
+	return [];
 }
+
+/**
+ * returns trues if a snippet file is linked
+ * @param strict true if linked to any profile
+ */
+export async function isSnippetLinked(filepath: string, strict?: boolean): Promise<boolean> {
+	if (!isUserSnippet(filepath)) {
+		return false; // Only user snippets can be linked
+	}
+	const linkedSnippets = await getLinkedSnippets();
+	const basename = path.basename(filepath);
+	return (
+		basename in linkedSnippets &&
+		(strict || linkedSnippets[basename].includes((await getActiveProfile()).location))
+	);
+}
+
+const isUserSnippet = (filepath: string) => isParentDir(getUserPath(), filepath);

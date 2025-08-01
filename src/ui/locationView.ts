@@ -9,6 +9,7 @@ import {
 import { findAllExtensionSnippetsFiles } from '../snippets/extension';
 import { getLinkedSnippets } from '../snippets/links';
 import path from 'path';
+import { getActiveProfile } from '../utils/profile';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
@@ -25,13 +26,18 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 
 	// ---------- Refresh Methods ---------- //
 	private async refresh() {
-		const links = await getLinkedSnippets();
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
 		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
-		this.globalTreeItems = globals.map((p) =>
+		const links = await getLinkedSnippets();
+		const activeProfileLocation = (await getActiveProfile()).location;
+		const snippetIsLinked = (fp: string, location: string) => {
+			const base = path.basename(fp);
+			return base in links && links[base].includes(location);
+		};
+		this.globalTreeItems = globals.map((fp) =>
 			snippetLocationTemplate(
-				p,
-				links.includes(path.basename(p))
+				fp,
+				snippetIsLinked(fp, activeProfileLocation)
 					? 'snippet-filepath global linked'
 					: 'snippet-filepath global'
 			)
@@ -43,7 +49,9 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 					paths.map((fp) =>
 						snippetLocationTemplate(
 							fp,
-							links.includes(path.basename(fp)) ? 'snippet-filepath linked' : 'snippet-filepath'
+							snippetIsLinked(fp, location)
+								? 'snippet-filepath profile linked'
+								: 'snippet-filepath profile'
 						)
 					),
 				];

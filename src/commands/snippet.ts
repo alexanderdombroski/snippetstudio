@@ -241,6 +241,13 @@ async function editSnippet(
 	body: string = ''
 ) {
 	try {
+		if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
+			const { createFile } = await import('../snippets/newSnippetFile.js');
+			const status = await createFile(snippetData.filename, false);
+			if (status === 'skipped') {
+				return;
+			}
+		}
 		const { initEditing } = await import('../editor/initEditing.js');
 		const provider = await initEditing(context);
 

@@ -31,13 +31,6 @@ function initSnippetEditorCommands(
 				const capitalize = vscode.workspace
 					.getConfiguration('snippetstudio')
 					.get<boolean>('autoCapitalizeSnippetName');
-
-				if (
-					vscode.workspace.getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')
-				) {
-					const { createFile } = await import('../snippets/newSnippetFile.js');
-					await createFile(data.filename, false);
-				}
 				const { writeSnippet } = await import('../snippets/updateSnippets.js');
 				writeSnippet(
 					data.filename,

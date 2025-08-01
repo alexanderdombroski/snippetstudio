@@ -251,13 +251,8 @@
 				"when": false
 			},
 			{
-				"command": "snippetstudio.file.link.add",
-				"title": "Copy changes across all profiles",
-				"when": false
-			},
-			{
-				"command": "snippetstudio.file.link.remove",
-				"title": "Stop syncing file for all profiles",
+				"command": "snippetstudio.file.link",
+				"title": "Choose profiles to use file",
 				"when": false
 			},
 			{
@@ -535,13 +530,8 @@
 					"when": "viewItem =~ /global-dropdown/"
 				},
 				{
-					"command": "snippetstudio.file.link.add",
-					"when": "(viewItem =~ /snippet-filepath/) && (viewItem =~ /global/) && !(viewItem =~ /linked/)",
-					"group": "navigation"
-				},
-				{
-					"command": "snippetstudio.file.link.remove",
-					"when": "viewItem =~ /linked/",
+					"command": "snippetstudio.file.link",
+					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)))",
 					"group": "navigation"
 				},
 				{
@@ -702,14 +692,19 @@
 					"markdownDescription": "When importing files from a gist, only include `.code-snippet` files."
 				},
 				"snippetstudio.file.linkedFiles": {
-					"type": "array",
-					"default": [],
-					"markdownDescription": "Snippet files that are updated for every profile to use. **Change only through commands**",
-					"readOnly": true,
-					"items": {
-						"type": "string",
-						"pattern": ".*\\.(json|code-snippets)$"
-					}
+					"type": "object",
+					"default": {},
+					"markdownDescription": "Maps snippet files to the profiles they are linked with. **Change only through commands**",
+					"patternProperties": {
+						".*\\.(json|code-snippets)$": {
+							"type": "array",
+							"items": {
+								"type": "string",
+								"pattern": "^-?[a-z0-9]+$|^__default__profile__$"
+							}
+						}
+					},
+					"additionalProperties": false
 				}
 			},
 			"order": 0
