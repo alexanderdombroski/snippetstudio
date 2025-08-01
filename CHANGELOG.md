@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.1](#210---2025-07-31) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
 - [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
 - [1.5](#151---2025-07-10) - Global Snippet Sync
@@ -26,9 +27,25 @@
   - Update homepage
   - Add searchbar
   - Add 2.0.0 pages
-- **SnippetManagement** (2.1)
+- **SnippetManagement** (2.2)
   - Rename .code-snippets Files
-  - Move Snippet Files
+
+## [2.1.0] - 2025-07-31
+
+### Added
+
+- `file.link.add` and `file.link.merge` are combined into one new command: `file.link`
+- Safety Precautions to not have a mix of linked and unlinked user snippets of the same name
+- Snippets can now be linked from Profile dropdowns
+
+### Fixed
+
+- Prevent user from creating snippets if their settings would cause it not to be saved
+
+### Changed
+
+- You can choose which profiles you link snippet files across
+- Format of `linkedFiles` setting of last release is changed. It auto adjusts for backwards compatibility (not forwards compatibility)
 
 ## [2.0.1] - 2025-07-27
 
