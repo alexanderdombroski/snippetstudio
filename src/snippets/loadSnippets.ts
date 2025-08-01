@@ -4,26 +4,33 @@ import { locateSnippetFiles } from './locateSnippets';
 import * as vscode from 'vscode';
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates';
 import { getCurrentLanguage } from '../utils/language';
+import { getLinkedSnippets } from './links';
+import { getProfileIdFromPath } from '../utils/profile';
+import path from 'path';
 
 export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.TreeItem[]][]> {
 	const snippetFiles: string[] = await locateSnippetFiles();
 	const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(snippetFiles);
 	const langId = getCurrentLanguage() ?? 'None Selected';
+	const linkedSnippets = await getLinkedSnippets();
 	const treeItems: [vscode.TreeItem, vscode.TreeItem[]][] = snippetGroups.map(
 		([filePath, group]) => {
 			const snippets = Object.entries(group)
 				.filter(
 					([_, v]) =>
-						v.scope === undefined ||
-						v.scope === langId ||
-						v.scope.split(',').includes(langId)
+						v.scope === undefined || v.scope === langId || v.scope.split(',').includes(langId)
 				)
 				.map(([k, v]) => createTreeItemFromSnippet(k, v, filePath));
+			const basename = path.basename(filePath);
 			const dropdown = createTreeItemFromFilePath(
 				filePath,
 				snippets.length === 0
 					? vscode.TreeItemCollapsibleState.None
-					: vscode.TreeItemCollapsibleState.Collapsed
+					: vscode.TreeItemCollapsibleState.Collapsed,
+				basename in linkedSnippets &&
+					linkedSnippets[basename].includes(getProfileIdFromPath(filePath))
+					? 'snippet-filepath linked'
+					: 'snippet-filepath'
 			);
 			return [dropdown, snippets];
 		}

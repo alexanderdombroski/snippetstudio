@@ -90,7 +90,17 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 			if (element.contextValue === 'disabled-dropdown') {
 				return this.snippetTreeItems
 					?.map((group) => group[0])
-					.filter((fp) => !this.isActive(fp) && this.isNotLinked(fp));
+					.filter((fp) => !this.isActive(fp) && this.isNotLinkedActive(fp))
+					.reduce((acc: vscode.TreeItem[], curr) => {
+						if (
+							curr.contextValue?.includes('linked') &&
+							acc.some((item) => item.label === curr.label && item.contextValue?.includes('linked'))
+						) {
+							return acc;
+						}
+						acc.push(curr);
+						return acc;
+					}, []);
 			}
 
 			if (element.label === 'Extension Snippets') {
@@ -123,15 +133,15 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
 		this.snippetTreeItems
 			?.map((group) => group[0])
-			?.filter((d) => this.isNotLinked(d) && this.isNotLocal(d) && !this.isActive(d))?.length &&
-			rootItems.push(unloadedDropdownTemplate());
+			?.filter((d) => this.isNotLinkedActive(d) && this.isNotLocal(d) && !this.isActive(d))
+			?.length && rootItems.push(unloadedDropdownTemplate());
 
 		return rootItems;
 	}
 
 	private isActive = (fileItem: vscode.TreeItem) =>
 		this._activePaths.includes(path.dirname(String(fileItem.description)));
-	private isNotLinked = (fileItem: vscode.TreeItem) =>
+	private isNotLinkedActive = (fileItem: vscode.TreeItem) =>
 		!(
 			(fileItem.label as string) in this._links &&
 			this._links[fileItem.label as string].includes(this._activeProfileLocation)
