@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [2.1](#210---2025-07-31) - Advanced Profile Linking
+- [2.1](#211---2025-08-01) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
 - [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
 - [1.5](#151---2025-07-10) - Global Snippet Sync
@@ -29,8 +29,9 @@
   - Add 2.0.0 pages
 - **SnippetManagement** (2.2)
   - Rename .code-snippets Files
+  - Simplified snippet view option
 
-## [2.1.1] - DATE
+## [2.1.1] - 2025-08-01
 
 ### Fixed
 
