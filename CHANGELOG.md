@@ -37,6 +37,7 @@
 - Saving Snippets won't crash if parent folder doesn't exist
 - Linked Snippets only appear once in other profile dropdown
 - Trash icon no longer shows to delete linked snippets in snippet view
+- Insertion features correctly highlighted at beginning of file
 
 ## [2.1.0] - 2025-07-31
 

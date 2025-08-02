@@ -197,11 +197,9 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		const decorations: vscode.DecorationOptions[] = [];
 
 		for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
-			if (match.index) {
-				const startPos = document.positionAt(match.index);
-				const endPos = document.positionAt(match.index + match[0].length);
-				decorations.push({ range: new vscode.Range(startPos, endPos) });
-			}
+			const startPos = document.positionAt(match.index);
+			const endPos = document.positionAt(match.index + match[0].length);
+			decorations.push({ range: new vscode.Range(startPos, endPos) });
 		}
 
 		editor.setDecorations(this._insertionFeatureDecorationType, decorations);
