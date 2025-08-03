@@ -5,7 +5,7 @@ import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import path from 'node:path';
 import type { SnippetData, VSCodeSnippet } from '../types';
 import { getConfirmation, getSelection, chooseSnippetFile } from '../utils/user';
-import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';
+import { snippetBodyAsString } from '../utils/string';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import { getGlobalLangFile, getKeybindingsFilePath } from '../utils/profile';
@@ -27,6 +27,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('snippetstudio.snippet.addGlobal', async () => {
 			const langId = getCurrentLanguage() ?? 'plaintext';
 
+			const { editSnippet } = await import('../ui/editor/startEditor.js');
 			await editSnippet(
 				context,
 				langId,
@@ -50,6 +51,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 					getCurrentLanguage() ??
 					'plaintext';
 
+				const { editSnippet } = await import('../ui/editor/startEditor.js');
 				await editSnippet(
 					context,
 					langId,
@@ -71,6 +73,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 				const langId = getCurrentLanguage() ?? 'plaintext';
 				const filename = await getGlobalLangFile(langId);
 
+				const { editSnippet } = await import('../ui/editor/startEditor.js');
 				await editSnippet(
 					context,
 					langId,
@@ -90,21 +93,15 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 			const langId = getCurrentLanguage() ?? 'plaintext';
 			const snippetTitle = item.description?.toString() ?? '';
 			const { readSnippet } = await import('../snippets/updateSnippets.js');
-			const snippet = await readSnippet(item.path, snippetTitle);
+			const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
 			const snippetData: SnippetData = {
+				...snippet,
 				filename: item.path,
 				snippetTitle,
-				prefix: item.label,
 			};
-			if (snippet) {
-				if (snippet.description) {
-					snippetData.description = snippet.description;
-				}
-				if (snippet.scope) {
-					snippetData.scope = snippet.scope;
-				}
-			}
+
 			const body = snippetBodyAsString(snippet?.body);
+			const { editSnippet } = await import('../ui/editor/startEditor.js');
 			await editSnippet(context, langId, snippetData, body);
 			vscode.commands.executeCommand('snippetstudio.refresh');
 		})
@@ -212,12 +209,11 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 
 				const snippetTitle = item.description?.toString() ?? '';
 				const { readSnippet } = await import('../snippets/updateSnippets.js');
-				const snippet = await readSnippet(item.path, snippetTitle, true);
+				const snippet = (await readSnippet(item.path, snippetTitle, true)) as VSCodeSnippet;
 				const snippetData: SnippetData = {
+					...snippet,
 					filename: savePath,
 					snippetTitle,
-					prefix: item.label,
-					description: snippet?.description ?? '',
 				};
 				if (savePath.includes('.code-snippets')) {
 					snippetData.scope = langs.join(',');
@@ -226,6 +222,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 				const active = String(getCurrentLanguage());
 				const langId = langs.includes(active) ? active : langs[0];
 
+				const { editSnippet } = await import('../ui/editor/startEditor.js');
 				await editSnippet(context, langId, snippetData, snippetBodyAsString(snippet?.body));
 				vscode.commands.executeCommand('snippetstudio.refresh');
 			}
@@ -233,67 +230,10 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 	);
 }
 
-async function editSnippet(
-	context: vscode.ExtensionContext,
-	langId: string,
-	snippetData: SnippetData,
-	body: string = ''
-) {
-	try {
-		if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
-			const { createFile } = await import('../snippets/newSnippetFile.js');
-			const status = await createFile(snippetData.filename, false);
-			if (status === 'skipped') {
-				return;
-			}
-		}
-		const { initEditing } = await import('../ui/editor/initEditing.js');
-		const provider = await initEditing(context);
-
-		if (
-			vscode.workspace
-				.getConfiguration('snippetstudio')
-				.get<boolean>('editor.autoEscapeDollarSignsFromSelection')
-		) {
-			body = escapeAllSnippetInsertionFeatures(body);
-		}
-		const uri = newSnippetEditorUri(
-			langId,
-			path.extname(snippetData.filename) === '.code-snippets'
-		);
-		await provider.mountSnippet(uri, snippetData, body);
-		const doc = await vscode.workspace.openTextDocument(uri);
-		vscode.languages.setTextDocumentLanguage(doc, langId);
-		await vscode.window.showTextDocument(doc, {
-			viewColumn: vscode.ViewColumn.Active,
-			preview: false,
-		});
-		vscode.workspace.onDidCloseTextDocument((document) => {
-			if (document.uri === doc.uri) {
-				provider.delete(doc.uri);
-			}
-		});
-		return doc;
-	} catch (error) {
-		vscode.window.showErrorMessage(`Error creating temp editor: ${error}`);
-		return undefined;
-	}
-}
-
 function defaultPrefix(): string {
 	return (
 		vscode.workspace.getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? ''
 	);
-}
-
-let editorCount = 0;
-
-function newSnippetEditorUri(langId: string = 'plaintext', showScope: boolean = true): vscode.Uri {
-	return vscode.Uri.from({
-		scheme: 'snippetstudio',
-		path: `/snippets/snippet-${++editorCount}`,
-		query: `type=${langId}&showScope=${showScope}`,
-	});
 }
 
 function getLangFromSnippetFilePath(filepath: string): string | undefined {

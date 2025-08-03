@@ -59,23 +59,4 @@ function countMinSpaces(lines: string[]): number {
 	return minCount;
 }
 
-/**
- * Escapes all instances of placholders and tabstops
- */
-function escapeAllSnippetInsertionFeatures(str: string): string {
-	// Escape tabstops
-	let escapedString = str.replace(/\$(\d+)/g, '\\$$$1');
-
-	// Escape choice/placeholder
-	escapedString = escapedString.replace(/\$\{(\d+)(\||:)/g, '\\$${$1$2');
-
-	return escapedString;
-}
-
-export {
-	titleCase,
-	snippetBodyAsString,
-	unTabMultiline,
-	capitalize,
-	escapeAllSnippetInsertionFeatures,
-};
+export { titleCase, snippetBodyAsString, unTabMultiline, capitalize };
