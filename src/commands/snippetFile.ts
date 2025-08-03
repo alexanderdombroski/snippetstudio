@@ -7,6 +7,7 @@ import { getExtensionSnippetLangs } from '../snippets/extension';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { isSnippetLinked } from '../snippets/links';
+import { exists } from '../utils/fsInfo';
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Open Snippets file
@@ -121,7 +122,7 @@ export function refreshAll() {
 async function deleteFile(filepath: string) {
 	const filename = path.basename(filepath);
 
-	if (!fs.existsSync(filepath)) {
+	if (!(await exists(filepath))) {
 		vscode.window.showErrorMessage(`${filename} File doesn't exits: ${filepath}`);
 		return;
 	}

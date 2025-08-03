@@ -1,7 +1,7 @@
-import fs from 'fs';
+import * as fs from 'fs/promises';
 import path from 'path';
 import * as vscode from 'vscode';
-import { getWorkspaceFolder } from '../utils/fsInfo';
+import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds, selectLanguage } from '../utils/language';
 import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
@@ -18,25 +18,17 @@ async function createFile(
 	showInformationMessage: boolean = true,
 	notSnippetFile?: boolean
 ): Promise<'skipped' | undefined> {
-	try {
-		await fs.promises.access(filepath); // Check if the file exists
-		if (showInformationMessage) {
-			vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
-		}
-	} catch (error) {
-		if (!notSnippetFile && (await isSnippetLinked(filepath, true))) {
-			vscode.window.showWarningMessage(
-				'Skipped File Creation. A linked snippet file of a matching filename exists already in some profile.'
-			);
-			return 'skipped';
-		}
-		if (error instanceof Error && (error as NodeJS.ErrnoException).code === 'ENOENT') {
-			// File doesn't exist, create it
-			await fs.promises.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
-			await fs.promises.writeFile(filepath, '{}'); // Create an empty JSON file
-		} else {
-			vscode.window.showErrorMessage(`Error checking/creating file: ${error}`);
-		}
+	if ((await exists(filepath)) && showInformationMessage) {
+		vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
+	} else if (!notSnippetFile && (await isSnippetLinked(filepath, true))) {
+		vscode.window.showWarningMessage(
+			'Skipped File Creation. A linked snippet file of a matching filename exists already in some profile.'
+		);
+		return 'skipped';
+	} else {
+		// File doesn't exist and should, create it
+		await fs.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
+		await fs.writeFile(filepath, '{}'); // Create an empty JSON file
 	}
 }
 

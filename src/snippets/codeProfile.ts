@@ -5,6 +5,7 @@ import * as path from 'path';
 import { processJsonWithComments } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
 import { chooseLocalGlobal } from '../utils/user';
+import { exists } from '../utils/fsInfo';
 
 export async function importCodeProfileSnippets(context: vscode.ExtensionContext) {
 	const items = [
@@ -66,7 +67,7 @@ async function saveCodeProfiles(
 
 	const tasks = Object.entries(secondParse.snippets).map(async ([name, fileContent]) => {
 		const idealPath = path.join(saveDir, name);
-		const savePath = fs.existsSync(idealPath)
+		const savePath = (await exists(idealPath))
 			? path.join(saveDir, crypto.randomUUID() + '.code-snippets')
 			: idealPath;
 		if (name.endsWith('.json')) {

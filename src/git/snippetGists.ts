@@ -6,6 +6,7 @@ import { getOctokitClient } from './octokit';
 import { mergeSnippetFiles } from '../snippets/newSnippetFile';
 import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/user';
 import { getGistId } from './utils';
+import { exists } from '../utils/fsInfo';
 
 async function createGist(context: vscode.ExtensionContext) {
 	const client = await getOctokitClient(context);
@@ -86,7 +87,7 @@ async function saveCodeSnippets(
 				(includeAll || file.filename.endsWith('.code-snippets'))
 			) {
 				let savePath: string | undefined = path.join(saveDir, file.filename);
-				if (fs.existsSync(savePath)) {
+				if (await exists(savePath)) {
 					savePath = await getSavePathFromDialog(file.filename, saveDir);
 				}
 

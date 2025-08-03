@@ -2,11 +2,11 @@ import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' 
 import { getOctokitClient } from './octokit';
 import * as vscode from 'vscode';
 import path from 'path';
-import fs from 'fs';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import type { PackageJsonSnippetsSection, VSCodeSnippets } from '../types';
 import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { flattenScopedExtensionSnippets } from '../snippets/extension';
+import { exists } from '../utils/fsInfo';
 
 export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 	const client = await getOctokitClient(context);
@@ -75,7 +75,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 			Object.values(snippets).forEach((s) => (s.scope = langId));
 			const fp = path.join(dirpath, basename);
 			await writeSnippetFile(
-				fs.existsSync(fp) ? path.join(dirpath, crypto.randomUUID() + '.code-snippets') : fp,
+				(await exists(fp)) ? path.join(dirpath, crypto.randomUUID() + '.code-snippets') : fp,
 				snippets
 			);
 		}

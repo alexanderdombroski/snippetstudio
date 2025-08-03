@@ -1,17 +1,13 @@
 import * as vscode from 'vscode';
 import path from 'path';
-import fs from 'fs';
+import * as fs from 'fs/promises';
 import { refreshAll } from './snippetFile';
 import type { TreePathItem } from '../ui/templates';
 import { addFileLink, getLinkLocations, removeFileLink } from '../snippets/links';
-import {
-	getActiveProfileSnippetsDir,
-	getAllGlobalSnippetDirs,
-	getPathFromProfileLocation,
-	getProfiles,
-} from '../utils/profile';
+import { getAllGlobalSnippetDirs, getPathFromProfileLocation, getProfiles } from '../utils/profile';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
+import { exists } from '../utils/fsInfo';
 
 async function initSnippetLinkCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -65,7 +61,7 @@ async function initSnippetLinkCommands(context: vscode.ExtensionContext) {
 					notSelectedSnippetDirs.map(async (dir) => {
 						const fp = path.join(dir, item.label);
 						try {
-							await fs.promises.rm(fp);
+							await fs.rm(fp);
 						} catch {}
 					})
 				);
@@ -90,12 +86,7 @@ async function canBeLinked(filename: string): Promise<boolean> {
 	const existenceChecks = await Promise.all(
 		allDirs.map(async (dir) => {
 			const filePath = path.join(dir, filename);
-			try {
-				await fs.promises.access(filePath);
-				return true; // File exists
-			} catch {
-				return false; // File doesn't exist
-			}
+			return await exists(filePath);
 		})
 	);
 

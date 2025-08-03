@@ -1,6 +1,6 @@
 import path from 'path';
-import fs from 'fs';
-import { getWorkspaceFolder } from '../utils/fsInfo';
+import * as fs from 'fs/promises';
+import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds } from '../utils/language';
 import {
 	getActiveProfileSnippetsDir,
@@ -50,7 +50,7 @@ async function getGlobalLangSnippetFiles(
 	const paths: string[] = [];
 
 	const languageSnippetFilePath = path.join(globalSnippetsPath, `${langId}.json`);
-	if (langId && fs.existsSync(languageSnippetFilePath)) {
+	if (langId && (await exists(languageSnippetFilePath))) {
 		paths.push(languageSnippetFilePath);
 	}
 
@@ -68,8 +68,8 @@ async function getGlobalLangSnippetFiles(
  * @param folderPath The path to the workspace folder.
  */
 export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
-	if (fs.existsSync(folderPath)) {
-		const files = await fs.promises.readdir(folderPath);
+	if (await exists(folderPath)) {
+		const files = await fs.readdir(folderPath);
 		return files.filter((f) => f.endsWith('.code-snippets')).map((f) => path.join(folderPath, f));
 	}
 	return [];
@@ -125,7 +125,7 @@ async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 
 	for (var langId of langIds) {
 		const snippetFile = path.join(globalDir, `${langId}.json`);
-		fs.existsSync(snippetFile) && snippetFiles.push(snippetFile);
+		(await exists(snippetFile)) && snippetFiles.push(snippetFile);
 	}
 
 	const files = await findCodeSnippetsFiles(globalDir);

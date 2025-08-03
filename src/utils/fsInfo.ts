@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import path from 'path';
 import os from 'os';
+import * as fs from 'fs/promises';
 
 /**
  * Grabs the CWD workspace of VSCode
@@ -60,10 +61,23 @@ function isParentDir(parent: string, child: string): boolean {
 	return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
+/**
+ * Check if a file/folder exists
+ */
+async function exists(fp: string): Promise<boolean> {
+	try {
+		await fs.access(fp);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 export {
 	getWorkspaceFolder,
 	getCurrentUri,
 	getLangFromSnippetFilePath,
 	getDownloadsDirPath,
 	isParentDir,
+	exists,
 };

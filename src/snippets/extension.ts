@@ -12,6 +12,7 @@ import type {
 	VSCodeSnippet,
 	VSCodeSnippets,
 } from '../types';
+import { exists } from '../utils/fsInfo';
 
 function getExtensionsDirPath(): string {
 	return path.join(os.homedir(), '.vscode', 'extensions');
@@ -59,7 +60,7 @@ export function flattenScopedExtensionSnippets(
 
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
 	const dir = getExtensionsDirPath();
-	if (!fs.existsSync(dir)) {
+	if (!(await exists(dir))) {
 		return {};
 	}
 
@@ -70,7 +71,7 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 			dirent
 		): Promise<[string, { name: string; files: SnippetContribution[] }] | undefined> => {
 			const pkgPath = path.join(dir, dirent.name, 'package.json');
-			if (!fs.existsSync(pkgPath)) {
+			if (!(await exists(pkgPath))) {
 				return;
 			}
 
