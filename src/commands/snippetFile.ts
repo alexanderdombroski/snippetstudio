@@ -6,7 +6,7 @@ import type { TreePathItem } from '../ui/templates';
 import { getExtensionSnippetLangs } from '../snippets/extension';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
-import { isSnippetLinked } from '../snippets/links';
+import { isSnippetLinked } from '../snippets/links/config';
 import { exists } from '../utils/fsInfo';
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {

@@ -8,7 +8,7 @@ import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
-import { isSnippetLinked } from './links';
+import { isSnippetLinked } from './links/config';
 
 /**
  * Creates an empty JSON file with {} and returns string alertStatus

@@ -7,7 +7,7 @@ import {
 	extensionTreeItems,
 } from './templates';
 import { findAllExtensionSnippetsFiles } from '../snippets/extension';
-import { getLinkedSnippets } from '../snippets/links';
+import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
 

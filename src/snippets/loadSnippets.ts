@@ -4,7 +4,7 @@ import { locateSnippetFiles } from './locateSnippets';
 import * as vscode from 'vscode';
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates';
 import { getCurrentLanguage } from '../utils/language';
-import { getLinkedSnippets } from './links';
+import { getLinkedSnippets } from './links/config';
 import { getProfileIdFromPath } from '../utils/profile';
 import path from 'node:path';
 

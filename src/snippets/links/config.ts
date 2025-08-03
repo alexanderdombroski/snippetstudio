@@ -1,14 +1,14 @@
 import path from 'node:path';
-import { getUserPath } from '../utils/context';
-import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
-import type { JSONObject, SnippetLinks } from '../types';
+import { getUserPath } from '../../utils/context';
+import { readJsonC, writeJson } from '../../utils/jsoncFilesIO';
+import type { JSONObject, SnippetLinks } from '../../types';
 import {
 	getActiveProfile,
 	getPathFromProfileLocation,
 	getProfileIdFromPath,
 	getProfiles,
-} from '../utils/profile';
-import { isParentDir } from '../utils/fsInfo';
+} from '../../utils/profile';
+import { isParentDir } from '../../utils/fsInfo';
 
 /**
  * Updates all settings.json files to add the target filename
@@ -49,7 +49,7 @@ export async function getLinkedSnippets(): Promise<SnippetLinks> {
  * Create or Read settings file, and write snippet links to settings
  */
 async function updateAllSettings(newLinksValue: SnippetLinks) {
-	const { createFile } = await import('../snippets/newSnippetFile.js');
+	const { createFile } = await import('../newSnippetFile.js');
 	const profiles = await getProfiles();
 	const paths = profiles.map((p) => {
 		return p.location === '__default__profile__'
