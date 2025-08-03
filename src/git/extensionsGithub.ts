@@ -1,7 +1,7 @@
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
 import * as vscode from 'vscode';
-import path from 'path';
+import path from 'node:path';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import type { PackageJsonSnippetsSection, VSCodeSnippets } from '../types';
 import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO';

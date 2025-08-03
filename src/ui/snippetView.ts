@@ -9,7 +9,7 @@ import {
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, isParentDir, shortenFullPath } from '../utils/fsInfo';
-import path from 'path';
+import path from 'node:path';
 import { findAllExtensionSnipppetsByLang } from '../snippets/extension';
 import { getLinkedSnippets } from '../snippets/links';
 import { getUserPath } from '../utils/context';

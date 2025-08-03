@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import { TreePathItem } from '../ui/templates';
 
 function onDoubleClick(callback: (item: TreePathItem) => void): (item: TreePathItem) => void {

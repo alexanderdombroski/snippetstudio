@@ -3,7 +3,7 @@ import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import { getLangFromSnippetFilePath } from '../utils/fsInfo';
-import path from 'path';
+import path from 'node:path';
 import type { SnippetData, VSCodeSnippet } from '../types';
 import { getConfirmation, getSelection, chooseSnippetFile } from '../utils/user';
 import { escapeAllSnippetInsertionFeatures, snippetBodyAsString } from '../utils/string';

@@ -1,6 +1,6 @@
 // Utilities for interacting with VS Code profiles
 import * as vscode from 'vscode';
-import path from 'path';
+import path from 'node:path';
 import type { ProfileInfo, ProfileAssociations } from '../types';
 import { getExtensionContext, getUserPath } from './context';
 

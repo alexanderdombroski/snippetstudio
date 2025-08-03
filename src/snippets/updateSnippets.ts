@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
-import path from 'path';
+import path from 'node:path';
 import { getCurrentLanguage } from '../utils/language';
 
 // -------------------------- CRUD operations --------------------------

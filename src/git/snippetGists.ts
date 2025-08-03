@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import path from 'path';
-import fs from 'fs';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 import { getOctokitClient } from './octokit';
 import { mergeSnippetFiles } from '../snippets/newSnippetFile';
@@ -92,7 +92,7 @@ async function saveCodeSnippets(
 				}
 
 				if (savePath) {
-					await fs.promises.writeFile(savePath, file.content);
+					await fs.writeFile(savePath, file.content);
 					fileCount += 1;
 				}
 			}

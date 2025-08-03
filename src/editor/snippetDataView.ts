@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import fs from 'fs';
+import fs from 'node:fs/promises';
 import { getCurrentUri } from '../utils/fsInfo';
 import SnippetDataManager from '../snippets/snippetDataManager';
 import type { SnippetData } from '../types';
@@ -43,7 +43,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 		const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 
 		try {
-			return await fs.promises.readFile(htmlPath.fsPath, 'utf8');
+			return await fs.readFile(htmlPath.fsPath, 'utf8');
 		} catch (error) {
 			console.error('Error reading HTML file:', error);
 			return '<h1>Error loading webview content.</h1>';

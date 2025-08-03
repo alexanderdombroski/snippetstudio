@@ -6,7 +6,7 @@ import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/tem
 import { getCurrentLanguage } from '../utils/language';
 import { getLinkedSnippets } from './links';
 import { getProfileIdFromPath } from '../utils/profile';
-import path from 'path';
+import path from 'node:path';
 
 export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.TreeItem[]][]> {
 	const snippetFiles: string[] = await locateSnippetFiles();

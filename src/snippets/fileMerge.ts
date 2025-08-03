@@ -1,7 +1,7 @@
-import fs from 'fs';
+import fs from 'node:fs/promises';
 import type { VSCodeSnippets } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
-import { isDeepStrictEqual } from 'util';
+import { isDeepStrictEqual } from 'node:util';
 
 /**
  * Merge two json files (the mergePath into KeepPath).
@@ -15,13 +15,13 @@ async function mergeFiles(globalPath: string, mergePath: string) {
 
 	if (!mergeSnippets) {
 		// Delete mergePath if has no snippets
-		await fs.promises.unlink(mergePath);
+		await fs.unlink(mergePath);
 		return;
 	}
 
 	if (!baseSnippets) {
 		// Move all if no base snippets
-		await fs.promises.rename(mergePath, globalPath);
+		await fs.rename(mergePath, globalPath);
 		return;
 	}
 
@@ -40,7 +40,7 @@ async function mergeFiles(globalPath: string, mergePath: string) {
 	});
 
 	await writeSnippetFile(globalPath, baseSnippets, '', true);
-	await fs.promises.unlink(mergePath);
+	await fs.unlink(mergePath);
 }
 
 /**

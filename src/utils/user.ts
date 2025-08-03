@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
-import path from 'path';
+import path from 'node:path';
 import { getActiveProfileSnippetsDir } from './profile';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../snippets/locateSnippets';
 

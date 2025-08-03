@@ -1,5 +1,5 @@
-import path from 'path';
-import * as fs from 'fs/promises';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds } from '../utils/language';
 import {

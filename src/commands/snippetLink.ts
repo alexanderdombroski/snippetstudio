@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import path from 'path';
-import * as fs from 'fs/promises';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 import { refreshAll } from './snippetFile';
 import type { TreePathItem } from '../ui/templates';
 import { addFileLink, getLinkLocations, removeFileLink } from '../snippets/links';

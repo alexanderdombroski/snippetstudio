@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import os from 'node:os';
 import { readJson, readJsoncFilesAsync } from '../utils/jsoncFilesIO';
 import type {
 	ExtensionSnippetFilesMap,
@@ -64,7 +64,7 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 		return {};
 	}
 
-	const allDirents = fs.readdirSync(dir, { withFileTypes: true });
+	const allDirents = await fs.readdir(dir, { withFileTypes: true });
 
 	const tasks = allDirents.map(
 		async (

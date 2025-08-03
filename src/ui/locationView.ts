@@ -8,7 +8,7 @@ import {
 } from './templates';
 import { findAllExtensionSnippetsFiles } from '../snippets/extension';
 import { getLinkedSnippets } from '../snippets/links';
-import path from 'path';
+import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
 
 export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {

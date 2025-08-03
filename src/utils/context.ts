@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import type { GlobalStorage } from '../types';
 import { readJsonC } from './jsoncFilesIO';
-import os from 'os';
-import path from 'path';
+import os from 'node:os';
+import path from 'node:path';
 
 let extensionContext: vscode.ExtensionContext | undefined;
 

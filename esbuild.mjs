@@ -1,6 +1,6 @@
 import { context } from 'esbuild';
-import fs from 'fs/promises';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
@@ -64,7 +64,7 @@ async function main() {
 		platform: 'node',
 		outdir,
 		splitting: true,
-		external: ['vscode', ...(await import('module')).builtinModules],
+		external: ['vscode', ...(await import('node:module')).builtinModules],
 		logLevel: 'silent',
 		plugins: [
 			/* add to the end of plugins array */

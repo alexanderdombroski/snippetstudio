@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 import { getUserPath } from '../utils/context';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import type { JSONObject, SnippetLinks } from '../types';

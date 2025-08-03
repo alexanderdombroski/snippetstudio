@@ -1,6 +1,6 @@
-import * as fs from 'fs/promises'; // Import fs/promises for async file operations
+import * as fs from 'node:fs/promises'; // Import fs/promises for async file operations
 import * as vscode from 'vscode';
-import path from 'path';
+import path from 'node:path';
 import type { GenericJson, VSCodeSnippets } from '../types';
 import { flattenScopedExtensionSnippets } from '../snippets/extension';
 import { getLinkLocations } from '../snippets/links';

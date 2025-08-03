@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import * as https from 'https';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'node:fs/promises';
+import https from 'node:https';
+import path from 'node:path';
 import { processJsonWithComments } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
 import { chooseLocalGlobal } from '../utils/user';
@@ -76,7 +76,7 @@ async function saveCodeProfiles(
 			Object.values(parsed).forEach((snippet) => (snippet.scope = lang));
 			fileContent = JSON.stringify(parsed, null, 2);
 		}
-		await fs.promises.writeFile(savePath, fileContent, 'utf-8');
+		await fs.writeFile(savePath, fileContent, 'utf-8');
 	});
 
 	await Promise.all(tasks);
@@ -102,7 +102,7 @@ async function fromFile(): Promise<string[] | undefined> {
 
 	const contents = await Promise.all(
 		uris.map(async (uri) => {
-			const bytes = await fs.promises.readFile(uri.fsPath);
+			const bytes = await fs.readFile(uri.fsPath);
 			return bytes.toString('utf8');
 		})
 	);

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import path from 'path';
-import os from 'os';
-import * as fs from 'fs/promises';
+import path from 'node:path';
+import os from 'node:os';
+import fs from 'node:fs/promises';
 
 /**
  * Grabs the CWD workspace of VSCode

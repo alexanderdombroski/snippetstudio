@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs/promises';
+import path from 'node:path';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getExtensionSnippetLangs } from '../snippets/extension';
@@ -139,7 +139,7 @@ async function deleteFile(filepath: string) {
 	}
 
 	try {
-		await fs.promises.unlink(filepath); // Use fs.promises.unlink
+		await fs.unlink(filepath); // Use fs.promises.unlink
 		vscode.window.showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
 		refreshAll();
 	} catch (error) {
