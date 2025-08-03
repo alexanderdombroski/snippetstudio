@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import SnippetDataManager from '../snippets/snippetDataManager';
-import SnippetDataWebViewProvider from './snippetDataView';
-import SnippetEditorProvider from './bufferEditor';
+import SnippetDataManager from './SnippetDataManager';
+import SnippetDataWebViewProvider from './SnippetDataWebViewProvider';
+import SnippetEditorProvider from './SnippetEditorProvider';
 import initSnippetEditorCommands from './snippetEditor';
 import initSnippetFeatureCommands from './snippetFeatures';
 

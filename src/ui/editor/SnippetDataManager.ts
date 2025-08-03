@@ -1,6 +1,6 @@
-import type { SnippetData } from '../types';
+import type { SnippetData } from '../../types';
 
-export default class snippetDataManager {
+export default class SnippetDataManager {
 	private _dataMap: Map<string, SnippetData> = new Map();
 
 	constructor() {}

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
-import type { SnippetData } from '../types';
-import SnippetDataManager from '../snippets/snippetDataManager';
-import { getCurrentUri } from '../utils/fsInfo';
+import type { SnippetData } from '../../types';
+import SnippetDataManager from './SnippetDataManager';
+import { getCurrentUri } from '../../utils/fsInfo';
 
 export default class SnippetEditorProvider implements vscode.FileSystemProvider {
 	private _emitter: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter<

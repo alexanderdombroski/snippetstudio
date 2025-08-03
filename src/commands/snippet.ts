@@ -248,7 +248,7 @@ async function editSnippet(
 				return;
 			}
 		}
-		const { initEditing } = await import('../editor/initEditing.js');
+		const { initEditing } = await import('../ui/editor/initEditing.js');
 		const provider = await initEditing(context);
 
 		if (

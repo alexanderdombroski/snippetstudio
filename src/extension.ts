@@ -2,8 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
-import SnippetViewProvider from './ui/snippetView';
-import LocationTreeProvider from './ui/locationView';
+import SnippetViewProvider from './ui/SnippetViewProvider';
+import LocationTreeProvider from './ui/LocationTreeProvider';
 
 import {
 	initSnippetCommands,

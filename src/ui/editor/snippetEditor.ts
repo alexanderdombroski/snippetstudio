@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import type SnippetEditorProvider from './bufferEditor';
-import { getCurrentUri } from '../utils/fsInfo';
-import type { VSCodeSnippet } from '../types';
-import { titleCase } from '../utils/string';
+import type SnippetEditorProvider from './SnippetEditorProvider';
+import { getCurrentUri } from '../../utils/fsInfo';
+import type { VSCodeSnippet } from '../../types';
+import { titleCase } from '../../utils/string';
 
 function initSnippetEditorCommands(
 	context: vscode.ExtensionContext,
@@ -31,7 +31,7 @@ function initSnippetEditorCommands(
 				const capitalize = vscode.workspace
 					.getConfiguration('snippetstudio')
 					.get<boolean>('autoCapitalizeSnippetName');
-				const { writeSnippet } = await import('../snippets/updateSnippets.js');
+				const { writeSnippet } = await import('../../snippets/updateSnippets.js');
 				writeSnippet(
 					data.filename,
 					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),

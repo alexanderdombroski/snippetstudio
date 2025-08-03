@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import fs from 'node:fs/promises';
-import { getCurrentUri } from '../utils/fsInfo';
-import SnippetDataManager from '../snippets/snippetDataManager';
-import type { SnippetData } from '../types';
+import { getCurrentUri } from '../../utils/fsInfo';
+import SnippetDataManager from './SnippetDataManager';
+import type { SnippetData } from '../../types';
 
 export default class SnippetDataWebViewProvider implements vscode.WebviewViewProvider {
 	private _view?: vscode.WebviewView;
