@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
-import { getLangFromSnippetFilePath } from '../utils/fsInfo';
 import path from 'node:path';
 import type { SnippetData, VSCodeSnippet } from '../types';
 import { getConfirmation, getSelection, chooseSnippetFile } from '../utils/user';
@@ -295,6 +294,20 @@ function newSnippetEditorUri(langId: string = 'plaintext', showScope: boolean = 
 		path: `/snippets/snippet-${++editorCount}`,
 		query: `type=${langId}&showScope=${showScope}`,
 	});
+}
+
+function getLangFromSnippetFilePath(filepath: string): string | undefined {
+	if (path.extname(filepath) === '.code-snippets') {
+		return;
+	}
+
+	const base = path.basename(filepath);
+	const dotIndex = base.indexOf('.');
+	if (dotIndex === -1) {
+		return;
+	}
+
+	return base.substring(0, dotIndex);
 }
 
 export default initSnippetCommands;

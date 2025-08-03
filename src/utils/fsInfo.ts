@@ -23,7 +23,7 @@ function getCurrentUri(): vscode.Uri | undefined {
 	return vscode.window.activeTextEditor?.document.uri;
 }
 
-export function shortenFullPath(fullPath: string): string {
+function shortenFullPath(fullPath: string): string {
 	const homeDir = os.homedir();
 	const resolvedhomeDir = path.resolve(homeDir);
 	const resolvedPath = path.resolve(fullPath);
@@ -33,20 +33,6 @@ export function shortenFullPath(fullPath: string): string {
 	}
 
 	return fullPath;
-}
-
-function getLangFromSnippetFilePath(filepath: string): string | undefined {
-	if (path.extname(filepath) === '.code-snippets') {
-		return;
-	}
-
-	const base = path.basename(filepath);
-	const dotIndex = base.indexOf('.');
-	if (dotIndex === -1) {
-		return;
-	}
-
-	return base.substring(0, dotIndex);
 }
 
 function getDownloadsDirPath(): string {
@@ -76,7 +62,7 @@ async function exists(fp: string): Promise<boolean> {
 export {
 	getWorkspaceFolder,
 	getCurrentUri,
-	getLangFromSnippetFilePath,
+	shortenFullPath,
 	getDownloadsDirPath,
 	isParentDir,
 	exists,
