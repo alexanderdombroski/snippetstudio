@@ -1,3 +1,7 @@
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
 import * as vscode from 'vscode';
 import fs from 'node:fs/promises';
 import path from 'node:path';

@@ -1,3 +1,7 @@
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
 import * as vscode from 'vscode';

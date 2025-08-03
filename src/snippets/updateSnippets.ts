@@ -1,3 +1,7 @@
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
 import * as vscode from 'vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';

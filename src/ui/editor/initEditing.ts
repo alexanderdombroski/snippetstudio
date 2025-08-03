@@ -1,3 +1,7 @@
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
 import * as vscode from 'vscode';
 import SnippetDataManager from './SnippetDataManager';
 import SnippetDataWebViewProvider from './SnippetDataWebViewProvider';
