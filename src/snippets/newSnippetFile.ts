@@ -22,8 +22,9 @@ async function createFile(
 	showInformationMessage: boolean = true,
 	notSnippetFile?: boolean
 ): Promise<'skipped' | undefined> {
-	if ((await exists(filepath)) && showInformationMessage) {
-		vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
+	if (await exists(filepath)) {
+		showInformationMessage &&
+			vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
 	} else if (!notSnippetFile && (await isSnippetLinked(filepath, true))) {
 		vscode.window.showWarningMessage(
 			'Skipped File Creation. A linked snippet file of a matching filename exists already in some profile.'
