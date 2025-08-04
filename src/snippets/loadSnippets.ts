@@ -1,7 +1,7 @@
 import { readJsoncFilesAsync } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
 import { locateSnippetFiles } from './locateSnippets';
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getLinkedSnippets } from './links/config';

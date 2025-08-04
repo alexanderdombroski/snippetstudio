@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 import type { CommandMap } from '../types';
 import type { SnippetCategoryTreeItem } from '../ui/templates';
 

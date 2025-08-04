@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 import { getCurrentLanguage } from '../utils/language';
 import { getCurrentUri } from '../utils/fsInfo';
 import { capitalize } from '../utils/string';

@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 
 let langIds: string[] = [];
 (async function loadLangs() {

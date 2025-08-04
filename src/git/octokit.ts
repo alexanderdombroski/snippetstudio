@@ -1,5 +1,5 @@
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 
 let client: Octokit | null = null;
 

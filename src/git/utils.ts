@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 
 export async function getGistId() {
 	const identifier = await vscode.window.showInputBox({

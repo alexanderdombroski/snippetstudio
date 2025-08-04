@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'node:path';

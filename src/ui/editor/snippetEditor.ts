@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../../vscode';
 import type SnippetEditorProvider from './SnippetEditorProvider';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { VSCodeSnippet } from '../../types';

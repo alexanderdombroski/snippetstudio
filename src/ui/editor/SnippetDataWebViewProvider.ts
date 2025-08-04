@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import SnippetDataManager from './SnippetDataManager';

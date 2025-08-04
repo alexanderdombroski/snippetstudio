@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import vscode from '../vscode';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
