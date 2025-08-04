@@ -7,6 +7,7 @@ import { isDeepStrictEqual } from 'node:util';
  * Merge two json files (the mergePath into KeepPath).
  * Don't overwrite duplicate keys, instead change the keynames of mergeFiles that are duplicates
  */
+// eslint-disable-next-line no-unused-vars
 async function mergeFiles(globalPath: string, mergePath: string) {
 	const [baseSnippets, mergeSnippets] = await Promise.all([
 		readSnippetFile(globalPath),

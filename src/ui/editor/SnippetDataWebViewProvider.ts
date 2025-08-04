@@ -17,7 +17,9 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 
 	async resolveWebviewView(
 		webviewView: vscode.WebviewView,
+		// eslint-disable-next-line no-unused-vars
 		context: vscode.WebviewViewResolveContext,
+		// eslint-disable-next-line no-unused-vars
 		token: vscode.CancellationToken
 	): Promise<void> {
 		this._view = webviewView;
@@ -35,10 +37,11 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 		};
 		this._getHtmlForWebview(webviewView.webview)
 			.then((html) => (webviewView.webview.html = html))
-			.then((_) => this.setUpMessages(webviewView))
+			.then(() => this.setUpMessages(webviewView))
 			.catch((reason) => console.error(reason));
 	}
 
+	// eslint-disable-next-line no-unused-vars
 	private async _getHtmlForWebview(webview: vscode.Webview) {
 		const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 

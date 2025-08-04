@@ -19,7 +19,7 @@ export function createStatusBar(context: vscode.ExtensionContext) {
 		}
 	});
 
-	vscode.window.onDidChangeActiveTextEditor((_) => {
+	vscode.window.onDidChangeActiveTextEditor(() => {
 		updateSnippetIndicatorText();
 	});
 

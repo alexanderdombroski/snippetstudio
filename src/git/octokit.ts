@@ -56,7 +56,7 @@ async function isTokenRevoked(token: string): Promise<boolean> {
 	try {
 		await test.request('GET /user');
 		return false;
-	} catch (error: any) {
+	} catch {
 		return true;
 	}
 }

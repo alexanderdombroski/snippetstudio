@@ -17,7 +17,7 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
 		([filePath, group]) => {
 			const snippets = Object.entries(group)
 				.filter(
-					([_, v]) =>
+					([, v]) =>
 						v.scope === undefined || v.scope === langId || v.scope.split(',').includes(langId)
 				)
 				.map(([k, v]) => createTreeItemFromSnippet(k, v, filePath));
@@ -42,7 +42,7 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
 			.get<boolean>('alwaysShowProjectSnippetFiles') === false
 	) {
 		return treeItems.filter(
-			([dropdown, _]) => dropdown.collapsibleState !== vscode.TreeItemCollapsibleState.None
+			([dropdown]) => dropdown.collapsibleState !== vscode.TreeItemCollapsibleState.None
 		);
 	}
 

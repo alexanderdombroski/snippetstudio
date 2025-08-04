@@ -7,7 +7,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, langIds, selectLanguage } from '../utils/language';
-import { findCodeSnippetsFiles, locateAllSnippetFiles, locateSnippetFiles } from './locateSnippets';
+import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';

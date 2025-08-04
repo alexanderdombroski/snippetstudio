@@ -128,6 +128,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 	writeFile(
 		uri: vscode.Uri,
 		content: Uint8Array,
+		// eslint-disable-next-line no-unused-vars
 		options: { create: boolean; overwrite: boolean }
 	): void | Thenable<void> {
 		this._files.set(uri.path, content);
@@ -157,6 +158,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 
 	delete(
 		uri: vscode.Uri,
+		// eslint-disable-next-line no-unused-vars
 		options: { recursive: boolean } = { recursive: true }
 	): void | Thenable<void> {
 		const parentPath = uri.path.substring(0, uri.path.lastIndexOf('/'));
@@ -205,12 +207,15 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		editor.setDecorations(this._insertionFeatureDecorationType, decorations);
 	}
 
-	// Not needed
 	rename(
+		// eslint-disable-next-line no-unused-vars
 		oldUri: vscode.Uri,
+		// eslint-disable-next-line no-unused-vars
 		newUri: vscode.Uri,
+		// eslint-disable-next-line no-unused-vars
 		options: { overwrite: boolean }
 	): void | Thenable<void> {}
+	// eslint-disable-next-line no-unused-vars
 	watch(uri: vscode.Uri, options: { recursive: boolean; excludes: string[] }): vscode.Disposable {
 		// Implement watch logic (e.g., for external changes).
 		return new vscode.Disposable(() => {}); // Placeholder

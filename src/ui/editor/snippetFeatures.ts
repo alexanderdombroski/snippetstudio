@@ -13,6 +13,7 @@ export default function initSnippetFeatureCommands(
 	context.subscriptions.push(
 		vscode.commands.registerTextEditorCommand(
 			'snippetstudio.editor.insertTabStop',
+			// eslint-disable-next-line no-unused-vars
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(`\\\$${getNextFeatureNumber(editor)}$0`),
@@ -22,6 +23,7 @@ export default function initSnippetFeatureCommands(
 		),
 		vscode.commands.registerTextEditorCommand(
 			'snippetstudio.editor.insertPlaceholder',
+			// eslint-disable-next-line no-unused-vars
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(
@@ -33,6 +35,7 @@ export default function initSnippetFeatureCommands(
 		),
 		vscode.commands.registerTextEditorCommand(
 			'snippetstudio.editor.insertChoice',
+			// eslint-disable-next-line no-unused-vars
 			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				editor.insertSnippet(
 					new vscode.SnippetString(
@@ -53,6 +56,7 @@ export default function initSnippetFeatureCommands(
 		context.subscriptions.push(
 			vscode.commands.registerTextEditorCommand(
 				'snippetstudio.editor.insertVariable',
+				// eslint-disable-next-line no-unused-vars
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					const variable = await showVariableQuickPick();
 					if (variable !== undefined) {
@@ -62,6 +66,7 @@ export default function initSnippetFeatureCommands(
 			),
 			vscode.commands.registerTextEditorCommand(
 				'snippetstudio.editor.insertVariablePlaceholder',
+				// eslint-disable-next-line no-unused-vars
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					const variable = await showVariableQuickPick();
 					if (variable !== undefined) {
@@ -79,6 +84,7 @@ export default function initSnippetFeatureCommands(
 		context.subscriptions.push(
 			vscode.commands.registerTextEditorCommand(
 				'snippetstudio.editor.insertVariable',
+				// eslint-disable-next-line no-unused-vars
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					editor.insertSnippet(
 						new vscode.SnippetString(`$\${1|${variableList()}|}$0`),
@@ -88,6 +94,7 @@ export default function initSnippetFeatureCommands(
 			),
 			vscode.commands.registerTextEditorCommand(
 				'snippetstudio.editor.insertVariablePlaceholder',
+				// eslint-disable-next-line no-unused-vars
 				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 					editor.insertSnippet(
 						new vscode.SnippetString(
@@ -102,6 +109,7 @@ export default function initSnippetFeatureCommands(
 	context.subscriptions.push(
 		vscode.commands.registerTextEditorCommand(
 			'snippetstudio.editor.insertPlaceholderWithTranformation',
+			// eslint-disable-next-line no-unused-vars
 			async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
 				const featureId = getNextFeatureNumber(editor);
 				editor.insertSnippet(
@@ -119,6 +127,7 @@ export default function initSnippetFeatureCommands(
 		vscode.languages.registerCompletionItemProvider(
 			{ scheme: 'snippetstudio' },
 			{
+				// eslint-disable-next-line no-unused-vars
 				provideCompletionItems(document, position, token, context) {
 					const id = '${1:id}';
 					const source =
