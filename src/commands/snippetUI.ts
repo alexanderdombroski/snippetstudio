@@ -1,8 +1,14 @@
-import vscode from '../vscode';
+import vscode, {
+	registerCommand,
+	executeCommand,
+	openExternal,
+	Uri,
+	createTerminal,
+	showInformationMessage,
+	ThemeIcon,
+} from '../vscode';
 import type { CommandMap } from '../types';
 import type { SnippetCategoryTreeItem } from '../ui/templates';
-
-const { registerCommand, executeCommand } = vscode.commands;
 
 function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: CommandMap) {
 	// Show Snippets view
@@ -35,13 +41,13 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 	// Open snippets file manager or terminal
 	context.subscriptions.push(
 		registerCommand('snippetstudio.file.open.Explorer', (treeItem: SnippetCategoryTreeItem) => {
-			vscode.env.openExternal(vscode.Uri.file(treeItem.folderPath));
+			openExternal(Uri.file(treeItem.folderPath));
 		}),
 		registerCommand('snippetstudio.file.open.Terminal', (treeItem: SnippetCategoryTreeItem) => {
-			const terminal = vscode.window.createTerminal({
+			const terminal = createTerminal({
 				name: 'Global Snippets',
 				cwd: treeItem.folderPath,
-				iconPath: new vscode.ThemeIcon('repo'),
+				iconPath: new ThemeIcon('repo'),
 			});
 			terminal.show();
 		})
@@ -50,7 +56,7 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 	// Prompt a walkthrough
 	!context.globalState.get<boolean>('walkthrough-completed') &&
 		(async () => {
-			const answer = await vscode.window.showInformationMessage(
+			const answer = await showInformationMessage(
 				'New here? How about you take a look at the tutorials?',
 				'Open Walkthroughs',
 				"Don't ask again"

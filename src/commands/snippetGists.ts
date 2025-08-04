@@ -1,6 +1,4 @@
-import vscode from '../vscode';
-
-const { registerCommand, executeCommand } = vscode.commands;
+import vscode, { registerCommand, executeCommand, openExternal, Uri } from '../vscode';
 
 async function initSnippetGistsCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -14,10 +12,10 @@ async function initSnippetGistsCommands(context: vscode.ExtensionContext) {
 			executeCommand('snippetstudio.refreshLocations');
 		}),
 		registerCommand('snippetstudio.github.browse', async () => {
-			const targetUri = vscode.Uri.parse(
+			const targetUri = Uri.parse(
 				'https://gist.github.com/search?q=snippetstudio+extension%3A.code-snippets&ref=searchresults'
 			);
-			vscode.env.openExternal(targetUri);
+			openExternal(targetUri);
 		})
 	);
 }

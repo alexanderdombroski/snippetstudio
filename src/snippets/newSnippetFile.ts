@@ -2,7 +2,13 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import {
+	showErrorMessage,
+	createQuickPick,
+	showWarningMessage,
+	showQuickPick,
+	showInformationMessage,
+} from '../vscode';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
@@ -19,14 +25,13 @@ import { isSnippetLinked } from './links/config';
  */
 async function createFile(
 	filepath: string,
-	showInformationMessage: boolean = true,
+	showInfoMessage: boolean = true,
 	notSnippetFile?: boolean
 ): Promise<'skipped' | undefined> {
 	if (await exists(filepath)) {
-		showInformationMessage &&
-			vscode.window.showInformationMessage('File already exists! ' + path.basename(filepath));
+		showInfoMessage && showInformationMessage('File already exists! ' + path.basename(filepath));
 	} else if (!notSnippetFile && (await isSnippetLinked(filepath, true))) {
-		vscode.window.showWarningMessage(
+		showWarningMessage(
 			'Skipped File Creation. A linked snippet file of a matching filename exists already in some profile.'
 		);
 		return 'skipped';
@@ -54,7 +59,7 @@ async function createLocalSnippetsFile(): Promise<void> {
 async function createGlobalLangFile(): Promise<void> {
 	const langId = getCurrentLanguage() ?? (await selectLanguage());
 	if (langId === undefined) {
-		vscode.window.showErrorMessage('No recently used language.');
+		showErrorMessage('No recently used language.');
 		return;
 	}
 	const dir = await getActiveProfileSnippetsDir();
@@ -111,7 +116,7 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 		}
 
 		// Select Snippets
-		const quickPick = vscode.window.createQuickPick();
+		const quickPick = createQuickPick();
 		quickPick.canSelectMany = true;
 		quickPick.title = 'Pick Snippets to export';
 		quickPick.items = items;
@@ -133,9 +138,7 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 			const langId = path.basename(filepath, path.extname(filepath));
 			snippetKeys.forEach((key) => {
 				if (key in snippetsToExport) {
-					vscode.window.showWarningMessage(
-						`Two Snippets hold the same titleKey: ${key}. Only one will be used`
-					);
+					showWarningMessage(`Two Snippets hold the same titleKey: ${key}. Only one will be used`);
 				}
 				const obj = fileSnippets[key];
 
@@ -164,12 +167,12 @@ async function chooseSnippetFiles(): Promise<string[] | undefined> {
 		.flat();
 	const snippetFiles = [...actives, ...locals, ...profileFiles];
 	if (snippetFiles.length === 0) {
-		vscode.window.showWarningMessage('You have no snippets to export. Operation cancelled');
+		showWarningMessage('You have no snippets to export. Operation cancelled');
 		return;
 	}
 
 	// Select Snippets Files
-	const fileItems = await vscode.window.showQuickPick(
+	const fileItems = await showQuickPick(
 		snippetFiles.map((fp) => ({ label: path.basename(fp), description: fp })),
 		{ canPickMany: true, title: 'Choose Snippet Files to include in the Export' }
 	);

@@ -2,7 +2,13 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../../vscode';
+import vscode, {
+	getConfiguration,
+	openTextDocument,
+	showErrorMessage,
+	showTextDocument,
+	Uri,
+} from '../../vscode';
 import path from 'node:path';
 import SnippetDataManager from './SnippetDataManager';
 import SnippetDataWebViewProvider from './SnippetDataWebViewProvider';
@@ -40,7 +46,7 @@ async function editSnippet(
 	body: string = ''
 ) {
 	try {
-		if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
+		if (getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
 			const { createFile } = await import('../../snippets/newSnippetFile.js');
 			const status = await createFile(snippetData.filename, false);
 			if (status === 'skipped') {
@@ -50,9 +56,7 @@ async function editSnippet(
 		const provider = await initEditing(context);
 
 		if (
-			vscode.workspace
-				.getConfiguration('snippetstudio')
-				.get<boolean>('editor.autoEscapeDollarSignsFromSelection')
+			getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSignsFromSelection')
 		) {
 			body = escapeAllSnippetInsertionFeatures(body);
 		}
@@ -61,9 +65,9 @@ async function editSnippet(
 			path.extname(snippetData.filename) === '.code-snippets'
 		);
 		await provider.mountSnippet(uri, snippetData, body);
-		const doc = await vscode.workspace.openTextDocument(uri);
+		const doc = await openTextDocument(uri);
 		vscode.languages.setTextDocumentLanguage(doc, langId);
-		await vscode.window.showTextDocument(doc, {
+		await showTextDocument(doc, {
 			viewColumn: vscode.ViewColumn.Active,
 			preview: false,
 		});
@@ -74,7 +78,7 @@ async function editSnippet(
 		});
 		return doc;
 	} catch (error) {
-		vscode.window.showErrorMessage(`Error creating temp editor: ${error}`);
+		showErrorMessage(`Error creating temp editor: ${error}`);
 		return undefined;
 	}
 }
@@ -82,7 +86,7 @@ async function editSnippet(
 let editorCount = 0;
 
 function newSnippetEditorUri(langId: string = 'plaintext', showScope: boolean = true): vscode.Uri {
-	return vscode.Uri.from({
+	return Uri.from({
 		scheme: 'snippetstudio',
 		path: `/snippets/snippet-${++editorCount}`,
 		query: `type=${langId}&showScope=${showScope}`,

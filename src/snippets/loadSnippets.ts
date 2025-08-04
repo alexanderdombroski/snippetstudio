@@ -1,7 +1,7 @@
+import vscode, { getConfiguration, None, Collapsed } from '../vscode';
 import { readJsoncFilesAsync } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
 import { locateSnippetFiles } from './locateSnippets';
-import vscode from '../vscode';
 import { createTreeItemFromFilePath, createTreeItemFromSnippet } from '../ui/templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getLinkedSnippets } from './links/config';
@@ -24,9 +24,7 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
 			const basename = path.basename(filePath);
 			const dropdown = createTreeItemFromFilePath(
 				filePath,
-				snippets.length === 0
-					? vscode.TreeItemCollapsibleState.None
-					: vscode.TreeItemCollapsibleState.Collapsed,
+				snippets.length === 0 ? None : Collapsed,
 				basename in linkedSnippets &&
 					linkedSnippets[basename].includes(getProfileIdFromPath(filePath))
 					? 'snippet-filepath linked'
@@ -36,14 +34,8 @@ export default async function loadSnippets(): Promise<[vscode.TreeItem, vscode.T
 		}
 	);
 
-	if (
-		vscode.workspace
-			.getConfiguration('snippetstudio')
-			.get<boolean>('alwaysShowProjectSnippetFiles') === false
-	) {
-		return treeItems.filter(
-			([dropdown]) => dropdown.collapsibleState !== vscode.TreeItemCollapsibleState.None
-		);
+	if (getConfiguration('snippetstudio').get<boolean>('alwaysShowProjectSnippetFiles') === false) {
+		return treeItems.filter(([dropdown]) => dropdown.collapsibleState !== None);
 	}
 
 	return treeItems;

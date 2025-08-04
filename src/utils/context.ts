@@ -1,4 +1,4 @@
-import vscode from '../vscode';
+import vscode, { openExternal, showErrorMessage, Uri } from '../vscode';
 import type { GlobalStorage } from '../types';
 import { readJsonC } from './jsoncFilesIO';
 import os from 'node:os';
@@ -43,18 +43,14 @@ function initUserPath(): string | undefined {
 		const userPath = getUserPath();
 		return userPath;
 	} catch {
-		vscode.window
-			.showErrorMessage(
-				`Unsupported platform: ${process.platform}. Couldn't find default user path. Want to submit an issue to request support for your device?`,
-				'Open GitHub Issue'
-			)
-			.then((selection) => {
-				if (selection === 'Open GitHub Issue') {
-					vscode.env.openExternal(
-						vscode.Uri.parse('https://github.com/alexanderdombroski/snippetstudio/issues')
-					);
-				}
-			});
+		showErrorMessage(
+			`Unsupported platform: ${process.platform}. Couldn't find default user path. Want to submit an issue to request support for your device?`,
+			'Open GitHub Issue'
+		).then((selection) => {
+			if (selection === 'Open GitHub Issue') {
+				openExternal(Uri.parse('https://github.com/alexanderdombroski/snippetstudio/issues'));
+			}
+		});
 	}
 }
 

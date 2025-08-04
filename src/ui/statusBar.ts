@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import vscode, { getConfiguration, onDidChangeActiveTextEditor } from '../vscode';
 import { getCurrentLanguage } from '../utils/language';
 import { getCurrentUri } from '../utils/fsInfo';
 import { capitalize } from '../utils/string';
@@ -19,7 +19,7 @@ export function createStatusBar(context: vscode.ExtensionContext) {
 		}
 	});
 
-	vscode.window.onDidChangeActiveTextEditor(() => {
+	onDidChangeActiveTextEditor(() => {
 		updateSnippetIndicatorText();
 	});
 
@@ -27,9 +27,7 @@ export function createStatusBar(context: vscode.ExtensionContext) {
 }
 
 function createSnippetIndicator() {
-	const priority = vscode.workspace
-		.getConfiguration('snippetstudio')
-		.get<number>('statusBar.priority', 30);
+	const priority = getConfiguration('snippetstudio').get<number>('statusBar.priority', 30);
 	snippetIndicator = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, priority);
 
 	updateSnippetIndicatorText();
@@ -49,7 +47,7 @@ function updateSnippetIndicatorText() {
 				? '$(book)'
 				: '$(repo)';
 	if (
-		vscode.workspace.getConfiguration('snippetstudio').get<boolean>('statusBar.showLanguage') &&
+		getConfiguration('snippetstudio').get<boolean>('statusBar.showLanguage') &&
 		langId !== undefined
 	) {
 		icon += '  ' + capitalize(langId);

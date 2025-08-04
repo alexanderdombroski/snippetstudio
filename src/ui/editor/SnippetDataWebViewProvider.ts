@@ -1,4 +1,4 @@
-import vscode from '../../vscode';
+import vscode, { Uri, executeCommand } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import SnippetDataManager from './SnippetDataManager';
@@ -43,7 +43,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 
 	// eslint-disable-next-line no-unused-vars
 	private async _getHtmlForWebview(webview: vscode.Webview) {
-		const htmlPath = vscode.Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
+		const htmlPath = Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 
 		try {
 			return await fs.readFile(htmlPath.fsPath, 'utf8');
@@ -70,7 +70,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 					if (uriKey) {
 						this._snippetDataManager.setData(uriKey, snippetData);
 					}
-					vscode.commands.executeCommand('snippetstudio.editor.save');
+					executeCommand('snippetstudio.editor.save');
 					break;
 				}
 				case 'updatePartialSnippetData': {

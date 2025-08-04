@@ -1,4 +1,4 @@
-import vscode from './vscode';
+import vscode, { getConfiguration } from './vscode';
 
 import SnippetViewProvider from './ui/SnippetViewProvider';
 import LocationTreeProvider from './ui/LocationTreeProvider';
@@ -48,7 +48,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	initSnippetGistsCommands(context);
 	initSnippetLinkCommands(context);
 
-	if (vscode.workspace.getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
+	if (getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
 		const { createStatusBar } = await import('./ui/statusBar.js');
 		createStatusBar(context);
 	}

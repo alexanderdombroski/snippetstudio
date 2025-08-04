@@ -1,4 +1,4 @@
-import vscode from '../vscode';
+import vscode, { showQuickPick } from '../vscode';
 
 let langIds: string[] = [];
 (async function loadLangs() {
@@ -9,7 +9,7 @@ let langIds: string[] = [];
  * Prompts the user to select a language
  */
 async function selectLanguage(): Promise<string | undefined> {
-	return await vscode.window.showQuickPick(langIds, {
+	return await showQuickPick(langIds, {
 		placeHolder: 'Select a language',
 		canPickMany: false,
 	});

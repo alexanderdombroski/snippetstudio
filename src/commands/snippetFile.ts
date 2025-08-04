@@ -1,8 +1,12 @@
-import vscode from '../vscode';
+import vscode, {
+	registerCommand,
+	executeCommand,
+	showTextDocument,
+	openTextDocument,
+	Uri,
+} from '../vscode';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
-
-const { registerCommand, executeCommand } = vscode.commands;
 
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Open Snippets file
@@ -88,8 +92,8 @@ export function refreshAll() {
 }
 
 async function openSnippetFile(filepath: string) {
-	const document = await vscode.workspace.openTextDocument(vscode.Uri.file(filepath));
-	await vscode.window.showTextDocument(document);
+	const document = await openTextDocument(Uri.file(filepath));
+	await showTextDocument(document);
 }
 
 export default initSnippetFileCommands;

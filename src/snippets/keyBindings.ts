@@ -2,7 +2,13 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import vscode, {
+	openTextDocument,
+	showTextDocument,
+	executeCommand,
+	Range,
+	Selection,
+} from '../vscode';
 import path from 'node:path';
 import { getActiveProfilePath } from '../utils/profile';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
@@ -36,9 +42,9 @@ async function promptAddKeybinding(item: TreePathItem) {
 	});
 
 	await writeJson(keyBindPath, keybindings);
-	const doc = await vscode.workspace.openTextDocument(keyBindPath);
-	const editor = await vscode.window.showTextDocument(doc);
-	await vscode.commands.executeCommand('workbench.action.files.revert');
+	const doc = await openTextDocument(keyBindPath);
+	const editor = await showTextDocument(doc);
+	await executeCommand('workbench.action.files.revert');
 
 	const text = doc.getText();
 	const index = text.indexOf(placeholder);
@@ -46,8 +52,8 @@ async function promptAddKeybinding(item: TreePathItem) {
 		return;
 	}
 	const position = doc.positionAt(index);
-	const range = new vscode.Range(position, position.translate(0, placeholder.length));
-	editor.selection = new vscode.Selection(range.start, range.end);
+	const range = new Range(position, position.translate(0, placeholder.length));
+	editor.selection = new Selection(range.start, range.end);
 	editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
 }
 

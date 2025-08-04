@@ -2,7 +2,13 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import vscode, {
+	showInputBox,
+	showInformationMessage,
+	openExternal,
+	Uri,
+	getConfiguration,
+} from '../vscode';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
@@ -27,7 +33,7 @@ async function createGist(context: vscode.ExtensionContext) {
 
 	const fileContent = JSON.stringify(snippetsToExport, null, 2);
 
-	let desc = await vscode.window.showInputBox({ prompt: 'Optional: Type a desc' });
+	let desc = await showInputBox({ prompt: 'Optional: Type a desc' });
 	const msg = 'Created using SnippetStudio';
 	desc = desc ? `${desc.trim()} | ${msg}` : msg;
 
@@ -42,13 +48,13 @@ async function createGist(context: vscode.ExtensionContext) {
 	});
 
 	const openInBrowser = 'Open Gist';
-	vscode.window
-		.showInformationMessage(`Successfully created gist '${filename}'`, openInBrowser)
-		.then((selection) => {
+	showInformationMessage(`Successfully created gist '${filename}'`, openInBrowser).then(
+		(selection) => {
 			if (selection === openInBrowser && response.data.html_url) {
-				vscode.env.openExternal(vscode.Uri.parse(response.data.html_url));
+				openExternal(Uri.parse(response.data.html_url));
 			}
-		});
+		}
+	);
 }
 
 async function importGist(context: vscode.ExtensionContext) {
@@ -73,14 +79,12 @@ async function saveCodeSnippets(
 	const client = await getOctokitClient(context);
 	const response = await client.request('GET /gists/{gist_id}', { gist_id });
 	if (response.data.files === undefined) {
-		vscode.window.showInformationMessage("Couldn't find any files in this gist.");
+		showInformationMessage("Couldn't find any files in this gist.");
 		return;
 	}
 
 	let fileCount = 0;
-	const includeAll = !vscode.workspace
-		.getConfiguration('snippetstudio')
-		.get<boolean>('gists.onlySnippets');
+	const includeAll = !getConfiguration('snippetstudio').get<boolean>('gists.onlySnippets');
 
 	await Promise.all(
 		Object.values(response.data.files).map(async (file) => {
@@ -103,7 +107,7 @@ async function saveCodeSnippets(
 		})
 	);
 
-	vscode.window.showInformationMessage(`Saved ${fileCount} files in ${saveDir}`);
+	showInformationMessage(`Saved ${fileCount} files in ${saveDir}`);
 }
 
 export { createGist, importGist };

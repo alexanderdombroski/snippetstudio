@@ -2,7 +2,12 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import vscode, {
+	showOpenDialog,
+	showInformationMessage,
+	showQuickPick,
+	showInputBox,
+} from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import path from 'node:path';
@@ -34,7 +39,7 @@ export async function importCodeProfileSnippets(context: vscode.ExtensionContext
 			run: fromUrl,
 		},
 	];
-	const selection = await vscode.window.showQuickPick(items, {
+	const selection = await showQuickPick(items, {
 		title: 'Select a source to get snippets from a built in code profile.',
 	});
 	if (selection === undefined) {
@@ -62,7 +67,7 @@ async function saveCodeProfiles(
 ): Promise<VSCodeSnippets | undefined> {
 	const firstParse: { snippets?: string } = await processJsonWithComments(profileFileContent);
 	if (!firstParse.snippets) {
-		vscode.window.showInformationMessage("Target code profile file didn't have snippets");
+		showInformationMessage("Target code profile file didn't have snippets");
 		return;
 	}
 	const secondParse: { snippets: { [filename: string]: string } } = await processJsonWithComments(
@@ -89,7 +94,7 @@ async function saveCodeProfiles(
 // ------------------------------ Get Code Profile File Content ------------------------------
 
 async function fromFile(): Promise<string[] | undefined> {
-	const uris = await vscode.window.showOpenDialog({
+	const uris = await showOpenDialog({
 		canSelectFiles: true,
 		canSelectFolders: false,
 		canSelectMany: true,
@@ -130,7 +135,7 @@ async function fromGist(context: vscode.ExtensionContext): Promise<string[] | un
 	) as { content: string; filename: string; type: string }[];
 
 	if (files.length === 0) {
-		vscode.window.showInformationMessage("Couldn't find any .code-profiles files in this gist.");
+		showInformationMessage("Couldn't find any .code-profiles files in this gist.");
 		return;
 	}
 
@@ -148,7 +153,7 @@ async function fromBuiltIn(): Promise<string[] | undefined> {
 		// 'nodejs',
 	];
 
-	const selected = await vscode.window.showQuickPick(
+	const selected = await showQuickPick(
 		validProfiles.map((template) => ({ label: template })),
 		{ title: 'Choose a code profile template' }
 	);
@@ -162,7 +167,7 @@ async function fromBuiltIn(): Promise<string[] | undefined> {
 }
 
 async function fromUrl(): Promise<string[] | undefined> {
-	const url = await vscode.window.showInputBox({
+	const url = await showInputBox({
 		title: 'Paste a URL to a raw .code-snippets file',
 	});
 	if (url) {

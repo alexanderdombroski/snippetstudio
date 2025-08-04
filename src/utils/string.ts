@@ -1,4 +1,4 @@
-import vscode from '../vscode';
+import vscode, { executeCommand, Selection } from '../vscode';
 
 function titleCase(str: string): string {
 	return str
@@ -25,10 +25,10 @@ async function unTabMultiline(
 
 	if (!selection.isSingleLine) {
 		const start = new vscode.Position(selection.start.line, 0);
-		selection = new vscode.Selection(start, editor.document.lineAt(selection.end.line).range.end);
+		selection = new Selection(start, editor.document.lineAt(selection.end.line).range.end);
 	}
 
-	await vscode.commands.executeCommand('editor.action.indentationToSpaces');
+	await executeCommand('editor.action.indentationToSpaces');
 	const selectedText = editor.document.getText(selection);
 	const lines = selectedText.split(/\r\n|\r|\n/);
 	const spaces = countMinSpaces(lines);

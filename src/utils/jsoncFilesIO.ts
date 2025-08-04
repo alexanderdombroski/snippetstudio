@@ -1,5 +1,5 @@
 import * as fs from 'node:fs/promises';
-import vscode from '../vscode';
+import vscode, { showErrorMessage, showInformationMessage, Uri } from '../vscode';
 import path from 'node:path';
 import type { GenericJson, VSCodeSnippets } from '../types';
 import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
@@ -65,7 +65,7 @@ export async function readSnippetFile(
 		const cleanedJson: VSCodeSnippets = await processJsonWithComments(jsonc);
 		return tryFlatten ? flattenScopedExtensionSnippets(cleanedJson) : cleanedJson;
 	} catch {
-		vscode.window.showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
+		showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
 	}
 }
 
@@ -91,12 +91,10 @@ export async function writeSnippetFile(
 			await fs.writeFile(filepath, jsonString);
 		}
 		if (!silent) {
-			vscode.window.showInformationMessage(successMessage);
+			showInformationMessage(successMessage);
 		}
 	} catch {
-		vscode.window.showErrorMessage(
-			`Unable to update file ${path.dirname(filepath)}\n\n${filepath}`
-		);
+		showErrorMessage(`Unable to update file ${path.dirname(filepath)}\n\n${filepath}`);
 	}
 }
 
@@ -112,5 +110,5 @@ export async function readJson(filepath: string): Promise<GenericJson> {
 
 export async function writeJson(filepath: string, jsonObj: GenericJson) {
 	const content = Buffer.from(JSON.stringify(jsonObj, null, 4), 'utf-8');
-	await vscode.workspace.fs.writeFile(vscode.Uri.file(filepath), content);
+	await vscode.workspace.fs.writeFile(Uri.file(filepath), content);
 }

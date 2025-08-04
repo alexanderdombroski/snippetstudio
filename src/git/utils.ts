@@ -2,10 +2,10 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../vscode';
+import { showInputBox, showErrorMessage } from '../vscode';
 
 export async function getGistId() {
-	const identifier = await vscode.window.showInputBox({
+	const identifier = await showInputBox({
 		title: 'Input a gist id, share url, or clone url',
 	});
 	if (identifier) {
@@ -42,6 +42,6 @@ function extractGistId(identifier: string): string {
 	}
 
 	const error = new Error(`Invalid Gist identifier: ${identifier}`);
-	vscode.window.showErrorMessage(error.message);
+	showErrorMessage(error.message);
 	throw error;
 }

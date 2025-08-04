@@ -1,4 +1,4 @@
-import vscode from '../../vscode';
+import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
 import type { SnippetData } from '../../types';
 import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
@@ -29,7 +29,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		this.scheme = scheme;
 		this._snippetDataManager = manager;
 
-		vscode.window.onDidChangeActiveTextEditor((editor) => {
+		onDidChangeActiveTextEditor((editor) => {
 			if (editor?.document.uri.scheme === this.scheme) {
 				this._highlightSnippetInsertionFeatures(editor);
 			}
@@ -60,9 +60,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		if (
 			change.text >= '0' &&
 			change.text <= '9' &&
-			vscode.workspace
-				.getConfiguration('snippetstudio')
-				.get<boolean>('editor.autoEscapeDollarSigns')
+			getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSigns')
 		) {
 			const newText = escapeDollarSignIfNeeded(changeEvent.document.getText(), change.rangeOffset);
 
@@ -74,12 +72,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 			let edit = new vscode.WorkspaceEdit();
 			edit.replace(
 				changeEvent.document.uri,
-				new vscode.Range(
-					0,
-					0,
-					changeEvent.document.lineCount,
-					changeEvent.document.getText().length
-				),
+				new Range(0, 0, changeEvent.document.lineCount, changeEvent.document.getText().length),
 				newText
 			);
 			vscode.workspace.applyEdit(edit);
@@ -142,7 +135,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		const parentPath = uri.path.substring(uri.path.lastIndexOf('/') + 1);
 		const fileName = uri.path.substring(0, uri.path.lastIndexOf('/') + 1);
 		if (!this._directories.has(parentPath)) {
-			this.createDirectory(vscode.Uri.parse(this.scheme + ':' + parentPath));
+			this.createDirectory(Uri.parse(this.scheme + ':' + parentPath));
 		}
 		this._directories.get(parentPath)?.add(fileName);
 	}
@@ -201,7 +194,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
 			const startPos = document.positionAt(match.index);
 			const endPos = document.positionAt(match.index + match[0].length);
-			decorations.push({ range: new vscode.Range(startPos, endPos) });
+			decorations.push({ range: new Range(startPos, endPos) });
 		}
 
 		editor.setDecorations(this._insertionFeatureDecorationType, decorations);

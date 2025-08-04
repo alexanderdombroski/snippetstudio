@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode from '../../vscode';
+import vscode, { showQuickPick } from '../../vscode';
 import path from 'node:path';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
@@ -89,7 +89,7 @@ async function chooseSnippetFile(langs: string[]) {
 		label: path.basename(fp),
 		description: fp,
 	}));
-	const selected = await vscode.window.showQuickPick(options, {
+	const selected = await showQuickPick(options, {
 		title: 'Pick a file to save this snippet to after editing',
 	});
 	return selected?.description;

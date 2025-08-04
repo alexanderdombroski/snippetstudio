@@ -1,10 +1,10 @@
-import vscode from '../vscode';
+import vscode, { registerCommand } from '../vscode';
 import { refreshAll } from './snippetFile';
 import type { TreePathItem } from '../ui/templates';
 
 async function initSnippetLinkCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.link', async (item: TreePathItem) => {
+		registerCommand('snippetstudio.file.link', async (item: TreePathItem) => {
 			const { manageLinkLocations } = await import('../snippets/links/commands.js');
 			await manageLinkLocations(!!item.contextValue?.includes('linked'), item.path);
 			refreshAll();

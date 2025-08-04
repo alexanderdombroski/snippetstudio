@@ -1,4 +1,10 @@
-import vscode from '../../vscode';
+import vscode, {
+	registerCommand,
+	executeCommand,
+	getConfiguration,
+	showErrorMessage,
+	onDidChangeActiveTextEditor,
+} from '../../vscode';
 import type SnippetEditorProvider from './SnippetEditorProvider';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { VSCodeSnippet } from '../../types';
@@ -9,12 +15,13 @@ function initSnippetEditorCommands(
 	provider: SnippetEditorProvider
 ) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.editor.save', async () => {
-			if (vscode.window.activeTextEditor?.document.uri.scheme === 'snippetstudio') {
-				const body = vscode.window.activeTextEditor.document.getText().split(/\r\n|\r|\n/);
+		registerCommand('snippetstudio.editor.save', async () => {
+			const editor = vscode.window.activeTextEditor;
+			if (editor?.document.uri.scheme === 'snippetstudio') {
+				const body = editor.document.getText().split(/\r\n|\r|\n/);
 				const data = provider.getSnippetData();
 				if (data === undefined) {
-					vscode.window.showErrorMessage('Cannot save snippet without snippet data');
+					showErrorMessage('Cannot save snippet without snippet data');
 					return;
 				}
 				const prefix =
@@ -28,31 +35,31 @@ function initSnippetEditorCommands(
 				if (data.scope) {
 					snippet.scope = data.scope.trim();
 				}
-				const capitalize = vscode.workspace
-					.getConfiguration('snippetstudio')
-					.get<boolean>('autoCapitalizeSnippetName');
+				const capitalize = getConfiguration('snippetstudio').get<boolean>(
+					'autoCapitalizeSnippetName'
+				);
 				const { writeSnippet } = await import('../../snippets/updateSnippets.js');
 				writeSnippet(
 					data.filename,
 					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
 					snippet
 				);
-				vscode.commands.executeCommand('workbench.action.closeActiveEditor');
-				vscode.commands.executeCommand('snippetstudio.refresh');
+				executeCommand('workbench.action.closeActiveEditor');
+				executeCommand('snippetstudio.refresh');
 			}
 		}),
-		vscode.commands.registerCommand('snippetstudio.editor.cancel', () => {
+		registerCommand('snippetstudio.editor.cancel', () => {
 			const uri = getCurrentUri();
 
 			if (uri) {
 				provider.delete(uri);
-				vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+				executeCommand('workbench.action.closeActiveEditor');
 			}
 		})
 	);
 
-	vscode.window.onDidChangeActiveTextEditor((editor) => {
-		vscode.commands.executeCommand(
+	onDidChangeActiveTextEditor((editor) => {
+		executeCommand(
 			'setContext',
 			'snippetstudio.editorVisible',
 			editor?.document.uri.scheme === 'snippetstudio'

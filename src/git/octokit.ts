@@ -1,5 +1,5 @@
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
-import vscode from '../vscode';
+import vscode, { showInformationMessage, openExternal, Uri } from '../vscode';
 
 let client: Octokit | null = null;
 
@@ -23,21 +23,19 @@ async function createOctokitClient(context: vscode.ExtensionContext): Promise<Oc
 			scopes: ['gist'],
 			onVerification: (verification) => {
 				const message = 'Copy Code & Open in Browser';
-				vscode.window
-					.showInformationMessage(
-						`Authorize SnippetStudio with GitHub using code ${verification.user_code}?`,
-						{ modal: true },
-						message
-					)
-					.then((selection) => {
-						if (selection === message) {
-							vscode.env.openExternal(vscode.Uri.parse(verification.verification_uri));
-							vscode.env.clipboard.writeText(verification.user_code);
-							vscode.window.showInformationMessage(
-								`${verification.user_code} copied to clipboard and redirected to ${verification.verification_uri}`
-							);
-						}
-					});
+				showInformationMessage(
+					`Authorize SnippetStudio with GitHub using code ${verification.user_code}?`,
+					{ modal: true },
+					message
+				).then((selection) => {
+					if (selection === message) {
+						openExternal(Uri.parse(verification.verification_uri));
+						vscode.env.clipboard.writeText(verification.user_code);
+						showInformationMessage(
+							`${verification.user_code} copied to clipboard and redirected to ${verification.verification_uri}`
+						);
+					}
+				});
 			},
 		});
 

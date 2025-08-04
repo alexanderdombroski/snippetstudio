@@ -1,4 +1,4 @@
-import vscode from '../vscode';
+import vscode, { onDidChangeActiveTextEditor } from '../vscode';
 import loadSnippets from '../snippets/loadSnippets';
 import {
 	unloadedDropdownTemplate,
@@ -36,7 +36,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 			this.refresh();
 		});
 
-		vscode.window.onDidChangeActiveTextEditor(async () => {
+		onDidChangeActiveTextEditor(async () => {
 			const newLangId = getCurrentLanguage();
 			if (newLangId && this.langId !== newLangId) {
 				this.langId = newLangId;

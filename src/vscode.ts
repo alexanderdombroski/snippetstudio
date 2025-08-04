@@ -2,4 +2,39 @@
 // Import the module and reference it with the alias vscode in your code below
 // Using a wrapper fixes esbuild's tendency to import vscode multiple times when chunking
 import * as vscode from 'vscode';
+
+export const {
+	SnippetString,
+	CompletionItem,
+	MarkdownString,
+	Uri,
+	ThemeIcon,
+	Range,
+	Selection,
+	TreeItem,
+} = vscode;
+
+export const { registerTextEditorCommand, registerCommand, executeCommand } = vscode.commands;
+
+export const { Event } = vscode.CompletionItemKind;
+
+export const { onDidChangeTextDocument, getConfiguration, openTextDocument } = vscode.workspace;
+
+export const {
+	showQuickPick,
+	showInformationMessage,
+	showWarningMessage,
+	showErrorMessage,
+	showInputBox,
+	showTextDocument,
+	createTerminal,
+	showOpenDialog,
+	createQuickPick,
+	onDidChangeActiveTextEditor,
+} = vscode.window;
+
+export const { openExternal } = vscode.env;
+
+export const { None, Collapsed, Expanded } = vscode.TreeItemCollapsibleState;
+
 export default vscode;

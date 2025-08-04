@@ -2,9 +2,9 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
+import vscode, { showQuickPick, showInformationMessage } from '../vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
-import vscode from '../vscode';
 import path from 'node:path';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import type { PackageJsonSnippetsSection, VSCodeSnippets } from '../types';
@@ -24,7 +24,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 		label: dir.name,
 		description: dir.path,
 	}));
-	const selections = await vscode.window.showQuickPick(options, {
+	const selections = await showQuickPick(options, {
 		title: 'Choose a built in extension to import snippets from.',
 		canPickMany: true,
 	});
@@ -44,7 +44,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 		]);
 
 		if (snippetFiles === undefined) {
-			vscode.window.showInformationMessage(`Couldn't find any snippets for ${selection.label}`);
+			showInformationMessage(`Couldn't find any snippets for ${selection.label}`);
 			continue;
 		}
 

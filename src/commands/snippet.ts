@@ -1,4 +1,9 @@
-import vscode from '../vscode';
+import vscode, {
+	registerCommand,
+	executeCommand,
+	showInformationMessage,
+	getConfiguration,
+} from '../vscode';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
@@ -8,12 +13,10 @@ import { getConfirmation, getSelection } from '../utils/user';
 import { snippetBodyAsString } from '../utils/string';
 import { getGlobalLangFile } from '../utils/profile';
 
-const { registerCommand, executeCommand } = vscode.commands;
-
 function initSnippetCommands(context: vscode.ExtensionContext) {
 	// Show Snippet Body
 	const showSnippetOnDoubleClick = onDoubleClick((item: TreePathItem) => {
-		vscode.window.showInformationMessage(item.tooltip?.toString() ?? '');
+		showInformationMessage(item.tooltip?.toString() ?? '');
 	});
 	context.subscriptions.push(
 		registerCommand('snippetstudio.snippet.showBody', (item: TreePathItem) => {
@@ -103,7 +106,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.snippet.delete', async (item: TreePathItem) => {
 			if (
-				vscode.workspace.getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
+				getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
 				!(await getConfirmation(`Are you sure you want to delete "${item.description}"?`))
 			) {
 				return;
@@ -141,9 +144,7 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 }
 
 function defaultPrefix(): string {
-	return (
-		vscode.workspace.getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? ''
-	);
+	return getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? '';
 }
 
 function getLangFromSnippetFilePath(filepath: string): string | undefined {
