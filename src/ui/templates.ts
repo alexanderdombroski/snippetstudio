@@ -14,6 +14,8 @@ import {
 	getProfiles,
 } from '../utils/profile';
 
+const { None, Collapsed, Expanded } = vscode.TreeItemCollapsibleState;
+
 export class TreePathItem extends vscode.TreeItem {
 	constructor(
 		public readonly label: string,
@@ -48,7 +50,7 @@ export function createTreeItemFromSnippet(
 	contextValue: string = 'snippet'
 ): TreePathItem {
 	const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(',') : snippet.prefix;
-	const treeItem = new TreePathItem(prefix, vscode.TreeItemCollapsibleState.None, path);
+	const treeItem = new TreePathItem(prefix, None, path);
 
 	treeItem.description = snippetTitle;
 	treeItem.contextValue = contextValue;
@@ -87,7 +89,7 @@ export function selectedLanguageTemplate(
 ): vscode.TreeItem {
 	const treeItem = new vscode.TreeItem(
 		langId === undefined ? 'No Language Open' : `${langId}`.toUpperCase(),
-		collapsible ? vscode.TreeItemCollapsibleState.Expanded : vscode.TreeItemCollapsibleState.None
+		collapsible ? Expanded : None
 	);
 	treeItem.tooltip = 'The language of the open file';
 	treeItem.contextValue = 'active-snippets';
@@ -96,10 +98,7 @@ export function selectedLanguageTemplate(
 }
 
 export function unloadedDropdownTemplate(): vscode.TreeItem {
-	const unloadedDropdown = new vscode.TreeItem(
-		'Other Profiles',
-		vscode.TreeItemCollapsibleState.Collapsed
-	);
+	const unloadedDropdown = new vscode.TreeItem('Other Profiles', Collapsed);
 	unloadedDropdown.contextValue = 'disabled-dropdown';
 	unloadedDropdown.tooltip =
 		"Snippets in these files won't be expandable until you switch your profile";
@@ -114,7 +113,7 @@ export function snippetLocationTemplate(
 ): TreePathItem {
 	const treeItem = new TreePathItem(
 		path.basename(filepath),
-		collapsible ? vscode.TreeItemCollapsibleState.Collapsed : vscode.TreeItemCollapsibleState.None,
+		collapsible ? Collapsed : None,
 		filepath
 	);
 	treeItem.description = shortenFullPath(filepath);
@@ -137,16 +136,13 @@ export function snippetLocationTemplate(
 // ---------- Extension Dropdowns ----------
 
 export function extensionCategoryDropdown() {
-	const dropdown = new vscode.TreeItem(
-		'Extension Snippets',
-		vscode.TreeItemCollapsibleState.Collapsed
-	);
+	const dropdown = new vscode.TreeItem('Extension Snippets', Collapsed);
 	dropdown.tooltip = 'Snippets that come packaged with extensions.';
 	dropdown.iconPath = new vscode.ThemeIcon('extensions');
 	return dropdown;
 }
 function extensionDropdown(indentifer: string, name: string): vscode.TreeItem {
-	const treeItem = new vscode.TreeItem(name, vscode.TreeItemCollapsibleState.Collapsed);
+	const treeItem = new vscode.TreeItem(name, Collapsed);
 	treeItem.description = indentifer;
 	treeItem.contextValue = 'extension-dropdown';
 	return treeItem;
@@ -204,8 +200,7 @@ export async function snippetLocationDropdownTemplates(
 ): Promise<[SnippetCategoryTreeItem[] | vscode.TreeItem[], SnippetCategoryTreeItem[]]> {
 	const activePath = await getActiveProfileSnippetsDir();
 	const activeProfile = await getActiveProfile();
-	const getCollapsedState = (collapsed: boolean) =>
-		collapsed ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed;
+	const getCollapsedState = (collapsed: boolean) => (collapsed ? None : Collapsed);
 
 	// ------------------------- Global Dropdown -------------------------
 	const global = new SnippetCategoryTreeItem(
@@ -261,10 +256,7 @@ export async function snippetLocationDropdownTemplates(
 		pd.contextValue = 'profile-dropdown category-dropdown';
 		pd.description = shortenFullPath(pd.location);
 	});
-	const otherProfilesDropdown = new vscode.TreeItem(
-		'Profiles Snippets',
-		vscode.TreeItemCollapsibleState.Collapsed
-	);
+	const otherProfilesDropdown = new vscode.TreeItem('Profiles Snippets', Collapsed);
 	otherProfilesDropdown.tooltip =
 		'Read [VS Code Profile Documentation](https://code.visualstudio.com/docs/configure/profiles) to learn more about profiles!';
 	otherProfilesDropdown.contextValue = 'profile-dropdown';

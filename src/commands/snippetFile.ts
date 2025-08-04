@@ -9,13 +9,15 @@ import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { isSnippetLinked } from '../snippets/links/config';
 import { exists } from '../utils/fsInfo';
 
+const { registerCommand, executeCommand } = vscode.commands;
+
 function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Open Snippets file
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.open', async (item: TreePathItem) => {
+		registerCommand('snippetstudio.file.open', async (item: TreePathItem) => {
 			await openSnippetFile(item.path);
 		}),
-		vscode.commands.registerCommand(
+		registerCommand(
 			'snippetstudio.file.openFromDouble',
 			onDoubleClick(async (item: TreePathItem) => {
 				await openSnippetFile(item.path);
@@ -25,7 +27,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
 	// Create Global Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.createGlobalLang', async () => {
+		registerCommand('snippetstudio.file.createGlobalLang', async () => {
 			const { createGlobalLangFile } = await import('../snippets/newSnippetFile.js');
 			createGlobalLangFile();
 			refreshAll();
@@ -33,7 +35,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	);
 	// Create Local Mixed Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.createProjectSnippets', async () => {
+		registerCommand('snippetstudio.file.createProjectSnippets', async () => {
 			const { createLocalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createLocalSnippetsFile();
 			refreshAll();
@@ -41,7 +43,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	);
 	// Create Global Mixed Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.createGlobalSnippets', async () => {
+		registerCommand('snippetstudio.file.createGlobalSnippets', async () => {
 			const { createGlobalSnippetsFile } = await import('../snippets/newSnippetFile.js');
 			await createGlobalSnippetsFile();
 			refreshAll();
@@ -50,7 +52,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
 	// Delete Snippet File
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.file.delete', async (treeItem: TreePathItem) => {
+		registerCommand('snippetstudio.file.delete', async (treeItem: TreePathItem) => {
 			if (await isSnippetLinked(treeItem.path)) {
 				vscode.window.showWarningMessage(
 					"Don't delete a linked snippet file until you unlink it first!"
@@ -58,47 +60,44 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 				return;
 			}
 			await deleteFile(treeItem.path);
-			vscode.commands.executeCommand('snippetstudio.refreshLocations');
+			executeCommand('snippetstudio.refreshLocations');
 		})
 	);
 
 	// Export Snippet Files
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.snippet.export', async () => {
+		registerCommand('snippetstudio.snippet.export', async () => {
 			const { exportSnippets } = await import('../snippets/newSnippetFile.js');
 			exportSnippets();
 		})
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand(
-			'snippetstudio.extension.extract',
-			async (item: TreePathItem) => {
-				const basename = (await getFileName()) + '.code-snippets';
-				if (basename === 'undefined.code-snippets') {
-					return;
-				}
-				const dirname = await chooseLocalGlobal();
-				if (dirname === undefined) {
-					return;
-				}
-
-				const fp = path.join(dirname, basename);
-
-				const langs = await getExtensionSnippetLangs(item.path);
-				const scope = langs.join(',');
-
-				const snippets = await readSnippetFile(item.path, true);
-				if (snippets === undefined) {
-					return;
-				}
-				Object.values(snippets).forEach((obj) => (obj.scope = scope));
-				await writeSnippetFile(fp, snippets, 'Copied extension snippets for safe editing.');
-
-				refreshAll();
+		registerCommand('snippetstudio.extension.extract', async (item: TreePathItem) => {
+			const basename = (await getFileName()) + '.code-snippets';
+			if (basename === 'undefined.code-snippets') {
+				return;
 			}
-		),
-		vscode.commands.registerCommand('snippetstudio.extension.fetch', async () => {
+			const dirname = await chooseLocalGlobal();
+			if (dirname === undefined) {
+				return;
+			}
+
+			const fp = path.join(dirname, basename);
+
+			const langs = await getExtensionSnippetLangs(item.path);
+			const scope = langs.join(',');
+
+			const snippets = await readSnippetFile(item.path, true);
+			if (snippets === undefined) {
+				return;
+			}
+			Object.values(snippets).forEach((obj) => (obj.scope = scope));
+			await writeSnippetFile(fp, snippets, 'Copied extension snippets for safe editing.');
+
+			refreshAll();
+		}),
+		registerCommand('snippetstudio.extension.fetch', async () => {
 			const { importBuiltinExtension } = await import('../git/extensionsGithub.js');
 			await importBuiltinExtension(context);
 			refreshAll();
@@ -106,7 +105,7 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	);
 
 	context.subscriptions.push(
-		vscode.commands.registerCommand('snippetstudio.profile.import', async () => {
+		registerCommand('snippetstudio.profile.import', async () => {
 			const { importCodeProfileSnippets } = await import('../snippets/codeProfile.js');
 			await importCodeProfileSnippets(context);
 			refreshAll();
@@ -115,8 +114,8 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 }
 
 export function refreshAll() {
-	vscode.commands.executeCommand('snippetstudio.refresh');
-	vscode.commands.executeCommand('snippetstudio.refreshLocations');
+	executeCommand('snippetstudio.refresh');
+	executeCommand('snippetstudio.refreshLocations');
 }
 
 async function deleteFile(filepath: string) {
