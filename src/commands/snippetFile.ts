@@ -1,13 +1,6 @@
 import vscode from '../vscode';
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
-import { getExtensionSnippetLangs } from '../snippets/extension';
-import { chooseLocalGlobal, getFileName } from '../utils/user';
-import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
-import { isSnippetLinked } from '../snippets/links/config';
-import { exists } from '../utils/fsInfo';
 
 const { registerCommand, executeCommand } = vscode.commands;
 
@@ -53,14 +46,9 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 	// Delete Snippet File
 	context.subscriptions.push(
 		registerCommand('snippetstudio.file.delete', async (treeItem: TreePathItem) => {
-			if (await isSnippetLinked(treeItem.path)) {
-				vscode.window.showWarningMessage(
-					"Don't delete a linked snippet file until you unlink it first!"
-				);
-				return;
-			}
-			await deleteFile(treeItem.path);
-			executeCommand('snippetstudio.refreshLocations');
+			const { deleteSnippetFile } = await import('../snippets/updateSnippets.js');
+			await deleteSnippetFile(treeItem.path);
+			refreshAll();
 		})
 	);
 
@@ -74,27 +62,8 @@ function initSnippetFileCommands(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		registerCommand('snippetstudio.extension.extract', async (item: TreePathItem) => {
-			const basename = (await getFileName()) + '.code-snippets';
-			if (basename === 'undefined.code-snippets') {
-				return;
-			}
-			const dirname = await chooseLocalGlobal();
-			if (dirname === undefined) {
-				return;
-			}
-
-			const fp = path.join(dirname, basename);
-
-			const langs = await getExtensionSnippetLangs(item.path);
-			const scope = langs.join(',');
-
-			const snippets = await readSnippetFile(item.path, true);
-			if (snippets === undefined) {
-				return;
-			}
-			Object.values(snippets).forEach((obj) => (obj.scope = scope));
-			await writeSnippetFile(fp, snippets, 'Copied extension snippets for safe editing.');
-
+			const { extractAllSnippets } = await import('../snippets/extension/transfer.js');
+			await extractAllSnippets(item);
 			refreshAll();
 		}),
 		registerCommand('snippetstudio.extension.fetch', async () => {
@@ -118,49 +87,9 @@ export function refreshAll() {
 	executeCommand('snippetstudio.refreshLocations');
 }
 
-async function deleteFile(filepath: string) {
-	const filename = path.basename(filepath);
-
-	if (!(await exists(filepath))) {
-		vscode.window.showErrorMessage(`${filename} File doesn't exits: ${filepath}`);
-		return;
-	}
-
-	// Confirmation message
-	const confirmation = await vscode.window.showInformationMessage(
-		`Are you sure you want to delete "${filename}"?`,
-		{ modal: true },
-		'Yes',
-		'No'
-	);
-	if (confirmation !== 'Yes') {
-		return;
-	}
-
-	try {
-		await fs.unlink(filepath); // Use fs.promises.unlink
-		vscode.window.showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
-		refreshAll();
-	} catch (error) {
-		if (error instanceof Error) {
-			vscode.window.showErrorMessage(`Error deleting file: ${error.message}`);
-		} else {
-			vscode.window.showErrorMessage(`An unknown error occurred: ${error}`);
-		}
-	}
-}
-
-async function openSnippetFile(filename: string | boolean | undefined) {
-	try {
-		if (filename) {
-			const document = await vscode.workspace.openTextDocument(vscode.Uri.file(`${filename}`));
-			await vscode.window.showTextDocument(document);
-		} else {
-			vscode.window.showErrorMessage('Could not find file path.');
-		}
-	} catch (error: any) {
-		vscode.window.showErrorMessage(`Failed to open snippet file: ${error.message}`);
-	}
+async function openSnippetFile(filepath: string) {
+	const document = await vscode.workspace.openTextDocument(vscode.Uri.file(filepath));
+	await vscode.window.showTextDocument(document);
 }
 
 export default initSnippetFileCommands;

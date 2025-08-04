@@ -10,7 +10,7 @@ import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, isParentDir, shortenFullPath } from '../utils/fsInfo';
 import path from 'node:path';
-import { findAllExtensionSnipppetsByLang } from '../snippets/extension';
+import { findAllExtensionSnipppetsByLang } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
 import type { SnippetLinks } from '../types';

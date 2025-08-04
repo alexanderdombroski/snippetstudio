@@ -42,14 +42,6 @@ async function getActiveProfilePath(): Promise<string> {
 }
 
 /**
- * Returns the filepath of the user's keybindings.json file, if it exists.
- */
-async function getKeybindingsFilePath(): Promise<string> {
-	const profilePath = await getActiveProfilePath();
-	return path.join(profilePath, 'keybindings.json');
-}
-
-/**
  * Gets the folderpath for the active user
  */
 async function getActiveProfileSnippetsDir(): Promise<string> {
@@ -104,7 +96,7 @@ export {
 	getProfiles,
 	getActiveProfile,
 	getGlobalLangFile,
-	getKeybindingsFilePath,
+	getActiveProfilePath,
 	getActiveProfileSnippetsDir,
 	getPathFromProfileLocation,
 	getProfileIdFromPath,

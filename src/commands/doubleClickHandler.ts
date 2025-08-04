@@ -1,4 +1,4 @@
-import { TreePathItem } from '../ui/templates';
+import type { TreePathItem } from '../ui/templates';
 
 function onDoubleClick(callback: (item: TreePathItem) => void): (item: TreePathItem) => void {
 	const clickTimestamps: { [key: string]: number } = {};

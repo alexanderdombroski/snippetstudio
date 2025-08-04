@@ -6,7 +6,12 @@ import vscode from '../vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'node:path';
+import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
+import { locateAllSnippetFiles } from './locateSnippets';
+import type { TreePathItem } from '../ui/templates';
+import { exists } from '../utils/fsInfo';
+import { isSnippetLinked } from './links/config';
 
 // -------------------------- CRUD operations --------------------------
 
@@ -62,4 +67,72 @@ async function readSnippet(
 	return snippets[snippetTitle];
 }
 
-export { deleteSnippet, writeSnippet, readSnippet };
+/**
+ * Handler for the snippet.move command
+ */
+async function moveSnippet(item: TreePathItem) {
+	const [actives, locals, profiles] = await locateAllSnippetFiles();
+	const profileFiles = Object.values(profiles)
+		.map((files) => files)
+		.flat();
+	const files = [...actives, ...locals, ...profileFiles];
+	const options = files
+		.filter((file) => file !== item.path)
+		.map((file) => ({
+			label: path.basename(file),
+			description: file,
+		}));
+	const selected = await vscode.window.showQuickPick(options, {
+		title: 'Pick a snippet file to move the snippet to',
+	});
+	if (selected === undefined) {
+		return;
+	}
+
+	const { readSnippet, writeSnippet } = await import('../snippets/updateSnippets.js');
+	const snippet = (await readSnippet(item.path, item.description as string)) as VSCodeSnippet;
+
+	await Promise.all([
+		writeSnippet(selected.description, item.description as string, snippet),
+		vscode.commands.executeCommand('snippetstudio.snippet.delete', item),
+	]);
+}
+
+async function deleteSnippetFile(filepath: string) {
+	if (await isSnippetLinked(filepath)) {
+		vscode.window.showWarningMessage(
+			"Don't delete a linked snippet file until you unlink it first!"
+		);
+		return;
+	}
+	const filename = path.basename(filepath);
+
+	if (!(await exists(filepath))) {
+		vscode.window.showErrorMessage(`${filename} File doesn't exits: ${filepath}`);
+		return;
+	}
+
+	// Confirmation message
+	const confirmation = await vscode.window.showInformationMessage(
+		`Are you sure you want to delete "${filename}"?`,
+		{ modal: true },
+		'Yes',
+		'No'
+	);
+	if (confirmation !== 'Yes') {
+		return;
+	}
+
+	try {
+		await fs.unlink(filepath);
+		vscode.window.showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
+	} catch (error) {
+		if (error instanceof Error) {
+			vscode.window.showErrorMessage(`Error deleting file: ${error.message}`);
+		} else {
+			vscode.window.showErrorMessage(`An unknown error occurred: ${error}`);
+		}
+	}
+}
+
+export { deleteSnippet, writeSnippet, readSnippet, moveSnippet, deleteSnippetFile };

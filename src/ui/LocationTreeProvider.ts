@@ -6,7 +6,7 @@ import {
 	snippetLocationTemplate,
 	extensionTreeItems,
 } from './templates';
-import { findAllExtensionSnippetsFiles } from '../snippets/extension';
+import { findAllExtensionSnippetsFiles } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';

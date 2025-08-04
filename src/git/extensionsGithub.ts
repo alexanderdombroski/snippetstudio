@@ -9,7 +9,7 @@ import path from 'node:path';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import type { PackageJsonSnippetsSection, VSCodeSnippets } from '../types';
 import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO';
-import { flattenScopedExtensionSnippets } from '../snippets/extension';
+import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { exists } from '../utils/fsInfo';
 
 export async function importBuiltinExtension(context: vscode.ExtensionContext) {

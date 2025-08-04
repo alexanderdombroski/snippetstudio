@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { readJson, readJsoncFilesAsync } from '../utils/jsoncFilesIO';
+import { readJson, readJsoncFilesAsync } from '../../utils/jsoncFilesIO';
 import type {
 	ExtensionSnippetFilesMap,
 	ExtensionSnippets,
@@ -11,8 +11,8 @@ import type {
 	SnippetContribution,
 	VSCodeSnippet,
 	VSCodeSnippets,
-} from '../types';
-import { exists } from '../utils/fsInfo';
+} from '../../types';
+import { exists } from '../../utils/fsInfo';
 
 function getExtensionsDirPath(): string {
 	return path.join(os.homedir(), '.vscode', 'extensions');
