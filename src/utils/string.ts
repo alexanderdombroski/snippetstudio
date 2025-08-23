@@ -1,4 +1,4 @@
-import vscode, { executeCommand, Selection } from '../vscode';
+import vscode, { executeCommand, Selection, Position } from '../vscode';
 
 function titleCase(str: string): string {
 	return str
@@ -24,7 +24,7 @@ async function unTabMultiline(
 	}
 
 	if (!selection.isSingleLine) {
-		const start = new vscode.Position(selection.start.line, 0);
+		const start = new Position(selection.start.line, 0);
 		selection = new Selection(start, editor.document.lineAt(selection.end.line).range.end);
 	}
 

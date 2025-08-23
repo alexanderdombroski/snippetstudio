@@ -12,6 +12,7 @@ export const {
 	Range,
 	Selection,
 	TreeItem,
+	Position,
 } = vscode;
 
 export const { registerTextEditorCommand, registerCommand, executeCommand } = vscode.commands;
@@ -31,6 +32,7 @@ export const {
 	showOpenDialog,
 	createQuickPick,
 	onDidChangeActiveTextEditor,
+	showSaveDialog,
 } = vscode.window;
 
 export const { openExternal } = vscode.env;

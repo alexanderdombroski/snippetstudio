@@ -5,6 +5,7 @@ import vscode, {
 	showInputBox,
 	showQuickPick,
 	Uri,
+	showSaveDialog,
 } from '../vscode';
 import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
@@ -46,7 +47,7 @@ async function getSavePathFromDialog(
 		saveLabel: 'Save',
 	};
 
-	const fileUri = await vscode.window.showSaveDialog(options);
+	const fileUri = await showSaveDialog(options);
 	return fileUri?.fsPath;
 }
 

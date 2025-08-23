@@ -5,7 +5,7 @@ function onDoubleClick(callback: (item: TreePathItem) => void): (item: TreePathI
 	const doubleClickThreshold = 350; // Adjust as needed (milliseconds)
 
 	return (item: TreePathItem) => {
-		if (item && item.label) {
+		if (item && item.path) {
 			const now = Date.now();
 			const lastClick = clickTimestamps[item.label.toString()] || 0;
 
