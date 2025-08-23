@@ -3,6 +3,7 @@
 out/**
 node_modules/**
 src/**
+.git
 .gitignore
 .yarnrc
 esbuild.mjs
@@ -11,7 +12,11 @@ vsc-extension-quickstart.md
 **/eslint.config.mjs
 **/*.map
 **/*.ts
+
 **/.vscode-test.*
+**/.test.ts
+.vitest/
+vitest.config.mts
 
 .env
 *.log

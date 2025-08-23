@@ -3,49 +3,49 @@ import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
 
 const customPlugin = {
-  rules: {
-    'no-extension-on-imports-except-await': {
-      meta: {
-        type: 'problem',
-        docs: {
-          description: "Disallow .js/.ts extensions on imports except awaited dynamic imports",
-        },
-        schema: [],
-      },
-      create(context) {
-        function checkImportSource(node, value) {
-          if (/\.(js|ts)$/.test(value)) {
-            context.report({
-              node,
-              message: "Import paths should not include extensions '.js' or '.ts'",
-            });
-          }
-        }
+	rules: {
+		'no-extension-on-imports-except-await': {
+			meta: {
+				type: 'problem',
+				docs: {
+					description: 'Disallow .js/.ts extensions on imports except awaited dynamic imports',
+				},
+				schema: [],
+			},
+			create(context) {
+				function checkImportSource(node, value) {
+					if (/\.(js|ts)$/.test(value)) {
+						context.report({
+							node,
+							message: "Import paths should not include extensions '.js' or '.ts'",
+						});
+					}
+				}
 
-        return {
-          ImportDeclaration(node) {
-            if (node.source && node.source.value) {
-              checkImportSource(node.source, node.source.value);
-            }
-          },
-          ImportExpression(node) {
-            if (node.parent && node.parent.type === 'AwaitExpression') {
-              return;
-            }
-            if (node.source && typeof node.source.value === 'string') {
-              checkImportSource(node.source, node.source.value);
-            }
-          },
+				return {
+					ImportDeclaration(node) {
+						if (node.source && node.source.value) {
+							checkImportSource(node.source, node.source.value);
+						}
+					},
+					ImportExpression(node) {
+						if (node.parent && node.parent.type === 'AwaitExpression') {
+							return;
+						}
+						if (node.source && typeof node.source.value === 'string') {
+							checkImportSource(node.source, node.source.value);
+						}
+					},
 					ExportNamedDeclaration(node) {
 						// node.source exists if this is a re-export
 						if (node.source && node.source.value) {
 							checkImportSource(node.source, node.source.value);
 						}
 					},
-        };
-      },
-    },
-  }
+				};
+			},
+		},
+	},
 };
 
 export default [
@@ -59,7 +59,7 @@ export default [
 	{
 		plugins: {
 			'@typescript-eslint': typescriptEslint,
-      custom: customPlugin,
+			custom: customPlugin,
 		},
 
 		languageOptions: {
@@ -86,21 +86,13 @@ export default [
 				},
 			],
 			'custom/no-extension-on-imports-except-await': 'error',
-			
+			'no-restricted-imports': ['error', { patterns: ['**/*.test*'] }],
+
 			'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
 			curly: 'warn',
 			eqeqeq: 'warn',
 			'no-throw-literal': 'warn',
 			semi: 'warn',
 		},
-
-		// settings: {
-		// 	'import/extensions': ['.js', '.ts'],
-		// 	'import/resolver': {
-		// 		node: {
-		// 			extensions: [],
-		// 		},
-		// 	},
-		// },
 	},
 ];
