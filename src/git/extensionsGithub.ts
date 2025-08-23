@@ -139,7 +139,7 @@ async function getDirsWithSnippets(client: Octokit) {
 	);
 }
 
-async function folderRequest(client: Octokit, fp: string) {
+export async function folderRequest(client: Octokit, fp: string) {
 	const { data } = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',
@@ -150,7 +150,7 @@ async function folderRequest(client: Octokit, fp: string) {
 	}
 }
 
-async function fileTextRequest(client: Octokit, path: string): Promise<string> {
+export async function fileTextRequest(client: Octokit, path: string): Promise<string> {
 	const { data }: any = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',
