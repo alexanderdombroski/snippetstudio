@@ -1,5 +1,14 @@
 // Move mocks you want to import in here
-import type { ExtensionContext, Disposable } from 'vscode';
+import type {
+	ExtensionContext,
+	Disposable,
+	TreeItem as TreeViewItem,
+	Uri,
+	MarkdownString,
+	TreeItemCollapsibleState,
+	Command,
+	AccessibilityInformation,
+} from 'vscode';
 import { vi, type Mocked } from 'vitest';
 import { Position } from './vscode';
 
@@ -35,3 +44,23 @@ export const TextEditor = class {
 		};
 	}
 };
+
+export class TreeItem implements TreeViewItem {
+	// Core properties
+	label: string;
+	id?: string;
+	iconPath?: string | Uri;
+	description?: string;
+	tooltip?: string | MarkdownString;
+	collapsibleState: TreeItemCollapsibleState | number;
+	contextValue?: string;
+	command?: Command;
+	resourceUri?: Uri;
+	accessibilityInformation?: AccessibilityInformation;
+	path?: string;
+
+	constructor(label: string, collapsibleState: TreeItemCollapsibleState = 0) {
+		this.label = label;
+		this.collapsibleState = collapsibleState;
+	}
+}

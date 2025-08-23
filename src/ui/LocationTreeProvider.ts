@@ -21,11 +21,11 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 
 	// ---------- Constructor ---------- //
 	constructor() {
-		this.refresh();
+		this.__refresh();
 	}
 
-	// ---------- Refresh Methods ---------- //
-	private async refresh() {
+	// ---------- __Refresh Methods ---------- //
+	async __refresh() {
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
 		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
 		const links = await getLinkedSnippets();
@@ -66,7 +66,7 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 			clearTimeout(this.debounceTimer); // Clear previous timer
 		}
 		this.debounceTimer = setTimeout(async () => {
-			await this.refresh(); // Call refresh after delay
+			await this.__refresh(); // Call __refresh after delay
 			this.debounceTimer = undefined; // Clear timer
 		}, 400); // Adjust delay as needed (e.g., 200ms)
 	}

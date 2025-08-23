@@ -36,6 +36,7 @@ export const Selection = class {
 	}
 };
 export { TextEditor } from './shared';
+export { TreeItem } from './shared';
 
 // Commands
 export const registerTextEditorCommand = vi.fn();
@@ -86,25 +87,16 @@ export const onDidChangeActiveTextEditor = vi.fn();
 // Env
 export const openExternal = vi.fn();
 
-export class TreeItem {
-	label: string;
-	collapsibleState?: number;
-	iconPath?: string | { light: string; dark: string };
-	command?: { command: string; title: string; arguments?: any[] };
-
-	constructor(label: string, collapsibleState?: number) {
-		this.label = label;
-		this.collapsibleState = collapsibleState;
-	}
-}
-
 // TreeItemCollapsibleState
 export const None = 0;
 export const Collapsed = 1;
 export const Expanded = 2;
 
 export default {
-	window: { activeTextEditor: vi.fn(), withProgress: vi.fn() },
+	EventEmitter: class {
+		public fire = vi.fn();
+	},
+	window: { activeTextEditor: vi.fn(), withProgress: vi.fn(), createStatusBarItem: vi.fn() },
 	languages: { getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']) },
 	workspace: {
 		folders: [],
@@ -112,6 +104,8 @@ export default {
 		fs: {
 			writeFile: vi.fn(),
 		},
+		onDidChangeConfiguration: vi.fn(),
 	},
 	env: { clipboard: { writeText: vi.fn() } },
+	StatusBarAlignment: { Right: 1 },
 };
