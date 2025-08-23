@@ -15,12 +15,14 @@
 - **VS Code API:** When interacting with the VS Code API, use the `vscode` module.
 - **Dependencies:** Use `npm` to manage dependencies. Add new dependencies to the `package.json` file.
 
-## Tests
+## Tests (vitest)
 
 - Use `vitest` for all tests.
 - All vscode imports are premocked inside of `.vitest/setup.ts` and `.vitest/__mocks__/vscode.ts`. Don't worry about mocking vscode imports or the `src/vscode.ts` file.
 - Write test files next to the file to be tested. Use a `.test.ts` file extension.
 - Don't run the tests after writing the test file.
+- import `Mock` and `Mocked` as a type. `vi.Mock` isn't valid vitest syntax.
+- prefer `it` instead of `test`.
 
 ## NEVER do these things
 

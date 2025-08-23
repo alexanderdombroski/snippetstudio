@@ -116,4 +116,5 @@ export default {
 			writeFile: vi.fn(),
 		},
 	},
+	env: { clipboard: { writeText: vi.fn() } },
 };

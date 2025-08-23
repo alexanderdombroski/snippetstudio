@@ -780,8 +780,9 @@
 		"lint": "eslint src",
 		"profile": "esbuild-visualizer --metadata ./profile/meta.json --filename ./profile/visualizer.html && open ./profile/visualizer.html",
 		"test": "vitest watch",
+		"test:env": "node .vitest/createEnv.mts",
 		"test:ui": "vitest watch --ui",
-		"coverage": "vitest run --coverage",
+		"coverage": "vitest run --coverage --reporter=dot",
 		"coverage:report": "vitest run --coverage && open ./coverage/index.html",
 		"prepare": "husky"
 	},
