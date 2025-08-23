@@ -9,7 +9,17 @@ export const Uri = {
 export const SnippetString = class {};
 export const CompletionItem = class {};
 export const MarkdownString = class {};
-export const ThemeIcon = class {};
+export const ThemeIcon = class {
+	iconPath: string;
+
+	constructor(iconPath: string) {
+		this.iconPath = iconPath;
+	}
+
+	toString(): string {
+		return this.iconPath;
+	}
+};
 export const Range = class {};
 export class Position {
 	constructor(

@@ -24,6 +24,7 @@
 - Don't run the tests after writing the test file.
 - import `Mock` and `Mocked` as a type. `vi.Mock` isn't valid vitest syntax.
 - prefer `it` instead of `test`.
+- Newly exported functions that were only used in one file can be changed to include a private prefix ie `__setConfig`.
 
 ## NEVER do these things
 

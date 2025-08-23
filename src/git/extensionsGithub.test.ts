@@ -10,20 +10,20 @@ describe.skipIf(!process.env.GITHUB_TOKEN)('extensionsGithub', async () => {
 	});
 
 	describe('folderRequest', async () => {
-		it('should return data if response is an array', async () => {
+		it.concurrent('should return data if response is an array', async () => {
 			const result = await __folderRequest(client, '');
 			const names = result?.map((i) => i.name);
 			expect(names).toContain('LICENSE.txt');
 			expect(names).toContain('README.md');
 		});
 
-		it("will throw if the path doesn't exist", async () => {
+		it.concurrent("will throw if the path doesn't exist", async () => {
 			await expect(__folderRequest(client, 'foo/bar')).rejects.toThrow();
 		});
 	});
 
 	describe('fileTextRequest', () => {
-		it('should return decoded text content', async () => {
+		it.concurrent('should return decoded text content', async () => {
 			const result = await __fileTextRequest(client, 'LICENSE.txt');
 			expect(result).toContain('MIT License');
 		});
