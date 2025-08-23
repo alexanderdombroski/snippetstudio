@@ -30,7 +30,7 @@ export async function initGlobalStore(context: vscode.ExtensionContext): Promise
 /**
  * Reads the globalStorage/storage.json VS Code storage file
  */
-async function readGlobalStorage(): Promise<GlobalStorage | undefined> {
+export async function readGlobalStorage(): Promise<GlobalStorage | undefined> {
 	const userPath = initUserPath();
 	if (userPath) {
 		const globalStoragePath = path.join(userPath, 'globalStorage', 'storage.json');
@@ -38,7 +38,7 @@ async function readGlobalStorage(): Promise<GlobalStorage | undefined> {
 	}
 }
 
-function initUserPath(): string | undefined {
+export function initUserPath(): string | undefined {
 	try {
 		const userPath = getUserPath();
 		return userPath;

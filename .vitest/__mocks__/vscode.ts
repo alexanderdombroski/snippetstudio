@@ -1,11 +1,27 @@
 // __mocks__/vscodeWrapper.ts
 import { vi } from 'vitest';
 
+const mockUri = {
+	file: (path: string) => ({ fsPath: path }), // minimal Uri mock
+	parse: vi.fn(),
+};
+
+vi.mock('vscode', async () => {
+	const actual = await vi.importActual<any>('vscode'); // keep other APIs
+
+	return {
+		...actual,
+		Uri: mockUri,
+	};
+});
+
+// Export the mocked Uri for your barrel
+export const Uri = mockUri;
+
 // Basic classes and constructors
 export const SnippetString = class {};
 export const CompletionItem = class {};
 export const MarkdownString = class {};
-export const Uri = { file: (path: string) => ({ path }) };
 export const ThemeIcon = class {};
 export const Range = class {};
 export class Position {
@@ -53,11 +69,22 @@ export const getConfiguration = vi.fn().mockReturnValue({
 });
 export const openTextDocument = vi.fn();
 
+// Helper to create a mock returning a Thenable<T>
+const makeThenable = <T>(impl?: (...args: any[]) => T) => {
+	const fn = vi.fn((...args: any[]): Promise<T> => {
+		if (impl) {
+			return Promise.resolve(impl(...args));
+		}
+		return Promise.resolve(undefined as unknown as T);
+	});
+	return fn;
+};
+
 // Window
 export const showQuickPick = vi.fn();
-export const showInformationMessage = vi.fn();
-export const showWarningMessage = vi.fn();
-export const showErrorMessage = vi.fn();
+export const showInformationMessage = makeThenable((message: string) => message);
+export const showWarningMessage = makeThenable((message: string) => message);
+export const showErrorMessage = makeThenable((message: string) => message);
 export const showInputBox = vi.fn();
 export const showTextDocument = vi.fn();
 export const createTerminal = vi.fn().mockReturnValue({
@@ -84,4 +111,11 @@ export const Expanded = 2;
 export default {
 	window: { activeTextEditor: TextEditor },
 	languages: { getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']) },
+	workspace: {
+		folders: [],
+		workspaceFolders: [],
+		fs: {
+			writeFile: vi.fn(),
+		},
+	},
 };

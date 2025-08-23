@@ -3,11 +3,9 @@
 ## Coding Style and Conventions
 
 - **Language:** All code should be written in TypeScript.
-- **Linting:** The project uses ESLint for linting. Please ensure that your code passes the linter before submitting a pull request.
 - **Naming Conventions:**
   - Use camelCase for variables and functions.
   - Use PascalCase for classes and interfaces.
-  - Prefix interfaces with `I` (e.g., `ISnippet`).
 - **Comments:** Use JSDoc-style comments for all public functions and classes.
 
 ## Best Practices
@@ -20,8 +18,9 @@
 ## Tests
 
 - Use `vitest` for all tests.
-- All vscode imports are premocked inside of `.vitest/setup.ts`. Don't worry about mocking vscode imports or the `src/vscode.ts` file.
+- All vscode imports are premocked inside of `.vitest/setup.ts` and `.vitest/__mocks__/vscode.ts`. Don't worry about mocking vscode imports or the `src/vscode.ts` file.
 - Write test files next to the file to be tested. Use a `.test.ts` file extension.
+- Don't run the tests after writing the test file.
 
 ## NEVER do these things
 
