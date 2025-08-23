@@ -39,8 +39,8 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 
 	for (const selection of selections) {
 		const [snippetFiles, pkgContent] = await Promise.all([
-			folderRequest(client, `extensions/${selection.label}/snippets`),
-			fileTextRequest(client, `extensions/${selection.label}/package.json`),
+			__folderRequest(client, `extensions/${selection.label}/snippets`),
+			__fileTextRequest(client, `extensions/${selection.label}/package.json`),
 		]);
 
 		if (snippetFiles === undefined) {
@@ -57,7 +57,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 
 		const snippetContents = await Promise.all(
 			verifiedSnippetFiles.map((file) =>
-				fileTextRequest(client, `extensions/${selection.label}/snippets/${file.name}`)
+				__fileTextRequest(client, `extensions/${selection.label}/snippets/${file.name}`)
 			)
 		);
 
@@ -87,7 +87,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 }
 
 async function getDirsWithSnippets(client: Octokit) {
-	const res = await folderRequest(client, 'extensions');
+	const res = await __folderRequest(client, 'extensions');
 	const folders = res?.filter((item) => item.type === 'dir') ?? [];
 
 	const extFolders = Array(folders.length);
@@ -112,7 +112,7 @@ async function getDirsWithSnippets(client: Octokit) {
 						increment: (1 / extFolders.length) * 100,
 					});
 
-					const subItems = await folderRequest(client, `extensions/${folder.name}`);
+					const subItems = await __folderRequest(client, `extensions/${folder.name}`);
 
 					const hasSnippets = subItems?.some(
 						(item) => item.type === 'dir' && item.name === 'snippets'
@@ -139,7 +139,7 @@ async function getDirsWithSnippets(client: Octokit) {
 	);
 }
 
-export async function folderRequest(client: Octokit, fp: string) {
+export async function __folderRequest(client: Octokit, fp: string) {
 	const { data } = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',
@@ -150,7 +150,7 @@ export async function folderRequest(client: Octokit, fp: string) {
 	}
 }
 
-export async function fileTextRequest(client: Octokit, path: string): Promise<string> {
+export async function __fileTextRequest(client: Octokit, path: string): Promise<string> {
 	const { data }: any = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',

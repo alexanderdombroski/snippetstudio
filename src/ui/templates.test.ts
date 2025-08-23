@@ -15,15 +15,20 @@ import {
 } from './templates';
 import vscode, { Collapsed, Expanded, None, ThemeIcon } from '../vscode';
 import type { VSCodeSnippet, ExtensionSnippetFilesMap, ExtensionSnippetsMap } from '../types';
-import * as fsInfo from '../utils/fsInfo';
-import * as profile from '../utils/profile';
+import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
+import {
+	getActiveProfile,
+	getActiveProfileSnippetsDir,
+	getPathFromProfileLocation,
+	getProfiles,
+} from '../utils/profile';
 
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/profile');
 
 describe('UI Templates', () => {
 	beforeEach(() => {
-		vi.mocked(fsInfo.shortenFullPath).mockImplementation((p) => (p ? `~/${path.basename(p)}` : ''));
+		vi.mocked(shortenFullPath).mockImplementation((p) => (p ? `~/${path.basename(p)}` : ''));
 	});
 
 	describe('createTreeItemFromSnippet', () => {
@@ -186,20 +191,18 @@ describe('UI Templates', () => {
 
 	describe('snippetLocationDropdownTemplates', () => {
 		beforeEach(() => {
-			vi.mocked(profile.getActiveProfileSnippetsDir).mockResolvedValue('/path/to/active/snippets');
-			vi.mocked(profile.getActiveProfile).mockResolvedValue({
+			vi.mocked(getActiveProfileSnippetsDir).mockResolvedValue('/path/to/active/snippets');
+			vi.mocked(getActiveProfile).mockResolvedValue({
 				name: 'Default',
 				location: 'default/location',
 				icon: 'person',
 			});
-			vi.mocked(profile.getProfiles).mockResolvedValue([
+			vi.mocked(getProfiles).mockResolvedValue([
 				{ name: 'Default', location: 'default/location', icon: 'person' },
 				{ name: 'Work', location: 'work/location', icon: 'briefcase' },
 			]);
-			vi.mocked(fsInfo.getWorkspaceFolder).mockReturnValue('/path/to/workspace');
-			vi.mocked(profile.getPathFromProfileLocation).mockImplementation(
-				(loc) => `/path/to/profiles/${loc}`
-			);
+			vi.mocked(getWorkspaceFolder).mockReturnValue('/path/to/workspace');
+			vi.mocked(getPathFromProfileLocation).mockImplementation((loc) => `/path/to/profiles/${loc}`);
 		});
 
 		it('should create dropdowns for all categories', async () => {
@@ -231,7 +234,7 @@ describe('UI Templates', () => {
 		});
 
 		it('should not show local snippets if no workspace folder is open', async () => {
-			vi.mocked(fsInfo.getWorkspaceFolder).mockReturnValue(undefined);
+			vi.mocked(getWorkspaceFolder).mockReturnValue(undefined);
 			const [topLevel] = await snippetLocationDropdownTemplates(false, false, true, {});
 			expect(topLevel.length).toBe(3); // Global, Extension, Profiles
 			expect(topLevel.find((item) => item.label === 'Local Snippets')).toBeUndefined();
@@ -244,9 +247,7 @@ describe('UI Templates', () => {
 		});
 
 		it('should not create profile dropdowns if only one profile exists', async () => {
-			vi.mocked(profile.getProfiles).mockResolvedValue([
-				{ name: 'Default', location: 'default/location' },
-			]);
+			vi.mocked(getProfiles).mockResolvedValue([{ name: 'Default', location: 'default/location' }]);
 			const [topLevel, profileDropdowns] = await snippetLocationDropdownTemplates(
 				false,
 				false,

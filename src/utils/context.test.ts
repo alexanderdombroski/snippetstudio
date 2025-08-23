@@ -5,9 +5,9 @@ import { readJsonC } from './jsoncFilesIO';
 import { showErrorMessage } from '../vscode';
 import {
 	getUserPath,
-	readGlobalStorage,
+	__readGlobalStorage,
 	initGlobalStore,
-	initUserPath,
+	__initUserPath,
 	getExtensionContext,
 } from './context';
 import { context } from '../../.vitest/__mocks__/shared';
@@ -87,7 +87,7 @@ describe('context', () => {
 				'Code',
 				'User'
 			);
-			const userPath = initUserPath();
+			const userPath = __initUserPath();
 			expect(userPath).toBe(expectedPath);
 		});
 
@@ -95,7 +95,7 @@ describe('context', () => {
 			Object.defineProperty(process, 'platform', {
 				value: 'sunos',
 			});
-			const userPath = initUserPath();
+			const userPath = __initUserPath();
 			expect(showErrorMessage).toHaveBeenCalledWith(
 				`Unsupported platform: sunos. Couldn't find default user path. Want to submit an issue to request support for your device?`,
 				'Open GitHub Issue'
@@ -153,12 +153,12 @@ describe('context', () => {
 			Object.defineProperty(process, 'platform', {
 				value: 'darwin',
 			});
-			const userPath = initUserPath();
+			const userPath = __initUserPath();
 			const expectedPath = path.join(userPath!, 'globalStorage', 'storage.json');
 			const mockStorage = { userDataProfiles: [] };
 			(readJsonC as Mock).mockResolvedValue(mockStorage);
 
-			const result = await readGlobalStorage();
+			const result = await __readGlobalStorage();
 
 			expect(readJsonC).toHaveBeenCalledWith(expectedPath);
 			expect(result).toBe(mockStorage);
@@ -169,7 +169,7 @@ describe('context', () => {
 				value: 'sunos',
 			});
 
-			const result = await readGlobalStorage();
+			const result = await __readGlobalStorage();
 
 			expect(readJsonC).not.toHaveBeenCalled();
 			expect(result).toBeUndefined();

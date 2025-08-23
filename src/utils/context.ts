@@ -19,7 +19,7 @@ export async function getExtensionContext(): Promise<vscode.ExtensionContext> {
  */
 export async function initGlobalStore(context: vscode.ExtensionContext): Promise<boolean> {
 	extensionContext = context;
-	const storage = await readGlobalStorage();
+	const storage = await __readGlobalStorage();
 	if (storage) {
 		context.globalState.update('users', storage.userDataProfiles ?? []);
 		context.globalState.update('profileAssociations', storage.profileAssociations);
@@ -30,15 +30,15 @@ export async function initGlobalStore(context: vscode.ExtensionContext): Promise
 /**
  * Reads the globalStorage/storage.json VS Code storage file
  */
-export async function readGlobalStorage(): Promise<GlobalStorage | undefined> {
-	const userPath = initUserPath();
+export async function __readGlobalStorage(): Promise<GlobalStorage | undefined> {
+	const userPath = __initUserPath();
 	if (userPath) {
 		const globalStoragePath = path.join(userPath, 'globalStorage', 'storage.json');
 		return (await readJsonC(globalStoragePath)) as GlobalStorage;
 	}
 }
 
-export function initUserPath(): string | undefined {
+export function __initUserPath(): string | undefined {
 	try {
 		const userPath = getUserPath();
 		return userPath;
