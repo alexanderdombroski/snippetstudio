@@ -143,11 +143,11 @@ function initSnippetCommands(context: vscode.ExtensionContext) {
 	);
 }
 
-function defaultPrefix(): string {
+export function defaultPrefix(): string {
 	return getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? '';
 }
 
-function getLangFromSnippetFilePath(filepath: string): string | undefined {
+export function getLangFromSnippetFilePath(filepath: string): string | undefined {
 	if (path.extname(filepath) === '.code-snippets') {
 		return;
 	}

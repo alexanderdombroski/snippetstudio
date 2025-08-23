@@ -8,7 +8,13 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8',
 			include: ['src/**'],
-			exclude: ['src/extension.ts', 'src/vscode.ts', '**/*.d.ts'],
+			exclude: ['src/extension.ts', 'src/commands/index.ts', 'src/vscode.ts', '**/*.d.ts'],
+			watermarks: {
+				statements: [40, 75],
+				functions: [50, 80],
+				branches: [50, 80],
+				lines: [40, 75],
+			},
 		},
 	},
 });
