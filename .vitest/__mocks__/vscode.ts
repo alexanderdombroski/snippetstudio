@@ -25,20 +25,7 @@ export const Selection = class {
 		this.end = end;
 	}
 };
-export const TextEditor = class {
-	document: {
-		getText: ReturnType<typeof vi.fn>;
-		lineAt: (line: number) => { range: { end: Position } };
-	};
-	constructor(text = '') {
-		this.document = {
-			// getText returns a string so split() works
-			getText: vi.fn(() => text),
-			// lineAt returns an object with range.end as a Position
-			lineAt: vi.fn((line: number) => ({ range: { end: new Position(line) } })),
-		};
-	}
-};
+export { TextEditor } from './shared';
 
 // Commands
 export const registerTextEditorCommand = vi.fn();
@@ -107,7 +94,7 @@ export const Collapsed = 1;
 export const Expanded = 2;
 
 export default {
-	window: { activeTextEditor: TextEditor },
+	window: { activeTextEditor: vi.fn(), withProgress: vi.fn() },
 	languages: { getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']) },
 	workspace: {
 		folders: [],

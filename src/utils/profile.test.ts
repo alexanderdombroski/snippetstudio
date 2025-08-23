@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import path from 'node:path';
 import type { ProfileInfo, ProfileAssociations } from '../types';
 import {
@@ -10,6 +10,8 @@ import {
 } from './profile';
 import { getExtensionContext, getUserPath } from './context';
 import vscode from '../vscode';
+import { context } from '../../.vitest/__mocks__/shared';
+import type { Uri } from 'vscode';
 
 vi.mock('./context', () => ({
 	getExtensionContext: vi.fn(),
@@ -23,7 +25,9 @@ describe('profile utils', () => {
 			: '/Users/test/Library/Application Support/Code/User';
 
 	beforeEach(() => {
-		vi.mocked(getUserPath).mockReturnValue(mockUserPath);
+		vi.clearAllMocks();
+		(getUserPath as Mock).mockReturnValue(mockUserPath);
+		(getExtensionContext as Mock).mockResolvedValue(context);
 	});
 
 	describe('getPathFromProfileLocation', () => {
@@ -66,12 +70,7 @@ describe('profile utils', () => {
 	describe('getProfiles', () => {
 		it('should return profiles from global state plus the default profile', async () => {
 			const mockProfiles: ProfileInfo[] = [{ location: '123', name: 'Test Profile' }];
-			const mockContext = {
-				globalState: {
-					get: vi.fn().mockReturnValue(mockProfiles),
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
+			(context.globalState.get as Mock).mockReturnValue(mockProfiles);
 
 			const profiles = await getProfiles();
 			expect(profiles).toHaveLength(2);
@@ -80,12 +79,7 @@ describe('profile utils', () => {
 		});
 
 		it('should return only the default profile if global state is empty', async () => {
-			const mockContext = {
-				globalState: {
-					get: vi.fn().mockReturnValue(undefined),
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
+			(context.globalState.get as Mock).mockReturnValue(undefined);
 
 			const profiles = await getProfiles();
 			expect(profiles).toHaveLength(1);
@@ -96,6 +90,11 @@ describe('profile utils', () => {
 	describe('getActiveProfile', () => {
 		const mockProfiles: ProfileInfo[] = [{ location: '123', name: 'Work' }];
 		const mockWorkspaceUri = 'file:///path/to/workspace';
+		beforeEach(() => {
+			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
+				{ uri: { toString: () => mockWorkspaceUri } as Uri, name: 'Work', index: 0 },
+			]);
+		});
 
 		it('should return the profile associated with the current workspace', async () => {
 			const mockAssociations: ProfileAssociations = {
@@ -104,22 +103,14 @@ describe('profile utils', () => {
 				},
 				emptyWindows: {},
 			};
-			const mockContext = {
-				globalState: {
-					get: (key: string) => {
-						if (key === 'users') {
-							return mockProfiles;
-						}
-						if (key === 'profileAssociations') {
-							return mockAssociations;
-						}
-					},
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
-			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
-				{ uri: { toString: () => mockWorkspaceUri } },
-			] as any);
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
 
 			const activeProfile = await getActiveProfile();
 			expect(activeProfile).toEqual({ location: '123', name: 'Work' });
@@ -130,34 +121,20 @@ describe('profile utils', () => {
 				workspaces: {},
 				emptyWindows: {},
 			};
-			const mockContext = {
-				globalState: {
-					get: (key: string) => {
-						if (key === 'users') {
-							return mockProfiles;
-						}
-						if (key === 'profileAssociations') {
-							return mockAssociations;
-						}
-					},
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
-			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
-				{ uri: { toString: () => mockWorkspaceUri } },
-			] as any);
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
 
 			const activeProfile = await getActiveProfile();
 			expect(activeProfile).toEqual({ location: '__default__profile__', name: 'Default' });
 		});
 
 		it('should return the default profile if there are no workspace folders', async () => {
-			const mockContext = {
-				globalState: {
-					get: vi.fn().mockReturnValue(null),
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
 			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue(undefined);
 
 			const activeProfile = await getActiveProfile();
@@ -171,12 +148,7 @@ describe('profile utils', () => {
 				{ location: '123', name: 'Test Profile' },
 				{ location: '456', name: 'Another Profile' },
 			];
-			const mockContext = {
-				globalState: {
-					get: vi.fn().mockReturnValue(mockProfiles),
-				},
-			};
-			vi.mocked(getExtensionContext).mockResolvedValue(mockContext as any);
+			(context.globalState.get as Mock).mockReturnValue(mockProfiles);
 
 			const dirs = await getAllGlobalSnippetDirs();
 			expect(dirs).toHaveLength(3); // 2 profiles + default

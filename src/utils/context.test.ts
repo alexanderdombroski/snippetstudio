@@ -1,7 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
 import os from 'node:os';
 import path from 'node:path';
-import type { ExtensionContext } from 'vscode';
 import { readJsonC } from './jsoncFilesIO';
 import { showErrorMessage } from '../vscode';
 import {
@@ -11,7 +10,7 @@ import {
 	initUserPath,
 	getExtensionContext,
 } from './context';
-import type { GenericJson, JSONObject } from '../types';
+import { context } from '../../.vitest/__mocks__/shared';
 
 vi.mock('node:os', () => ({
 	default: {
@@ -113,39 +112,26 @@ describe('context', () => {
 		});
 
 		it('should return the context after it has been initialized', async () => {
-			vi.mocked(readJsonC).mockResolvedValue(undefined as unknown as GenericJson);
-			const mockContext = {
-				globalState: { update: vi.fn(), get: vi.fn() },
-			} as unknown as ExtensionContext;
+			(readJsonC as Mock).mockResolvedValue(undefined);
 
-			await initGlobalStore(mockContext);
-			const context = await getExtensionContext();
-			expect(context).toBe(mockContext);
+			await initGlobalStore(context);
+			const savedContext = await getExtensionContext();
+			expect(savedContext).toBe(context);
 		});
 	});
 
 	describe('initGlobalStore', () => {
-		const mockContext = {
-			globalState: {
-				update: vi.fn(),
-				get: vi.fn(),
-			},
-		} as unknown as ExtensionContext;
-
 		it('should initialize context and return true if storage is read', async () => {
 			const storage = {
 				userDataProfiles: [{ name: 'test' }],
 				profileAssociations: { '/root': 'test' },
 			};
-			vi.mocked(readJsonC).mockResolvedValue(storage as GenericJson);
+			(readJsonC as Mock).mockResolvedValue(storage);
 
-			const result = await initGlobalStore(mockContext);
+			const result = await initGlobalStore(context);
 
-			expect(mockContext.globalState.update).toHaveBeenCalledWith(
-				'users',
-				storage.userDataProfiles
-			);
-			expect(mockContext.globalState.update).toHaveBeenCalledWith(
+			expect(context.globalState.update).toHaveBeenCalledWith('users', storage.userDataProfiles);
+			expect(context.globalState.update).toHaveBeenCalledWith(
 				'profileAssociations',
 				storage.profileAssociations
 			);
@@ -153,11 +139,11 @@ describe('context', () => {
 		});
 
 		it('should return false if storage is not found', async () => {
-			vi.mocked(readJsonC).mockResolvedValue(undefined as unknown as GenericJson);
+			(readJsonC as Mock).mockResolvedValue(undefined);
 
-			const result = await initGlobalStore(mockContext);
+			const result = await initGlobalStore(context);
 
-			expect(mockContext.globalState.update).not.toHaveBeenCalled();
+			expect(context.globalState.update).not.toHaveBeenCalled();
 			expect(result).toBe(false);
 		});
 	});
@@ -170,7 +156,7 @@ describe('context', () => {
 			const userPath = initUserPath();
 			const expectedPath = path.join(userPath!, 'globalStorage', 'storage.json');
 			const mockStorage = { userDataProfiles: [] };
-			vi.mocked(readJsonC).mockResolvedValue(mockStorage as JSONObject);
+			(readJsonC as Mock).mockResolvedValue(mockStorage);
 
 			const result = await readGlobalStorage();
 

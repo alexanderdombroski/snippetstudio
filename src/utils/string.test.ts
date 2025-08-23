@@ -1,6 +1,6 @@
 import { describe, expect, it, type Mock } from 'vitest';
 import { capitalize, snippetBodyAsString, titleCase, unTabMultiline } from './string';
-import { TextEditor } from '../../.vitest/__mocks__/vscode';
+import { TextEditor } from '../../.vitest/__mocks__/shared';
 import { executeCommand, Selection, Position } from '../vscode';
 
 describe('string utils', () => {

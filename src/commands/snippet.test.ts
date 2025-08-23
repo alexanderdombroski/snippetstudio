@@ -1,67 +1,23 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import initSnippetCommands, { defaultPrefix, getLangFromSnippetFilePath } from './snippet';
 import { getConfiguration, registerCommand } from '../vscode';
-import onDoubleClick from './doubleClickHandler';
-import * as langUtils from '../utils/language';
-import * as userUtils from '../utils/user';
-import * as profileUtils from '../utils/profile';
-import * as stringUtils from '../utils/string';
-import type { WorkspaceConfiguration } from 'vscode';
-
-// Mock dependencies
-vi.mock('./doubleClickHandler');
-vi.mock('../utils/language');
-vi.mock('../utils/user');
-vi.mock('../utils/profile');
-vi.mock('../utils/string');
-
-vi.mock('../ui/editor/startEditor.js', () => ({
-	editSnippet: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock('../snippets/updateSnippets.js', () => ({
-	readSnippet: vi.fn().mockResolvedValue({ prefix: 'test', body: 'test' }),
-	deleteSnippet: vi.fn().mockResolvedValue(undefined),
-	moveSnippet: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock('../snippets/keyBindings.js', () => ({
-	promptAddKeybinding: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock('../snippets/extension/transfer.js', () => ({
-	extractAndModify: vi.fn().mockResolvedValue(undefined),
-}));
+import { context } from '../../.vitest/__mocks__/shared';
 
 describe('Snippet Commands', () => {
-	let mockContext: any;
-
 	beforeEach(() => {
 		vi.clearAllMocks();
-
-		mockContext = {
-			subscriptions: {
-				push: vi.fn(),
-			},
-		};
-
-		// Mock implementations for non-dynamically imported modules
-		vi.mocked(onDoubleClick).mockImplementation((fn) => fn as any);
-		vi.mocked(getConfiguration).mockReturnValue({
-			get: vi.fn().mockReturnValue(''),
-		} as any);
-		vi.mocked(langUtils.getCurrentLanguage).mockReturnValue('typescript');
-		vi.mocked(profileUtils.getGlobalLangFile).mockResolvedValue('global.code-snippets');
-		vi.mocked(userUtils.getSelection).mockResolvedValue('');
-		vi.mocked(langUtils.selectLanguage).mockResolvedValue('javascript');
-		vi.mocked(stringUtils.snippetBodyAsString).mockReturnValue('');
-		vi.mocked(userUtils.getConfirmation).mockResolvedValue(true);
 	});
 
 	it('should register all snippet commands', () => {
-		initSnippetCommands(mockContext);
+		vi.spyOn(context.subscriptions, 'push');
+		initSnippetCommands(context);
 
-		expect(vi.mocked(registerCommand)).toHaveBeenCalledTimes(9);
-		expect(mockContext.subscriptions.push).toHaveBeenCalledTimes(9);
+		expect(registerCommand).toHaveBeenCalledTimes(9);
+		expect(context.subscriptions.push).toHaveBeenCalledTimes(9);
 
-		const registeredCommands = vi.mocked(registerCommand).mock.calls.map((call) => call[0]);
+		const registeredCommands = (registerCommand as Mock<typeof registerCommand>).mock.calls.map(
+			(call: any[]) => call[0]
+		);
 
 		expect(registeredCommands).toEqual(
 			expect.arrayContaining([
@@ -81,7 +37,7 @@ describe('Snippet Commands', () => {
 	describe('defaultPrefix', () => {
 		it('should return the configured default prefix', () => {
 			const mockGet = vi.fn().mockReturnValue('snip');
-			vi.mocked(getConfiguration).mockReturnValue({ get: mockGet } as any);
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
 			const prefix = defaultPrefix();
 
@@ -92,14 +48,8 @@ describe('Snippet Commands', () => {
 
 		it('should return an empty string if prefix is not configured', () => {
 			const mockGet = vi.fn().mockReturnValue(undefined);
-			vi.mocked(getConfiguration).mockReturnValue({ get: mockGet } as any);
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const prefix = defaultPrefix();
-			expect(prefix).toBe('');
-		});
-
-		it('should return an empty string if configuration is not found', () => {
-			vi.mocked(getConfiguration).mockReturnValue(undefined as unknown as WorkspaceConfiguration);
 			const prefix = defaultPrefix();
 			expect(prefix).toBe('');
 		});

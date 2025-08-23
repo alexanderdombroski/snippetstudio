@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
-import vscode from '../vscode';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { context } from '../../.vitest/__mocks__/shared';
 
 const Auth = vi.fn();
 vi.mock('@octokit/auth-oauth-device', () => {
@@ -7,15 +7,6 @@ vi.mock('@octokit/auth-oauth-device', () => {
 		createOAuthDeviceAuth: vi.fn(() => Auth),
 	};
 });
-
-const context = {
-	secrets: {
-		get: vi.fn(async (key: string) => process.env[key]),
-		store: vi.fn(),
-		delete: vi.fn(),
-		onDidChange: { event: vi.fn() } as any,
-	},
-} as Pick<vscode.ExtensionContext, 'secrets'> as Mocked<vscode.ExtensionContext>;
 
 describe('getOctokitClient', () => {
 	let getOctokitClient: Function;

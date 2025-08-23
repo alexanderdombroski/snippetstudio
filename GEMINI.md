@@ -19,6 +19,7 @@
 
 - Use `vitest` for all tests.
 - All vscode imports are premocked inside of `.vitest/setup.ts` and `.vitest/__mocks__/vscode.ts`. Don't worry about mocking vscode imports or the `src/vscode.ts` file.
+- `src/vscode.ts` is a barrel file for the vsocde api. If a function is imported through the barrel in the file, it should also be imported via barrel in the test file.
 - Write test files next to the file to be tested. Use a `.test.ts` file extension.
 - Don't run the tests after writing the test file.
 - import `Mock` and `Mocked` as a type. `vi.Mock` isn't valid vitest syntax.
