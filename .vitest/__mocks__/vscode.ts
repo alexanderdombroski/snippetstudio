@@ -1,24 +1,11 @@
-// __mocks__/vscodeWrapper.ts
+// __mocks__/vscode.ts
 import { vi } from 'vitest';
 
-const mockUri = {
+// Basic classes and constructors
+export const Uri = {
 	file: (path: string) => ({ fsPath: path }), // minimal Uri mock
 	parse: vi.fn(),
 };
-
-vi.mock('vscode', async () => {
-	const actual = await vi.importActual<any>('vscode'); // keep other APIs
-
-	return {
-		...actual,
-		Uri: mockUri,
-	};
-});
-
-// Export the mocked Uri for your barrel
-export const Uri = mockUri;
-
-// Basic classes and constructors
 export const SnippetString = class {};
 export const CompletionItem = class {};
 export const MarkdownString = class {};
@@ -38,7 +25,6 @@ export const Selection = class {
 		this.end = end;
 	}
 };
-export const TreeItem = class {};
 export const TextEditor = class {
 	document: {
 		getText: ReturnType<typeof vi.fn>;
@@ -102,6 +88,18 @@ export const onDidChangeActiveTextEditor = vi.fn();
 
 // Env
 export const openExternal = vi.fn();
+
+export class TreeItem {
+	label: string;
+	collapsibleState?: number;
+	iconPath?: string | { light: string; dark: string };
+	command?: { command: string; title: string; arguments?: any[] };
+
+	constructor(label: string, collapsibleState?: number) {
+		this.label = label;
+		this.collapsibleState = collapsibleState;
+	}
+}
 
 // TreeItemCollapsibleState
 export const None = 0;

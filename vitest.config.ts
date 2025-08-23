@@ -4,6 +4,7 @@ export default defineConfig({
 	test: {
 		setupFiles: '.vitest/setup.ts',
 		environment: 'node',
+		silent: 'passed-only',
 		coverage: {
 			provider: 'v8',
 			include: ['src/**'],
