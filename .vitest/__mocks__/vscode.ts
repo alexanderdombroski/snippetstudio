@@ -4,7 +4,18 @@ import { vi } from 'vitest';
 // Basic classes and constructors
 export const Uri = {
 	file: (path: string) => ({ fsPath: path }), // minimal Uri mock
-	parse: vi.fn(),
+	parse: vi.fn((uri: string) => {
+		// very naive parse (sufficient for tests)
+		const url = new URL(uri);
+		return {
+			scheme: url.protocol.replace(':', ''),
+			path: url.pathname,
+			query: url.search ? url.search.substring(1) : undefined,
+			fragment: url.hash ? url.hash.substring(1) : undefined,
+			toString: () => uri,
+		};
+	}),
+	joinPath: vi.fn(),
 };
 export const SnippetString = class {};
 export const CompletionItem = class {};
@@ -96,7 +107,12 @@ export default {
 	EventEmitter: class {
 		public fire = vi.fn();
 	},
-	window: { activeTextEditor: vi.fn(), withProgress: vi.fn(), createStatusBarItem: vi.fn() },
+	window: {
+		activeTextEditor: vi.fn(),
+		withProgress: vi.fn(),
+		createStatusBarItem: vi.fn(),
+		createTextEditorDecorationType: vi.fn(),
+	},
 	languages: { getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']) },
 	workspace: {
 		folders: [],
@@ -105,7 +121,13 @@ export default {
 			writeFile: vi.fn(),
 		},
 		onDidChangeConfiguration: vi.fn(),
+		applyEdit: vi.fn(),
 	},
 	env: { clipboard: { writeText: vi.fn() } },
 	StatusBarAlignment: { Right: 1 },
+	FileChangeType: { Changed: 1, Created: 2, Deleted: 3 },
+	FileType: { Unknown: 0, File: 1, Directory: 2 },
+	WorkspaceEdit: class {
+		replace = vi.fn();
+	},
 };

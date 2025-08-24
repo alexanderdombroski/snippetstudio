@@ -34,6 +34,9 @@ export const TextEditor = class {
 	document: {
 		getText: ReturnType<typeof vi.fn>;
 		lineAt: (line: number) => { range: { end: Position } };
+		uri: {
+			scheme: string;
+		};
 	};
 	constructor(text = '') {
 		this.document = {
@@ -41,6 +44,9 @@ export const TextEditor = class {
 			getText: vi.fn(() => text),
 			// lineAt returns an object with range.end as a Position
 			lineAt: vi.fn((line: number) => ({ range: { end: new Position(line) } })),
+			uri: {
+				scheme: '',
+			},
 		};
 	}
 };
