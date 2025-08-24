@@ -36,10 +36,6 @@ vi.mock('./snippetEditor');
 vi.mock('./snippetFeatures');
 
 describe('startEditor', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('editSnippet', () => {
 		let mockSnippetData: SnippetData;
 		let mockDoc: { uri: UriType };

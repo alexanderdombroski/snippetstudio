@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import LocationTreeProvider from './LocationTreeProvider';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import {
@@ -64,10 +64,6 @@ describe('ui/LocationTreeProvider', () => {
 		provider = new LocationTreeProvider();
 		// The constructor calls refresh, so we need to wait for promises to resolve.
 		await new Promise(setImmediate);
-	});
-
-	afterEach(() => {
-		vi.clearAllMocks();
 	});
 
 	it('should be created', () => {

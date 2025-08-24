@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
@@ -20,10 +20,6 @@ vi.mock('node:os', () => ({
 }));
 
 describe('fsInfo', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('getWorkspaceFolder', () => {
 		it('should return undefined if no workspace folders are open', () => {
 			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue(undefined);

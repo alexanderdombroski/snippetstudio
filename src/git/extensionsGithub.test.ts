@@ -1,13 +1,10 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { __folderRequest, __fileTextRequest } from './extensionsGithub';
 import { getOctokitClient } from './octokit';
 import { context } from '../../.vitest/__mocks__/shared';
 
 describe.skipIf(!process.env.GITHUB_TOKEN)('extensionsGithub', async () => {
 	const client = await getOctokitClient(context);
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
 
 	describe('folderRequest', async () => {
 		it.concurrent('should return data if response is an array', async () => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import initSnippetUICommands from './snippetUI';
 import { registerCommand, showInformationMessage } from '../vscode';
 import type { MessageItem } from 'vscode';
@@ -7,10 +7,6 @@ import { context } from '../../.vitest/__mocks__/shared';
 const mockCommandMap = {};
 
 describe('Snippet UI Commands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should register all UI commands', () => {
 		vi.spyOn(context.subscriptions, 'push');
 		initSnippetUICommands(context, mockCommandMap);

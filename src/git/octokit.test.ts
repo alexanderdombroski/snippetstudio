@@ -13,7 +13,6 @@ describe('getOctokitClient', () => {
 	beforeEach(async () => {
 		// Reset client singleton state for each test
 		vi.resetModules();
-		vi.clearAllMocks();
 		const { getOctokitClient: getClient } = await import('./octokit.js');
 		getOctokitClient = getClient;
 	});

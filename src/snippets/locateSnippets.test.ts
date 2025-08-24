@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
+import { vi, describe, it, expect, type Mock } from 'vitest';
 import fs from 'node:fs/promises';
 import { findCodeSnippetsFiles, locateAllSnippetFiles } from './locateSnippets';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
@@ -15,10 +15,6 @@ vi.mock('../utils/profile');
 vi.mock('../utils/language');
 
 describe('locateSnippets', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('findCodeSnippetsFiles', () => {
 		it('should return an empty array if folder does not exist', async () => {
 			(exists as Mock).mockResolvedValue(false);

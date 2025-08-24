@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import SnippetViewProvider from './SnippetViewProvider';
 import loadSnippets from '../snippets/loadSnippets';
 import {
@@ -78,10 +78,6 @@ describe('ui/SnippetViewProvider', () => {
 		provider = new SnippetViewProvider();
 		// Wait for async constructor parts
 		await new Promise(setImmediate);
-	});
-
-	afterEach(() => {
-		vi.clearAllMocks();
 	});
 
 	it('should be created', () => {

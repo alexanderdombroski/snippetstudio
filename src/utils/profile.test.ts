@@ -25,7 +25,6 @@ describe('profile utils', () => {
 			: '/Users/test/Library/Application Support/Code/User';
 
 	beforeEach(() => {
-		vi.clearAllMocks();
 		(getUserPath as Mock).mockReturnValue(mockUserPath);
 		(getExtensionContext as Mock).mockResolvedValue(context);
 	});

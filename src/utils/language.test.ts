@@ -1,12 +1,8 @@
-import { describe, expect, it, vi, beforeEach, type Mock } from 'vitest';
+import { describe, expect, it, type Mock } from 'vitest';
 import { selectLanguage, getCurrentLanguage, langIds } from './language';
 import vscode, { showQuickPick } from '../vscode';
 
 describe('language utils', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('langIds', () => {
 		it('should be populated with languages', async () => {
 			const mockLangs = ['typescript', 'javascript', 'python'];

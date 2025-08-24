@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock, Mocked } from 'vitest';
 import type { Uri } from 'vscode';
 import { getCurrentUri } from '../utils/fsInfo';
@@ -46,10 +46,6 @@ describe('ui/statusBar', () => {
 		(getCurrentLanguage as Mock).mockReturnValue('typescript');
 		(getCurrentUri as Mock).mockReturnValue(undefined);
 		(capitalize as Mock).mockImplementation((s) => s.charAt(0).toUpperCase() + s.slice(1));
-	});
-
-	afterEach(() => {
-		vi.clearAllMocks();
 	});
 
 	it('should create and initialize the status bar item', () => {

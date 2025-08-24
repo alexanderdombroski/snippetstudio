@@ -1,6 +1,4 @@
-// src/utils/jsoncFilesIO.test.ts
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import * as fs from 'node:fs/promises';
 import {
 	processJsonWithComments,
@@ -33,10 +31,6 @@ vi.mock('strip-json-comments', () => ({
 }));
 
 describe('jsoncFilesIO', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('processJsonWithComments', () => {
 		it('should strip comments and parse valid JSON', async () => {
 			const jsonWithComments = `{

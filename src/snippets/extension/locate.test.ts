@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import type { Dirent } from 'node:fs';
-import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { describe, expect, it, vi, type Mock } from 'vitest';
 import { exists } from '../../utils/fsInfo';
 import { readJson } from '../../utils/jsoncFilesIO';
 import {
@@ -17,10 +17,6 @@ vi.mock('node:os');
 (os.homedir as Mock).mockReturnValue('/home/user');
 
 describe('locate', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe('getExtensionSnippetLangs', () => {
 		it('should return the languages for a given snippet path', async () => {
 			const snippetPath =

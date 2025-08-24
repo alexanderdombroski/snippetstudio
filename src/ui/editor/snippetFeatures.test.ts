@@ -28,14 +28,10 @@ const mockProvider = {
 	handleDocumentChange: vi.fn(),
 } as Pick<SnippetEditorProvider, 'handleDocumentChange'> as Mocked<SnippetEditorProvider>;
 
+(getConfiguration as Mock).mockReturnValue({
+	get: vi.fn().mockReturnValue(false), // default to not using quick pick
+});
 describe('initSnippetFeatureCommands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-		(getConfiguration as Mock).mockReturnValue({
-			get: vi.fn().mockReturnValue(false), // default to not using quick pick
-		});
-	});
-
 	it('should register document change listener and completion provider', () => {
 		vi.spyOn(context.subscriptions, 'push');
 		initSnippetFeatureCommands(context, mockProvider);

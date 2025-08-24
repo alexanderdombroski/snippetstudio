@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, type Mock, type Mocked } from 'vitest';
+import { describe, it, expect, vi, type Mock, type Mocked } from 'vitest';
 import initSnippetEditorCommands, { __saveSnippet } from './snippetEditor';
 import vscode, {
 	executeCommand,
@@ -19,10 +19,6 @@ const mockEditor = {
 } as Pick<SnippetEditorProvider, 'getSnippetData'> as Mocked<SnippetEditorProvider>;
 
 describe('initSnippetEditorCommands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should register commands and editor change listener', () => {
 		vi.spyOn(context.subscriptions, 'push');
 
@@ -45,10 +41,6 @@ describe('initSnippetEditorCommands', () => {
 });
 
 describe('saveSnippet', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('will only save snippet studio buffer files', async () => {
 		vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue({
 			document: { uri: { scheme: 'file' } as Uri } as TextDocument,

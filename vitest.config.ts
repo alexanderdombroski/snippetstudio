@@ -6,6 +6,7 @@ export default defineConfig({
 		environment: 'node',
 		silent: 'passed-only',
 		slowTestThreshold: 800,
+		clearMocks: true,
 		coverage: {
 			provider: 'v8',
 			include: ['src/**'],

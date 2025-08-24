@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
+import { vi, describe, it, expect, type Mock } from 'vitest';
 import loadSnippets from './loadSnippets';
 import { getConfiguration } from '../vscode';
 import { readJsoncFilesAsync } from '../utils/jsoncFilesIO';
@@ -20,10 +20,6 @@ vi.mock('../utils/profile');
 (readJsoncFilesAsync as Mock).mockResolvedValue([['/path/to/snippets.json', {}]]);
 
 describe('loadSnippets', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should set context for linked snippets', async () => {
 		(getLinkedSnippets as Mock).mockResolvedValue({ 'snippets.json': ['profile'] });
 		(getProfileIdFromPath as Mock).mockReturnValue('profile');

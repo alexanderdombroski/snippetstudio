@@ -1,13 +1,9 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import initSnippetGistsCommands from './snippetGists';
 import { registerCommand } from '../vscode';
 import { context } from '../../.vitest/__mocks__/shared';
 
 describe('Snippet Gists Commands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should register all gist commands', async () => {
 		vi.spyOn(context.subscriptions, 'push');
 		await initSnippetGistsCommands(context);

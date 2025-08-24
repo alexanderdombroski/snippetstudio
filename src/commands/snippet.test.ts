@@ -1,13 +1,9 @@
-import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import initSnippetCommands, { defaultPrefix, getLangFromSnippetFilePath } from './snippet';
 import { getConfiguration, registerCommand } from '../vscode';
 import { context } from '../../.vitest/__mocks__/shared';
 
 describe('Snippet Commands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should register all snippet commands', () => {
 		vi.spyOn(context.subscriptions, 'push');
 		initSnippetCommands(context);

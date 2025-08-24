@@ -1,13 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import initSnippetLinkCommands from './snippetLink';
 import { registerCommand } from '../vscode';
 import { context } from '../../.vitest/__mocks__/shared';
 
 describe('Snippet Link Commands', () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	it('should register the link command', async () => {
 		vi.spyOn(context.subscriptions, 'push');
 		await initSnippetLinkCommands(context);
