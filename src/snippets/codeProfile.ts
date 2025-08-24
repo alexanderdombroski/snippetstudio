@@ -21,12 +21,12 @@ export async function importCodeProfileSnippets(context: vscode.ExtensionContext
 		{
 			label: 'From profile template',
 			description: 'snippets typically created from a vscode profile template',
-			run: fromBuiltIn,
+			run: __fromBuiltIn,
 		},
 		{
 			label: 'From a gist',
 			description: 'import snippets from a .code-profile file from a gist',
-			run: () => fromGist(context),
+			run: () => __fromGist(context),
 		},
 		{
 			label: 'From a file',
@@ -119,7 +119,7 @@ async function fromFile(): Promise<string[] | undefined> {
 	return contents;
 }
 
-async function fromGist(context: vscode.ExtensionContext): Promise<string[] | undefined> {
+export async function __fromGist(context: vscode.ExtensionContext): Promise<string[] | undefined> {
 	const { getGistId } = await import('../git/utils.js');
 	const gistId = await getGistId();
 	if (gistId === undefined) {
@@ -142,7 +142,7 @@ async function fromGist(context: vscode.ExtensionContext): Promise<string[] | un
 	return files.map((file) => file.content as string);
 }
 
-async function fromBuiltIn(): Promise<string[] | undefined> {
+export async function __fromBuiltIn(): Promise<string[] | undefined> {
 	const validProfiles = [
 		'python',
 		// 'angular',

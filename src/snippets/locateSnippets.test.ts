@@ -9,7 +9,6 @@ import {
 	getPathFromProfileLocation,
 } from '../utils/profile';
 
-vi.mock('node:fs/promises');
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/profile');
 vi.mock('../utils/language');

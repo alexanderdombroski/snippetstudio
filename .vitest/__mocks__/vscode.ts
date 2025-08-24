@@ -142,4 +142,5 @@ export default {
 		replace = vi.fn();
 	},
 	ViewColumn: { Active: 1 },
+	TextEditorRevealType: {},
 };
