@@ -19,15 +19,9 @@ vi.mock('node:os', () => ({
 	},
 }));
 
-vi.mock('node:fs/promises', () => ({
-	default: {
-		access: vi.fn(),
-	},
-}));
-
 describe('fsInfo', () => {
 	beforeEach(() => {
-		vi.resetAllMocks();
+		vi.clearAllMocks();
 	});
 
 	describe('getWorkspaceFolder', () => {

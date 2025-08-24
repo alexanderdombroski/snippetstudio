@@ -8,7 +8,6 @@ import type { Mock, Mocked } from 'vitest';
 import type { Uri } from 'vscode';
 import { context } from '../../../.vitest/__mocks__/shared';
 
-vi.mock('node:fs/promises');
 vi.mock('../../utils/fsInfo');
 
 describe('SnippetDataWebViewProvider', () => {

@@ -18,7 +18,6 @@ import path from 'node:path';
 import vscode from '../vscode';
 
 // Mock dependencies
-vi.mock('node:fs/promises');
 vi.mock('../snippets/extension/locate', () => ({
 	flattenScopedExtensionSnippets: vi.fn((x) => x),
 }));

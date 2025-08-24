@@ -14,7 +14,6 @@ import { manageLinkLocations } from './commands';
 import type { ProfileInfo, VSCodeSnippets } from '../../types';
 import type { QuickPickItem } from 'vscode';
 
-vi.mock('node:fs/promises');
 vi.mock('./config');
 vi.mock('../../utils/profile');
 vi.mock('../../utils/jsoncFilesIO');
