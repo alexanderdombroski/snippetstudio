@@ -198,8 +198,6 @@ describe('CompletionItemProvider', () => {
 		expect(MarkdownString).toBeCalledTimes(6);
 		expect(SnippetString).toBeCalledTimes(6);
 
-		console.log(items, 'items');
-
 		expect(items.map((i) => i.label)).toEqual([
 			'tabstop',
 			'placeholder',

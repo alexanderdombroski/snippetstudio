@@ -26,7 +26,6 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 
 		webviewView.onDidChangeVisibility(() => {
 			if (webviewView.visible) {
-				console.log('visible');
 				this.setUpMessages(webviewView);
 			}
 		});
