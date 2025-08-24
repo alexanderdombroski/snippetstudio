@@ -19,7 +19,9 @@ import type { SnippetData } from '../../types';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
 
-async function initEditing(context: vscode.ExtensionContext): Promise<SnippetEditorProvider> {
+export async function __initEditing(
+	context: vscode.ExtensionContext
+): Promise<SnippetEditorProvider> {
 	if (!snippetEditorProvider) {
 		const snippetDataManager = new SnippetDataManager();
 		const snippetDataView = new SnippetDataWebViewProvider(context, snippetDataManager);
@@ -53,14 +55,13 @@ async function editSnippet(
 				return;
 			}
 		}
-		const provider = await initEditing(context);
-
+		const provider = await __initEditing(context);
 		if (
 			getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSignsFromSelection')
 		) {
-			body = escapeAllSnippetInsertionFeatures(body);
+			body = __escapeAllSnippetInsertionFeatures(body);
 		}
-		const uri = newSnippetEditorUri(
+		const uri = __newSnippetEditorUri(
 			langId,
 			path.extname(snippetData.filename) === '.code-snippets'
 		);
@@ -85,7 +86,10 @@ async function editSnippet(
 
 let editorCount = 0;
 
-function newSnippetEditorUri(langId: string = 'plaintext', showScope: boolean = true): vscode.Uri {
+export function __newSnippetEditorUri(
+	langId: string = 'plaintext',
+	showScope: boolean = true
+): vscode.Uri {
 	return Uri.from({
 		scheme: 'snippetstudio',
 		path: `/snippets/snippet-${++editorCount}`,
@@ -96,7 +100,7 @@ function newSnippetEditorUri(langId: string = 'plaintext', showScope: boolean = 
 /**
  * Escapes all instances of placholders and tabstops
  */
-function escapeAllSnippetInsertionFeatures(str: string): string {
+export function __escapeAllSnippetInsertionFeatures(str: string): string {
 	// Escape tabstops
 	let escapedString = str.replace(/\$(\d+)/g, '\\$$$1');
 

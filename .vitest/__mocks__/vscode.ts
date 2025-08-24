@@ -16,10 +16,11 @@ export const Uri = {
 		};
 	}),
 	joinPath: vi.fn(),
+	from: vi.fn((obj) => obj),
 };
-export const SnippetString = class {};
-export const CompletionItem = class {};
-export const MarkdownString = class {};
+export const SnippetString = vi.fn();
+export const CompletionItem = vi.fn((label: string) => ({ label }));
+export const MarkdownString = vi.fn();
 export const ThemeIcon = class {
 	iconPath: string;
 
@@ -81,7 +82,7 @@ export const showInformationMessage = makeThenable((message: string) => message)
 export const showWarningMessage = makeThenable((message: string) => message);
 export const showErrorMessage = makeThenable((message: string) => message);
 export const showInputBox = vi.fn();
-export const showTextDocument = vi.fn();
+export const showTextDocument = vi.fn().mockResolvedValue({});
 export const createTerminal = vi.fn().mockReturnValue({
 	show: vi.fn(),
 	sendText: vi.fn(),
@@ -112,8 +113,14 @@ export default {
 		withProgress: vi.fn(),
 		createStatusBarItem: vi.fn(),
 		createTextEditorDecorationType: vi.fn(),
+		setTextDocumentLanguage: vi.fn(),
+		registerWebviewViewProvider: vi.fn(),
 	},
-	languages: { getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']) },
+	languages: {
+		getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']),
+		registerCompletionItemProvider: vi.fn(),
+		setTextDocumentLanguage: vi.fn(),
+	},
 	workspace: {
 		folders: [],
 		workspaceFolders: [],
@@ -122,6 +129,10 @@ export default {
 		},
 		onDidChangeConfiguration: vi.fn(),
 		applyEdit: vi.fn(),
+		onDidCloseTextDocument: vi.fn(() => {
+			return { dispose: vi.fn() };
+		}),
+		registerFileSystemProvider: vi.fn(),
 	},
 	env: { clipboard: { writeText: vi.fn() } },
 	StatusBarAlignment: { Right: 1 },
@@ -130,4 +141,5 @@ export default {
 	WorkspaceEdit: class {
 		replace = vi.fn();
 	},
+	ViewColumn: { Active: 1 },
 };

@@ -16,37 +16,7 @@ function initSnippetEditorCommands(
 ) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.editor.save', async () => {
-			const editor = vscode.window.activeTextEditor;
-			if (editor?.document.uri.scheme === 'snippetstudio') {
-				const body = editor.document.getText().split(/\r\n|\r|\n/);
-				const data = provider.getSnippetData();
-				if (data === undefined) {
-					showErrorMessage('Cannot save snippet without snippet data');
-					return;
-				}
-				const prefix =
-					!Array.isArray(data.prefix) && data.prefix.includes(',')
-						? data.prefix.trim().split(',')
-						: data.prefix;
-				const snippet: VSCodeSnippet = { prefix, body };
-				if (data.description) {
-					snippet.description = data.description.trim();
-				}
-				if (data.scope) {
-					snippet.scope = data.scope.trim();
-				}
-				const capitalize = getConfiguration('snippetstudio').get<boolean>(
-					'autoCapitalizeSnippetName'
-				);
-				const { writeSnippet } = await import('../../snippets/updateSnippets.js');
-				writeSnippet(
-					data.filename,
-					capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
-					snippet
-				);
-				executeCommand('workbench.action.closeActiveEditor');
-				executeCommand('snippetstudio.refresh');
-			}
+			await __saveSnippet(provider);
 		}),
 		registerCommand('snippetstudio.editor.cancel', () => {
 			const uri = getCurrentUri();
@@ -65,6 +35,40 @@ function initSnippetEditorCommands(
 			editor?.document.uri.scheme === 'snippetstudio'
 		);
 	});
+}
+
+export async function __saveSnippet(provider: SnippetEditorProvider) {
+	const editor = vscode.window.activeTextEditor;
+	if (editor?.document.uri.scheme !== 'snippetstudio') {
+		return;
+	}
+
+	const body = editor.document.getText().split(/\r\n|\r|\n/);
+	const data = provider.getSnippetData();
+	if (data === undefined) {
+		showErrorMessage('Cannot save snippet without snippet data');
+		return;
+	}
+	const prefix =
+		!Array.isArray(data.prefix) && data.prefix.includes(',')
+			? data.prefix.trim().split(',')
+			: data.prefix;
+	const snippet: VSCodeSnippet = { prefix, body };
+	if (data.description) {
+		snippet.description = data.description.trim();
+	}
+	if (data.scope) {
+		snippet.scope = data.scope.trim();
+	}
+	const capitalize = getConfiguration('snippetstudio').get<boolean>('autoCapitalizeSnippetName');
+	const { writeSnippet } = await import('../../snippets/updateSnippets.js');
+	writeSnippet(
+		data.filename,
+		capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
+		snippet
+	);
+	executeCommand('workbench.action.closeActiveEditor');
+	executeCommand('snippetstudio.refresh');
 }
 
 export default initSnippetEditorCommands;
