@@ -123,13 +123,19 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 		quickPick.show();
 
 		const snippetKeys: string[] | undefined = await new Promise((resolve) => {
+			let resolved = false;
+
 			quickPick.onDidAccept(() => {
 				const selectedItems = quickPick.selectedItems.map((item) => item.label);
+				resolved = true;
 				quickPick.hide();
 				resolve(selectedItems);
 			});
+
 			quickPick.onDidHide(() => {
-				resolve(undefined);
+				if (!resolved) {
+					resolve(undefined);
+				}
 			});
 		});
 
