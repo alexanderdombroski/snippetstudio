@@ -5,10 +5,6 @@ on:
     tags:
       - '*.*.*' # Trigger on tags like 1.0.0
 
-env: 
-  SVG_PATH: docs/static/img/coverage.svg
-  PNG_PATH: docs/static/img/coverage.png
-
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -33,32 +29,7 @@ jobs:
       - name: Test Coverage
         run: npm run coverage:publish
         env: 
-          GITHUB_TOKEN: ${{ secrets.OAUTH_APP_TOKEN }}
-
-      - name: Create Coverage Badges
-        uses: jaywcjlove/coverage-badges-cli@main
-        with:
-          source: coverage/coverage-summary.json
-          jsonPath: total.statements.pct
-          output: ${{ env.SVG_PATH }}
-      
-      - name: Convert Badge to PNG
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
-          convert ${{ env.SVG_PATH }} ${{ env.PNG_PATH }}
-      
-      - name: Commit code coverage badge
-        run: |
-          gh auth setup-git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ${{ env.SVG_PATH }} ${{ env.PNG_PATH }}
-          git commit -m "Update coverage badge [skip ci]" || echo "No changes to commit"
-          git push origin HEAD:main --no-verify
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+          GITHUB_TOKEN: ${{ secrets.OAUTH_APP_TOKEN }}          
 
       - name: Compile extension
         run: npm run package
