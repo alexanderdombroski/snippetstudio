@@ -5,16 +5,23 @@ import {
 	createGlobalLangFile,
 	createGlobalSnippetsFile,
 	exportSnippets,
+	mergeSnippetFiles,
 } from './newSnippetFile';
-import { showWarningMessage, showInformationMessage, showQuickPick } from '../vscode';
+import {
+	showWarningMessage,
+	showInformationMessage,
+	showQuickPick,
+	createQuickPick,
+} from '../vscode';
 import fs from 'node:fs/promises';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
 import { isSnippetLinked } from './links/config';
-import { writeSnippetFile } from '../utils/jsoncFilesIO';
+import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { locateAllSnippetFiles } from './locateSnippets';
+import type { VSCodeSnippets } from '../types';
 
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/language');
@@ -79,6 +86,37 @@ describe('newSnippetFile', () => {
 			(isSnippetLinked as Mock).mockResolvedValue(false);
 			await createGlobalSnippetsFile();
 			expect(fs.writeFile).toHaveBeenCalledWith('/global/test.code-snippets', '{}');
+		});
+	});
+
+	describe('mergeSnippetFiles', async () => {
+		it('should show a warning if you have no snippet files', async () => {
+			(locateAllSnippetFiles as Mock).mockReturnValue([[], [], {}]);
+			await mergeSnippetFiles();
+
+			expect(showWarningMessage).toBeCalledWith(expect.stringContaining('no snippets'));
+		});
+		it('should merge snippet files into one', async () => {
+			const fp = 'snippet1.json';
+			const snippets: VSCodeSnippets = {
+				log: { prefix: 'log', body: 'console.log' },
+				info: { prefix: ['info', 'logi'], body: 'console.info' },
+			};
+
+			(locateAllSnippetFiles as Mock).mockReturnValue([[fp], [], {}]);
+			(showQuickPick as Mock).mockImplementation((obj) => obj);
+			(readJsoncFilesAsync as Mock).mockResolvedValue([[fp, snippets]]);
+
+			const qpMock = (createQuickPick as Mock).getMockImplementation();
+			(createQuickPick as Mock).mockImplementationOnce(() => {
+				const qp = qpMock?.();
+				qp.selectedItems = Object.keys(snippets).map((k) => ({ label: k }));
+				return qp;
+			});
+
+			const merged = await mergeSnippetFiles();
+
+			expect(merged).toStrictEqual(snippets);
 		});
 	});
 

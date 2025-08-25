@@ -89,10 +89,30 @@ export const createTerminal = vi.fn().mockReturnValue({
 });
 export const showOpenDialog = vi.fn();
 export const showSaveDialog = vi.fn();
-export const createQuickPick = vi.fn().mockReturnValue({
-	items: [],
-	show: vi.fn(),
-	onDidChangeSelection: vi.fn(),
+export const createQuickPick = vi.fn().mockImplementation(() => {
+	let acceptCallback: (() => void) | undefined;
+	let hideCallback: (() => void) | undefined;
+	const qp = {
+		selectedItems: [],
+		items: [],
+		show: vi.fn(() => {
+			setTimeout(() => {
+				acceptCallback?.();
+			}, 100);
+		}),
+		hide: vi.fn(() => {
+			hideCallback?.();
+		}),
+		onDidChangeSelection: vi.fn(),
+		onDidHide: vi.fn((cb) => {
+			hideCallback = cb;
+		}),
+		onDidAccept: vi.fn((cb) => {
+			acceptCallback = cb;
+		}),
+	};
+
+	return qp;
 });
 export const onDidChangeActiveTextEditor = vi.fn();
 
@@ -143,4 +163,5 @@ export default {
 	},
 	ViewColumn: { Active: 1 },
 	TextEditorRevealType: {},
+	ProgressLocation: {},
 };

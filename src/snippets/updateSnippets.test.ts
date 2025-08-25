@@ -1,12 +1,24 @@
 import { vi, describe, it, expect, type Mock } from 'vitest';
-import { deleteSnippet, writeSnippet, readSnippet, deleteSnippetFile } from './updateSnippets';
-import { showInformationMessage, showErrorMessage, showWarningMessage } from '../vscode';
+import {
+	deleteSnippet,
+	writeSnippet,
+	readSnippet,
+	deleteSnippetFile,
+	moveSnippet,
+} from './updateSnippets';
+import {
+	showInformationMessage,
+	showErrorMessage,
+	showWarningMessage,
+	showQuickPick,
+} from '../vscode';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
 import type { VSCodeSnippet } from '../types';
+import { locateAllSnippetFiles } from './locateSnippets';
 
 vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/language');
@@ -53,6 +65,15 @@ describe('updateSnippets', () => {
 
 			expect(console.error).not.toBeCalled();
 			expect(result).toEqual(snippet);
+		});
+	});
+
+	describe('moveSnippet', () => {
+		it('should not move if no file is selected', async () => {
+			(locateAllSnippetFiles as Mock).mockReturnValue([[], [], {}]);
+			(showQuickPick as Mock).mockReturnValue(undefined);
+			await moveSnippet({ path: '/global/snippet', label: 'snippet', collapsibleState: 0 });
+			expect(showInformationMessage).not.toBeCalled();
 		});
 	});
 

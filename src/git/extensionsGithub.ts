@@ -15,7 +15,7 @@ import { exists } from '../utils/fsInfo';
 export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 	const client = await getOctokitClient(context);
 
-	const snippetDirs = await getDirsWithSnippets(client);
+	const snippetDirs = await __getDirsWithSnippets(client);
 	if (snippetDirs === undefined) {
 		return;
 	}
@@ -86,7 +86,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 	}
 }
 
-async function getDirsWithSnippets(client: Octokit) {
+export async function __getDirsWithSnippets(client: Octokit) {
 	const res = await __folderRequest(client, 'extensions');
 	const folders = res?.filter((item) => item.type === 'dir') ?? [];
 
