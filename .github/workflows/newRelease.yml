@@ -24,10 +24,17 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Install @vscode/vsce
-        run: npm install -g @vscode/vsce
+      - name: Test Coverage
+        run: npm run coverage:publish
+
+      - name: Create Coverage Badges
+        uses: jaywcjlove/coverage-badges-cli@main
+        with:
+          source: coverage/coverage-summary.json
+          jsonPath: total.statements.pct
+          output: docs/static/img/coverage.svg
 
       - name: Compile extension
         run: npm run package
