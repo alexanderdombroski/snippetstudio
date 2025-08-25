@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [2.1](#211---2025-08-01) - Advanced Profile Linking
+- [2.1](#212---2025-08-25) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
 - [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
 - [1.5](#151---2025-07-10) - Global Snippet Sync
@@ -30,6 +30,17 @@
 - **SnippetManagement** (2.2)
   - Rename .code-snippets Files
   - Simplified snippet view option
+
+## [2.1.2] - 2025-08-25
+
+### Fixed
+
+- Export Snippet Quickpick no longer resolves promise multiple times
+
+### Changed
+
+- Reduce bundle size & performance improvements
+- Set up automated tests and improved dev experience
 
 ## [2.1.1] - 2025-08-01
 
