@@ -35,6 +35,7 @@ export const {
 	showSaveDialog,
 } = vscode.window;
 
+export const { getLanguages } = vscode.languages;
 export const { openExternal } = vscode.env;
 
 export const { None, Collapsed, Expanded } = vscode.TreeItemCollapsibleState;

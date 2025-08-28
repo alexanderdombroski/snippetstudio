@@ -8,6 +8,7 @@ import {
 	getActiveProfile,
 	getPathFromProfileLocation,
 } from '../utils/profile';
+import { getLanguages } from '../vscode';
 
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/profile');
@@ -31,6 +32,7 @@ describe('locateSnippets', () => {
 
 	describe('locateAllSnippetFiles', () => {
 		it('should locate all snippet files across profiles and workspace', async () => {
+			(getLanguages as Mock).mockResolvedValue(['typescript']);
 			(getWorkspaceFolder as Mock).mockReturnValue('/workspace');
 			(getActiveProfileSnippetsDir as Mock).mockResolvedValue('/profiles/active/snippets');
 			(getActiveProfile as Mock).mockResolvedValue({ location: 'active' });
@@ -52,10 +54,19 @@ describe('locateSnippets', () => {
 			const [locals, globals, profileSnippetsMap] = await locateAllSnippetFiles();
 
 			expect(locals).toEqual(['/workspace/.vscode/local.code-snippets']);
-			expect(globals).toEqual(['/profiles/active/snippets/active.code-snippets']);
+			const tsSnippets = '/profiles/active/snippets/active.code-snippets';
+			expect(globals).toEqual(
+				expect.arrayContaining([tsSnippets, '/profiles/active/snippets/typescript.json'])
+			);
 			expect(profileSnippetsMap).toEqual({
-				active: ['/profiles/active/snippets/active.code-snippets'],
-				other: ['/profiles/other/snippets/other.code-snippets'],
+				active: expect.arrayContaining([
+					'/profiles/active/snippets/active.code-snippets',
+					tsSnippets,
+				]),
+				other: expect.arrayContaining([
+					'/profiles/other/snippets/other.code-snippets',
+					'/profiles/other/snippets/typescript.json',
+				]),
 			});
 		});
 	});

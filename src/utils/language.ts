@@ -1,15 +1,10 @@
-import vscode, { showQuickPick } from '../vscode';
-
-let langIds: string[] = [];
-(async function loadLangs() {
-	langIds.push(...(await vscode.languages.getLanguages()));
-})();
+import vscode, { showQuickPick, getLanguages } from '../vscode';
 
 /**
  * Prompts the user to select a language
  */
 async function selectLanguage(): Promise<string | undefined> {
-	return await showQuickPick(langIds, {
+	return await showQuickPick(await getLanguages(), {
 		placeHolder: 'Select a language',
 		canPickMany: false,
 	});
@@ -22,4 +17,4 @@ function getCurrentLanguage(): string | undefined {
 	return vscode.window.activeTextEditor?.document.languageId;
 }
 
-export { selectLanguage, getCurrentLanguage, langIds };
+export { selectLanguage, getCurrentLanguage };

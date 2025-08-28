@@ -8,11 +8,12 @@ import {
 	showWarningMessage,
 	showQuickPick,
 	showInformationMessage,
+	getLanguages,
 } from '../vscode';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
-import { getCurrentLanguage, langIds, selectLanguage } from '../utils/language';
+import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
@@ -138,6 +139,8 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 				}
 			});
 		});
+
+		const langIds = await getLanguages();
 
 		// Add Snippets to export object
 		if (snippetKeys !== undefined) {

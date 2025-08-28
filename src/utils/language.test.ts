@@ -1,19 +1,11 @@
 import { describe, expect, it, type Mock } from 'vitest';
-import { selectLanguage, getCurrentLanguage, langIds } from './language';
-import vscode, { showQuickPick } from '../vscode';
+import { selectLanguage, getCurrentLanguage } from './language';
+import vscode, { getLanguages, showQuickPick } from '../vscode';
 
 describe('language utils', () => {
-	describe('langIds', () => {
-		it('should be populated with languages', async () => {
-			const mockLangs = ['typescript', 'javascript', 'python'];
-			(vscode.languages.getLanguages as Mock).mockResolvedValue(mockLangs);
-
-			expect(langIds).toEqual(expect.arrayContaining(mockLangs));
-		});
-	});
-
 	describe('selectLanguage', () => {
 		it('should show a quick pick with languages and return the selected language', async () => {
+			const langIds = await getLanguages();
 			const mockLangs = ['typescript', 'javascript', 'python'];
 			langIds.splice(0, langIds.length, ...mockLangs); // reset and fill
 			const expectedLanguage = 'typescript';

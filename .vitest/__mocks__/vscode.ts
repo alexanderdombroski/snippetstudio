@@ -119,6 +119,11 @@ export const onDidChangeActiveTextEditor = vi.fn();
 // Env
 export const openExternal = vi.fn();
 
+// Languages
+export const getLanguages = vi
+	.fn()
+	.mockResolvedValue(['python', 'css', 'javascript', 'typescript']);
+
 // TreeItemCollapsibleState
 export const None = 0;
 export const Collapsed = 1;
@@ -137,7 +142,6 @@ export default {
 		registerWebviewViewProvider: vi.fn(),
 	},
 	languages: {
-		getLanguages: vi.fn(() => ['python', 'css', 'javascript', 'typescript']),
 		registerCompletionItemProvider: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
 	},

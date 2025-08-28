@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fs from 'node:fs/promises';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
-import { getCurrentLanguage, langIds } from '../utils/language';
+import { getCurrentLanguage } from '../utils/language';
 import {
 	getActiveProfileSnippetsDir,
 	getPathFromProfileLocation,
@@ -10,6 +10,7 @@ import {
 	getActiveProfile,
 } from '../utils/profile';
 import type { ProfileSnippetsMap } from '../types';
+import { getLanguages } from '../vscode';
 
 // ---------------------------- Language Specfic ---------------------------- //
 
@@ -123,6 +124,7 @@ async function locateAllSnippetFiles(): Promise<[string[], string[], ProfileSnip
 async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 	const snippetFiles: string[] = [];
 
+	const langIds = await getLanguages();
 	for (var langId of langIds) {
 		const snippetFile = path.join(globalDir, `${langId}.json`);
 		(await exists(snippetFile)) && snippetFiles.push(snippetFile);
