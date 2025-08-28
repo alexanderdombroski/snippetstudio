@@ -17,6 +17,7 @@ vsc-extension-quickstart.md
 **/.test.ts
 .vitest/
 vitest.config.mts
+coverage
 
 .env
 *.log
