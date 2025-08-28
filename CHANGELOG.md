@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [2.1](#212---2025-08-25) - Advanced Profile Linking
+- [2.1](#213---2025-08-27) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
 - [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
 - [1.5](#151---2025-07-10) - Global Snippet Sync
@@ -30,6 +30,14 @@
 - **SnippetManagement** (2.2)
   - Rename .code-snippets Files
   - Simplified snippet view option
+  - Fix to handle json with trailing commas
+
+## [2.1.3] - 2025-08-27
+
+### Fixed
+
+- File reader and language chooser pulls from updated language list
+- Code coverage data no longer included in extension bundle
 
 ## [2.1.2] - 2025-08-25
 
