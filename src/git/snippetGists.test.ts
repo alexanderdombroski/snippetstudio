@@ -30,7 +30,7 @@ describe('snippetGists', () => {
 	describe('createGist', () => {
 		beforeEach(() => {
 			vi.spyOn(octo, 'getOctokitClient').mockResolvedValue({
-				request: vi.fn(() => ({ data: {} })),
+				request: vi.fn().mockResolvedValue({ data: { html_url: 'http://fake.gist' } }),
 			} as unknown as Octokit);
 		});
 		it('should end early if user escapes quickpicks', async () => {
