@@ -21,15 +21,26 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Test Coverage
         run: npm run coverage:publish
-        env: 
-          GITHUB_TOKEN: ${{ secrets.OAUTH_APP_TOKEN }}          
+        env:
+          GITHUB_TOKEN: ${{ secrets.OAUTH_APP_TOKEN }}
+
+      - name: Publish Coverage
+        run: |
+          node .vitest/publishCoverage.mts
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh auth setup-git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "bot: update readme code coverage" --no-verify || echo "No changes to commit"
+          git push origin HEAD:main --no-verify
 
       - name: Compile extension
         run: npm run package
@@ -48,7 +59,7 @@ jobs:
             echo "Failed to download CHANGELOG.md"
             exit 1
           fi
-          
+
           # Use awk to extract the relevant section
           awk -v tag="${{ github.ref_name }}" '
             BEGIN { found=0; }
@@ -83,4 +94,3 @@ jobs:
         run: npx @vscode/vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
         env:
           VSCODE_MARKETPLACE_TOKEN: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
- 
