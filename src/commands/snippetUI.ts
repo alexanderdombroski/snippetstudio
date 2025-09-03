@@ -4,7 +4,6 @@ import vscode, {
 	openExternal,
 	Uri,
 	createTerminal,
-	showInformationMessage,
 	ThemeIcon,
 } from '../vscode';
 import type { CommandMap } from '../types';
@@ -52,25 +51,6 @@ function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: Com
 			terminal.show();
 		})
 	);
-
-	// Prompt a walkthrough
-	!context.globalState.get<boolean>('walkthrough-completed') &&
-		(async () => {
-			const answer = await showInformationMessage(
-				'New here? How about you take a look at the tutorials?',
-				'Open Walkthroughs',
-				"Don't ask again"
-			);
-			if (answer === 'Open Walkthroughs') {
-				executeCommand(
-					'workbench.action.openWalkthrough',
-					'AlexDombroski.snippetstudio#snippetStudioWalkthrough'
-				);
-			}
-			if (answer) {
-				context.globalState.update('walkthrough-completed', true);
-			}
-		})();
 }
 
 export default initSnippetUICommands;
