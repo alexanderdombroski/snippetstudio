@@ -8,7 +8,7 @@ import {
 	getProfileIdFromPath,
 	getProfiles,
 } from '../../utils/profile';
-import { isParentDir } from '../../utils/fsInfo';
+import { exists, isParentDir } from '../../utils/fsInfo';
 import { createFile } from '../newSnippetFile';
 import {
 	addFileLink,
@@ -40,6 +40,7 @@ describe('src/snippets/links/config.ts', () => {
 		(getProfiles as Mock).mockResolvedValue(mockProfiles);
 		(createFile as Mock).mockResolvedValue(undefined);
 		(writeJson as Mock).mockResolvedValue(undefined);
+		(exists as Mock).mockResolvedValue(true);
 	});
 
 	afterEach(() => {
@@ -49,6 +50,12 @@ describe('src/snippets/links/config.ts', () => {
 	describe('getLinkedSnippets', () => {
 		it('should return empty object if no links are present', async () => {
 			(readJsonC as Mock).mockResolvedValue({});
+			const links = await getLinkedSnippets();
+			expect(links).toEqual({});
+		});
+
+		it("should return empty object if settings file doesn't exist", async () => {
+			(exists as Mock).mockResolvedValue(false);
 			const links = await getLinkedSnippets();
 			expect(links).toEqual({});
 		});

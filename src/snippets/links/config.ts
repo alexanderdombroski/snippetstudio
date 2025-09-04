@@ -8,7 +8,7 @@ import {
 	getProfileIdFromPath,
 	getProfiles,
 } from '../../utils/profile';
-import { isParentDir } from '../../utils/fsInfo';
+import { exists, isParentDir } from '../../utils/fsInfo';
 
 /**
  * Updates all settings.json files to add the target filename
@@ -35,6 +35,9 @@ export async function removeFileLink(filename: string) {
  */
 export async function getLinkedSnippets(): Promise<SnippetLinks> {
 	const settingsPath = path.join(getUserPath(), 'settings.json');
+	if (!(await exists(settingsPath))) {
+		return {};
+	}
 	const settings = (await readJsonC(settingsPath)) as JSONObject;
 	let links = settings['snippetstudio.file.linkedFiles'] as string[] | SnippetLinks | undefined;
 	if (Array.isArray(links)) {
