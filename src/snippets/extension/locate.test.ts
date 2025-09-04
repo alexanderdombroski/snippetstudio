@@ -1,18 +1,24 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import type { Dirent } from 'node:fs';
-import { describe, expect, it, vi, type Mock } from 'vitest';
+import { afterAll, describe, expect, it, vi, type Mock } from 'vitest';
 import { exists } from '../../utils/fsInfo';
 import { readJson } from '../../utils/jsoncFilesIO';
 import {
 	findAllExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
 	getExtensionSnippetLangs,
+	_getExtensionsDirPath,
 } from './locate';
+import vscode from '../../vscode';
 
 vi.mock('../../utils/fsInfo');
 vi.mock('../../utils/jsoncFilesIO');
 vi.mock('node:os');
+
+function configPath(appConfigDir: TemplateStringsArray) {
+	return `/home/user/${appConfigDir}/extensions`;
+}
 
 (os.homedir as Mock).mockReturnValue('/home/user');
 
@@ -136,6 +142,19 @@ describe('locate', () => {
 					],
 				},
 			});
+		});
+	});
+
+	describe('getExtensionPath', () => {
+		afterAll(() => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
+		});
+		it('should find the vscode extensions folder', () => {
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
+		});
+		it('should should update the path for the nightly build', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
 	});
 });
