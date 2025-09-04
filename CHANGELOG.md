@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.2](#220---2025-09-03) - VS Code Insiders Support
 - [2.1](#213---2025-08-27) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
 - [1.6](#160---2025-07-17) - Transfer Snippets & Keybindings
@@ -31,6 +32,17 @@
   - Rename .code-snippets Files
   - Simplified snippet view option
   - Fix to handle json with trailing commas
+
+## [2.2.0] - 2025-09-03
+
+### Added
+
+- VS Code Insiders support
+
+### Fixed
+
+- Extension no longer crashes if settings.json doesn't exist
+- Suggestion to do walkthroughs doesn't show immediately after being shown the walkthrough page
 
 ## [2.1.3] - 2025-08-27
 
