@@ -55,13 +55,14 @@ export function __initUserPath(): string | undefined {
 }
 
 export function getUserPath(): string {
+	const appName = vscode.env.appName === 'Visual Studio Code' ? 'Code' : 'Code - Insiders';
 	switch (process.platform) {
 		case 'win32':
-			return path.join(os.homedir(), 'AppData', 'Roaming', 'Code', 'User');
+			return path.join(os.homedir(), 'AppData', 'Roaming', appName, 'User');
 		case 'linux':
-			return path.join(os.homedir(), '.config', 'Code', 'User');
+			return path.join(os.homedir(), '.config', appName, 'User');
 		case 'darwin':
-			return path.join(os.homedir(), 'Library', 'Application Support', 'Code', 'User');
+			return path.join(os.homedir(), 'Library', 'Application Support', appName, 'User');
 		default:
 			throw new Error("Unknown OS: Couldn't find user path");
 	}

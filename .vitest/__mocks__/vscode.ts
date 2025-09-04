@@ -158,7 +158,7 @@ export default {
 		}),
 		registerFileSystemProvider: vi.fn(),
 	},
-	env: { clipboard: { writeText: vi.fn() } },
+	env: { clipboard: { writeText: vi.fn() }, appName: 'Visual Studio Code' },
 	StatusBarAlignment: { Right: 1 },
 	FileChangeType: { Changed: 1, Created: 2, Deleted: 3 },
 	FileType: { Unknown: 0, File: 1, Directory: 2 },

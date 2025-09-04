@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach, type Mock, afterAll } from 'vitest';
 import os from 'node:os';
 import path from 'node:path';
 import { readJsonC } from './jsoncFilesIO';
-import { showErrorMessage } from '../vscode';
+import vscode, { showErrorMessage } from '../vscode';
 import {
 	getUserPath,
 	__readGlobalStorage,
@@ -37,7 +37,10 @@ describe('context', () => {
 	});
 
 	describe('getUserPath', () => {
-		it('should return the correct path for win32', async () => {
+		afterAll(() => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
+		});
+		it('should return the correct path for win32', () => {
 			Object.defineProperty(process, 'platform', {
 				value: 'win32',
 			});
@@ -45,7 +48,7 @@ describe('context', () => {
 			expect(getUserPath()).toBe(expectedPath);
 		});
 
-		it('should return the correct path for linux', async () => {
+		it('should return the correct path for linux', () => {
 			Object.defineProperty(process, 'platform', {
 				value: 'linux',
 			});
@@ -53,7 +56,7 @@ describe('context', () => {
 			expect(getUserPath()).toBe(expectedPath);
 		});
 
-		it('should return the correct path for darwin', async () => {
+		it('should return the correct path for darwin', () => {
 			Object.defineProperty(process, 'platform', {
 				value: 'darwin',
 			});
@@ -72,6 +75,21 @@ describe('context', () => {
 				value: 'sunos',
 			});
 			expect(() => getUserPath()).toThrow("Unknown OS: Couldn't find user path");
+		});
+
+		it('should use insiders on nightly builds', () => {
+			Object.defineProperty(process, 'platform', {
+				value: 'darwin',
+			});
+			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
+			const expectedPath = path.join(
+				'/home/user',
+				'Library',
+				'Application Support',
+				'Code - Insiders',
+				'User'
+			);
+			expect(getUserPath()).toBe(expectedPath);
 		});
 	});
 
