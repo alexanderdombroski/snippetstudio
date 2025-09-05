@@ -18,7 +18,7 @@
 	"bugs": {
 		"url": "https://github.com/alexanderdombroski/snippetstudio/issues/new/choose"
 	},
-	"qna": "https://github.com/snippetstudio/discussions",
+	"qna": "https://github.com/alexanderdombroski/snippetstudio/discussions",
 	"engines": {
 		"vscode": "^1.100.0",
 		"node": ">=20.0.0"
