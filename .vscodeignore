@@ -23,7 +23,6 @@ coverage
 *.log
 public/examples/**.gif
 .github/
-CHANGELOG.md
 release_notes.txt
 .husky/
 lint-staged.config.cjs

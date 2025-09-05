@@ -23,6 +23,7 @@
 		"vscode": "^1.100.0",
 		"node": ">=20.0.0"
 	},
+	"changelog": "",
 	"capabilities": {
 		"virtualWorkspaces": {
 			"supported": "limited",

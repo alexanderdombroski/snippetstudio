@@ -33,6 +33,17 @@
   - Simplified snippet view option
   - Fix to handle json with trailing commas
 
+## [2.2.1] - 2025-09-04
+
+### Added
+
+### Fixed
+
+- Changelog correctly appears on marketplace
+- Fix marketplace qna link
+
+### Changed
+
 ## [2.2.0] - 2025-09-03
 
 ### Added
