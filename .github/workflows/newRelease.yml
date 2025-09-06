@@ -85,7 +85,7 @@ jobs:
 
       - name: Upload .vsix to release
         run: |
-          gh release upload ${{ env.RELEASE_ID }} ${{ env.VSIX_PATH }} \
+          gh release upload $RELEASE_ID $VSIX_PATH \
             --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
