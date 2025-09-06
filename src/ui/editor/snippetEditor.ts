@@ -28,11 +28,13 @@ function initSnippetEditorCommands(
 		})
 	);
 
-	onDidChangeActiveTextEditor((editor) => {
+	onDidChangeActiveTextEditor(() => {
 		executeCommand(
 			'setContext',
 			'snippetstudio.editorVisible',
-			editor?.document.uri.scheme === 'snippetstudio'
+			vscode.window.visibleTextEditors.some(
+				(editor) => editor?.document.uri.scheme === 'snippetstudio'
+			)
 		);
 	});
 }
@@ -67,8 +69,9 @@ export async function __saveSnippet(provider: SnippetEditorProvider) {
 		capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
 		snippet
 	);
-	executeCommand('workbench.action.closeActiveEditor');
 	executeCommand('snippetstudio.refresh');
+	await executeCommand('workbench.action.closeActiveEditor');
+	await executeCommand('setContext', 'snippetstudio.editorVisible', false);
 }
 
 export default initSnippetEditorCommands;
