@@ -1,148 +1,161 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-    <title>Snippet Details</title>
-    <script>
-        const vscode = acquireVsCodeApi();
-    </script>
-</head>
-<body>
-    <form id="snippetForm">
-        <label for="snippetTitle">Title:</label>
-        <input type="text" id="snippetTitle" name="snippetTitle" required><br><br>
-    
-        <label for="prefix">Prefix:</label>
-        <input type="text" id="prefix" name="prefix" required><br><br>
-    
-        <label for="description">Description:</label>
-        <textarea id="description" name="description"></textarea><br><br>
-    
-        <div id="scopeContainer">
-            <label for="scope">Scope:</label>
-            <input type="text" id="scope" name="scope"><br><br>
-        </div>
+	<head>
+		<title>Snippet Details</title>
+		<script>
+			const vscode = acquireVsCodeApi();
+		</script>
+	</head>
+	<body>
+		<form id="snippetForm">
+			<label for="snippetTitle">Title:</label>
+			<input type="text" id="snippetTitle" name="snippetTitle" required /><br /><br />
 
-        <button type="submit" id="saveButton">Save</button>
+			<label for="prefix">Prefix:</label>
+			<input type="text" id="prefix" name="prefix" required /><br /><br />
 
-        <p>Snippet will be stored at: <span id="filename"></span></p>
-    </form>
+			<label for="description">Description:</label>
+			<textarea id="description" name="description"></textarea><br /><br />
 
+			<div id="scopeContainer">
+				<label for="scope">Scope:</label>
+				<input type="text" id="scope" name="scope" /><br /><br />
+			</div>
 
-    <script>
-        let showScope;
+			<button type="submit" id="saveButton">Save</button>
 
-        document.getElementById("snippetForm").addEventListener('submit', (event) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const data = {
-                snippetTitle: formData.get('snippetTitle'),
-                prefix: formData.get('prefix'),
-                filename: document.getElementById("filename").innerText
-            }
-            const desc = formData.get('description');
-            if (desc) data.description = desc;
-            const scope = formData.get('scope');
-            if (showScope && scope) data.scope = scope;
+			<p>Snippet will be stored at: <span id="filename"></span></p>
+		</form>
 
-            vscode.postMessage({ command: "updateSnippetData", data: data })
-        });
+		<script>
+			let showScope;
+			const saveButton = document.getElementById('saveButton');
 
-        window.addEventListener('message', event => {
-            
-            if (!event.origin.startsWith('vscode-webview://')) {
-                console.warn('Received message from an unexpected origin:', event.origin);
-                return;
-            }
+			document.getElementById('snippetForm').addEventListener('submit', (event) => {
+				event.preventDefault();
+				const formData = new FormData(event.currentTarget);
+				const data = {
+					snippetTitle: formData.get('snippetTitle'),
+					prefix: formData.get('prefix'),
+					filename: document.getElementById('filename').innerText,
+				};
+				const desc = formData.get('description');
+				if (desc) data.description = desc;
+				const scope = formData.get('scope');
+				if (showScope && scope) data.scope = scope;
 
-            const message = event.data;
-            switch (message.command) {
-                case 'updateScope':
-                    showScope = message.showScope
-                    document.getElementById('scopeContainer').style.display = showScope ? 'block' : 'none';
-                    break;
+				vscode.postMessage({ command: 'updateSnippetData', data: data });
+			});
 
-                case 'returnData':
-                    document.getElementById("snippetForm").requestSubmit();
-                    break;
-                
-                case 'initForm':
-                    const data = message.data;
-                    document.getElementById("snippetTitle").value = data.snippetTitle;
-                    const prefix = Array.isArray(data.prefix) ? data.prefix.join(',') : data.prefix
-                    document.getElementById("prefix").value = prefix;
-                    if (data.description) document.getElementById("description").innerText = data.description;
-                    if (showScope && data.scope) document.getElementById("scope").value = data.scope;
-                    document.getElementById('filename').innerText = data.filename
-                    break
-            
-                default:
-                    break;
-            }
-        });
+			window.addEventListener('message', (event) => {
+				if (!event.origin.startsWith('vscode-webview://')) {
+					console.warn('Received message from an unexpected origin:', event.origin);
+					return;
+				}
 
-        function listenForChanges(id) {
-            document.getElementById(id).addEventListener("input", (event) => {
-                debounce((event) => {
-                    const data = event.target.value.trim()
-                    vscode.postMessage({ command: "updatePartialSnippetData", data: { data: data, type: id }})
-                }, 300)(event);
-            });
-        }
-        listenForChanges("snippetTitle");
-        listenForChanges("prefix");
-        listenForChanges("description");
-        listenForChanges("scope");
+				const message = event.data;
+				switch (message.command) {
+					case 'updateScope':
+						showScope = message.showScope;
+						document.getElementById('scopeContainer').style.display = showScope ? 'block' : 'none';
+						break;
 
-        function debounce(func, delay) {
-            let timeoutId;
-            return function (...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                    func.apply(this, args);
-                }, delay);
-            };
-        }
+					case 'returnData':
+						document.getElementById('snippetForm').requestSubmit();
+						break;
 
-    </script>
+					case 'setIsEditorActive':
+						saveButton.ariaDisabled = String(!message.data);
+						saveButton.disabled = !message.data;
+						break;
 
-    <style>
-        body {
-            background-color: var(--vscode-sideBar-background);
-            margin: 0;
-        }
+					case 'initForm':
+						const data = message.data;
+						document.getElementById('snippetTitle').value = data.snippetTitle;
+						const prefix = Array.isArray(data.prefix) ? data.prefix.join(',') : data.prefix;
+						document.getElementById('prefix').value = prefix;
+						if (data.description)
+							document.getElementById('description').innerText = data.description;
+						if (showScope && data.scope) document.getElementById('scope').value = data.scope;
+						document.getElementById('filename').innerText = data.filename;
+						break;
 
-        label {
-            color: var(--vscode-sideBar-foreground);
-        }
-        input, textarea {
-            background-color: var(--vscode-settings-textInputBackground);
-            color: var(--vscode-settings-textInputForeground);
-            border-color: var(--vscode-settings-textInputBorder);
-            border-style: solid;
-            margin-top: 2px;
-            width: 100%;
-        }
-        input {
-            font-size: 0.7rem;
-        }
-        textarea {
-            font-size: 0.6rem;
-        }
-        button {
-            background-color: var(--vscode-button-background);
-            color: var(--vscode-button-foreground);
-            border-color: var(--vscode-button-border);
-        }
-        button:hover {
-            background-color: var(--vscode-button-hoverBackground);
-        }
-        p, span {
-            font-style: italic;
-            font-size: 0.5rem;
-        }
-        span {
-            word-break: break-all;
-        }
-    </style>
-</body>
+					default:
+						break;
+				}
+			});
+
+			function listenForChanges(id) {
+				document.getElementById(id).addEventListener('input', (event) => {
+					debounce((event) => {
+						const data = event.target.value.trim();
+						vscode.postMessage({
+							command: 'updatePartialSnippetData',
+							data: { data: data, type: id },
+						});
+					}, 300)(event);
+				});
+			}
+			listenForChanges('snippetTitle');
+			listenForChanges('prefix');
+			listenForChanges('description');
+			listenForChanges('scope');
+
+			function debounce(func, delay) {
+				let timeoutId;
+				return function (...args) {
+					clearTimeout(timeoutId);
+					timeoutId = setTimeout(() => {
+						func.apply(this, args);
+					}, delay);
+				};
+			}
+		</script>
+
+		<style>
+			body {
+				background-color: var(--vscode-sideBar-background);
+				margin: 0;
+			}
+
+			label {
+				color: var(--vscode-sideBar-foreground);
+			}
+			input,
+			textarea {
+				background-color: var(--vscode-settings-textInputBackground);
+				color: var(--vscode-settings-textInputForeground);
+				border-color: var(--vscode-settings-textInputBorder);
+				border-style: solid;
+				margin-top: 2px;
+				width: 100%;
+			}
+			input {
+				font-size: 0.7rem;
+			}
+			textarea {
+				font-size: 0.6rem;
+			}
+			button {
+				background-color: var(--vscode-button-background);
+				color: var(--vscode-button-foreground);
+				border-color: var(--vscode-button-border);
+			}
+			button:hover {
+				background-color: var(--vscode-button-hoverBackground);
+			}
+			button:disabled {
+				color: var(--vscode-button-secondaryForeground);
+				background-color: var(--vscode-button-secondaryBackground);
+			}
+			p,
+			span {
+				font-style: italic;
+				font-size: 0.5rem;
+			}
+			span {
+				word-break: break-all;
+			}
+		</style>
+	</body>
 </html>

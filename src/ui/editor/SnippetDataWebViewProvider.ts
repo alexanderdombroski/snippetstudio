@@ -88,6 +88,8 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 		});
 	}
 
+	private schemeNotifier: vscode.Disposable | undefined;
+
 	public initMessages(uri: vscode.Uri) {
 		const view = this._view?.webview;
 		if (view) {
@@ -101,6 +103,13 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 					data: this._snippetDataManager.getData(uri.path),
 				});
 			}
+			this.schemeNotifier?.dispose();
+			this.schemeNotifier = vscode.window.onDidChangeActiveTextEditor((editor) => {
+				view.postMessage({
+					command: 'setIsEditorActive',
+					data: editor?.document.uri.scheme === 'snippetstudio',
+				});
+			});
 		}
 	}
 }
