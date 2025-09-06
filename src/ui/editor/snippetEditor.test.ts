@@ -79,6 +79,6 @@ describe('saveSnippet', () => {
 
 		await __saveSnippet(mockEditor);
 		expect(writeSnippet).toHaveBeenCalled();
-		expect(executeCommand).toHaveBeenCalledTimes(2);
+		expect(executeCommand).toHaveBeenCalledTimes(3);
 	});
 });

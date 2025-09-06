@@ -26,6 +26,7 @@ describe('SnippetEditorProvider', () => {
 		dataManager = new SnippetDataManager();
 		provider = new SnippetEditorProvider(scheme, dataManager);
 		(getCurrentUri as Mock).mockReturnValue(testUri);
+		(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 	});
 
 	afterEach(() => {

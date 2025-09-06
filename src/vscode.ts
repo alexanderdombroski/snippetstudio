@@ -33,6 +33,7 @@ export const {
 	createQuickPick,
 	onDidChangeActiveTextEditor,
 	showSaveDialog,
+	createTextEditorDecorationType,
 } = vscode.window;
 
 export const { getLanguages } = vscode.languages;

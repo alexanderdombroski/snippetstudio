@@ -1,4 +1,4 @@
-import vscode, { Uri, executeCommand } from '../../vscode';
+import vscode, { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import SnippetDataManager from './SnippetDataManager';
@@ -104,7 +104,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 				});
 			}
 			this.schemeNotifier?.dispose();
-			this.schemeNotifier = vscode.window.onDidChangeActiveTextEditor((editor) => {
+			this.schemeNotifier = onDidChangeActiveTextEditor((editor) => {
 				view.postMessage({
 					command: 'setIsEditorActive',
 					data: editor?.document.uri.scheme === 'snippetstudio',

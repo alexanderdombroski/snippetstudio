@@ -64,6 +64,7 @@ export const getConfiguration = vi.fn().mockReturnValue({
 	get: vi.fn(),
 });
 export const openTextDocument = vi.fn();
+export const createTextEditorDecorationType = vi.fn();
 
 // Helper to create a mock returning a Thenable<T>
 const makeThenable = <T>(impl?: (...args: any[]) => T) => {
@@ -137,13 +138,13 @@ export default {
 		activeTextEditor: vi.fn(),
 		withProgress: vi.fn(),
 		createStatusBarItem: vi.fn(),
-		createTextEditorDecorationType: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
 		registerWebviewViewProvider: vi.fn(),
 	},
 	languages: {
 		registerCompletionItemProvider: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
+		getDiagnostics: vi.fn(),
 	},
 	workspace: {
 		folders: [],

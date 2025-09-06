@@ -1,4 +1,10 @@
-import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
+import vscode, {
+	onDidChangeActiveTextEditor,
+	getConfiguration,
+	Range,
+	Uri,
+	createTextEditorDecorationType,
+} from '../../vscode';
 import type { SnippetData } from '../../types';
 import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
@@ -16,7 +22,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 	public scheme: string = '';
 
 	private _lspDebounce: NodeJS.Timeout | undefined;
-	private _insertionFeatureDecorationType = vscode.window.createTextEditorDecorationType({
+	private _insertionFeatureDecorationType = createTextEditorDecorationType({
 		color: '#FFF', // White in Dark+
 		fontWeight: 'bold',
 		light: {
@@ -25,12 +31,12 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 	});
 
 	// The red squigglys in your editor are SVGs btw, and there's no way to remove diagnostics.
-	private _diagnosticSuppressorDecorationType = vscode.window.createTextEditorDecorationType({
+	private _diagnosticSuppressorDecorationType = createTextEditorDecorationType({
 		backgroundColor: 'var(--vscode-editor-background)',
 		textDecoration: 'underline wavy var(--vscode-editor-background)', // Mask underline squiggles
 		isWholeLine: true,
 	});
-	private _diagnosticSuppressorDecorationOverLine = vscode.window.createTextEditorDecorationType({
+	private _diagnosticSuppressorDecorationOverLine = createTextEditorDecorationType({
 		textDecoration: 'overline wavy var(--vscode-editor-background)', // Additional Coverup underline squiggles
 		isWholeLine: true,
 	});
@@ -190,9 +196,9 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 
 	private _highlightSnippetInsertionFeatures(editor: vscode.TextEditor) {
 		const document = editor.document;
-		const shouldMaskDiagnostics = vscode.workspace
-			.getConfiguration('snippetstudio')
-			.get<boolean>('editor.suppressDiagnostics');
+		const shouldMaskDiagnostics = getConfiguration('snippetstudio').get<boolean>(
+			'editor.suppressDiagnostics'
+		);
 		const diagnostics = shouldMaskDiagnostics
 			? vscode.languages.getDiagnostics(document.uri)
 			: undefined;
