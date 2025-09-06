@@ -667,6 +667,11 @@
 					"default": true,
 					"description": "Automatically determine and add the next id number for tabstops, placeholders, and choice snipppet insertion features."
 				},
+				"snippetstudio.editor.suppressDiagnostics": {
+					"type": "boolean",
+					"default": true,
+					"description": "Mask syntax errors that may occur when adding insertion features"
+				},
 				"snippetstudio.export.location": {
 					"type": "string",
 					"default": "choose",

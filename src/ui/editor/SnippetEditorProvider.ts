@@ -24,6 +24,17 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		},
 	});
 
+	// The red squigglys in your editor are SVGs btw, and there's no way to remove diagnostics.
+	private _diagnosticSuppressorDecorationType = vscode.window.createTextEditorDecorationType({
+		backgroundColor: 'var(--vscode-editor-background)',
+		textDecoration: 'underline wavy var(--vscode-editor-background)', // Mask underline squiggles
+		isWholeLine: true,
+	});
+	private _diagnosticSuppressorDecorationOverLine = vscode.window.createTextEditorDecorationType({
+		textDecoration: 'overline wavy var(--vscode-editor-background)', // Additional Coverup underline squiggles
+		isWholeLine: true,
+	});
+
 	constructor(scheme: string, manager: SnippetDataManager) {
 		this._directories.set('/snippets', new Set());
 		this.scheme = scheme;
@@ -178,10 +189,13 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 	}
 
 	private _highlightSnippetInsertionFeatures(editor: vscode.TextEditor) {
-		const document = editor?.document;
-		if (document === undefined) {
-			return;
-		}
+		const document = editor.document;
+		const shouldMaskDiagnostics = vscode.workspace
+			.getConfiguration('snippetstudio')
+			.get<boolean>('editor.suppressDiagnostics');
+		const diagnostics = shouldMaskDiagnostics
+			? vscode.languages.getDiagnostics(document.uri)
+			: undefined;
 
 		const text = document.getText();
 		const regexes = [
@@ -193,14 +207,34 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 			/(?<!\\)\$\{\d+\/.*?\/.*?\/[gimsuy]*\}/g,
 		];
 		const decorations: vscode.DecorationOptions[] = [];
+		const supressedDiagnostics: vscode.DecorationOptions[] = [];
+		const supressedDiagnosticsOverLine: vscode.DecorationOptions[] = [];
 
 		for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
 			const startPos = document.positionAt(match.index);
 			const endPos = document.positionAt(match.index + match[0].length);
-			decorations.push({ range: new Range(startPos, endPos) });
+			const range = new Range(startPos, endPos);
+			decorations.push({ range });
+
+			diagnostics
+				?.filter((dg) => dg.range.intersection(range))
+				.forEach((dg) => {
+					console.log(dg.range.start.line, dg.range.end.line);
+					supressedDiagnostics.push({ range: dg.range });
+
+					supressedDiagnosticsOverLine.push({ range: moveRangeDown(dg.range, document) });
+					diagnostics.splice(diagnostics.indexOf(dg), 1);
+				});
 		}
 
 		editor.setDecorations(this._insertionFeatureDecorationType, decorations);
+		if (shouldMaskDiagnostics) {
+			editor.setDecorations(this._diagnosticSuppressorDecorationType, supressedDiagnostics);
+			editor.setDecorations(
+				this._diagnosticSuppressorDecorationOverLine,
+				supressedDiagnosticsOverLine
+			);
+		}
 	}
 
 	rename(
@@ -254,4 +288,15 @@ export function __escapeDollarSignIfNeeded(text: string, offset: number): string
 		// Is a placeholder
 		return text.slice(0, offset - 2) + '\\' + text.slice(offset - 2);
 	}
+}
+
+function moveRangeDown(range: vscode.Range, document: vscode.TextDocument): vscode.Range {
+	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
+	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);
+
+	// Clamp the character positions to the line length
+	const newStartChar = Math.min(range.start.character, document.lineAt(newStartLine).text.length);
+	const newEndChar = Math.min(range.end.character, document.lineAt(newEndLine).text.length);
+
+	return new vscode.Range(newStartLine, newStartChar, newEndLine, newEndChar);
 }
