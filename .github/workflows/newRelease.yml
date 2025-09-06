@@ -90,7 +90,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Publish extension to Open VSX Registry
+        run: npx ovsx publish $VSIX_PATH -p $OPEN_VSX_MARKETPLACE_TOKEN
+        env:
+          OPEN_VSX_MARKETPLACE_TOKEN: ${{ secrets.OPEN_VSX_MARKETPLACE_TOKEN }}
+
       - name: Publish extension to VS Code Marketplace
-        run: npx @vscode/vsce publish -p ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
+        run: npx @vscode/vsce publish -p $VSCODE_MARKETPLACE_TOKEN
         env:
           VSCODE_MARKETPLACE_TOKEN: ${{ secrets.VSCODE_MARKETPLACE_TOKEN }}
