@@ -16,7 +16,12 @@ import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
 export function _getExtensionsDirPath(): string {
-	const appConfig = vscode.env.appName === 'Visual Studio Code' ? '.vscode' : '.vscode-insiders';
+	const appConfigs: Record<string, string> = {
+		'Visual Studio Code': '.vscode',
+		'Visual Studio Code - Insiders': '.vscode-insiders',
+		VSCodium: '.vscode-oss',
+	};
+	const appConfig = appConfigs[vscode.env.appName];
 	return path.join(os.homedir(), appConfig, 'extensions');
 }
 

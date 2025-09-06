@@ -156,5 +156,9 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
+		it('should should update the path for VSCodium', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
+		});
 	});
 });
