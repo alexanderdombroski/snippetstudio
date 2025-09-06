@@ -36,7 +36,7 @@ export async function importCodeProfileSnippets(context: vscode.ExtensionContext
 		{
 			label: 'From a url',
 			description: 'fetch the .code-profile file raw from a url',
-			run: fromUrl,
+			run: __fromUrl,
 		},
 	];
 	const selection = await showQuickPick(items, {
@@ -166,7 +166,7 @@ export async function __fromBuiltIn(): Promise<string[] | undefined> {
 	return [await fetchProfile(url)];
 }
 
-async function fromUrl(): Promise<string[] | undefined> {
+export async function __fromUrl(): Promise<string[] | undefined> {
 	const url = await showInputBox({
 		title: 'Paste a URL to a raw .code-snippets file',
 	});

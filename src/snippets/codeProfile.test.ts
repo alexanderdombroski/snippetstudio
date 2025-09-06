@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, type Mock } from 'vitest';
-import { __fromBuiltIn, __fromGist, importCodeProfileSnippets } from './codeProfile';
-import { showInformationMessage, showQuickPick } from '../vscode';
+import { __fromBuiltIn, __fromGist, __fromUrl, importCodeProfileSnippets } from './codeProfile';
+import { showInformationMessage, showInputBox, showQuickPick } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import { chooseLocalGlobal } from '../utils/user';
@@ -12,6 +12,26 @@ vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/user');
 vi.mock('../utils/fsInfo');
 vi.mock('../git/utils.js');
+
+function mockHttps() {
+	vi.spyOn(https, 'get').mockImplementation((url: string | URL, callback: any) => {
+		const mockRes = {
+			statusCode: 200,
+			on: (_event: string, cb: (chunk?: any) => void) => {
+				cb();
+			},
+			resume: () => {},
+		};
+
+		// call the callback with the mocked response
+		callback(mockRes);
+
+		// return a mock request object with .on() so .on('error') works
+		return {
+			on: () => {},
+		} as unknown as ClientRequest;
+	});
+}
 
 describe.concurrent('codeProfile', () => {
 	describe('importCodeProfileSnippets', () => {
@@ -43,34 +63,29 @@ describe.concurrent('codeProfile', () => {
 		);
 	});
 
+	describe('profile file from raw url', () => {
+		it('should fetch a profile from a url', async () => {
+			const url =
+				'https://gist.githubusercontent.com/example/0123456789/raw/abcdef12345/test.code-profile';
+			(showInputBox as Mock).mockResolvedValue(url);
+			mockHttps();
+
+			await __fromUrl();
+			expect(https.get).toBeCalledWith(url, expect.any(Function));
+		});
+	});
+
 	describe.sequential('from built in code profiles', () => {
 		it('should query built in code profiles', async () => {
 			(showQuickPick as Mock).mockReturnValue({ label: 'python' });
-
-			vi.spyOn(https, 'get').mockImplementation((url: string | URL, callback: any) => {
-				const mockRes = {
-					statusCode: 200,
-					on: (_event: string, cb: (chunk?: any) => void) => {
-						cb();
-					},
-					resume: () => {},
-				};
-
-				// call the callback with the mocked response
-				callback(mockRes);
-
-				// return a mock request object with .on() so .on('error') works
-				return {
-					on: () => {},
-				} as unknown as ClientRequest;
-			});
+			mockHttps();
 
 			await __fromBuiltIn();
 			expect(https.get).toBeCalledWith(expect.stringContaining('python'), expect.any(Function));
 		});
 		it('should cancel if no template is selected', async () => {
 			(showQuickPick as Mock).mockReturnValue(undefined);
-			vi.spyOn(https, 'get');
+			mockHttps();
 
 			await __fromBuiltIn();
 			expect(https.get).not.toBeCalled();
