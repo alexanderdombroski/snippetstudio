@@ -27,6 +27,9 @@ describe('context', () => {
 
 	beforeEach(() => {
 		vi.spyOn(os, 'homedir').mockReturnValue('/home/user');
+		Object.defineProperty(process, 'platform', {
+			value: 'darwin',
+		});
 	});
 
 	afterEach(() => {
@@ -57,9 +60,6 @@ describe('context', () => {
 		});
 
 		it('should return the correct path for darwin', () => {
-			Object.defineProperty(process, 'platform', {
-				value: 'darwin',
-			});
 			const expectedPath = path.join(
 				'/home/user',
 				'Library',
@@ -78,15 +78,24 @@ describe('context', () => {
 		});
 
 		it('should use insiders on nightly builds', () => {
-			Object.defineProperty(process, 'platform', {
-				value: 'darwin',
-			});
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
 			const expectedPath = path.join(
 				'/home/user',
 				'Library',
 				'Application Support',
 				'Code - Insiders',
+				'User'
+			);
+			expect(getUserPath()).toBe(expectedPath);
+		});
+
+		it('should use VSCodium for complete OSS builds', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
+			const expectedPath = path.join(
+				'/home/user',
+				'Library',
+				'Application Support',
+				'VSCodium',
 				'User'
 			);
 			expect(getUserPath()).toBe(expectedPath);
