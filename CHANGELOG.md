@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.3](#230---2025-09-05) - VSCodium Support
 - [2.2](#220---2025-09-03) - VS Code Insiders Support
 - [2.1](#213---2025-08-27) - Advanced Profile Linking
 - [2.0](#201---2025-07-27) - Extension and Profile Snippets
@@ -28,21 +29,22 @@
   - Update homepage
   - Add searchbar
   - Add 2.0.0 pages
-- **SnippetManagement** (2.2)
+- **SnippetManagement** (2.4)
   - Rename .code-snippets Files
   - Simplified snippet view option
   - Fix to handle json with trailing commas
 
-## [2.2.1] - 2025-09-04
+## [2.3.0] - 2025-09-05
 
 ### Added
+
+- Added extension to open-vsx registry
+- Added VSCodium support
 
 ### Fixed
 
 - Changelog correctly appears on marketplace
 - Fix marketplace qna link
-
-### Changed
 
 ## [2.2.0] - 2025-09-03
 
