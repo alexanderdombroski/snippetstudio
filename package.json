@@ -20,7 +20,7 @@
 	},
 	"qna": "https://github.com/alexanderdombroski/snippetstudio/discussions",
 	"engines": {
-		"vscode": "^1.100.0",
+		"vscode": "^1.99.0",
 		"node": ">=20.0.0"
 	},
 	"changelog": "",
@@ -796,7 +796,7 @@
 	"devDependencies": {
 		"@types/mocha": "^10.0.10",
 		"@types/node": "^24.1.0",
-		"@types/vscode": "^1.100.0",
+		"@types/vscode": "^1.99.0",
 		"@typescript-eslint/eslint-plugin": "^8.38.0",
 		"@typescript-eslint/parser": "^8.38.0",
 		"@vitest/coverage-v8": "^3.2.4",
