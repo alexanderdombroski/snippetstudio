@@ -1,3 +1,4 @@
+import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
 import vscode from '../vscode';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import {
@@ -11,12 +12,12 @@ import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
 
-export default class LocationTreeProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export default class LocationTreeProvider implements TreeDataProvider<TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
-	private localTreeItems: vscode.TreeItem[] = [];
-	private globalTreeItems: vscode.TreeItem[] = [];
-	private extensionTreeItems: [vscode.TreeItem, vscode.TreeItem[]][] = [];
-	private profileDropdownItems: { [location: string]: vscode.TreeItem[] } = {};
+	private localTreeItems: TreeItem[] = [];
+	private globalTreeItems: TreeItem[] = [];
+	private extensionTreeItems: [TreeItem, TreeItem[]][] = [];
+	private profileDropdownItems: { [location: string]: TreeItem[] } = {};
 	private debounceTimer: NodeJS.Timeout | undefined;
 
 	// ---------- Constructor ---------- //
@@ -72,12 +73,10 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 	}
 
 	// ---------- INIT TREE Methods ---------- //
-	getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+	getTreeItem(element: TreeItem): TreeItem | Thenable<TreeItem> {
 		return element;
 	}
-	async getChildren(
-		element?: vscode.TreeItem | undefined
-	): Promise<vscode.TreeItem[] | null | undefined> {
+	async getChildren(element?: TreeItem | undefined): Promise<TreeItem[] | null | undefined> {
 		if (this.localTreeItems.length === 0 && this.globalTreeItems.length === 0) {
 			return [];
 		}
@@ -118,8 +117,8 @@ export default class LocationTreeProvider implements vscode.TreeDataProvider<vsc
 	}
 
 	// ---------- Event Emitters ---------- //
-	private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> =
-		new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-	readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> =
+	private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | null | void> =
+		new vscode.EventEmitter<TreeItem | undefined | null | void>();
+	readonly onDidChangeTreeData: Event<TreeItem | undefined | null | void> =
 		this._onDidChangeTreeData.event;
 }

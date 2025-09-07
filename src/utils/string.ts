@@ -1,4 +1,5 @@
-import vscode, { executeCommand, Selection, Position } from '../vscode';
+import { executeCommand, Selection, Position } from '../vscode';
+import type { Selection as SelectionType, TextEditor } from 'vscode';
 
 function titleCase(str: string): string {
 	return str
@@ -15,10 +16,7 @@ function snippetBodyAsString(body: string | string[] | null | undefined) {
 	return Array.isArray(body) ? body.join('\n') : (body ?? '');
 }
 
-async function unTabMultiline(
-	selection: vscode.Selection,
-	editor: vscode.TextEditor
-): Promise<string> {
+async function unTabMultiline(selection: SelectionType, editor: TextEditor): Promise<string> {
 	if (selection.isEmpty) {
 		return '';
 	}

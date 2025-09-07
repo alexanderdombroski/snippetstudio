@@ -2,6 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
+import type { ExtensionContext, Uri as UriType } from 'vscode';
 import vscode, {
 	getConfiguration,
 	openTextDocument,
@@ -19,9 +20,7 @@ import type { SnippetData } from '../../types';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
 
-export async function __initEditing(
-	context: vscode.ExtensionContext
-): Promise<SnippetEditorProvider> {
+export async function __initEditing(context: ExtensionContext): Promise<SnippetEditorProvider> {
 	if (!snippetEditorProvider) {
 		const snippetDataManager = new SnippetDataManager();
 		const snippetDataView = new SnippetDataWebViewProvider(context, snippetDataManager);
@@ -42,7 +41,7 @@ export async function __initEditing(
 }
 
 async function editSnippet(
-	context: vscode.ExtensionContext,
+	context: ExtensionContext,
 	langId: string,
 	snippetData: SnippetData,
 	body: string = ''
@@ -89,7 +88,7 @@ let editorCount = 0;
 export function __newSnippetEditorUri(
 	langId: string = 'plaintext',
 	showScope: boolean = true
-): vscode.Uri {
+): UriType {
 	return Uri.from({
 		scheme: 'snippetstudio',
 		path: `/snippets/snippet-${++editorCount}`,

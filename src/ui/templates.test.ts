@@ -13,7 +13,8 @@ import {
 	extensionSnippetsTreeItems,
 	snippetLocationDropdownTemplates,
 } from './templates';
-import vscode, { Collapsed, Expanded, None, ThemeIcon } from '../vscode';
+import type { TreeItem } from 'vscode';
+import { Collapsed, Expanded, None, ThemeIcon } from '../vscode';
 import type { VSCodeSnippet, ExtensionSnippetFilesMap, ExtensionSnippetsMap } from '../types';
 import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import {
@@ -224,10 +225,10 @@ describe('UI Templates', () => {
 			expect(local.label).toBe('Local Snippets');
 			expect(local.contextValue).toContain('local-dropdown');
 
-			const extension = topLevel[2] as vscode.TreeItem;
+			const extension = topLevel[2] as TreeItem;
 			expect(extension.label).toBe('Extension Snippets');
 
-			const profiles = topLevel[3] as vscode.TreeItem;
+			const profiles = topLevel[3] as TreeItem;
 			expect(profiles.label).toBe('Profiles Snippets');
 
 			expect(profileDropdowns[0].description).toBe('~/location');

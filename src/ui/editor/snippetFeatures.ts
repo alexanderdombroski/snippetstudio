@@ -1,3 +1,4 @@
+import type { ExtensionContext, TextEditor, TextEditorEdit } from 'vscode';
 import vscode, {
 	SnippetString,
 	CompletionItem,
@@ -11,7 +12,7 @@ import vscode, {
 import type SnippetEditorProvider from './SnippetEditorProvider';
 
 export default function initSnippetFeatureCommands(
-	context: vscode.ExtensionContext,
+	context: ExtensionContext,
 	provider: SnippetEditorProvider
 ) {
 	context.subscriptions.push(onDidChangeTextDocument(provider.handleDocumentChange, provider));
@@ -21,7 +22,7 @@ export default function initSnippetFeatureCommands(
 		registerTextEditorCommand(
 			'snippetstudio.editor.insertTabStop',
 			// eslint-disable-next-line no-unused-vars
-			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
 					new SnippetString(`\\\$${__getNextFeatureNumber(editor)}$0`),
 					editor.selection
@@ -31,7 +32,7 @@ export default function initSnippetFeatureCommands(
 		registerTextEditorCommand(
 			'snippetstudio.editor.insertPlaceholder',
 			// eslint-disable-next-line no-unused-vars
-			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
 					new SnippetString(
 						`\\\${${__getNextFeatureNumber(editor)}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
@@ -43,7 +44,7 @@ export default function initSnippetFeatureCommands(
 		registerTextEditorCommand(
 			'snippetstudio.editor.insertChoice',
 			// eslint-disable-next-line no-unused-vars
-			(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
 					new SnippetString(
 						`\\\${${__getNextFeatureNumber(editor)}|\${2:\${TM_SELECTED_TEXT:choice}},\${3:choice}|}$0`
@@ -60,7 +61,7 @@ export default function initSnippetFeatureCommands(
 			registerTextEditorCommand(
 				'snippetstudio.editor.insertVariable',
 				// eslint-disable-next-line no-unused-vars
-				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+				async (editor: TextEditor, edit: TextEditorEdit) => {
 					const variable = await __showVariableQuickPick();
 					if (variable !== undefined) {
 						editor.insertSnippet(new SnippetString(`\\\$${variable}`), editor.selection);
@@ -70,7 +71,7 @@ export default function initSnippetFeatureCommands(
 			registerTextEditorCommand(
 				'snippetstudio.editor.insertVariablePlaceholder',
 				// eslint-disable-next-line no-unused-vars
-				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+				async (editor: TextEditor, edit: TextEditorEdit) => {
 					const variable = await __showVariableQuickPick();
 					if (variable !== undefined) {
 						editor.insertSnippet(
@@ -86,7 +87,7 @@ export default function initSnippetFeatureCommands(
 			registerTextEditorCommand(
 				'snippetstudio.editor.insertVariable',
 				// eslint-disable-next-line no-unused-vars
-				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+				async (editor: TextEditor, edit: TextEditorEdit) => {
 					editor.insertSnippet(
 						new SnippetString(`$\${1|${__variableList()}|}$0`),
 						editor.selection
@@ -96,7 +97,7 @@ export default function initSnippetFeatureCommands(
 			registerTextEditorCommand(
 				'snippetstudio.editor.insertVariablePlaceholder',
 				// eslint-disable-next-line no-unused-vars
-				async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+				async (editor: TextEditor, edit: TextEditorEdit) => {
 					editor.insertSnippet(
 						new SnippetString(
 							`\\\${\${1|${__variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
@@ -111,7 +112,7 @@ export default function initSnippetFeatureCommands(
 		registerTextEditorCommand(
 			'snippetstudio.editor.insertPlaceholderWithTranformation',
 			// eslint-disable-next-line no-unused-vars
-			async (editor: vscode.TextEditor, edit: vscode.TextEditorEdit) => {
+			async (editor: TextEditor, edit: TextEditorEdit) => {
 				const featureId = __getNextFeatureNumber(editor);
 				editor.insertSnippet(
 					new SnippetString(
@@ -198,7 +199,7 @@ export default function initSnippetFeatureCommands(
 	);
 }
 
-export function __getNextFeatureNumber(editor: vscode.TextEditor): string | number {
+export function __getNextFeatureNumber(editor: TextEditor): string | number {
 	const regex = /(?<!\\)\$\{?(\d{1,2})/g;
 	const text = editor.document.getText();
 

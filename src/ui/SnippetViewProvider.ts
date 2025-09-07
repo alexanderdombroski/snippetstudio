@@ -1,3 +1,4 @@
+import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
 import vscode, { onDidChangeActiveTextEditor } from '../vscode';
 import loadSnippets from '../snippets/loadSnippets';
 import {
@@ -15,13 +16,13 @@ import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
 import type { SnippetLinks } from '../types';
 
-type ParentChildTreeItems = [vscode.TreeItem, vscode.TreeItem[]][];
+type ParentChildTreeItems = [TreeItem, TreeItem[]][];
 
-export default class SnippetViewProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	// ---------- Attributes ---------- //
 	private snippetTreeItems: ParentChildTreeItems | undefined;
-	private activeDropdowns: vscode.TreeItem[] | undefined;
-	private extensionDropdownsTuple: [vscode.TreeItem, ParentChildTreeItems][] | undefined;
+	private activeDropdowns: TreeItem[] | undefined;
+	private extensionDropdownsTuple: [TreeItem, ParentChildTreeItems][] | undefined;
 	private langId: string | undefined;
 	private debounceTimer: NodeJS.Timeout | undefined;
 	private _activePaths: string[] = [];
@@ -76,11 +77,11 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 	}
 
 	// ---------- INIT TREE Methods ---------- //
-	getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+	getTreeItem(element: TreeItem): TreeItem | Thenable<TreeItem> {
 		return element;
 	}
 
-	async getChildren(element?: vscode.TreeItem): Promise<vscode.TreeItem[] | undefined> {
+	async getChildren(element?: TreeItem): Promise<TreeItem[] | undefined> {
 		// Handle child items
 		if (element) {
 			if (element.contextValue === 'active-snippets') {
@@ -91,7 +92,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 				return this.snippetTreeItems
 					?.map((group) => group[0])
 					.filter((fp) => !this.isActive(fp) && this.isNotLinkedActive(fp))
-					.reduce((acc: vscode.TreeItem[], curr) => {
+					.reduce((acc: TreeItem[], curr) => {
 						if (
 							curr.contextValue?.includes('linked') &&
 							acc.some((item) => item.label === curr.label && item.contextValue?.includes('linked'))
@@ -127,7 +128,7 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		}
 
 		// Root level: Create parent items
-		const rootItems: vscode.TreeItem[] = [
+		const rootItems: TreeItem[] = [
 			selectedLanguageTemplate(this.langId, !!this.activeDropdowns?.length),
 		]; // Always add the template
 		this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
@@ -139,19 +140,19 @@ export default class SnippetViewProvider implements vscode.TreeDataProvider<vsco
 		return rootItems;
 	}
 
-	private isActive = (fileItem: vscode.TreeItem) =>
+	private isActive = (fileItem: TreeItem) =>
 		this._activePaths.includes(path.dirname(String(fileItem.description)));
-	private isNotLinkedActive = (fileItem: vscode.TreeItem) =>
+	private isNotLinkedActive = (fileItem: TreeItem) =>
 		!(
 			(fileItem.label as string) in this._links &&
 			this._links[fileItem.label as string].includes(this._activeProfileLocation)
 		);
-	private isNotLocal = (fileItem: vscode.TreeItem) =>
+	private isNotLocal = (fileItem: TreeItem) =>
 		!isParentDir(this._userPath, String(fileItem.description));
 
 	// ---------- Event Emitters ---------- //
-	private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined | null | void> =
-		new vscode.EventEmitter<vscode.TreeItem | undefined | null | void>();
-	readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined | null | void> =
+	private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | null | void> =
+		new vscode.EventEmitter<TreeItem | undefined | null | void>();
+	readonly onDidChangeTreeData: Event<TreeItem | undefined | null | void> =
 		this._onDidChangeTreeData.event;
 }

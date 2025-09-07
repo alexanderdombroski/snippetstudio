@@ -22,6 +22,7 @@ import type {
 	TextDocument,
 	TextEditor,
 	CompletionItem as CompletionItemType,
+	CompletionItemProvider,
 } from 'vscode';
 
 const mockProvider = {
@@ -166,7 +167,7 @@ describe('__showVariableQuickPick', () => {
 });
 
 describe('CompletionItemProvider', () => {
-	let provider: vscode.CompletionItemProvider;
+	let provider: CompletionItemProvider;
 
 	beforeEach(() => {
 		initSnippetFeatureCommands(context, mockProvider);

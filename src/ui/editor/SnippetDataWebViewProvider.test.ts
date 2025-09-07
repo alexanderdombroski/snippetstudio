@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import SnippetDataWebViewProvider from './SnippetDataWebViewProvider';
 import SnippetDataManager from './SnippetDataManager';
-import vscode, { executeCommand } from '../../vscode';
+import type { WebviewView, Webview } from 'vscode';
+import { executeCommand } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { Mock, Mocked } from 'vitest';
@@ -13,8 +14,8 @@ vi.mock('../../utils/fsInfo');
 describe('SnippetDataWebViewProvider', () => {
 	let provider: SnippetDataWebViewProvider;
 	let dataManager: SnippetDataManager;
-	let mockWebviewView: Mocked<vscode.WebviewView>;
-	let mockWebview: Mocked<vscode.Webview>;
+	let mockWebviewView: Mocked<WebviewView>;
+	let mockWebview: Mocked<Webview>;
 
 	const testUri = {
 		scheme: 'snippetstudio',

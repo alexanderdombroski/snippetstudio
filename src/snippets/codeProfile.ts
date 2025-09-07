@@ -2,12 +2,8 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode, {
-	showOpenDialog,
-	showInformationMessage,
-	showQuickPick,
-	showInputBox,
-} from '../vscode';
+import type { ExtensionContext } from 'vscode';
+import { showOpenDialog, showInformationMessage, showQuickPick, showInputBox } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import path from 'node:path';
@@ -16,7 +12,7 @@ import type { VSCodeSnippets } from '../types';
 import { chooseLocalGlobal } from '../utils/user';
 import { exists } from '../utils/fsInfo';
 
-export async function importCodeProfileSnippets(context: vscode.ExtensionContext) {
+export async function importCodeProfileSnippets(context: ExtensionContext) {
 	const items = [
 		{
 			label: 'From profile template',
@@ -119,7 +115,7 @@ async function fromFile(): Promise<string[] | undefined> {
 	return contents;
 }
 
-export async function __fromGist(context: vscode.ExtensionContext): Promise<string[] | undefined> {
+export async function __fromGist(context: ExtensionContext): Promise<string[] | undefined> {
 	const { getGistId } = await import('../git/utils.js');
 	const gistId = await getGistId();
 	if (gistId === undefined) {

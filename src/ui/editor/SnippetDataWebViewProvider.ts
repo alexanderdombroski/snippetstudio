@@ -1,26 +1,36 @@
-import vscode, { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
+import type {
+	WebviewViewProvider,
+	ExtensionContext,
+	WebviewView,
+	Webview,
+	WebviewViewResolveContext,
+	CancellationToken,
+	Disposable,
+	Uri as UriType,
+} from 'vscode';
+import { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import SnippetDataManager from './SnippetDataManager';
 import type { SnippetData } from '../../types';
 
-export default class SnippetDataWebViewProvider implements vscode.WebviewViewProvider {
-	private _view?: vscode.WebviewView;
+export default class SnippetDataWebViewProvider implements WebviewViewProvider {
+	private _view?: WebviewView;
 	private _snippetDataManager: SnippetDataManager;
 
 	constructor(
-		private readonly _context: vscode.ExtensionContext,
+		private readonly _context: ExtensionContext,
 		manager: SnippetDataManager
 	) {
 		this._snippetDataManager = manager;
 	}
 
 	async resolveWebviewView(
-		webviewView: vscode.WebviewView,
+		webviewView: WebviewView,
 		// eslint-disable-next-line no-unused-vars
-		context: vscode.WebviewViewResolveContext,
+		context: WebviewViewResolveContext,
 		// eslint-disable-next-line no-unused-vars
-		token: vscode.CancellationToken
+		token: CancellationToken
 	): Promise<void> {
 		this._view = webviewView;
 
@@ -42,7 +52,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 	}
 
 	// eslint-disable-next-line no-unused-vars
-	private async _getHtmlForWebview(webview: vscode.Webview) {
+	private async _getHtmlForWebview(webview: Webview) {
 		const htmlPath = Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 
 		try {
@@ -55,7 +65,7 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 
 	// --------------- Message Passing ---------------
 
-	private async setUpMessages(webviewView: vscode.WebviewView) {
+	private async setUpMessages(webviewView: WebviewView) {
 		const uri = getCurrentUri();
 		if (uri) {
 			this.initMessages(uri);
@@ -88,9 +98,9 @@ export default class SnippetDataWebViewProvider implements vscode.WebviewViewPro
 		});
 	}
 
-	private schemeNotifier: vscode.Disposable | undefined;
+	private schemeNotifier: Disposable | undefined;
 
-	public initMessages(uri: vscode.Uri) {
+	public initMessages(uri: UriType) {
 		const view = this._view?.webview;
 		if (view) {
 			view.postMessage({

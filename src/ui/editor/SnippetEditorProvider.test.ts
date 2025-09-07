@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
 import SnippetEditorProvider, { __escapeDollarSignIfNeeded } from './SnippetEditorProvider';
 import SnippetDataManager from './SnippetDataManager';
+import type { Position as PositionType, TextEditor } from 'vscode';
 import vscode, { Position, getConfiguration, onDidChangeActiveTextEditor } from '../../vscode';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { Uri } from 'vscode';
@@ -120,7 +121,7 @@ describe('SnippetEditorProvider', () => {
 				getText: vi.fn().mockReturnValue('const a = $1;'),
 				lineCount: 1,
 				// A mock for rangeOffset calculation
-				offsetAt: (pos: vscode.Position) => pos.character,
+				offsetAt: (pos: PositionType) => pos.character,
 			};
 			changeEvent = {
 				document: mockDocument,
@@ -148,7 +149,7 @@ describe('SnippetEditorProvider', () => {
 
 	describe('Highlighting', () => {
 		it('should highlight snippet features on editor change', () => {
-			let editorChangeCallback: (editor: vscode.TextEditor | undefined) => void = () => {};
+			let editorChangeCallback: (editor: TextEditor | undefined) => void = () => {};
 			(onDidChangeActiveTextEditor as Mock).mockImplementation((cb) => {
 				editorChangeCallback = cb;
 				return { dispose: vi.fn() };

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock, Mocked } from 'vitest';
-import type { Uri } from 'vscode';
+import type { Uri, StatusBarItem, TextEditor } from 'vscode';
 import { getCurrentUri } from '../utils/fsInfo';
 import { getCurrentLanguage } from '../utils/language';
 import { capitalize } from '../utils/string';
@@ -13,8 +13,8 @@ vi.mock('../utils/fsInfo');
 vi.mock('../utils/string');
 
 describe('ui/statusBar', () => {
-	let statusBarItem: Mocked<vscode.StatusBarItem>;
-	let onDidChangeActiveTextEditorCallback: (editor: vscode.TextEditor | undefined) => any;
+	let statusBarItem: Mocked<StatusBarItem>;
+	let onDidChangeActiveTextEditorCallback: (editor: TextEditor | undefined) => any;
 
 	beforeEach(() => {
 		statusBarItem = {
@@ -23,7 +23,7 @@ describe('ui/statusBar', () => {
 			text: '',
 			tooltip: '',
 			command: '',
-		} as unknown as Mocked<vscode.StatusBarItem>;
+		} as unknown as Mocked<StatusBarItem>;
 
 		(vscode.window.createStatusBarItem as Mock).mockReturnValue(statusBarItem);
 

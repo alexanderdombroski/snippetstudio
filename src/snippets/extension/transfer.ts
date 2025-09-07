@@ -2,7 +2,8 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode, { showQuickPick } from '../../vscode';
+import type { ExtensionContext, QuickPickItem } from 'vscode';
+import { showQuickPick } from '../../vscode';
 import path from 'node:path';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
@@ -44,7 +45,7 @@ async function extractAllSnippets(item: TreePathItem) {
 /**
  * Handler for extension.modify
  */
-async function extractAndModify(item: TreePathItem, context: vscode.ExtensionContext) {
+async function extractAndModify(item: TreePathItem, context: ExtensionContext) {
 	const langs = await getExtensionSnippetLangs(item.path);
 	const savePath = await chooseSnippetFile(langs);
 	if (savePath === undefined) {
@@ -85,7 +86,7 @@ async function chooseSnippetFile(langs: string[]) {
 		files = [...workspaceFiles, ...profileFiles];
 	}
 
-	const options: vscode.QuickPickItem[] = files.map((fp) => ({
+	const options: QuickPickItem[] = files.map((fp) => ({
 		label: path.basename(fp),
 		description: fp,
 	}));

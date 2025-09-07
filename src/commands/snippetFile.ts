@@ -1,4 +1,5 @@
-import vscode, {
+import type { ExtensionContext } from 'vscode';
+import {
 	registerCommand,
 	executeCommand,
 	showTextDocument,
@@ -8,7 +9,7 @@ import vscode, {
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 
-function initSnippetFileCommands(context: vscode.ExtensionContext) {
+function initSnippetFileCommands(context: ExtensionContext) {
 	// Open Snippets file
 	context.subscriptions.push(
 		registerCommand('snippetstudio.file.open', async (item: TreePathItem) => {

@@ -1,4 +1,5 @@
-import vscode, {
+import type { ExtensionContext } from 'vscode';
+import {
 	registerCommand,
 	executeCommand,
 	openExternal,
@@ -9,7 +10,7 @@ import vscode, {
 import type { CommandMap } from '../types';
 import type { SnippetCategoryTreeItem } from '../ui/templates';
 
-function initSnippetUICommands(context: vscode.ExtensionContext, commandMap: CommandMap) {
+function initSnippetUICommands(context: ExtensionContext, commandMap: CommandMap) {
 	// Show Snippets view
 	context.subscriptions.push(
 		registerCommand('snippetstudio.openView', () => {

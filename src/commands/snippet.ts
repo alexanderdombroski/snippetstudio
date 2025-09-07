@@ -1,4 +1,5 @@
-import vscode, {
+import type { ExtensionContext } from 'vscode';
+import {
 	registerCommand,
 	executeCommand,
 	showInformationMessage,
@@ -13,7 +14,7 @@ import { getConfirmation, getSelection } from '../utils/user';
 import { snippetBodyAsString } from '../utils/string';
 import { getGlobalLangFile } from '../utils/profile';
 
-function initSnippetCommands(context: vscode.ExtensionContext) {
+function initSnippetCommands(context: ExtensionContext) {
 	// Show Snippet Body
 	const showSnippetOnDoubleClick = onDoubleClick((item: TreePathItem) => {
 		showInformationMessage(item.tooltip?.toString() ?? '');

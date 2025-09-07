@@ -1,3 +1,18 @@
+import type {
+	FileSystemProvider,
+	EventEmitter,
+	FileChangeEvent,
+	Event,
+	TextDocumentChangeEvent,
+	FileType,
+	Uri as UriType,
+	TextEditor,
+	DecorationOptions,
+	FileStat,
+	Disposable,
+	TextDocument,
+	Range as RangeType,
+} from 'vscode';
 import vscode, {
 	onDidChangeActiveTextEditor,
 	getConfiguration,
@@ -9,11 +24,9 @@ import type { SnippetData } from '../../types';
 import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 
-export default class SnippetEditorProvider implements vscode.FileSystemProvider {
-	private _emitter: vscode.EventEmitter<vscode.FileChangeEvent[]> = new vscode.EventEmitter<
-		vscode.FileChangeEvent[]
-	>();
-	readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this._emitter.event;
+export default class SnippetEditorProvider implements FileSystemProvider {
+	private _emitter: EventEmitter<FileChangeEvent[]> = new vscode.EventEmitter<FileChangeEvent[]>();
+	readonly onDidChangeFile: Event<FileChangeEvent[]> = this._emitter.event;
 
 	private _files = new Map<string, Uint8Array>();
 	private _directories = new Map<string, Set<string>>();
@@ -53,7 +66,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		});
 	}
 
-	handleDocumentChange(changeEvent: vscode.TextDocumentChangeEvent): void {
+	handleDocumentChange(changeEvent: TextDocumentChangeEvent): void {
 		if (
 			changeEvent.document.uri.scheme !== this.scheme ||
 			changeEvent.contentChanges.length === 0
@@ -99,7 +112,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		}
 	}
 
-	createDirectory(uri: vscode.Uri): void | Thenable<void> {
+	createDirectory(uri: UriType): void | Thenable<void> {
 		const dirPath = uri.path;
 		const parentPath = dirPath.substring(0, dirPath.lastIndexOf('/'));
 		const dirName = dirPath.substring(dirPath.lastIndexOf('/') + 1);
@@ -121,16 +134,14 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		}
 	}
 
-	readDirectory(
-		uri: vscode.Uri
-	): [string, vscode.FileType][] | Thenable<[string, vscode.FileType][]> {
-		const files: [string, vscode.FileType][] = Array.from(this._files.keys())
+	readDirectory(uri: UriType): [string, FileType][] | Thenable<[string, FileType][]> {
+		const files: [string, FileType][] = Array.from(this._files.keys())
 			.filter((path) => path.startsWith(uri.path))
 			.map((path) => [path.substring(uri.path.length + 1), vscode.FileType.File]);
 		return files;
 	}
 
-	readFile(uri: vscode.Uri): Uint8Array | Thenable<Uint8Array> {
+	readFile(uri: UriType): Uint8Array | Thenable<Uint8Array> {
 		const path = uri.path;
 		if (this._files.has(path)) {
 			return this._files.get(path)!;
@@ -139,7 +150,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 	}
 
 	writeFile(
-		uri: vscode.Uri,
+		uri: UriType,
 		content: Uint8Array,
 		// eslint-disable-next-line no-unused-vars
 		options: { create: boolean; overwrite: boolean }
@@ -147,7 +158,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		this._files.set(uri.path, content);
 		this._emitter.fire([{ type: vscode.FileChangeType.Changed, uri }]);
 	}
-	async createFile(uri: vscode.Uri, content: string = '') {
+	async createFile(uri: UriType, content: string = '') {
 		await this.writeFile(uri, new TextEncoder().encode(content), {
 			create: true,
 			overwrite: true,
@@ -160,17 +171,13 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		this._directories.get(parentPath)?.add(fileName);
 	}
 
-	async mountSnippet(
-		uri: vscode.Uri,
-		snippetData: SnippetData,
-		body: string | undefined = undefined
-	) {
+	async mountSnippet(uri: UriType, snippetData: SnippetData, body: string | undefined = undefined) {
 		this._snippetDataManager.setData(uri.path, snippetData);
 		await this.createFile(uri, body ?? '');
 	}
 
 	delete(
-		uri: vscode.Uri,
+		uri: UriType,
 		// eslint-disable-next-line no-unused-vars
 		options: { recursive: boolean } = { recursive: true }
 	): void | Thenable<void> {
@@ -194,7 +201,7 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 		}
 	}
 
-	private _highlightSnippetInsertionFeatures(editor: vscode.TextEditor) {
+	private _highlightSnippetInsertionFeatures(editor: TextEditor) {
 		const document = editor.document;
 		const shouldMaskDiagnostics = getConfiguration('snippetstudio').get<boolean>(
 			'editor.suppressDiagnostics'
@@ -212,9 +219,9 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 			/(?<!\\)\$\{((TM_(SELECTED_TEXT|CURRENT_(LINE|WORD)|LINE_(INDEX|NUMBER)|FILE(NAME(_BASE)?|PATH)|DIRECTORY))|CLIPBOARD|RELATIVE_FILEPATH|(WORKSPACE_(NAME|FOLDER))|CURSOR_(INDEX|NUMBER)|CURRENT_(YEAR(_SHORT)?|MONTH(_NAME(_SHORT)?)?|DA(TE|Y_NAME(_SHORT)?)|HOUR|MINUTE|SECOND(S_UNIX)?|TIMEZONE_OFFSET)|RANDOM(_HEX)?|UUID|BLOCK_COMMENT_(START|END)|LINE_COMMENT):([^}]*)\}/g,
 			/(?<!\\)\$\{\d+\/.*?\/.*?\/[gimsuy]*\}/g,
 		];
-		const decorations: vscode.DecorationOptions[] = [];
-		const supressedDiagnostics: vscode.DecorationOptions[] = [];
-		const supressedDiagnosticsOverLine: vscode.DecorationOptions[] = [];
+		const decorations: DecorationOptions[] = [];
+		const supressedDiagnostics: DecorationOptions[] = [];
+		const supressedDiagnosticsOverLine: DecorationOptions[] = [];
 
 		for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
 			const startPos = document.positionAt(match.index);
@@ -245,18 +252,18 @@ export default class SnippetEditorProvider implements vscode.FileSystemProvider 
 
 	rename(
 		// eslint-disable-next-line no-unused-vars
-		oldUri: vscode.Uri,
+		oldUri: UriType,
 		// eslint-disable-next-line no-unused-vars
-		newUri: vscode.Uri,
+		newUri: UriType,
 		// eslint-disable-next-line no-unused-vars
 		options: { overwrite: boolean }
 	): void | Thenable<void> {}
 	// eslint-disable-next-line no-unused-vars
-	watch(uri: vscode.Uri, options: { recursive: boolean; excludes: string[] }): vscode.Disposable {
+	watch(uri: UriType, options: { recursive: boolean; excludes: string[] }): Disposable {
 		// Implement watch logic (e.g., for external changes).
 		return new vscode.Disposable(() => {}); // Placeholder
 	}
-	stat(uri: vscode.Uri): vscode.FileStat | Thenable<vscode.FileStat> {
+	stat(uri: UriType): FileStat | Thenable<FileStat> {
 		const path = uri.path;
 		if (this._files.has(path)) {
 			return {
@@ -296,7 +303,7 @@ export function __escapeDollarSignIfNeeded(text: string, offset: number): string
 	}
 }
 
-function moveRangeDown(range: vscode.Range, document: vscode.TextDocument): vscode.Range {
+function moveRangeDown(range: RangeType, document: TextDocument): RangeType {
 	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
 	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);
 

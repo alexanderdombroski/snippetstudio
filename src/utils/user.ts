@@ -1,3 +1,4 @@
+import type { SaveDialogOptions } from 'vscode';
 import vscode, {
 	getConfiguration,
 	showErrorMessage,
@@ -41,7 +42,7 @@ async function getSavePathFromDialog(
 ): Promise<string | undefined> {
 	const defaultUri = Uri.file(path.join(startingDir, basename));
 
-	const options: vscode.SaveDialogOptions = {
+	const options: SaveDialogOptions = {
 		title: `Save ${basename}`,
 		defaultUri: defaultUri,
 		saveLabel: 'Save',

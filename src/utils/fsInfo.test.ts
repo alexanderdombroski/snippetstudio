@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
+import type { WorkspaceFolder, TextDocument, TextEditor } from 'vscode';
 import vscode, { Uri } from '../vscode';
 import {
 	getWorkspaceFolder,
@@ -31,7 +32,7 @@ describe('fsInfo', () => {
 
 		it('should return the path of the first workspace folder', () => {
 			const folderPath = '/test/workspace';
-			const mockFolders: vscode.WorkspaceFolder[] = [
+			const mockFolders: WorkspaceFolder[] = [
 				{ uri: Uri.file(folderPath), name: 'mock-folder', index: 0 },
 			];
 
@@ -48,17 +49,15 @@ describe('fsInfo', () => {
 
 		it('should return the URI of the active text editor document', () => {
 			const uri = Uri.file('/test/file.txt'); // proper Uri
-			const mockDocument: Partial<vscode.TextDocument> = {
+			const mockDocument: Partial<TextDocument> = {
 				uri,
 			};
 
-			const mockEditor: Partial<vscode.TextEditor> = {
-				document: mockDocument as vscode.TextDocument,
+			const mockEditor: Partial<TextEditor> = {
+				document: mockDocument as TextDocument,
 			};
 
-			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue(
-				mockEditor as vscode.TextEditor
-			);
+			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue(mockEditor as TextEditor);
 
 			expect(getCurrentUri()).toBe(uri);
 		});

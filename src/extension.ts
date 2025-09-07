@@ -1,3 +1,4 @@
+import type { ExtensionContext } from 'vscode';
 import vscode, { getConfiguration } from './vscode';
 
 import SnippetViewProvider from './ui/SnippetViewProvider';
@@ -15,7 +16,7 @@ import { initGlobalStore } from './utils/context';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: ExtensionContext) {
 	if (!(await initGlobalStore(context))) {
 		return;
 	}

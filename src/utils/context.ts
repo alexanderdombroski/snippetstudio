@@ -1,12 +1,13 @@
+import type { ExtensionContext } from 'vscode';
 import vscode, { openExternal, showErrorMessage, Uri } from '../vscode';
 import type { GlobalStorage } from '../types';
 import { readJsonC } from './jsoncFilesIO';
 import os from 'node:os';
 import path from 'node:path';
 
-let extensionContext: vscode.ExtensionContext | undefined;
+let extensionContext: ExtensionContext | undefined;
 
-export async function getExtensionContext(): Promise<vscode.ExtensionContext> {
+export async function getExtensionContext(): Promise<ExtensionContext> {
 	if (!extensionContext) {
 		throw new Error('Extension context not correctly initialized');
 	}
@@ -17,7 +18,7 @@ export async function getExtensionContext(): Promise<vscode.ExtensionContext> {
  * Initializes Global Context
  * @returns success or fail boolean
  */
-export async function initGlobalStore(context: vscode.ExtensionContext): Promise<boolean> {
+export async function initGlobalStore(context: ExtensionContext): Promise<boolean> {
 	extensionContext = context;
 	const storage = await __readGlobalStorage();
 	if (storage) {

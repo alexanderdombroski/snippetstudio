@@ -2,12 +2,8 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode, {
-	ThemeIcon,
-	showQuickPick,
-	showInformationMessage,
-	showWarningMessage,
-} from '../../vscode';
+import type { QuickPickItem } from 'vscode';
+import { ThemeIcon, showQuickPick, showInformationMessage, showWarningMessage } from '../../vscode';
 
 import path from 'node:path';
 import fs from 'node:fs/promises';
@@ -27,7 +23,7 @@ export async function manageLinkLocations(isAlreadyLinked: boolean, filepath: st
 		: [path.dirname(filepath)];
 	const filename = path.basename(filepath);
 	if (isAlreadyLinked || (await canBeLinked(filename))) {
-		const items: vscode.QuickPickItem[] = (await getProfiles()).map(({ location, name, icon }) => {
+		const items: QuickPickItem[] = (await getProfiles()).map(({ location, name, icon }) => {
 			const detail = getPathFromProfileLocation(location);
 			return {
 				iconPath: new ThemeIcon(icon ?? 'account'),

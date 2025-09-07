@@ -1,4 +1,5 @@
-import vscode, { None, Collapsed, Expanded, TreeItem, ThemeIcon } from '../vscode';
+import type { TreeItemCollapsibleState, TreeItem as TreeItemType } from 'vscode';
+import { None, Collapsed, Expanded, TreeItem, ThemeIcon } from '../vscode';
 import path from 'node:path';
 import type {
 	VSCodeSnippet,
@@ -17,7 +18,7 @@ import {
 export class TreePathItem extends TreeItem {
 	constructor(
 		public readonly label: string,
-		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+		public readonly collapsibleState: TreeItemCollapsibleState,
 		public readonly path: string
 	) {
 		super(label, collapsibleState);
@@ -26,7 +27,7 @@ export class TreePathItem extends TreeItem {
 export class SnippetCategoryTreeItem extends TreeItem {
 	constructor(
 		public readonly label: string,
-		public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+		public readonly collapsibleState: TreeItemCollapsibleState,
 		public readonly folderPath: string,
 		public readonly location: string
 	) {
@@ -35,11 +36,11 @@ export class SnippetCategoryTreeItem extends TreeItem {
 }
 
 /**
- * Creates a vscode.TreeItem from a VSCodeSnippet.
+ * Creates a TreeItem from a VSCodeSnippet.
  *
  * @param snippetTitle The title of the snippet.
  * @param snippet The VSCodeSnippet object.
- * @returns A vscode.TreeItem representing the snippet.
+ * @returns A TreeItem representing the snippet.
  */
 export function createTreeItemFromSnippet(
 	snippetTitle: string,
@@ -68,7 +69,7 @@ export function createTreeItemFromSnippet(
 
 export function createTreeItemFromFilePath(
 	filepath: string,
-	collapsibleState: vscode.TreeItemCollapsibleState,
+	collapsibleState: TreeItemCollapsibleState,
 	contextValue: string = 'snippet-filepath'
 ): TreePathItem {
 	const filename = path.basename(filepath);
@@ -84,7 +85,7 @@ export function createTreeItemFromFilePath(
 export function selectedLanguageTemplate(
 	langId: string | undefined,
 	collapsible: boolean
-): vscode.TreeItem {
+): TreeItemType {
 	const treeItem = new TreeItem(
 		langId === undefined ? 'No Language Open' : `${langId}`.toUpperCase(),
 		collapsible ? Expanded : None
@@ -95,7 +96,7 @@ export function selectedLanguageTemplate(
 	return treeItem;
 }
 
-export function unloadedDropdownTemplate(): vscode.TreeItem {
+export function unloadedDropdownTemplate(): TreeItemType {
 	const unloadedDropdown = new TreeItem('Other Profiles', Collapsed);
 	unloadedDropdown.contextValue = 'disabled-dropdown';
 	unloadedDropdown.tooltip =
@@ -139,7 +140,7 @@ export function extensionCategoryDropdown() {
 	dropdown.iconPath = new ThemeIcon('extensions');
 	return dropdown;
 }
-function extensionDropdown(indentifer: string, name: string): vscode.TreeItem {
+function extensionDropdown(indentifer: string, name: string): TreeItemType {
 	const treeItem = new TreeItem(name, Collapsed);
 	treeItem.description = indentifer;
 	treeItem.contextValue = 'extension-dropdown';
@@ -154,7 +155,7 @@ function extensionSnippetsDropdown(
 	return item;
 }
 
-type DropdownWithItems = [vscode.TreeItem, TreePathItem[]];
+type DropdownWithItems = [TreeItemType, TreePathItem[]];
 export function extensionTreeItems(fileMap: ExtensionSnippetFilesMap): DropdownWithItems[] {
 	return Object.entries(fileMap).map(([identifier, ext]): DropdownWithItems => {
 		const dropdown = extensionDropdown(identifier, ext.name);
@@ -165,7 +166,7 @@ export function extensionTreeItems(fileMap: ExtensionSnippetFilesMap): DropdownW
 }
 
 type DropdownWithFileItems = [TreePathItem, TreePathItem[]];
-type DropdownWithDropdowns = [vscode.TreeItem, DropdownWithFileItems[]];
+type DropdownWithDropdowns = [TreeItemType, DropdownWithFileItems[]];
 export function extensionSnippetsTreeItems(
 	snippetsMap: ExtensionSnippetsMap
 ): DropdownWithDropdowns[] {
@@ -195,7 +196,7 @@ export async function snippetLocationDropdownTemplates(
 	local_collapsed: boolean,
 	extension_showing: boolean,
 	profile_collapsed_map: { [location: string]: boolean }
-): Promise<[SnippetCategoryTreeItem[] | vscode.TreeItem[], SnippetCategoryTreeItem[]]> {
+): Promise<[SnippetCategoryTreeItem[] | TreeItemType[], SnippetCategoryTreeItem[]]> {
 	const activePath = await getActiveProfileSnippetsDir();
 	const activeProfile = await getActiveProfile();
 	const getCollapsedState = (collapsed: boolean) => (collapsed ? None : Collapsed);
@@ -211,7 +212,7 @@ export async function snippetLocationDropdownTemplates(
 	global.tooltip = 'Global Snippets are availiable anywhere in vscode';
 	global.iconPath = new ThemeIcon('globe');
 
-	const topLevelDropdowns: vscode.TreeItem[] = [global];
+	const topLevelDropdowns: TreeItemType[] = [global];
 
 	// ------------------------- Local Dropdown -------------------------
 	const workspaceFolder = getWorkspaceFolder();

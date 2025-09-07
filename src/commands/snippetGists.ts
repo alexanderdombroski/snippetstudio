@@ -1,6 +1,7 @@
-import vscode, { registerCommand, executeCommand, openExternal, Uri } from '../vscode';
+import type { ExtensionContext } from 'vscode';
+import { registerCommand, executeCommand, openExternal, Uri } from '../vscode';
 
-async function initSnippetGistsCommands(context: vscode.ExtensionContext) {
+async function initSnippetGistsCommands(context: ExtensionContext) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.github.export', async () => {
 			const { createGist } = await import('../git/snippetGists.js');

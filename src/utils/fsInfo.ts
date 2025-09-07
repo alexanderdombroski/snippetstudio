@@ -1,3 +1,4 @@
+import type { Uri as UriType } from 'vscode';
 import vscode from '../vscode';
 import path from 'node:path';
 import os from 'node:os';
@@ -19,7 +20,7 @@ function getWorkspaceFolder(): string | undefined {
 	return workspaceFolders[0].uri.fsPath;
 }
 
-function getCurrentUri(): vscode.Uri | undefined {
+function getCurrentUri(): UriType | undefined {
 	return vscode.window.activeTextEditor?.document.uri;
 }
 

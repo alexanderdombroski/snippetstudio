@@ -2,6 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
+import type { ExtensionContext, QuickPickItem } from 'vscode';
 import vscode, { showQuickPick, showInformationMessage } from '../vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
@@ -12,7 +13,7 @@ import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO
 import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { exists } from '../utils/fsInfo';
 
-export async function importBuiltinExtension(context: vscode.ExtensionContext) {
+export async function importBuiltinExtension(context: ExtensionContext) {
 	const client = await getOctokitClient(context);
 
 	const snippetDirs = await __getDirsWithSnippets(client);
@@ -20,7 +21,7 @@ export async function importBuiltinExtension(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	const options: vscode.QuickPickItem[] = snippetDirs.map((dir) => ({
+	const options: QuickPickItem[] = snippetDirs.map((dir) => ({
 		label: dir.name,
 		description: dir.path,
 	}));

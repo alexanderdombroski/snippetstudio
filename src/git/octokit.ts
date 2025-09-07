@@ -1,16 +1,17 @@
+import type { ExtensionContext } from 'vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import vscode, { showInformationMessage, openExternal, Uri } from '../vscode';
 
 let client: Octokit | null = null;
 
-async function getOctokitClient(context: vscode.ExtensionContext): Promise<Octokit> {
+async function getOctokitClient(context: ExtensionContext): Promise<Octokit> {
 	if (!client) {
 		client = await createOctokitClient(context);
 	}
 	return client;
 }
 
-async function createOctokitClient(context: vscode.ExtensionContext): Promise<Octokit> {
+async function createOctokitClient(context: ExtensionContext): Promise<Octokit> {
 	const { Octokit } = await import('@octokit/core');
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
 

@@ -2,7 +2,8 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import vscode, {
+import type { ExtensionContext } from 'vscode';
+import {
 	showInputBox,
 	showInformationMessage,
 	openExternal,
@@ -18,7 +19,7 @@ import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/
 import { getGistId } from './utils';
 import { exists } from '../utils/fsInfo';
 
-async function createGist(context: vscode.ExtensionContext) {
+async function createGist(context: ExtensionContext) {
 	const client = await getOctokitClient(context);
 
 	const filename = (await getFileName()) + '.code-snippets';
@@ -57,7 +58,7 @@ async function createGist(context: vscode.ExtensionContext) {
 	);
 }
 
-async function importGist(context: vscode.ExtensionContext) {
+async function importGist(context: ExtensionContext) {
 	const gistId = await getGistId();
 	if (gistId === undefined) {
 		return;
@@ -72,7 +73,7 @@ async function importGist(context: vscode.ExtensionContext) {
 }
 
 async function saveCodeSnippets(
-	context: vscode.ExtensionContext,
+	context: ExtensionContext,
 	gist_id: string,
 	saveDir: string
 ): Promise<void> {

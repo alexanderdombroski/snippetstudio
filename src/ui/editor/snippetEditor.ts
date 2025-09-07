@@ -1,3 +1,4 @@
+import type { ExtensionContext } from 'vscode';
 import vscode, {
 	registerCommand,
 	executeCommand,
@@ -10,10 +11,7 @@ import { getCurrentUri } from '../../utils/fsInfo';
 import type { VSCodeSnippet } from '../../types';
 import { titleCase } from '../../utils/string';
 
-function initSnippetEditorCommands(
-	context: vscode.ExtensionContext,
-	provider: SnippetEditorProvider
-) {
+function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetEditorProvider) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.editor.save', async () => {
 			await __saveSnippet(provider);
