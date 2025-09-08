@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.4](#240---2025-09-07) - Cursor Support
 - [2.3](#230---2025-09-05) - VSCodium Support
 - [2.2](#220---2025-09-03) - VS Code Insiders Support
 - [2.1](#213---2025-08-27) - Advanced Profile Linking
@@ -29,10 +30,21 @@
   - Update homepage
   - Add searchbar
   - Add 2.0.0 pages
-- **SnippetManagement** (2.4)
+- **SnippetManagement** (2.5)
   - Rename .code-snippets Files
   - Simplified snippet view option
   - Fix to handle json with trailing commas
+
+## [2.4.0] - 2025-09-07
+
+### Added
+
+- Added Cursor Support
+
+### Fixed
+
+- Syntax errors caused by unexpected snippet insertion features are less prominent
+- Snippet creation data view remains open in split screen views
 
 ## [2.3.0] - 2025-09-05
 
