@@ -15,18 +15,19 @@ import type {
 import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
-export function _getExtensionsDirPath(): string {
+export function __getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
 		'Visual Studio Code': '.vscode',
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',
+		Cursor: '.cursor',
 	};
-	const appConfig = appConfigs[vscode.env.appName];
+	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');
 }
 
 function getPackagePathFromSnippetPath(snippetPath: string): string {
-	const extDirPath = _getExtensionsDirPath();
+	const extDirPath = __getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
@@ -66,7 +67,7 @@ export function flattenScopedExtensionSnippets(
 // -------------------- All Extension Files --------------------
 
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	const dir = _getExtensionsDirPath();
+	const dir = __getExtensionsDirPath();
 	if (!(await exists(dir))) {
 		return {};
 	}

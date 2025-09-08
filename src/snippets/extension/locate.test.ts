@@ -8,7 +8,7 @@ import {
 	findAllExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
 	getExtensionSnippetLangs,
-	_getExtensionsDirPath,
+	__getExtensionsDirPath,
 } from './locate';
 import vscode from '../../vscode';
 
@@ -150,15 +150,23 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
 		});
 		it('should find the vscode extensions folder', () => {
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
+			expect(__getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 		it('should should update the path for the nightly build', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
+			expect(__getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
 		it('should should update the path for VSCodium', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
+			expect(__getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
+		});
+		it('should should update the path for Cursor', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
+			expect(__getExtensionsDirPath()).toBe(configPath`.cursor`);
+		});
+		it('should default to VS Code', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
+			expect(__getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 	});
 });

@@ -60,8 +60,9 @@ export function getUserPath(): string {
 		'Visual Studio Code': 'Code',
 		'Visual Studio Code - Insiders': 'Code - Insiders',
 		VSCodium: 'VSCodium',
+		Cursor: 'Cursor',
 	};
-	const appName = appNames[vscode.env.appName];
+	const appName = appNames[vscode.env.appName] ?? 'Code';
 	switch (process.platform) {
 		case 'win32':
 			return path.join(os.homedir(), 'AppData', 'Roaming', appName, 'User');

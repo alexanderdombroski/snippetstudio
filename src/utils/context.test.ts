@@ -100,6 +100,18 @@ describe('context', () => {
 			);
 			expect(getUserPath()).toBe(expectedPath);
 		});
+
+		it('should use Cursor for AI Enjoyers', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
+			const expectedPath = path.join(
+				'/home/user',
+				'Library',
+				'Application Support',
+				'Cursor',
+				'User'
+			);
+			expect(getUserPath()).toBe(expectedPath);
+		});
 	});
 
 	describe('initUserPath', () => {
