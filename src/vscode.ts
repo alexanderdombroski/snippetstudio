@@ -1,7 +1,10 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 // Using a wrapper fixes esbuild's tendency to import vscode multiple times when chunking
-import * as vscode from 'vscode';
+import { createRequire } from 'node:module';
+// @ts-expect-error ts(1470) - File will remain ESM
+const require = createRequire(import.meta.url);
+const vscode: typeof import('vscode') = require('vscode'); // Cursor requires a cjs require of vscode API
 
 export const {
 	SnippetString,
