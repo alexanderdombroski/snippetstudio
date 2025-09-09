@@ -232,9 +232,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 			diagnostics
 				?.filter((dg) => dg.range.intersection(range))
 				.forEach((dg) => {
-					console.log(dg.range.start.line, dg.range.end.line);
 					supressedDiagnostics.push({ range: dg.range });
-
 					supressedDiagnosticsOverLine.push({ range: moveRangeDown(dg.range, document) });
 					diagnostics.splice(diagnostics.indexOf(dg), 1);
 				});
