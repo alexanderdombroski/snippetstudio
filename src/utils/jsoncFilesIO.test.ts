@@ -43,8 +43,14 @@ describe('jsoncFilesIO', () => {
 			expect(result).toEqual({ key: 'value', key2: 123 });
 		});
 
-		it('should return null for invalid JSON', async () => {
+		it('should handle trailing commas', async () => {
 			const invalidJson = `{ "key": "value", }`;
+			const result = await processJsonWithComments(invalidJson);
+			expect(result).toStrictEqual({ key: 'value' });
+		});
+
+		it('should return null for invalid JSON', async () => {
+			const invalidJson = `{ "key: value" }`;
 			const result = await processJsonWithComments(invalidJson);
 			expect(result).toBeNull();
 		});
@@ -75,7 +81,7 @@ describe('jsoncFilesIO', () => {
 		it('should handle JSON parsing errors gracefully', async () => {
 			const files = {
 				'good.jsonc': '{ "good": "json" }',
-				'bad.jsonc': '{ "bad": "json", }',
+				'bad.jsonc': '{ "bad": "json\' }',
 			};
 			vi.mocked(fs.readFile).mockImplementation((path) =>
 				Promise.resolve(files[path as keyof typeof files])

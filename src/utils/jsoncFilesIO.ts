@@ -7,10 +7,16 @@ import { getLinkLocations } from '../snippets/links/config';
 
 export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
-		const stripJsonCommentsModule = await import('strip-json-comments');
-		const stripJsonComments = stripJsonCommentsModule.default; // Access the default export
-		const cleanedJson = stripJsonComments(jsonString);
-		return JSON.parse(cleanedJson);
+		const { default: stripJsonComments } = await import('strip-json-comments');
+		let cleanedJson = stripJsonComments(jsonString);
+
+		try {
+			return JSON.parse(cleanedJson);
+		} catch {
+			// Remove trailing commas and retry
+			cleanedJson = cleanedJson.replace(/,\s*([}\]])/g, '$1');
+			return JSON.parse(cleanedJson);
+		}
 	} catch (error) {
 		console.error('Error processing JSON with comments:', error);
 		return null;
