@@ -1,7 +1,7 @@
 {
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
-	"description": "A snippets manager that assists you in creating, editing, viewing, and deleteing snippets and snippet files.",
+	"description": "A snippets manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
 	"version": "2.4.0",
 	"publisher": "AlexDombroski",
 	"author": {
@@ -37,10 +37,22 @@
 		"Other"
 	],
 	"keywords": [
+		"snippet",
 		"snippets",
 		"snippet editor",
 		"snippet manager",
+		"snippet sharing",
+		"live templates",
+		"autocomplete",
+		"tab complete",
+		"gists",
+		"gui",
 		"gui editor",
+		"keybindings",
+		"visual editor",
+		"productivity",
+		"developer tools",
+		"code generation",
 		"code completion"
 	],
 	"preview": false,

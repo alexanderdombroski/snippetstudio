@@ -50,7 +50,7 @@ VS Code already has [powerful syncing](https://code.visualstudio.com/docs/config
 
 Snippets added to the active profile, or choose files to sync across all profiles
 
-Import snippets from your friends profile backups, or profile templates
+Import snippets from your friend's profile backups, or profile templates
 
 ### Extension Snippets
 
@@ -72,7 +72,7 @@ Check out the [changelog](https://github.com/alexanderdombroski/snippetstudio/bl
 
 ## License & Contributions
 
-This extension is open source! Feel free to add github [issues](https://github.com/alexanderdombroski/snippetstudio/issues), [ideas](https://github.com/alexanderdombroski/snippetstudio/discussions) or [contribute](https://github.com/alexanderdombroski/snippetstudio/blob/main/CONTRIBUTING.md).
+This extension is open source! Feel free to add GitHub [issues](https://github.com/alexanderdombroski/snippetstudio/issues), [ideas](https://github.com/alexanderdombroski/snippetstudio/discussions) or [contribute](https://github.com/alexanderdombroski/snippetstudio/blob/main/CONTRIBUTING.md).
 
 [![License](https://img.shields.io/github/license/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio?tab=MIT-1-ov-file#readme)
 
