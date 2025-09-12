@@ -20,7 +20,7 @@ import vscode, {
 	Uri,
 	createTextEditorDecorationType,
 } from '../../vscode';
-import type { SnippetData } from '../../types';
+import type { DiagnosticsLevel, SnippetData } from '../../types';
 import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 
@@ -203,9 +203,9 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 
 	private _highlightSnippetInsertionFeatures(editor: TextEditor) {
 		const document = editor.document;
-		const shouldMaskDiagnostics = getConfiguration('snippetstudio').get<boolean>(
-			'editor.suppressDiagnostics'
-		);
+		const shouldMaskDiagnostics =
+			getConfiguration('snippetstudio').get<DiagnosticsLevel>('editor.diagnosticsLevel') ===
+			'suppressed';
 		const diagnostics = shouldMaskDiagnostics
 			? vscode.languages.getDiagnostics(document.uri)
 			: undefined;

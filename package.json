@@ -666,10 +666,20 @@
 					"default": true,
 					"description": "Automatically determine and add the next id number for tabstops, placeholders, and choice snipppet insertion features."
 				},
-				"snippetstudio.editor.suppressDiagnostics": {
-					"type": "boolean",
-					"default": true,
-					"description": "Mask syntax errors that may occur when adding insertion features"
+				"snippetstudio.editor.diagnosticsLevel": {
+					"type": "string",
+					"enum": [
+						"all",
+						"suppressed",
+						"none"
+					],
+					"default": "none",
+					"markdownDescription": "Control diagnostics for `snippetstudio` scheme",
+					"enumDescriptions": [
+						"Show all diagnostics",
+						"Mask syntax errors caused by insertion features",
+						"Remove all diagnostics within the scheme"
+					]
 				},
 				"snippetstudio.export.location": {
 					"type": "string",

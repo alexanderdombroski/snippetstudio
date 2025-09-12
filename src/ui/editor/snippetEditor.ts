@@ -8,7 +8,7 @@ import vscode, {
 } from '../../vscode';
 import type SnippetEditorProvider from './SnippetEditorProvider';
 import { getCurrentUri } from '../../utils/fsInfo';
-import type { VSCodeSnippet } from '../../types';
+import type { DiagnosticsLevel, VSCodeSnippet } from '../../types';
 import { titleCase } from '../../utils/string';
 
 function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetEditorProvider) {
@@ -27,12 +27,18 @@ function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetE
 	);
 
 	onDidChangeActiveTextEditor(() => {
-		executeCommand(
-			'setContext',
-			'snippetstudio.editorVisible',
-			vscode.window.visibleTextEditors.some(
-				(editor) => editor?.document.uri.scheme === 'snippetstudio'
-			)
+		const active = vscode.window.visibleTextEditors.some(
+			(editor) => editor?.document.uri.scheme === 'snippetstudio'
+		);
+
+		executeCommand('setContext', 'snippetstudio.editorVisible', active);
+		const hidden =
+			active &&
+			getConfiguration('snippetstudio').get<DiagnosticsLevel>('editor.diagnosticsLevel') === 'none';
+		getConfiguration('problems').update(
+			'visibility',
+			hidden ? false : undefined,
+			vscode.ConfigurationTarget.Global
 		);
 	});
 }

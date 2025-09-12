@@ -2,4 +2,6 @@ interface CommandMap {
 	[command: string]: () => void;
 }
 
-export type { CommandMap };
+type DiagnosticsLevel = 'all' | 'suppressed' | 'none';
+
+export type { CommandMap, DiagnosticsLevel };

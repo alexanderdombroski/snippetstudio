@@ -21,6 +21,11 @@ export async function activate(context: ExtensionContext) {
 		return;
 	}
 
+	// Reset setting
+	vscode.workspace
+		.getConfiguration('problems')
+		.update('visibility', undefined, vscode.ConfigurationTarget.Global);
+
 	// Close old tabs on startup
 	vscode.window.tabGroups.all.forEach((group) =>
 		group.tabs.forEach((tab) => {

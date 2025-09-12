@@ -62,6 +62,7 @@ export const Event = {};
 export const onDidChangeTextDocument = vi.fn();
 export const getConfiguration = vi.fn().mockReturnValue({
 	get: vi.fn(),
+	update: vi.fn(),
 });
 export const openTextDocument = vi.fn();
 export const createTextEditorDecorationType = vi.fn();
