@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [2.4](#240---2025-09-07) - Cursor Support
+- [2.4](#241---2025-09-11) - Cursor Support
 - [2.3](#230---2025-09-05) - VSCodium Support
 - [2.2](#220---2025-09-03) - VS Code Insiders Support
 - [2.1](#213---2025-08-27) - Advanced Profile Linking
@@ -34,6 +34,13 @@
   - Rename .code-snippets Files
   - Simplified snippet view option
   - Fix to handle json with trailing commas
+
+## [2.4.1] - 2025-09-11
+
+### Fixed
+
+- Extension can read snippets with trailing commas
+- Improve Supress Diagnostics option
 
 ## [2.4.0] - 2025-09-07
 
