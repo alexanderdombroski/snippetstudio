@@ -95,7 +95,6 @@ async function moveSnippet(item: TreePathItem) {
 		return;
 	}
 
-	const { readSnippet, writeSnippet } = await import('../snippets/updateSnippets.js');
 	const snippet = (await readSnippet(item.path, item.description as string)) as VSCodeSnippet;
 
 	await Promise.all([
