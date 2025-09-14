@@ -8,8 +8,13 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 	private scheme = 'snippetviewer' as const;
 
 	constructor() {
-		vscode.workspace.onDidCloseTextDocument((doc) => {
+		vscode.workspace.onDidOpenTextDocument((doc) => {
 			if (doc.uri.scheme === this.scheme) {
+				vscode.languages.setTextDocumentLanguage(doc, doc.uri.fragment);
+			}
+		});
+		vscode.window.onDidChangeVisibleTextEditors((editors) => {
+			if (!editors.some((e) => e.document.uri.scheme === this.scheme)) {
 				this.snippets.clear();
 			}
 		});
@@ -34,7 +39,11 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 
 		// Store the snippets
 		let currentLine = 0;
-		const uri = Uri.from({ scheme: this.scheme, path: `/${language}/full-list` });
+		const uri = Uri.from({
+			scheme: this.scheme,
+			path: `/${language}/full-list`,
+			fragment: language,
+		});
 		const locations: Location[] = [];
 		const combinedBody: string[] = [];
 
@@ -47,7 +56,11 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 			locations.push(location);
 
 			if (k === preferred) {
-				const preferredUri = Uri.from({ scheme: this.scheme, path: `/${language}/clicked` });
+				const preferredUri = Uri.from({
+					scheme: this.scheme,
+					path: `/${language}/clicked`,
+					fragment: language,
+				});
 				this.snippets.set(preferredUri.toString(), body.join('\n'));
 				locations.unshift(new vscode.Location(preferredUri, new vscode.Position(0, 0)));
 			}
