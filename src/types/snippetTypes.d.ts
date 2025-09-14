@@ -53,7 +53,7 @@ interface SnippetData {
 	scope?: string;
 
 	/**
-	 * File the snippet will be stored in
+	 * Filepath the snippet will be stored in
 	 */
 	filename: string;
 }

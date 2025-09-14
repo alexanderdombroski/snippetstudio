@@ -1,10 +1,5 @@
 import type { ExtensionContext } from 'vscode';
-import {
-	registerCommand,
-	executeCommand,
-	showInformationMessage,
-	getConfiguration,
-} from '../vscode';
+import { registerCommand, executeCommand, getConfiguration } from '../vscode';
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
@@ -16,8 +11,9 @@ import { getGlobalLangFile } from '../utils/profile';
 
 function initSnippetCommands(context: ExtensionContext) {
 	// Show Snippet Body
-	const showSnippetOnDoubleClick = onDoubleClick((item: TreePathItem) => {
-		showInformationMessage(item.tooltip?.toString() ?? '');
+	const showSnippetOnDoubleClick = onDoubleClick(async (item: TreePathItem) => {
+		const { peekAtSnippet } = await import('../ui/peeker/peek.js');
+		await peekAtSnippet(context, item.path, item.description as string);
 	});
 	context.subscriptions.push(
 		registerCommand('snippetstudio.snippet.showBody', (item: TreePathItem) => {
