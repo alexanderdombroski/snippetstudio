@@ -2,6 +2,7 @@ import { getCurrentLanguage } from '../../utils/language';
 import vscode, { executeCommand, openTextDocument, showTextDocument, Uri } from '../../vscode';
 import type { Location, TextDocumentContentProvider, Uri as UriType } from 'vscode';
 import type { VSCodeSnippets } from '../../types';
+import { highlightSnippetInsertionFeatures } from '../syntax';
 
 export default class SnippetPeekProvider implements TextDocumentContentProvider {
 	private snippets = new Map<string, string>();
@@ -14,7 +15,10 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 			}
 		});
 		vscode.window.onDidChangeVisibleTextEditors((editors) => {
-			if (!editors.some((e) => e.document.uri.scheme === this.scheme)) {
+			const editor = editors.find((e) => e.document.uri.scheme === this.scheme);
+			if (editor) {
+				highlightSnippetInsertionFeatures(editor);
+			} else {
 				this.snippets.clear();
 			}
 		});
@@ -52,7 +56,11 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 			const location = new vscode.Location(uri, new vscode.Position(currentLine, 0));
 			currentLine += body.length + 2;
 
-			combinedBody.push(formatTitle(`${s.prefix} - ${k}`), ...body, '');
+			combinedBody.push(
+				formatTitle(`${Array.isArray(s.prefix) ? s.prefix.join(', ') : s.prefix} - ${k}`),
+				...body,
+				''
+			);
 			locations.push(location);
 
 			if (k === preferred) {

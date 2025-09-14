@@ -6,23 +6,14 @@ import type {
 	TextDocumentChangeEvent,
 	FileType,
 	Uri as UriType,
-	TextEditor,
-	DecorationOptions,
 	FileStat,
 	Disposable,
-	TextDocument,
-	Range as RangeType,
 } from 'vscode';
-import vscode, {
-	onDidChangeActiveTextEditor,
-	getConfiguration,
-	Range,
-	Uri,
-	createTextEditorDecorationType,
-} from '../../vscode';
-import type { DiagnosticsLevel, SnippetData } from '../../types';
+import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
+import type { SnippetData } from '../../types';
 import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
+import { highlightSnippetInsertionFeatures } from '../syntax';
 
 export default class SnippetEditorProvider implements FileSystemProvider {
 	private _emitter: EventEmitter<FileChangeEvent[]> = new vscode.EventEmitter<FileChangeEvent[]>();
@@ -35,24 +26,6 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 	public scheme: string = '';
 
 	private _lspDebounce: NodeJS.Timeout | undefined;
-	private _insertionFeatureDecorationType = createTextEditorDecorationType({
-		color: '#FFF', // White in Dark+
-		fontWeight: 'bold',
-		light: {
-			color: '#D801F8', // Purple for Light+
-		},
-	});
-
-	// The red squigglys in your editor are SVGs btw, and there's no way to remove diagnostics.
-	private _diagnosticSuppressorDecorationType = createTextEditorDecorationType({
-		backgroundColor: 'var(--vscode-editor-background)',
-		textDecoration: 'underline wavy var(--vscode-editor-background)', // Mask underline squiggles
-		isWholeLine: true,
-	});
-	private _diagnosticSuppressorDecorationOverLine = createTextEditorDecorationType({
-		textDecoration: 'overline wavy var(--vscode-editor-background)', // Additional Coverup underline squiggles
-		isWholeLine: true,
-	});
 
 	constructor(scheme: string, manager: SnippetDataManager) {
 		this._directories.set('/snippets', new Set());
@@ -61,7 +34,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 
 		onDidChangeActiveTextEditor((editor) => {
 			if (editor?.document.uri.scheme === this.scheme) {
-				this._highlightSnippetInsertionFeatures(editor);
+				highlightSnippetInsertionFeatures(editor);
 			}
 		});
 	}
@@ -82,7 +55,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		this._lspDebounce = setTimeout(() => {
 			const editor = vscode.window.activeTextEditor;
 			if (editor) {
-				this._highlightSnippetInsertionFeatures(editor);
+				highlightSnippetInsertionFeatures(editor);
 			}
 		}, 400);
 
@@ -201,53 +174,6 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		}
 	}
 
-	private _highlightSnippetInsertionFeatures(editor: TextEditor) {
-		const document = editor.document;
-		const shouldMaskDiagnostics =
-			getConfiguration('snippetstudio').get<DiagnosticsLevel>('editor.diagnosticsLevel') ===
-			'suppressed';
-		const diagnostics = shouldMaskDiagnostics
-			? vscode.languages.getDiagnostics(document.uri)
-			: undefined;
-
-		const text = document.getText();
-		const regexes = [
-			/(?<!\\)\$\d+/g, // $0, $1
-			/(?<!\\)\$\{\d+:[^}]*\}/g, // ${1:placeholder}
-			/(?<!\\)\$\{\d+\|[^}]+\|\}/g, // ${2|choice1,choice2|}
-			/(?<!\\)\$((TM_(SELECTED_TEXT|CURRENT_(LINE|WORD)|LINE_(INDEX|NUMBER)|FILE(NAME(_BASE)?|PATH)|DIRECTORY))|CLIPBOARD|RELATIVE_FILEPATH|(WORKSPACE_(NAME|FOLDER))|CURSOR_(INDEX|NUMBER)|CURRENT_(YEAR(_SHORT)?|MONTH(_NAME(_SHORT)?)?|DA(TE|Y_NAME(_SHORT)?)|HOUR|MINUTE|SECOND(S_UNIX)?|TIMEZONE_OFFSET)|RANDOM(_HEX)?|UUID|BLOCK_COMMENT_(START|END)|LINE_COMMENT)/g,
-			/(?<!\\)\$\{((TM_(SELECTED_TEXT|CURRENT_(LINE|WORD)|LINE_(INDEX|NUMBER)|FILE(NAME(_BASE)?|PATH)|DIRECTORY))|CLIPBOARD|RELATIVE_FILEPATH|(WORKSPACE_(NAME|FOLDER))|CURSOR_(INDEX|NUMBER)|CURRENT_(YEAR(_SHORT)?|MONTH(_NAME(_SHORT)?)?|DA(TE|Y_NAME(_SHORT)?)|HOUR|MINUTE|SECOND(S_UNIX)?|TIMEZONE_OFFSET)|RANDOM(_HEX)?|UUID|BLOCK_COMMENT_(START|END)|LINE_COMMENT):([^}]*)\}/g,
-			/(?<!\\)\$\{\d+\/.*?\/.*?\/[gimsuy]*\}/g,
-		];
-		const decorations: DecorationOptions[] = [];
-		const supressedDiagnostics: DecorationOptions[] = [];
-		const supressedDiagnosticsOverLine: DecorationOptions[] = [];
-
-		for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
-			const startPos = document.positionAt(match.index);
-			const endPos = document.positionAt(match.index + match[0].length);
-			const range = new Range(startPos, endPos);
-			decorations.push({ range });
-
-			diagnostics
-				?.filter((dg) => dg.range.intersection(range))
-				.forEach((dg) => {
-					supressedDiagnostics.push({ range: dg.range });
-					supressedDiagnosticsOverLine.push({ range: moveRangeDown(dg.range, document) });
-					diagnostics.splice(diagnostics.indexOf(dg), 1);
-				});
-		}
-
-		editor.setDecorations(this._insertionFeatureDecorationType, decorations);
-		if (shouldMaskDiagnostics) {
-			editor.setDecorations(this._diagnosticSuppressorDecorationType, supressedDiagnostics);
-			editor.setDecorations(
-				this._diagnosticSuppressorDecorationOverLine,
-				supressedDiagnosticsOverLine
-			);
-		}
-	}
-
 	rename(
 		// eslint-disable-next-line no-unused-vars
 		oldUri: UriType,
@@ -299,15 +225,4 @@ export function __escapeDollarSignIfNeeded(text: string, offset: number): string
 		// Is a placeholder
 		return text.slice(0, offset - 2) + '\\' + text.slice(offset - 2);
 	}
-}
-
-function moveRangeDown(range: RangeType, document: TextDocument): RangeType {
-	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
-	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);
-
-	// Clamp the character positions to the line length
-	const newStartChar = Math.min(range.start.character, document.lineAt(newStartLine).text.length);
-	const newEndChar = Math.min(range.end.character, document.lineAt(newEndLine).text.length);
-
-	return new vscode.Range(newStartLine, newStartChar, newEndLine, newEndChar);
 }
