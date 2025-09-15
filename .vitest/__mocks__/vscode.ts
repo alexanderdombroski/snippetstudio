@@ -32,7 +32,15 @@ export const ThemeIcon = class {
 		return this.iconPath;
 	}
 };
-export const Range = class {};
+export class Range {
+	start: { line: number; character: number };
+	end: { line: number; character: number };
+
+	constructor(startLine: number, startChar: number, endLine: number, endChar: number) {
+		this.start = { line: startLine, character: startChar };
+		this.end = { line: endLine, character: endChar };
+	}
+}
 export class Position {
 	constructor(
 		public line: number,
@@ -139,6 +147,7 @@ export default {
 		activeTextEditor: vi.fn(),
 		withProgress: vi.fn(),
 		createStatusBarItem: vi.fn(),
+		onDidChangeVisibleTextEditors: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
 		registerWebviewViewProvider: vi.fn(),
 	},
@@ -154,11 +163,13 @@ export default {
 			writeFile: vi.fn(),
 		},
 		onDidChangeConfiguration: vi.fn(),
+		onDidOpenTextDocument: vi.fn(),
 		applyEdit: vi.fn(),
 		onDidCloseTextDocument: vi.fn(() => {
 			return { dispose: vi.fn() };
 		}),
 		registerFileSystemProvider: vi.fn(),
+		registerTextDocumentContentProvider: vi.fn(),
 	},
 	env: { clipboard: { writeText: vi.fn() }, appName: 'Visual Studio Code' },
 	StatusBarAlignment: { Right: 1 },
@@ -170,4 +181,5 @@ export default {
 	ViewColumn: { Active: 1 },
 	TextEditorRevealType: {},
 	ProgressLocation: {},
+	Location: class {},
 };

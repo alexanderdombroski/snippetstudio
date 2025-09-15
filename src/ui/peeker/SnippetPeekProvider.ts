@@ -1,5 +1,11 @@
 import { getCurrentLanguage } from '../../utils/language';
-import vscode, { executeCommand, openTextDocument, showTextDocument, Uri } from '../../vscode';
+import vscode, {
+	executeCommand,
+	openTextDocument,
+	Position,
+	showTextDocument,
+	Uri,
+} from '../../vscode';
 import type { Location, TextDocumentContentProvider, Uri as UriType } from 'vscode';
 import type { VSCodeSnippets } from '../../types';
 import { highlightSnippetInsertionFeatures } from '../syntax';
@@ -53,7 +59,7 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 
 		Object.entries(snippets).forEach(([k, s]) => {
 			const body = Array.isArray(s.body) ? s.body : s.body.split(/\r\n|\r|\n/);
-			const location = new vscode.Location(uri, new vscode.Position(currentLine, 0));
+			const location = new vscode.Location(uri, new Position(currentLine, 0));
 			currentLine += body.length + 2;
 
 			combinedBody.push(
@@ -70,7 +76,7 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 					fragment: language,
 				});
 				this.snippets.set(preferredUri.toString(), body.join('\n'));
-				locations.unshift(new vscode.Location(preferredUri, new vscode.Position(0, 0)));
+				locations.unshift(new vscode.Location(preferredUri, new Position(0, 0)));
 			}
 		});
 

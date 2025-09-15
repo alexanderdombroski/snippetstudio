@@ -71,5 +71,5 @@ export function __moveRangeDown(range: RangeType, document: TextDocument): Range
 	const newStartChar = Math.min(range.start.character, document.lineAt(newStartLine).text.length);
 	const newEndChar = Math.min(range.end.character, document.lineAt(newEndLine).text.length);
 
-	return new vscode.Range(newStartLine, newStartChar, newEndLine, newEndChar);
+	return new Range(newStartLine, newStartChar, newEndLine, newEndChar);
 }

@@ -6,6 +6,7 @@ import type { ExtensionContext } from 'vscode';
 import SnippetPeekProvider from './SnippetPeekProvider';
 import vscode from '../../vscode';
 import type { VSCodeSnippets } from '../../types';
+import { readSnippetFile } from '../../utils/jsoncFilesIO';
 
 let snippetPeekProvider: SnippetPeekProvider | undefined;
 
@@ -21,7 +22,6 @@ export async function peekAtSnippet(
 		);
 	}
 
-	const { readSnippetFile } = await import('../../utils/jsoncFilesIO.js');
 	const snippets = (await readSnippetFile(filepath, true)) as VSCodeSnippets;
 
 	await snippetPeekProvider.showPeek(snippets, preferred);
