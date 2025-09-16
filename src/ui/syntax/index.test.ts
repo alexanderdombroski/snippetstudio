@@ -67,7 +67,7 @@ describe('syntax', () => {
 	});
 
 	describe('__moveLocationDown', () => {
-		it.only('should move a Location down one line', () => {
+		it('should move a Location down one line', () => {
 			(editor.document.lineAt as Mock).mockReturnValue({ text: 'placeholder text' });
 			const range = new Range(0, 5, 0, 10);
 			const newLocation = __moveRangeDown(range, editor.document);
