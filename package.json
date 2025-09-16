@@ -797,8 +797,8 @@
 		"test": "vitest watch",
 		"test:env": "node .vitest/createEnv.mts",
 		"test:ui": "vitest watch --ui",
-		"coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text --coverage.reporter=text-summary",
-		"coverage:publish": "vitest run --coverage --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
+		"coverage": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=text --coverage.reporter=text-summary",
+		"coverage:publish": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
 		"coverage:report": "npm run coverage:publish && open ./coverage/index.html",
 		"prepare": "husky"
 	},
