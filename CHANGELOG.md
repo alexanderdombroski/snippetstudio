@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.5](#250---2025-09-15) - Snippet Peeks
 - [2.4](#241---2025-09-11) - Cursor Support
 - [2.3](#230---2025-09-05) - VSCodium Support
 - [2.2](#220---2025-09-03) - VS Code Insiders Support
@@ -30,10 +31,20 @@
   - Update homepage
   - Add searchbar
   - Add 2.0.0 pages
-- **SnippetManagement** (2.5)
+- **SnippetManagement** (2.6)
   - Rename .code-snippets Files
   - Simplified snippet view option
-  - Fix to handle json with trailing commas
+
+## [2.5.0] - 2025-09-15
+
+### Added
+
+- Double click a snippet to quickly view the snippet contents in a peek
+- Peeks show the snippet clicked and all other snippets of the file
+
+### Fixed
+
+- Move snippet command now runs correctly
 
 ## [2.4.1] - 2025-09-11
 
