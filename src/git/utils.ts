@@ -4,6 +4,7 @@
 
 import { showInputBox, showErrorMessage } from '../vscode';
 
+/** prompts for a gist identifer and returns the id */
 export async function getGistId() {
 	const identifier = await showInputBox({
 		title: 'Input a gist id, share url, or clone url',
@@ -13,6 +14,7 @@ export async function getGistId() {
 	}
 }
 
+/** extracts a gist id from a url, clone url, or ssh url */
 function extractGistId(identifier: string): string {
 	// From share URL
 	const shareUrlRegex = /https:\/\/gist\.github\.com\/[\w-]+\/([a-f0-9]+)/i;

@@ -13,6 +13,7 @@ import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO
 import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { exists } from '../utils/fsInfo';
 
+/** scans the vscode repository for all extensions with snippets and allows user to choose some to save */
 export async function importBuiltinExtension(context: ExtensionContext) {
 	const client = await getOctokitClient(context);
 
@@ -87,6 +88,7 @@ export async function importBuiltinExtension(context: ExtensionContext) {
 	}
 }
 
+/** finds all extension folders with snippets within the vscode repo */
 export async function __getDirsWithSnippets(client: Octokit) {
 	const res = await __folderRequest(client, 'extensions');
 	const folders = res?.filter((item) => item.type === 'dir') ?? [];
@@ -103,7 +105,7 @@ export async function __getDirsWithSnippets(client: Octokit) {
 			let index = 0;
 			const CONCURRENCY_LIMIT = 10;
 
-			async function worker() {
+			const worker = async () => {
 				while (index < folders.length && !token.isCancellationRequested) {
 					const currentIndex = index++;
 					const folder = folders[currentIndex];
@@ -120,7 +122,7 @@ export async function __getDirsWithSnippets(client: Octokit) {
 					);
 					extFolders[currentIndex] = hasSnippets ? folder : undefined;
 				}
-			}
+			};
 
 			// Start workers
 			const workers = Array(CONCURRENCY_LIMIT)
@@ -140,6 +142,7 @@ export async function __getDirsWithSnippets(client: Octokit) {
 	);
 }
 
+/** gets folder contents within vscode repo */
 export async function __folderRequest(client: Octokit, fp: string) {
 	const { data } = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
@@ -151,6 +154,7 @@ export async function __folderRequest(client: Octokit, fp: string) {
 	}
 }
 
+/** gets text content within vscode repo */
 export async function __fileTextRequest(client: Octokit, path: string): Promise<string> {
 	const { data }: any = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',

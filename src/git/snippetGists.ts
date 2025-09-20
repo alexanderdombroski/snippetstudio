@@ -19,6 +19,7 @@ import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/
 import { getGistId } from './utils';
 import { exists } from '../utils/fsInfo';
 
+/** creates a new gist from exported snippets */
 async function createGist(context: ExtensionContext) {
 	const client = await getOctokitClient(context);
 
@@ -58,6 +59,7 @@ async function createGist(context: ExtensionContext) {
 	);
 }
 
+/** gets a gist id and saves all snippets */
 async function importGist(context: ExtensionContext) {
 	const gistId = await getGistId();
 	if (gistId === undefined) {
@@ -72,6 +74,7 @@ async function importGist(context: ExtensionContext) {
 	await saveCodeSnippets(context, gistId, saveDir);
 }
 
+/** saves all snippets from a gist */
 async function saveCodeSnippets(
 	context: ExtensionContext,
 	gist_id: string,

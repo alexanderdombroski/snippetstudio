@@ -4,6 +4,7 @@ import vscode, { showInformationMessage, openExternal, Uri } from '../vscode';
 
 let client: Octokit | null = null;
 
+/** returns an octokit client (inits on first call) */
 async function getOctokitClient(context: ExtensionContext): Promise<Octokit> {
 	if (!client) {
 		client = await createOctokitClient(context);
@@ -11,6 +12,7 @@ async function getOctokitClient(context: ExtensionContext): Promise<Octokit> {
 	return client;
 }
 
+/** retrieves a token and inits the octokit client */
 async function createOctokitClient(context: ExtensionContext): Promise<Octokit> {
 	const { Octokit } = await import('@octokit/core');
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
@@ -48,6 +50,7 @@ async function createOctokitClient(context: ExtensionContext): Promise<Octokit> 
 	return new Octokit({ auth: token });
 }
 
+/** runs a basic user request to see if a token is valid */
 async function isTokenRevoked(token: string): Promise<boolean> {
 	const { Octokit } = await import('@octokit/core');
 	const test = new Octokit({ auth: token });
