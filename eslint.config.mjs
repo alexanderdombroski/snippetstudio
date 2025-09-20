@@ -1,6 +1,7 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import importPlugin from 'eslint-plugin-import';
+import jsdoc from 'eslint-plugin-jsdoc';
 
 const customPlugin = {
 	rules: {
@@ -94,5 +95,46 @@ export default [
 			'no-throw-literal': 'warn',
 			semi: 'warn',
 		},
+	},
+	jsdoc.configs['flat/recommended-typescript'],
+	{
+		files: ['**/*.ts'],
+		plugins: {
+			jsdoc,
+		},
+		rules: {
+			'jsdoc/require-jsdoc': [
+				'warn',
+				{
+					require: {
+						ClassDeclaration: true,
+						FunctionDeclaration: true,
+						MethodDefinition: true,
+					},
+				},
+			],
+			'jsdoc/require-returns': 'off',
+			'jsdoc/require-param': 'off',
+			'jsdoc/lines-before-block': 'warn',
+			'jsdoc/check-indentation': 'warn',
+			'jsdoc/require-description': 'error',
+			'jsdoc/multiline-blocks': [
+				'warn',
+				{
+					noSingleLineBlocks: false,
+					noMultilineBlocks: true,
+				},
+			],
+		},
+	},
+	{
+		files: ['**/*.ts'],
+		plugins: {
+			jsdoc,
+		},
+		files: ['**/*.test.ts'],
+		rules: {
+			'jsdoc/require-jsdoc': 'off'
+		}
 	},
 ];

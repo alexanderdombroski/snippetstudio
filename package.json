@@ -815,6 +815,7 @@
 		"esbuild-visualizer": "^0.7.0",
 		"eslint": "^9.35.0",
 		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsdoc": "^59.0.2",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.1.6",
 		"npm-run-all": "^4.1.5",
