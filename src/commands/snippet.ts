@@ -9,6 +9,7 @@ import { getConfirmation, getSelection } from '../utils/user';
 import { snippetBodyAsString } from '../utils/string';
 import { getGlobalLangFile } from '../utils/profile';
 
+/** register all snippet creation commands */
 function initSnippetCommands(context: ExtensionContext) {
 	// Show Snippet Body
 	const showSnippetOnDoubleClick = onDoubleClick(async (item: TreePathItem) => {
@@ -140,10 +141,12 @@ function initSnippetCommands(context: ExtensionContext) {
 	);
 }
 
+/** gets default snippet prefix from configuration */
 export function defaultPrefix(): string {
 	return getConfiguration('snippetstudio')?.get<string>('defaultSnippetPrefix') ?? '';
 }
 
+/** attempts to return a language identifier from the snippet filepath */
 export function getLangFromSnippetFilePath(filepath: string): string | undefined {
 	if (path.extname(filepath) === '.code-snippets') {
 		return;

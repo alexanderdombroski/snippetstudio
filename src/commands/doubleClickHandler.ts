@@ -1,5 +1,6 @@
 import type { TreePathItem } from '../ui/templates';
 
+/** only runs the callback after it is called in quick sucession */
 function onDoubleClick(callback: (item: TreePathItem) => void): (item: TreePathItem) => void {
 	const clickTimestamps: { [key: string]: number } = {};
 	const doubleClickThreshold = 350; // Adjust as needed (milliseconds)

@@ -3,6 +3,7 @@ import { registerCommand } from '../vscode';
 import { refreshAll } from './snippetFile';
 import type { TreePathItem } from '../ui/templates';
 
+/** regsister commands to link profiles */
 async function initSnippetLinkCommands(context: ExtensionContext) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.file.link', async (item: TreePathItem) => {

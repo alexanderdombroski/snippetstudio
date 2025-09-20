@@ -9,6 +9,7 @@ import {
 import onDoubleClick from './doubleClickHandler';
 import type { TreePathItem } from '../ui/templates';
 
+/** register all snippet file related commands */
 function initSnippetFileCommands(context: ExtensionContext) {
 	// Open Snippets file
 	context.subscriptions.push(
@@ -87,11 +88,13 @@ function initSnippetFileCommands(context: ExtensionContext) {
 	);
 }
 
+/** refresh snippet and location views */
 export function refreshAll() {
 	executeCommand('snippetstudio.refresh');
 	executeCommand('snippetstudio.refreshLocations');
 }
 
+/** open a snippet file in a new editor */
 async function openSnippetFile(filepath: string) {
 	const document = await openTextDocument(Uri.file(filepath));
 	await showTextDocument(document);

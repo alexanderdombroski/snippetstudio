@@ -10,6 +10,7 @@ import {
 import type { CommandMap } from '../types';
 import type { SnippetCategoryTreeItem } from '../ui/templates';
 
+/** register ui related commands */
 function initSnippetUICommands(context: ExtensionContext, commandMap: CommandMap) {
 	// Show Snippets view
 	context.subscriptions.push(
