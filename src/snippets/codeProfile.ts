@@ -12,6 +12,7 @@ import type { VSCodeSnippets } from '../types';
 import { chooseLocalGlobal } from '../utils/user';
 import { exists } from '../utils/fsInfo';
 
+/** command handler to import all snippets from a .code-profile file at a chosen location */
 export async function importCodeProfileSnippets(context: ExtensionContext) {
 	const items = [
 		{
@@ -57,6 +58,7 @@ export async function importCodeProfileSnippets(context: ExtensionContext) {
 
 // ------------------------------ Parse Code Profile File ------------------------------
 
+/** exports all snippets from a profile to a given directory */
 async function saveCodeProfiles(
 	profileFileContent: string,
 	saveDir: string
@@ -89,6 +91,7 @@ async function saveCodeProfiles(
 
 // ------------------------------ Get Code Profile File Content ------------------------------
 
+/** pick a .code-profile file via file expolorer and  */
 async function fromFile(): Promise<string[] | undefined> {
 	const uris = await showOpenDialog({
 		canSelectFiles: true,
@@ -115,6 +118,7 @@ async function fromFile(): Promise<string[] | undefined> {
 	return contents;
 }
 
+/** attempts to reads a .code-profile from a gist */
 export async function __fromGist(context: ExtensionContext): Promise<string[] | undefined> {
 	const { getGistId } = await import('../git/utils.js');
 	const gistId = await getGistId();
@@ -138,6 +142,7 @@ export async function __fromGist(context: ExtensionContext): Promise<string[] | 
 	return files.map((file) => file.content as string);
 }
 
+/** gets the snippets from Microsoft's template code profiles */
 export async function __fromBuiltIn(): Promise<string[] | undefined> {
 	const validProfiles = [
 		'python',
@@ -162,6 +167,7 @@ export async function __fromBuiltIn(): Promise<string[] | undefined> {
 	return [await fetchProfile(url)];
 }
 
+/** gets file from user  code profile from a url with the raw file */
 export async function __fromUrl(): Promise<string[] | undefined> {
 	const url = await showInputBox({
 		title: 'Paste a URL to a raw .code-snippets file',
@@ -171,6 +177,7 @@ export async function __fromUrl(): Promise<string[] | undefined> {
 	}
 }
 
+/** reads code profile from a url with the raw file */
 async function fetchProfile(url: string): Promise<string> {
 	return new Promise((resolve, reject) => {
 		https

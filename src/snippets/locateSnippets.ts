@@ -17,7 +17,6 @@ import { getLanguages } from '../vscode';
 /**
  * Finds all snippet files for a given language ID, starting from the workspace root and including global snippets.
  * Returns an empty array if there is no open editor and workspace folder.
- *
  * @returns A promise that resolves to an array of file paths.
  */
 async function locateSnippetFiles(langId?: string): Promise<string[]> {
@@ -41,7 +40,6 @@ async function locateSnippetFiles(langId?: string): Promise<string[]> {
 
 /**
  * Searches and finds the global snippets file for a given language.
- *
  * @returns returns a global snippet filepath, or empty string if couldn't find it.
  */
 async function getGlobalLangSnippetFiles(
@@ -65,7 +63,6 @@ async function getGlobalLangSnippetFiles(
 
 /**
  * Finds the code-snippets files in a workspace folder.
- *
  * @param folderPath The path to the workspace folder.
  */
 export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
@@ -77,10 +74,8 @@ export async function findCodeSnippetsFiles(folderPath: string): Promise<string[
 }
 
 /**
- * Returns a tuple of local and global snippets of any language. [ LOCAL, GLOBAL ]
- *
- * @param folderPath The path to the workspace folder.
- * @param filePaths The array to store the found file paths.
+ * Locates all snippet files created by the user
+ * @returns a tuple of snippets of at various locations. [ LOCAL, GLOBAL, PROFILES ]
  */
 async function locateAllSnippetFiles(): Promise<[string[], string[], ProfileSnippetsMap]> {
 	const getLocals = async (): Promise<string[]> => {
@@ -118,9 +113,7 @@ async function locateAllSnippetFiles(): Promise<[string[], string[], ProfileSnip
 	return [locals, globals, profileSnippetsMap];
 }
 
-/**
- * Finds all global snippet files.
- */
+/** Finds all global snippet files. */
 async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 	const snippetFiles: string[] = [];
 

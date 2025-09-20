@@ -17,9 +17,7 @@ import type { VSCodeSnippet } from '../types';
 import { getCurrentLanguage } from '../utils/language';
 import { snippetBodyAsString } from '../utils/string';
 
-/**
- * Handler for the add keybindings commmand
- */
+/** Handler for the add keybindings commmand */
 async function promptAddKeybinding(item: TreePathItem) {
 	const keyBindPath = await getKeybindingsFilePath();
 
@@ -57,9 +55,7 @@ async function promptAddKeybinding(item: TreePathItem) {
 	editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
 }
 
-/**
- * Returns the filepath of the user's keybindings.json file, if it exists.
- */
+/** Returns the filepath of the user's keybindings.json file, if it exists. */
 async function getKeybindingsFilePath(): Promise<string> {
 	const profilePath = await getActiveProfilePath();
 	return path.join(profilePath, 'keybindings.json');

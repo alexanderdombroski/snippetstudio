@@ -21,6 +21,7 @@ import { isSnippetLinked } from './links/config';
 
 // -------------------------- CRUD operations --------------------------
 
+/** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
 async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
 	const snippets = await readSnippetFile(filepath);
 	if (snippets === undefined) {
@@ -42,6 +43,7 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 	await writeSnippetFile(filepath, snippets);
 }
 
+/** removes a single snippet from a snippet file */
 async function deleteSnippet(filepath: string, titleKey: string) {
 	const snippets = await readSnippetFile(filepath);
 	if (snippets === undefined) {
@@ -54,9 +56,7 @@ async function deleteSnippet(filepath: string, titleKey: string) {
 	}
 }
 
-/**
- * Return a snippet from a snippet file. Use tryFlatten if the file is from an extension.
- */
+/** Return a snippet from a snippet file. Use tryFlatten if the file is from an extension. */
 async function readSnippet(
 	filepath: string,
 	snippetTitle: string,
@@ -73,9 +73,7 @@ async function readSnippet(
 	return snippets[snippetTitle];
 }
 
-/**
- * Handler for the snippet.move command
- */
+/** Handler for the snippet.move command */
 async function moveSnippet(item: TreePathItem) {
 	const [actives, locals, profiles] = await locateAllSnippetFiles();
 	const profileFiles = Object.values(profiles)
@@ -103,6 +101,7 @@ async function moveSnippet(item: TreePathItem) {
 	]);
 }
 
+/** deletes snippet file on user confirmation if not linked and exists */
 async function deleteSnippetFile(filepath: string) {
 	if (await isSnippetLinked(filepath)) {
 		showWarningMessage("Don't delete a linked snippet file until you unlink it first!");

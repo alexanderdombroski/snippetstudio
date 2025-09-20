@@ -21,9 +21,7 @@ import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
 import { isSnippetLinked } from './links/config';
 
-/**
- * Creates an empty JSON file with {} and returns string alertStatus
- */
+/** Creates an empty JSON file with {} and returns string alertStatus */
 async function createFile(
 	filepath: string,
 	showInfoMessage: boolean = true,
@@ -43,6 +41,7 @@ async function createFile(
 	}
 }
 
+/** prompts filename and creates empty snippets file in .vscode project folder */
 async function createLocalSnippetsFile(): Promise<void> {
 	const cwd = getWorkspaceFolder();
 	if (!cwd) {
@@ -57,6 +56,7 @@ async function createLocalSnippetsFile(): Promise<void> {
 	await createFile(filepath);
 }
 
+/** creates a language snippet file if doesn't exists */
 async function createGlobalLangFile(): Promise<void> {
 	const langId = getCurrentLanguage() ?? (await selectLanguage());
 	if (langId === undefined) {
@@ -68,6 +68,7 @@ async function createGlobalLangFile(): Promise<void> {
 	await createFile(filepath);
 }
 
+/** creates a .code-snippets file in the user snippets folder */
 async function createGlobalSnippetsFile(): Promise<void> {
 	const dir = await getActiveProfileSnippetsDir();
 	const name = await getFileName();
@@ -79,6 +80,7 @@ async function createGlobalSnippetsFile(): Promise<void> {
 	await createFile(filepath);
 }
 
+/** creates a .code-snippets file with chosen snippets from chosen files */
 async function exportSnippets() {
 	// Select Save Paths
 	const savePath = await getSavePath();
@@ -95,9 +97,7 @@ async function exportSnippets() {
 	await writeSnippetFile(savePath, snippetsToExport, `Snippets exported to ${savePath}`);
 }
 
-/**
- * Lets the user pick snippets from each file and merges them into one object
- */
+/** Lets the user pick snippets from each file and merges them into one object */
 async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 	const filepaths = await chooseSnippetFiles();
 	if (filepaths === undefined) {
@@ -166,9 +166,7 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 	return snippetsToExport;
 }
 
-/**
- * Uses a quickpick to allow the user select one or more snippet paths
- */
+/** Uses a quickpick to allow the user select one or more snippet paths */
 async function chooseSnippetFiles(): Promise<string[] | undefined> {
 	const [actives, locals, profiles] = await locateAllSnippetFiles();
 	const profileFiles = Object.values(profiles)

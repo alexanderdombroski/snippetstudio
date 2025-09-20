@@ -9,6 +9,7 @@ import { getLinkedSnippets } from './links/config';
 import { getProfileIdFromPath } from '../utils/profile';
 import path from 'node:path';
 
+/** Reads all snippets for the active language, creates tree items, and loads the snippet view */
 export default async function loadSnippets(): Promise<[TreeItem, TreeItem[]][]> {
 	const snippetFiles: string[] = await locateSnippetFiles();
 	const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(snippetFiles);
