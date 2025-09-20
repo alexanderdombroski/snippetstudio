@@ -15,6 +15,7 @@ import type {
 import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
+/** returns the location of downloaded extensions for current platform and os */
 export function __getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
 		'Visual Studio Code': '.vscode',
@@ -26,6 +27,7 @@ export function __getExtensionsDirPath(): string {
 	return path.join(os.homedir(), appConfig, 'extensions');
 }
 
+/** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
 	const extDirPath = __getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
@@ -33,6 +35,7 @@ function getPackagePathFromSnippetPath(snippetPath: string): string {
 	return path.join(extDirPath, extensionFolder, 'package.json');
 }
 
+/** lookup what languages an extension snippet filepath is assigned to */
 export async function getExtensionSnippetLangs(snippetPath: string): Promise<string[]> {
 	const pkgPath = getPackagePathFromSnippetPath(snippetPath);
 	const pkg = (await readJson(pkgPath)) as PackageJsonSnippetsSection;
@@ -44,9 +47,7 @@ export async function getExtensionSnippetLangs(snippetPath: string): Promise<str
 		.map(({ language }) => language);
 }
 
-/**
- * Removes textmate snippet scopes from snippet objects
- */
+/** Removes textmate snippet scopes from snippet objects */
 export function flattenScopedExtensionSnippets(
 	snippets: VSCodeSnippets | JSONObject
 ): VSCodeSnippets {
@@ -66,6 +67,7 @@ export function flattenScopedExtensionSnippets(
 
 // -------------------- All Extension Files --------------------
 
+/** finds all extension snippet files and groups them by extension */
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
 	const dir = __getExtensionsDirPath();
 	if (!(await exists(dir))) {
@@ -103,6 +105,7 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 type ExtensionSnippetsMapKVP = [string, { name: string; snippets: ExtensionSnippets[] }];
 type TaskResult = Promise<ExtensionSnippetsMapKVP | undefined>;
 
+/** locates and reads all snippet files returning snippets of a specific language from downloaded extensions */
 export async function findAllExtensionSnipppetsByLang(
 	langId: string
 ): Promise<ExtensionSnippetsMap> {
