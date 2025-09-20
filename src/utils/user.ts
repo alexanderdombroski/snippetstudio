@@ -13,12 +13,14 @@ import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'node:path';
 import { getActiveProfileSnippetsDir } from './profile';
 
+/** requires the user to answer a Y/n question in a modal */
 async function getConfirmation(question: string): Promise<boolean> {
 	// Confirmation message
 	const confirmation = await showInformationMessage(question, { modal: true }, 'Yes', 'No');
 	return confirmation === 'Yes';
 }
 
+/** returns user's highlighted text */
 async function getSelection(): Promise<string | undefined> {
 	const editor = vscode.window.activeTextEditor;
 	if (editor === undefined || editor.selection.isEmpty) {
@@ -35,7 +37,7 @@ async function getSelection(): Promise<string | undefined> {
 		return editor.document.getText(editor.selection);
 	}
 }
-
+/** gets savepath via file explorer */
 async function getSavePathFromDialog(
 	basename: string,
 	startingDir = getDownloadsDirPath()
@@ -52,6 +54,7 @@ async function getSavePathFromDialog(
 	return fileUri?.fsPath;
 }
 
+/** gets a cleaned filename from the user */
 async function getFileName(
 	prompt: string = 'type a filename',
 	silent?: boolean
@@ -70,6 +73,7 @@ async function getFileName(
 	return name;
 }
 
+/** Choose file name, export location, and return a filepath */
 async function getSavePath() {
 	const filename = (await getFileName()) + '.code-snippets';
 	if (filename === 'undefined.code-snippets') {
@@ -103,9 +107,7 @@ async function getSavePath() {
 	return savePath;
 }
 
-/**
- * Returns the base path to save a code snippets file
- */
+/** Returns the base path to save a code snippets file */
 async function chooseLocalGlobal(): Promise<string | undefined> {
 	const locations = [{ label: 'Downloads', description: getDownloadsDirPath() }];
 	const globalPath = await getActiveProfileSnippetsDir();

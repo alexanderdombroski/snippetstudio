@@ -7,18 +7,14 @@ import { getExtensionContext, getUserPath } from './context';
 const DEFAULT_PROFILE_ID = '__default__profile__';
 const getDefaultProfile = () => ({ location: DEFAULT_PROFILE_ID, name: 'Default' }) as const;
 
-/**
- * Returns a list of all Profiles
- */
+/** Returns a list of all Profiles */
 async function getProfiles(): Promise<ProfileInfo[]> {
 	const context = await getExtensionContext();
 	const profiles = context.globalState.get<ProfileInfo[]>('users') ?? [];
 	return [...profiles, getDefaultProfile()];
 }
 
-/**
- * Returns the active VS Code profile
- */
+/** Returns the active VS Code profile */
 async function getActiveProfile(): Promise<ProfileInfo> {
 	const context = await getExtensionContext();
 	const profileAssociations = context.globalState.get<ProfileAssociations>('profileAssociations');
@@ -30,9 +26,7 @@ async function getActiveProfile(): Promise<ProfileInfo> {
 	);
 }
 
-/**
- * Returns the user path for the active profile
- */
+/** Returns the user path for the active profile */
 async function getActiveProfilePath(): Promise<string> {
 	const profile = await getActiveProfile();
 	const userPath = getUserPath();
@@ -41,42 +35,32 @@ async function getActiveProfilePath(): Promise<string> {
 		: path.join(userPath, 'profiles', profile.location);
 }
 
-/**
- * Gets the folderpath for the active user
- */
+/** Gets the folderpath for the active user */
 async function getActiveProfileSnippetsDir(): Promise<string> {
 	const profilePath = await getActiveProfilePath();
 	return path.join(profilePath, 'snippets');
 }
 
-/**
- * Given a language identifier, return the global snippet path for the active user
- */
+/** Given a language identifier, return the global snippet path for the active user */
 async function getGlobalLangFile(langId: string): Promise<string> {
 	const snippetsPath = await getActiveProfileSnippetsDir();
 	return path.join(snippetsPath, `${langId}.json`);
 }
 
-/**
- * Gets all the global snippet paths and returns [] if none
- */
+/** Gets all the global snippet paths and returns [] if none */
 async function getAllGlobalSnippetDirs(): Promise<string[]> {
 	const profiles = await getProfiles();
 	return profiles.map((p) => getPathFromProfileLocation(p.location));
 }
 
-/**
- * Returns the snippets path for the given profile
- */
+/** Returns the snippets path for the given profile */
 function getPathFromProfileLocation(location: string): string {
 	return location === DEFAULT_PROFILE_ID
 		? path.join(getUserPath(), 'snippets')
 		: path.join(getUserPath(), 'profiles', location, 'snippets');
 }
 
-/**
- * Extracts the profile id from the snippets path
- */
+/** Extracts the profile id from the snippets path */
 function getProfileIdFromPath(filePath: string): string {
 	const parts = filePath.split(path.sep);
 

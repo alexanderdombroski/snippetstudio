@@ -7,6 +7,7 @@ import path from 'node:path';
 
 let extensionContext: ExtensionContext | undefined;
 
+/** gets the extension context saved globally */
 export async function getExtensionContext(): Promise<ExtensionContext> {
 	if (!extensionContext) {
 		throw new Error('Extension context not correctly initialized');
@@ -28,9 +29,7 @@ export async function initGlobalStore(context: ExtensionContext): Promise<boolea
 	return !!storage;
 }
 
-/**
- * Reads the globalStorage/storage.json VS Code storage file
- */
+/** Reads the globalStorage/storage.json VS Code storage file */
 export async function __readGlobalStorage(): Promise<GlobalStorage | undefined> {
 	const userPath = __initUserPath();
 	if (userPath) {
@@ -39,6 +38,7 @@ export async function __readGlobalStorage(): Promise<GlobalStorage | undefined> 
 	}
 }
 
+/** handles if a user path doesn't exist */
 export function __initUserPath(): string | undefined {
 	try {
 		const userPath = getUserPath();
@@ -55,6 +55,7 @@ export function __initUserPath(): string | undefined {
 	}
 }
 
+/** returns the vscode user path based on platform and os */
 export function getUserPath(): string {
 	const appNames: Record<string, string> = {
 		'Visual Studio Code': 'Code',

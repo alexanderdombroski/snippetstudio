@@ -1,6 +1,7 @@
 import { executeCommand, Selection, Position } from '../vscode';
 import type { Selection as SelectionType, TextEditor } from 'vscode';
 
+/** makes space delimited words become title case */
 function titleCase(str: string): string {
 	return str
 		.split(' ')
@@ -8,14 +9,17 @@ function titleCase(str: string): string {
 		.join(' ');
 }
 
+/** capitalizes the first letter of a string */
 function capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+/** ensures a snippet code is formatted as a string */
 function snippetBodyAsString(body: string | string[] | null | undefined) {
 	return Array.isArray(body) ? body.join('\n') : (body ?? '');
 }
 
+/** removes an equal amount of leading tabs from every line */
 async function unTabMultiline(selection: SelectionType, editor: TextEditor): Promise<string> {
 	if (selection.isEmpty) {
 		return '';
@@ -34,6 +38,7 @@ async function unTabMultiline(selection: SelectionType, editor: TextEditor): Pro
 	return lines.map((line) => line.substring(spaces)).join('\n');
 }
 
+/** for every line, find the one with the least amount of spaces */
 function countMinSpaces(lines: string[]): number {
 	let minCount = 9999;
 	for (let line of lines) {

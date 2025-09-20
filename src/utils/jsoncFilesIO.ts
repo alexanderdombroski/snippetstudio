@@ -5,6 +5,7 @@ import type { GenericJson, VSCodeSnippets } from '../types';
 import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { getLinkLocations } from '../snippets/links/config';
 
+/** Removes trailing commas and comments from a jsonString */
 export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
 		const { default: stripJsonComments } = await import('strip-json-comments');
@@ -23,13 +24,7 @@ export async function processJsonWithComments(jsonString: string): Promise<any> 
 	}
 }
 
-/**
- * Function that reads and uses all jsonc files asynchronously and independently. It
- * returns an array objects holding groups of snippets from each file
- *
- * @param filePaths
- * @param callback A void function that takes a JSONObject<any> as a parameter
- */
+/** Function that reads and uses all jsonc files asynchronously and independently. It returns an array objects holding groups of snippets from each file */
 export async function readJsoncFilesAsync(
 	filePaths: string[]
 ): Promise<[string, VSCodeSnippets][]> {
@@ -62,6 +57,7 @@ export async function readJsoncFilesAsync(
 	return snippetMap;
 }
 
+/** reads a vscode snippet or textmate formatted snippet file */
 export async function readSnippetFile(
 	filepath: string,
 	tryFlatten?: boolean
@@ -75,6 +71,7 @@ export async function readSnippetFile(
 	}
 }
 
+/** overwrites a snippet file with status updates */
 export async function writeSnippetFile(
 	filepath: string,
 	jsonObject: VSCodeSnippets,
@@ -104,16 +101,19 @@ export async function writeSnippetFile(
 	}
 }
 
+/** reads contents of a json file and handles comments */
 export async function readJsonC(filepath: string): Promise<GenericJson> {
 	const jsonc = await fs.readFile(filepath, 'utf-8');
 	return await processJsonWithComments(jsonc);
 }
 
+/** reads contents of a json file */
 export async function readJson(filepath: string): Promise<GenericJson> {
 	const jsonc = await fs.readFile(filepath, 'utf-8');
 	return JSON.parse(jsonc);
 }
 
+/** writes javascript data to a file */
 export async function writeJson(filepath: string, jsonObj: GenericJson) {
 	const content = Buffer.from(JSON.stringify(jsonObj, null, 4), 'utf-8');
 	await vscode.workspace.fs.writeFile(Uri.file(filepath), content);
