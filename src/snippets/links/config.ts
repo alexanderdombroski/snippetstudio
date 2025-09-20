@@ -10,9 +10,7 @@ import {
 } from '../../utils/profile';
 import { exists, isParentDir } from '../../utils/fsInfo';
 
-/**
- * Updates all settings.json files to add the target filename
- */
+/** Updates all settings.json files to add the target filename */
 export async function addFileLink(filename: string, profileLocations: string[]) {
 	const links = await getLinkedSnippets();
 	links[filename] = profileLocations;
@@ -20,9 +18,7 @@ export async function addFileLink(filename: string, profileLocations: string[]) 
 	await updateAllSettings(links);
 }
 
-/**
- * Updates all settings.json files to remove the target filename
- */
+/** Updates all settings.json files to remove the target filename */
 export async function removeFileLink(filename: string) {
 	const links = await getLinkedSnippets();
 	delete links[filename];
@@ -30,9 +26,7 @@ export async function removeFileLink(filename: string) {
 	await updateAllSettings(links);
 }
 
-/**
- * Returns the linked snippet file basenames
- */
+/** Returns the linked snippet file basenames */
 export async function getLinkedSnippets(): Promise<SnippetLinks> {
 	const settingsPath = path.join(getUserPath(), 'settings.json');
 	if (!(await exists(settingsPath))) {
@@ -48,9 +42,7 @@ export async function getLinkedSnippets(): Promise<SnippetLinks> {
 	return links ?? {};
 }
 
-/**
- * Create or Read settings file, and write snippet links to settings
- */
+/** Create or Read settings file, and write snippet links to settings */
 async function updateAllSettings(newLinksValue: SnippetLinks) {
 	const { createFile } = await import('../newSnippetFile.js');
 	const profiles = await getProfiles();
@@ -70,9 +62,7 @@ async function updateAllSettings(newLinksValue: SnippetLinks) {
 	);
 }
 
-/**
- * Gets the link paths for a given filepath
- */
+/** Gets the link paths for a given filepath */
 export async function getLinkLocations(filepath: string): Promise<string[]> {
 	if (!isUserSnippet(filepath)) {
 		return [];
@@ -87,6 +77,7 @@ export async function getLinkLocations(filepath: string): Promise<string[]> {
 
 /**
  * returns trues if a snippet file is linked
+ * @param filepath filepath of the snippet
  * @param strict true if linked to any profile
  */
 export async function isSnippetLinked(filepath: string, strict?: boolean): Promise<boolean> {

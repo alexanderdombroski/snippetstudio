@@ -17,6 +17,7 @@ import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { exists } from '../../utils/fsInfo';
 import type { VSCodeSnippets } from '../../types';
 
+/** use quickpick to select profiles in which a snippet file should be tracked and modified */
 export async function manageLinkLocations(isAlreadyLinked: boolean, filepath: string) {
 	const linkedSnippetPathDirs = isAlreadyLinked
 		? await getLinkLocations(filepath)
@@ -74,6 +75,7 @@ export async function manageLinkLocations(isAlreadyLinked: boolean, filepath: st
 
 // -------------------- Helpers --------------------
 
+/** ensures other profiles don't have snippet files of the same name */
 async function canBeLinked(filename: string): Promise<boolean> {
 	const allDirs = await getAllGlobalSnippetDirs();
 	if (allDirs.length <= 1) {
