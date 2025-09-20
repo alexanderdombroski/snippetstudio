@@ -29,6 +29,20 @@ body:
     validations:
       required: true
 
+  - type: dropdown
+    id: platform
+    attributes:
+      label: platform
+      options:
+        - VS Code
+        - VSCodium
+        - Cursur
+        - VS Code - Insiders
+        - Other
+      default: VS Code
+    validations:
+      required: true
+
   - type: input
     id: os-other
     attributes:
