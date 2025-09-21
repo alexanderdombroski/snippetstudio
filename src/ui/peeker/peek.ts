@@ -10,6 +10,7 @@ import { readSnippetFile } from '../../utils/jsoncFilesIO';
 
 let snippetPeekProvider: SnippetPeekProvider | undefined;
 
+/** creates a peek and text document to store the snippets in */
 export async function peekAtSnippet(
 	context: ExtensionContext,
 	filepath: string,

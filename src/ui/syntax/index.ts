@@ -19,6 +19,7 @@ const diagnosticSuppressorDecorationOverLine = createTextEditorDecorationType({
 	isWholeLine: true,
 });
 
+/** adds text decoration to highlight snippet insertion features within a text editor */
 export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 	const document = editor.document;
 	const shouldMaskDiagnostics =
@@ -63,6 +64,7 @@ export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 	}
 }
 
+/** moves a vscode range down a line and shrinks it to fit the textdocument */
 export function __moveRangeDown(range: RangeType, document: TextDocument): RangeType {
 	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
 	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);

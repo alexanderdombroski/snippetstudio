@@ -10,6 +10,7 @@ import type { Location, TextDocumentContentProvider, Uri as UriType } from 'vsco
 import type { VSCodeSnippets } from '../../types';
 import { highlightSnippetInsertionFeatures } from '../syntax';
 
+/** Text document provider that creates documents for use in peeks */
 export default class SnippetPeekProvider implements TextDocumentContentProvider {
 	private snippets = new Map<string, string>();
 	private scheme = 'snippetviewer' as const;
@@ -30,10 +31,12 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 		});
 	}
 
+	/** get the text content of a document */
 	provideTextDocumentContent(uri: UriType): string {
 		return this.snippets.get(uri.toString()) ?? '// snippet not found';
 	}
 
+	/** display a peek with the clicked snippet, and every other snippet in the file */
 	async showPeek(snippets: VSCodeSnippets, preferred: string) {
 		const language = getCurrentLanguage() ?? 'plaintext';
 		const commentToken = getCommentToken(language);
@@ -95,6 +98,8 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 }
 
 /* c8 ignore start */
+
+/** returns the comment syntax for a given language */
 function getCommentToken(langId: string): string | [string, string] {
 	switch (langId) {
 		case 'javascript':
