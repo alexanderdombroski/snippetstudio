@@ -32,21 +32,20 @@ body:
   - type: dropdown
     id: platform
     attributes:
-      label: platform
+      label: Platform
       options:
         - VS Code
         - VSCodium
         - Cursur
         - VS Code - Insiders
         - Other
-      default: VS Code
     validations:
       required: true
 
   - type: input
-    id: os-other
+    id: os/platform-other
     attributes:
-      label: If Other, specify OS (optional)
+      label: If Other, specify OS and/or platform (optional)
       placeholder: "e.g. ChromeOS, BSD"
 
   - type: input
