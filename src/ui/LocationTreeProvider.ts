@@ -12,6 +12,7 @@ import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
 
+/** Tree View to display all snippet files and locations */
 export default class LocationTreeProvider implements TreeDataProvider<TreeItem> {
 	private profileDropdowns: SnippetCategoryTreeItem[] = [];
 	private localTreeItems: TreeItem[] = [];
@@ -21,11 +22,14 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	private debounceTimer: NodeJS.Timeout | undefined;
 
 	// ---------- Constructor ---------- //
+
 	constructor() {
 		this.__refresh();
 	}
 
 	// ---------- __Refresh Methods ---------- //
+
+	/** finds all snippet files and redisplays them */
 	async __refresh() {
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
 		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
@@ -62,6 +66,8 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
 		this._onDidChangeTreeData.fire();
 	}
+
+	/** ensures a refresh doesn't happen too often */
 	public debounceRefresh() {
 		if (this.debounceTimer) {
 			clearTimeout(this.debounceTimer); // Clear previous timer
@@ -73,9 +79,13 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	}
 
 	// ---------- INIT TREE Methods ---------- //
+
+	/** returns a tree item */
 	getTreeItem(element: TreeItem): TreeItem | Thenable<TreeItem> {
 		return element;
 	}
+
+	/** recursively returns snippet files in groups layered as shown in the tree view */
 	async getChildren(element?: TreeItem | undefined): Promise<TreeItem[] | null | undefined> {
 		if (this.localTreeItems.length === 0 && this.globalTreeItems.length === 0) {
 			return [];

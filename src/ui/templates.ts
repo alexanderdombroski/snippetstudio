@@ -15,6 +15,7 @@ import {
 	getProfiles,
 } from '../utils/profile';
 
+/** A TreeItem that contains a path. */
 export class TreePathItem extends TreeItem {
 	constructor(
 		public readonly label: string,
@@ -24,6 +25,8 @@ export class TreePathItem extends TreeItem {
 		super(label, collapsibleState);
 	}
 }
+
+/** A TreeItem that represents a snippet category. */
 export class SnippetCategoryTreeItem extends TreeItem {
 	constructor(
 		public readonly label: string,
@@ -37,7 +40,6 @@ export class SnippetCategoryTreeItem extends TreeItem {
 
 /**
  * Creates a TreeItem from a VSCodeSnippet.
- *
  * @param snippetTitle The title of the snippet.
  * @param snippet The VSCodeSnippet object.
  * @returns A TreeItem representing the snippet.
@@ -67,6 +69,7 @@ export function createTreeItemFromSnippet(
 	return treeItem;
 }
 
+/** Creates a TreeItem from a file path. */
 export function createTreeItemFromFilePath(
 	filepath: string,
 	collapsibleState: TreeItemCollapsibleState,
@@ -82,6 +85,7 @@ export function createTreeItemFromFilePath(
 	return treeItem;
 }
 
+/** Creates a TreeItem for the selected language. */
 export function selectedLanguageTemplate(
 	langId: string | undefined,
 	collapsible: boolean
@@ -96,6 +100,7 @@ export function selectedLanguageTemplate(
 	return treeItem;
 }
 
+/** Creates a TreeItem for other vscode profiles. */
 export function unloadedDropdownTemplate(): TreeItemType {
 	const unloadedDropdown = new TreeItem('Other Profiles', Collapsed);
 	unloadedDropdown.contextValue = 'disabled-dropdown';
@@ -105,6 +110,7 @@ export function unloadedDropdownTemplate(): TreeItemType {
 	return unloadedDropdown;
 }
 
+/** Creates a TreeItem for a snippet file location. */
 export function snippetLocationTemplate(
 	filepath: string,
 	contextValue: string = 'snippet-filepath',
@@ -134,18 +140,23 @@ export function snippetLocationTemplate(
 
 // ---------- Extension Dropdowns ----------
 
+/** Creates a dropdown for extension snippets. */
 export function extensionCategoryDropdown() {
 	const dropdown = new TreeItem('Extension Snippets', Collapsed);
 	dropdown.tooltip = 'Snippets that come packaged with extensions.';
 	dropdown.iconPath = new ThemeIcon('extensions');
 	return dropdown;
 }
+
+/** Creates a dropdown for a single extension. */
 function extensionDropdown(indentifer: string, name: string): TreeItemType {
 	const treeItem = new TreeItem(name, Collapsed);
 	treeItem.description = indentifer;
 	treeItem.contextValue = 'extension-dropdown';
 	return treeItem;
 }
+
+/** Creates a dropdown for an extension's snippets file. */
 function extensionSnippetsDropdown(
 	contribution: SnippetContribution,
 	collapsible?: boolean
@@ -156,6 +167,8 @@ function extensionSnippetsDropdown(
 }
 
 type DropdownWithItems = [TreeItemType, TreePathItem[]];
+
+/** Creates TreeItems for each extension's snippet files. */
 export function extensionTreeItems(fileMap: ExtensionSnippetFilesMap): DropdownWithItems[] {
 	return Object.entries(fileMap).map(([identifier, ext]): DropdownWithItems => {
 		const dropdown = extensionDropdown(identifier, ext.name);
@@ -167,6 +180,8 @@ export function extensionTreeItems(fileMap: ExtensionSnippetFilesMap): DropdownW
 
 type DropdownWithFileItems = [TreePathItem, TreePathItem[]];
 type DropdownWithDropdowns = [TreeItemType, DropdownWithFileItems[]];
+
+/** Creates TreeItems for each extension's snippets. */
 export function extensionSnippetsTreeItems(
 	snippetsMap: ExtensionSnippetsMap
 ): DropdownWithDropdowns[] {
@@ -188,9 +203,7 @@ export function extensionSnippetsTreeItems(
 
 // ---------- Dropdowns for Snippet Location View ----------
 
-/**
- * returns [top level dropdowns, profile dropdowns]
- */
+/** Creates dropdowns for snippet locations (global, local, extensions, profiles). */
 export async function snippetLocationDropdownTemplates(
 	global_collapsed: boolean,
 	local_collapsed: boolean,

@@ -22,9 +22,7 @@ type ProfileSnippetsMap = {
 	[location: string]: string[];
 };
 
-/**
- * Linked snippet file basenames and which profile locations they're located in
- */
+/** Linked snippet file basenames and which profile locations they're located in */
 type SnippetLinks = {
 	[file: string]: string[];
 };

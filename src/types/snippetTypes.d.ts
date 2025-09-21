@@ -1,29 +1,19 @@
 interface VSCodeSnippet {
-	/**
-	 * The prefix to trigger the snippet. This appears as the title of the autocomplete option
-	 */
+	/** The prefix to trigger the snippet. This appears as the title of the autocomplete option */
 	prefix: string | string[];
 
-	/**
-	 * The snippet body. Can be a single string or an array of strings.
-	 */
+	/** The snippet body. Can be a single string or an array of strings. */
 	body: string | string[];
 
-	/**
-	 * The snippet description. This appears when hovering over the autocomplete option
-	 */
+	/** The snippet description. This appears when hovering over the autocomplete option */
 	description?: string;
 
-	/**
-	 * The scope(s) in which the snippet is valid.
-	 */
+	/** The scope(s) in which the snippet is valid. */
 	scope?: string;
 }
 
 interface VSCodeSnippets {
-	/**
-	 * snippetTitle appears to the right of autocomplete trigger
-	 */
+	/** snippetTitle appears to the right of autocomplete trigger */
 	[snippetTitle: string]: VSCodeSnippet;
 }
 
@@ -32,29 +22,19 @@ interface SnippetMap {
 }
 
 interface SnippetData {
-	/**
-	 * snippetTitle appears to the right of autocomplete trigger
-	 */
+	/** snippetTitle appears to the right of autocomplete trigger */
 	snippetTitle: string;
 
-	/**
-	 * The prefix to trigger the snippet. This appears as the title of the autocomplete option
-	 */
+	/** The prefix to trigger the snippet. This appears as the title of the autocomplete option */
 	prefix: string | string[];
 
-	/**
-	 * The snippet description. This appears when hovering over the autocomplete option
-	 */
+	/** The snippet description. This appears when hovering over the autocomplete option */
 	description?: string;
 
-	/**
-	 * The scope(s) in which the snippet is valid.
-	 */
+	/** The scope(s) in which the snippet is valid. */
 	scope?: string;
 
-	/**
-	 * Filepath the snippet will be stored in
-	 */
+	/** Filepath the snippet will be stored in */
 	filename: string;
 }
 

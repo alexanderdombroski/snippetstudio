@@ -18,6 +18,7 @@ import type { SnippetLinks } from '../types';
 
 type ParentChildTreeItems = [TreeItem, TreeItem[]][];
 
+/** Creates a tree view to display all snippets of the active language */
 export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	// ---------- Attributes ---------- //
 	private snippetTreeItems: ParentChildTreeItems | undefined;
@@ -31,9 +32,16 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	private _userPath = getUserPath();
 
 	// ---------- Constructor ---------- //
+
+	/** inits snippet view and refreshing */
 	constructor() {
 		this.langId = getCurrentLanguage();
-		this.initPaths().then(() => {
+		(async () => {
+			this._activePaths = [
+				shortenFullPath(await getActiveProfileSnippetsDir()),
+				shortenFullPath(path.join(getWorkspaceFolder() ?? 'not found', '.vscode')),
+			];
+		})().then(() => {
 			this.refresh();
 		});
 
@@ -47,12 +55,8 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	}
 
 	// ---------- Refresh Methods ---------- //
-	private async initPaths() {
-		this._activePaths = [
-			shortenFullPath(await getActiveProfileSnippetsDir()),
-			shortenFullPath(path.join(getWorkspaceFolder() ?? 'not found', '.vscode')),
-		];
-	}
+
+	/** reread and format all snippet files */
 	private async refresh() {
 		this._links = await getLinkedSnippets();
 		this._activeProfileLocation = (await getActiveProfile()).location;
@@ -66,6 +70,8 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 		}
 		this._onDidChangeTreeData.fire();
 	}
+
+	/** applies debounce to refresh */
 	public debounceRefresh() {
 		if (this.debounceTimer) {
 			clearTimeout(this.debounceTimer); // Clear previous timer
@@ -77,10 +83,13 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	}
 
 	// ---------- INIT TREE Methods ---------- //
+
+	/** returns a tree item */
 	getTreeItem(element: TreeItem): TreeItem | Thenable<TreeItem> {
 		return element;
 	}
 
+	/** loads the tree items recursively in groups */
 	async getChildren(element?: TreeItem): Promise<TreeItem[] | undefined> {
 		// Handle child items
 		if (element) {

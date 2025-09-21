@@ -14,8 +14,7 @@ import {
 
 import { initGlobalStore } from './utils/context';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+/** This method is called when your extension is activated */
 export async function activate(context: ExtensionContext) {
 	if (!(await initGlobalStore(context))) {
 		return;
@@ -62,5 +61,5 @@ export async function activate(context: ExtensionContext) {
 	console.log('The extension "snippetstudio" is now active!');
 }
 
-// This method is called when your extension is deactivated
+/** This method is called when your extension is deactivated */
 export function deactivate() {}
