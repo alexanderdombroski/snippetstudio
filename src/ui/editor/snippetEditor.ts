@@ -11,6 +11,7 @@ import { getCurrentUri } from '../../utils/fsInfo';
 import type { DiagnosticsLevel, VSCodeSnippet } from '../../types';
 import { titleCase } from '../../utils/string';
 
+/** registers all snippet editor ui commands */
 function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetEditorProvider) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.editor.save', async () => {
@@ -43,6 +44,7 @@ function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetE
 	});
 }
 
+/** saves a snippet and closes the editor */
 export async function __saveSnippet(provider: SnippetEditorProvider) {
 	const editor = vscode.window.activeTextEditor;
 	if (editor?.document.uri.scheme !== 'snippetstudio') {

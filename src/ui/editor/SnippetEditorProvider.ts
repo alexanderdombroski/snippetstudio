@@ -15,6 +15,7 @@ import SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 import { highlightSnippetInsertionFeatures } from '../syntax';
 
+/** Provider that handles a custom buffer editor and changes within the editor */
 export default class SnippetEditorProvider implements FileSystemProvider {
 	private _emitter: EventEmitter<FileChangeEvent[]> = new vscode.EventEmitter<FileChangeEvent[]>();
 	readonly onDidChangeFile: Event<FileChangeEvent[]> = this._emitter.event;
@@ -39,6 +40,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		});
 	}
 
+	/** triggers change events and refreshes, including editor syntax highlighting */
 	handleDocumentChange(changeEvent: TextDocumentChangeEvent): void {
 		if (
 			changeEvent.document.uri.scheme !== this.scheme ||
@@ -85,6 +87,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		}
 	}
 
+	/** creates new directory */
 	createDirectory(uri: UriType): void | Thenable<void> {
 		const dirPath = uri.path;
 		const parentPath = dirPath.substring(0, dirPath.lastIndexOf('/'));
@@ -107,6 +110,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		}
 	}
 
+	/** returns the files within a virtual directory */
 	readDirectory(uri: UriType): [string, FileType][] | Thenable<[string, FileType][]> {
 		const files: [string, FileType][] = Array.from(this._files.keys())
 			.filter((path) => path.startsWith(uri.path))
@@ -114,6 +118,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		return files;
 	}
 
+	/** returns the contents of a buffer */
 	readFile(uri: UriType): Uint8Array | Thenable<Uint8Array> {
 		const path = uri.path;
 		if (this._files.has(path)) {
@@ -122,6 +127,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		throw vscode.FileSystemError.FileNotFound();
 	}
 
+	/** writes to a buffer and triggers change events */
 	writeFile(
 		uri: UriType,
 		content: Uint8Array,
@@ -131,6 +137,8 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		this._files.set(uri.path, content);
 		this._emitter.fire([{ type: vscode.FileChangeType.Changed, uri }]);
 	}
+
+	/** creates a snippet editor buffer and directory to store it in */
 	async createFile(uri: UriType, content: string = '') {
 		await this.writeFile(uri, new TextEncoder().encode(content), {
 			create: true,
@@ -144,11 +152,13 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		this._directories.get(parentPath)?.add(fileName);
 	}
 
+	/** create a new buffer, track snippet data, and open an editor */
 	async mountSnippet(uri: UriType, snippetData: SnippetData, body: string | undefined = undefined) {
 		this._snippetDataManager.setData(uri.path, snippetData);
 		await this.createFile(uri, body ?? '');
 	}
 
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	delete(
 		uri: UriType,
 		// eslint-disable-next-line no-unused-vars
@@ -167,6 +177,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		}
 	}
 
+	/** returns snippet data of an open editor */
 	getSnippetData(): SnippetData | undefined {
 		const uri = getCurrentUri();
 		if (uri) {
@@ -174,6 +185,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		}
 	}
 
+	// eslint-disable-next-line jsdoc/require-jsdoc
 	rename(
 		// eslint-disable-next-line no-unused-vars
 		oldUri: UriType,
@@ -182,11 +194,14 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 		// eslint-disable-next-line no-unused-vars
 		options: { overwrite: boolean }
 	): void | Thenable<void> {}
-	// eslint-disable-next-line no-unused-vars
+
+	// eslint-disable-next-line jsdoc/require-jsdoc, no-unused-vars
 	watch(uri: UriType, options: { recursive: boolean; excludes: string[] }): Disposable {
 		// Implement watch logic (e.g., for external changes).
 		return new vscode.Disposable(() => {}); // Placeholder
 	}
+
+	/** returns data about the file */
 	stat(uri: UriType): FileStat | Thenable<FileStat> {
 		const path = uri.path;
 		if (this._files.has(path)) {
@@ -210,7 +225,6 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 
 /**
  * Adds a backspace before a snippet tabstop, placeholder, or choice
- *
  * @param text string to run the operation on
  * @param offset the position of the number inside the potential tabstop/placeholder/choice
  * @returns the updated text or undefined if nothing changed

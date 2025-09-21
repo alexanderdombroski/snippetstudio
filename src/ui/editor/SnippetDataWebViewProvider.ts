@@ -14,6 +14,7 @@ import { getCurrentUri } from '../../utils/fsInfo';
 import SnippetDataManager from './SnippetDataManager';
 import type { SnippetData } from '../../types';
 
+/** */
 export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 	private _view?: WebviewView;
 	private _snippetDataManager: SnippetDataManager;
@@ -25,6 +26,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 		this._snippetDataManager = manager;
 	}
 
+	/** loads the webview and sets up messages */
 	async resolveWebviewView(
 		webviewView: WebviewView,
 		// eslint-disable-next-line no-unused-vars
@@ -51,7 +53,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 			.catch((reason) => console.error(reason));
 	}
 
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line jsdoc/require-jsdoc, no-unused-vars
 	private async _getHtmlForWebview(webview: Webview) {
 		const htmlPath = Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
 
@@ -65,6 +67,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 
 	// --------------- Message Passing ---------------
 
+	/** sets up message passing between snippet editor and data view */
 	private async setUpMessages(webviewView: WebviewView) {
 		const uri = getCurrentUri();
 		if (uri) {
@@ -100,6 +103,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 
 	private schemeNotifier: Disposable | undefined;
 
+	/** sets up messages passing and sets up snippet format */
 	public initMessages(uri: UriType) {
 		const view = this._view?.webview;
 		if (view) {

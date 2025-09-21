@@ -20,6 +20,7 @@ import type { SnippetData } from '../../types';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
 
+/** completes all setup of editor, snippet data view, and commands */
 export async function __initEditing(context: ExtensionContext): Promise<SnippetEditorProvider> {
 	if (!snippetEditorProvider) {
 		const snippetDataManager = new SnippetDataManager();
@@ -40,6 +41,7 @@ export async function __initEditing(context: ExtensionContext): Promise<SnippetE
 	return snippetEditorProvider;
 }
 
+/** start up a new buffer editor to create/edit a snippet */
 async function editSnippet(
 	context: ExtensionContext,
 	langId: string,
@@ -85,6 +87,7 @@ async function editSnippet(
 
 let editorCount = 0;
 
+/** create a new editor uri */
 export function __newSnippetEditorUri(
 	langId: string = 'plaintext',
 	showScope: boolean = true
@@ -96,9 +99,7 @@ export function __newSnippetEditorUri(
 	});
 }
 
-/**
- * Escapes all instances of placholders and tabstops
- */
+/** Escapes all instances of placholders and tabstops */
 export function __escapeAllSnippetInsertionFeatures(str: string): string {
 	// Escape tabstops
 	let escapedString = str.replace(/\$(\d+)/g, '\\$$$1');

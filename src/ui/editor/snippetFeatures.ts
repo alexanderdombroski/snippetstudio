@@ -11,6 +11,7 @@ import vscode, {
 } from '../../vscode';
 import type SnippetEditorProvider from './SnippetEditorProvider';
 
+/** registers all snippet feature insertion commands and keybinds */
 export default function initSnippetFeatureCommands(
 	context: ExtensionContext,
 	provider: SnippetEditorProvider
@@ -199,6 +200,7 @@ export default function initSnippetFeatureCommands(
 	);
 }
 
+/** finds the next unsused insertion feature number from the editor */
 export function __getNextFeatureNumber(editor: TextEditor): string | number {
 	const regex = /(?<!\\)\$\{?(\d{1,2})/g;
 	const text = editor.document.getText();
@@ -218,10 +220,12 @@ export function __getNextFeatureNumber(editor: TextEditor): string | number {
 	return `\${1:${max + 1}}`;
 }
 
+/** returns a comma delimited list of snippet context variables */
 export function __variableList(): string {
 	return 'TM_SELECTED_TEXT,TM_CURRENT_LINE,TM_CURRENT_WORD,TM_LINE_INDEX,TM_LINE_NUMBER,TM_FILENAME,TM_FILENAME_BASE,TM_DIRECTORY,TM_FILEPATH,RELATIVE_FILEPATH,CLIPBOARD,WORKSPACE_NAME,WORKSPACE_FOLDER,CURSOR_INDEX,CURSOR_NUMBER,CURRENT_YEAR,CURRENT_YEAR_SHORT,CURRENT_MONTH,CURRENT_MONTH_NAME,CURRENT_MONTH_NAME_SHORT,CURRENT_DATE,CURRENT_DAY_NAME,CURRENT_DAY_NAME_SHORT,CURRENT_HOUR,CURRENT_MINUTE,CURRENT_SECOND,CURRENT_SECONDS_UNIX,CURRENT_TIMEZONE_OFFSET,RANDOM,RANDOM_HEX,UUID,BLOCK_COMMENT_START,BLOCK_COMMENT_END,LINE_COMMENT';
 }
 
+/** choose a variable from a quick pick */
 export async function __showVariableQuickPick(): Promise<string | undefined> {
 	const variables = [
 		// TextMate Variables

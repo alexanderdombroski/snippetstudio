@@ -111,6 +111,7 @@ export default [
 						FunctionDeclaration: true,
 						MethodDefinition: true,
 					},
+					checkConstructors: false
 				},
 			],
 			'jsdoc/require-returns': 'off',
@@ -134,7 +135,7 @@ export default [
 		},
 		files: ['**/*.test.ts'],
 		rules: {
-			'jsdoc/require-jsdoc': 'off'
-		}
+			'jsdoc/require-jsdoc': 'off',
+		},
 	},
 ];
