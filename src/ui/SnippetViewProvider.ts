@@ -97,7 +97,6 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 				return this.activeDropdowns;
 			}
 
-			// TODO - is it safe to remove this if statement?
 			if (element.contextValue === 'disabled-dropdown') {
 				return this.snippetTreeItems
 					?.map((group) => group[0])

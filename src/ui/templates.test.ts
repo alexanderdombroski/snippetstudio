@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import path from 'node:path';
 import {
 	TreePathItem,
@@ -14,7 +14,7 @@ import {
 	snippetLocationDropdownTemplates,
 } from './templates';
 import type { TreeItem } from 'vscode';
-import { Collapsed, Expanded, None, ThemeIcon } from '../vscode';
+import { Collapsed, Expanded, getConfiguration, None, ThemeIcon } from '../vscode';
 import type { VSCodeSnippet, ExtensionSnippetFilesMap, ExtensionSnippetsMap } from '../types';
 import { getWorkspaceFolder, shortenFullPath } from '../utils/fsInfo';
 import {
@@ -192,6 +192,7 @@ describe('UI Templates', () => {
 
 	describe('snippetLocationDropdownTemplates', () => {
 		beforeEach(() => {
+			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 			vi.mocked(getActiveProfileSnippetsDir).mockResolvedValue('/path/to/active/snippets');
 			vi.mocked(getActiveProfile).mockResolvedValue({
 				name: 'Default',
@@ -241,7 +242,7 @@ describe('UI Templates', () => {
 			expect(topLevel.find((item) => item.label === 'Local Snippets')).toBeUndefined();
 		});
 
-		it('should not show extension snippets if extension_showing is false', async () => {
+		it('should not show extension snippets if extension_showing is false (none found)', async () => {
 			const [topLevel] = await snippetLocationDropdownTemplates(false, false, false, {});
 			expect(topLevel.length).toBe(3); // Global, Local, Profiles
 			expect(topLevel.find((item) => item.label === 'Extension Snippets')).toBeUndefined();
@@ -249,6 +250,21 @@ describe('UI Templates', () => {
 
 		it('should not create profile dropdowns if only one profile exists', async () => {
 			vi.mocked(getProfiles).mockResolvedValue([{ name: 'Default', location: 'default/location' }]);
+			const [topLevel, profileDropdowns] = await snippetLocationDropdownTemplates(
+				false,
+				false,
+				true,
+				{}
+			);
+			expect(topLevel.find((item) => item.label === 'Profiles Snippets')).toBeUndefined();
+			expect(profileDropdowns.length).toBe(0);
+		});
+		it('should not create profile dropdowns if showProfiles config is disabled', async () => {
+			vi.mocked(getProfiles).mockResolvedValue([
+				{ name: 'Default', location: 'default/location' },
+				{ name: 'profile2', location: 'profile2/location' },
+			]);
+			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => false) });
 			const [topLevel, profileDropdowns] = await snippetLocationDropdownTemplates(
 				false,
 				false,

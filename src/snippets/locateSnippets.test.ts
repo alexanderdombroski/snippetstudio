@@ -8,7 +8,7 @@ import {
 	getActiveProfile,
 	getPathFromProfileLocation,
 } from '../utils/profile';
-import { getLanguages } from '../vscode';
+import { getConfiguration, getLanguages } from '../vscode';
 
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/profile');
@@ -32,6 +32,7 @@ describe('locateSnippets', () => {
 
 	describe('locateAllSnippetFiles', () => {
 		it('should locate all snippet files across profiles and workspace', async () => {
+			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 			(getLanguages as Mock).mockResolvedValue(['typescript']);
 			(getWorkspaceFolder as Mock).mockReturnValue('/workspace');
 			(getActiveProfileSnippetsDir as Mock).mockResolvedValue('/profiles/active/snippets');
