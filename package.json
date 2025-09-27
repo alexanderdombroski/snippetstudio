@@ -600,6 +600,11 @@
 		"configuration": {
 			"title": "SnippetStudio Configuration",
 			"properties": {
+				"snippetstudio.view.showExtensions": {
+					"type": "boolean",
+					"default": true,
+					"description": "Display extension snippets in the snippets and location views."
+				},
 				"snippetstudio.confirmSnippetDeletion": {
 					"type": "boolean",
 					"default": false,

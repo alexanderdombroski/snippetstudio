@@ -2,7 +2,6 @@ import * as fs from 'node:fs/promises';
 import vscode, { showErrorMessage, showInformationMessage, Uri } from '../vscode';
 import path from 'node:path';
 import type { GenericJson, VSCodeSnippets } from '../types';
-import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { getLinkLocations } from '../snippets/links/config';
 
 /** Removes trailing commas and comments from a jsonString */
@@ -65,7 +64,11 @@ export async function readSnippetFile(
 	try {
 		const jsonc = await fs.readFile(filepath, 'utf-8');
 		const cleanedJson: VSCodeSnippets = await processJsonWithComments(jsonc);
-		return tryFlatten ? flattenScopedExtensionSnippets(cleanedJson) : cleanedJson;
+		if (tryFlatten) {
+			const { flattenScopedExtensionSnippets } = await import('../snippets/extension/locate.js');
+			return flattenScopedExtensionSnippets(cleanedJson);
+		}
+		return cleanedJson;
 	} catch {
 		showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
 	}

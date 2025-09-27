@@ -1,5 +1,5 @@
 import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode from '../vscode';
+import vscode, { getConfiguration } from '../vscode';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import {
 	snippetLocationDropdownTemplates,
@@ -7,7 +7,6 @@ import {
 	snippetLocationTemplate,
 	extensionTreeItems,
 } from './templates';
-import { findAllExtensionSnippetsFiles } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
@@ -62,8 +61,11 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 				];
 			})
 		);
-		const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
-		this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
+		if (getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
+			const { findAllExtensionSnippetsFiles } = await import('../snippets/extension/locate.js');
+			const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
+			this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
+		}
 		this._onDidChangeTreeData.fire();
 	}
 

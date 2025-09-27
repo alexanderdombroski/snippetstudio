@@ -1,5 +1,5 @@
 import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode, { onDidChangeActiveTextEditor } from '../vscode';
+import vscode, { getConfiguration, onDidChangeActiveTextEditor } from '../vscode';
 import loadSnippets from '../snippets/loadSnippets';
 import {
 	unloadedDropdownTemplate,
@@ -11,7 +11,6 @@ import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, isParentDir, shortenFullPath } from '../utils/fsInfo';
 import path from 'node:path';
-import { findAllExtensionSnipppetsByLang } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
 import type { SnippetLinks } from '../types';
@@ -62,7 +61,8 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 		this._activeProfileLocation = (await getActiveProfile()).location;
 		this.snippetTreeItems = await loadSnippets();
 		this.activeDropdowns = this.snippetTreeItems?.map((group) => group[0])?.filter(this.isActive);
-		if (this.langId) {
+		if (this.langId && getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
+			const { findAllExtensionSnipppetsByLang } = await import('../snippets/extension/locate.js');
 			const extensionSnippetsMap = await findAllExtensionSnipppetsByLang(this.langId);
 			this.extensionDropdownsTuple = extensionSnippetsTreeItems(extensionSnippetsMap);
 		} else {
