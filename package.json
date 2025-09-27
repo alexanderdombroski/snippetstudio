@@ -23,7 +23,6 @@
 		"vscode": "^1.99.0",
 		"node": ">=20.0.0"
 	},
-	"changelog": "",
 	"capabilities": {
 		"virtualWorkspaces": {
 			"supported": "limited",
@@ -810,7 +809,7 @@
 		"@typescript-eslint/parser": "^8.43.0",
 		"@vitest/coverage-v8": "^3.2.4",
 		"@vitest/ui": "^3.2.4",
-		"@vscode/vsce": "^3.6.0",
+		"@vscode/vsce": "^3.6.2",
 		"esbuild": "^0.25.8",
 		"esbuild-visualizer": "^0.7.0",
 		"eslint": "^9.35.0",
