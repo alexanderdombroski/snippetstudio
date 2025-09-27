@@ -26,7 +26,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		this.__refresh();
 	}
 
-	// ---------- __Refresh Methods ---------- //
+	// ---------- Refresh Methods ---------- //
 
 	/** finds all snippet files and redisplays them */
 	async __refresh() {

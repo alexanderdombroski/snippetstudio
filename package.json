@@ -600,6 +600,11 @@
 		"configuration": {
 			"title": "SnippetStudio Configuration",
 			"properties": {
+				"snippetstudio.view.showProfiles": {
+					"type": "boolean",
+					"default": true,
+					"description": "Display snippets from other profiles in the snippets and location views."
+				},
 				"snippetstudio.view.showExtensions": {
 					"type": "boolean",
 					"default": true,

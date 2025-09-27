@@ -33,7 +33,16 @@
   - Add 2.0.0 pages
 - **SnippetManagement** (2.6)
   - Rename .code-snippets Files
-  - Simplified snippet view option
+
+## [2.6.0] - Date
+
+### Added
+
+- config options to skip loading snippets from extensions and/or other profiles
+
+### Fixed
+
+### Changed
 
 ## [2.5.0] - 2025-09-15
 

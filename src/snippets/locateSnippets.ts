@@ -10,7 +10,7 @@ import {
 	getActiveProfile,
 } from '../utils/profile';
 import type { ProfileSnippetsMap } from '../types';
-import { getLanguages } from '../vscode';
+import { getConfiguration, getLanguages } from '../vscode';
 
 // ---------------------------- Language Specfic ---------------------------- //
 
@@ -21,7 +21,9 @@ import { getLanguages } from '../vscode';
  */
 async function locateSnippetFiles(langId?: string): Promise<string[]> {
 	langId ??= getCurrentLanguage();
-	const globalDirs = await getAllGlobalSnippetDirs();
+	const globalDirs = getConfiguration('snippetstudio').get<boolean>('view.showProfiles')
+		? await getAllGlobalSnippetDirs()
+		: [await getActiveProfileSnippetsDir()];
 
 	const globalTasks = globalDirs.map((dir) => {
 		return getGlobalLangSnippetFiles(dir, langId);
@@ -90,27 +92,31 @@ async function locateAllSnippetFiles(): Promise<[string[], string[], ProfileSnip
 
 	const active = await getActiveProfile();
 
-	const getProfileSnippetsMap = async (): Promise<ProfileSnippetsMap> => {
-		const profiles = await getProfiles();
-		const tasks = profiles
-			.filter((p) => p.location !== active.location)
-			.map(async (p): Promise<[string, string[]]> => {
-				const path = getPathFromProfileLocation(p.location);
-				return [p.location, await findAllGlobalSnippetFiles(path)];
-			});
-		const paths: [string, string[]][] = await Promise.all(tasks);
-		return Object.fromEntries(paths);
-	};
+	const getProfileSnippetsMap = getConfiguration('snippetstudio').get<boolean>('view.showProfiles')
+		? async (): Promise<ProfileSnippetsMap> => {
+				const profiles = await getProfiles();
+				const tasks = profiles
+					.filter((p) => p.location !== active.location)
+					.map(async (p): Promise<[string, string[]]> => {
+						const path = getPathFromProfileLocation(p.location);
+						return [p.location, await findAllGlobalSnippetFiles(path)];
+					});
+				const paths: [string, string[]][] = await Promise.all(tasks);
+				return Object.fromEntries(paths);
+			}
+		: undefined;
 
 	const [locals, globals, profileSnippetsMap] = await Promise.all([
 		getLocals(),
 		getGlobals(),
-		getProfileSnippetsMap(),
+		getProfileSnippetsMap?.(),
 	]);
 
-	profileSnippetsMap[active.location] = globals;
+	if (profileSnippetsMap) {
+		profileSnippetsMap[active.location] = globals;
+	}
 
-	return [locals, globals, profileSnippetsMap];
+	return [locals, globals, profileSnippetsMap ?? {}];
 }
 
 /** Finds all global snippet files. */

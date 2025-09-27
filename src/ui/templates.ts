@@ -1,5 +1,5 @@
 import type { TreeItemCollapsibleState, TreeItem as TreeItemType } from 'vscode';
-import { None, Collapsed, Expanded, TreeItem, ThemeIcon } from '../vscode';
+import { None, Collapsed, Expanded, TreeItem, ThemeIcon, getConfiguration } from '../vscode';
 import path from 'node:path';
 import type {
 	VSCodeSnippet,
@@ -250,7 +250,7 @@ export async function snippetLocationDropdownTemplates(
 
 	// ------------------------- Profile Dropdown -------------------------
 	const profiles = await getProfiles();
-	if (profiles.length < 2) {
+	if (profiles.length < 2 || !getConfiguration('snippetstudio').get<boolean>('view.showProfiles')) {
 		return [topLevelDropdowns, []];
 	}
 
