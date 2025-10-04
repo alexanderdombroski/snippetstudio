@@ -4,7 +4,7 @@ This VS Code extension streamlines creation and management of [VS Code snippets]
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio) [![Version](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio.svg)](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio)
 
-Available on [VS Code Marketplace](https://marketplace.visualstudio.com/items/AlexDombroski.snippetstudio) or [Open VSX Registry](https://open-vsx.org/extension/AlexDombroski/snippetstudio)
+Available on [VS Code Marketplace](https://marketplace.visualstudio.com/items/AlexDombroski.snippetstudio), [Open VSX Registry](https://open-vsx.org/extension/AlexDombroski/snippetstudio), or [Github Releases](https://github.com/alexanderdombroski/snippetstudio/releases).
 
 Read [installation and getting started](https://alexanderdombroski.github.io/snippetstudio/docs/getting-started/installation) for more info
 

@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.6](#260---2025-10-04) - Simplified View Options
 - [2.5](#250---2025-09-15) - Snippet Peeks
 - [2.4](#241---2025-09-11) - Cursor Support
 - [2.3](#230---2025-09-05) - VSCodium Support
@@ -27,22 +28,13 @@
   - Use vscode.workspace.fs to create project snippets
   - Global Snippet Commands not visible to web users
   - Modify CI/CD to package as separate extension, or fork repo?
-- **DOCS**
-  - Update homepage
-  - Add searchbar
-  - Add 2.0.0 pages
-- **SnippetManagement** (2.6)
-  - Rename .code-snippets Files
 
-## [2.6.0] - Date
+## [2.6.0] - 2025-10-04
 
 ### Added
 
-- config options to skip loading snippets from extensions and/or other profiles
-
-### Fixed
-
-### Changed
+- Config option `view.showExtensions` to load snippets from extensions
+- Config option `view.showProfiles` to load snippets from all profiles
 
 ## [2.5.0] - 2025-09-15
 
