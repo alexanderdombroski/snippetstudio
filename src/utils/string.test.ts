@@ -2,6 +2,7 @@ import { describe, expect, it, type Mock } from 'vitest';
 import { capitalize, snippetBodyAsString, titleCase, unTabMultiline } from './string';
 import { TextEditor } from '../../.vitest/__mocks__/shared';
 import { executeCommand, Selection, Position } from '../vscode';
+import type { Selection as SelectionType } from 'vscode';
 
 describe('string utils', () => {
 	describe('titleCase', () => {
@@ -52,6 +53,12 @@ describe('string utils', () => {
 		const getText: Mock = mockEditor.document.getText;
 
 		it('should return an empty string for an empty selection', async () => {
+			const selection = { isEmpty: true } as SelectionType;
+			const result = await unTabMultiline(selection, mockEditor as any);
+			expect(result).toBe('');
+		});
+
+		it('should return an empty string for a selection with no difference in range', async () => {
 			const selection = new Selection(new Position(0, 0), new Position(0, 0));
 			getText.mockReturnValue(''); // return string
 			const result = await unTabMultiline(selection, mockEditor as any);
