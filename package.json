@@ -538,7 +538,7 @@
 				},
 				{
 					"command": "snippetstudio.file.link",
-					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)))",
+					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
 					"group": "navigation"
 				},
 				{
