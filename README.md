@@ -54,7 +54,7 @@ Import snippets from your friend's profile backups, or profile templates
 
 ### Extension Snippets
 
-Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and modify them to be more helpful
+Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/working-with-extension-snippets) them to be more helpful
 
 ## Requirements
 
