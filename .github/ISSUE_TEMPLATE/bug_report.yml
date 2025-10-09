@@ -43,7 +43,7 @@ body:
       required: true
 
   - type: input
-    id: os/platform-other
+    id: os_platform_other
     attributes:
       label: If Other, specify OS and/or platform (optional)
       placeholder: "e.g. ChromeOS, BSD"
