@@ -1,0 +1,13 @@
+name: "Hacktoberfest"
+description: "Use this template to add a simple Hacktoberfest issue."
+title: "[Hacktoberfest]: "
+labels: ["hacktoberfest"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Briefly describe what this issue is about."
+      placeholder: "Example: Add documentation page for command"
+    validations:
+      required: true
