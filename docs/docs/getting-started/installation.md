@@ -10,7 +10,7 @@ Let's *extend* VS Code's functionality by installing an extension!
 
 ## Getting Started
 
-1. Install SnippetStudio in the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=AlexDombroski.snippetstudio)
+1. Install SnippetStudio in the [VS Code Extension Marketplace](https://marketplace.visualstudio.com/items?itemName=AlexDombroski.snippetstudio) or [Open VSX Registry](https://open-vsx.org/extension/AlexDombroski/snippetstudio)
 2. Click on the Snippet Studio Manager <i className="codicon codicon-repo"></i> in the VS Code Activity Bar
 
 ### What you'll need
