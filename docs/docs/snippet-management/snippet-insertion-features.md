@@ -6,7 +6,7 @@ sidebar_position: 4
 
 # Snippet Insertion Features
 
-Create *dynamic* snippets with tabstops, placeholders, and other snippet insertion features
+Create _dynamic_ snippets with tabstops, placeholders, and other snippet insertion features
 
 ## How they work
 
@@ -26,14 +26,14 @@ There are a few ways to add them. Your curser must be in the snippet editor.
 
 ### Keyboard Shortcuts
 
-| Insertion Feature                      | <i className="fa-brands fa-linux"></i> Linux | <i className="fa-brands fa-apple"></i> Mac | <i className="fa-brands fa-windows"></i> Windows |
-| :------------------------------------- | :--------------------------------------: | :------------------------------------: | :------------------------------------------: |
-| Tabstop                         |              `ctrl+shift+1`              |              `cmd+opt+1`               |                `alt+shift+1`                 |
-| Placeholder                     |              `ctrl+shift+2`              |              `cmd+opt+2`               |                `alt+shift+2`                 |
-| Choice                          |              `ctrl+shift+3`              |              `cmd+opt+3`               |                `alt+shift+3`                 |
-| Variable                        |              `ctrl+shift+4`              |              `cmd+opt+4`               |                `alt+shift+4`                 |
-| Variable with Placeholder       |              `ctrl+shift+5`              |              `cmd+opt+5`               |                `alt+shift+5`                 |
-| Placeholder with Transformation |              `ctrl+shift+6`              |              `cmd+opt+6`               |                `alt+shift+6`                 |
+| Insertion Feature               | <i className="fa-brands fa-linux"></i> Linux | <i className="fa-brands fa-apple"></i> Mac | <i className="fa-brands fa-windows"></i> Windows |
+| :------------------------------ | :------------------------------------------: | :----------------------------------------: | :----------------------------------------------: |
+| Tabstop                         |                `ctrl+shift+1`                |                `cmd+opt+1`                 |                  `alt+shift+1`                   |
+| Placeholder                     |                `ctrl+shift+2`                |                `cmd+opt+2`                 |                  `alt+shift+2`                   |
+| Choice                          |                `ctrl+shift+3`                |                `cmd+opt+3`                 |                  `alt+shift+3`                   |
+| Variable                        |                `ctrl+shift+4`                |                `cmd+opt+4`                 |                  `alt+shift+4`                   |
+| Variable with Placeholder       |                `ctrl+shift+5`                |                `cmd+opt+5`                 |                  `alt+shift+5`                   |
+| Placeholder with Transformation |                `ctrl+shift+6`                |                `cmd+opt+6`                 |                  `alt+shift+6`                   |
 
 ### Commands
 
@@ -65,7 +65,7 @@ There are a few ways to add them. Your curser must be in the snippet editor.
 5. Hit `tab` to move the cursor to the end of the line
 
 ```javascript
-const [myState, setMyState] = useState("foo")
+const [myState, setMyState] = useState('foo');
 ```
 
 **Solution:** Use camelcase and pascalcase in [Placeholder Transforms](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_placeholdertransform)
@@ -73,4 +73,21 @@ const [myState, setMyState] = useState("foo")
 ```javascript
 const [${1/(.*)/${1:/camelcase}/}, set${1/(.*)/${1:/pascalcase}/}] = useState($2)$0
 ```
+
 <p className="small">*If you use regex you are cool. Good luck rendering that one, Docusaurus!*</p>
+
+#### Variable Regex
+
+There's also variable transformation with regex. You can read [VS Code's](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_variable-transforms) and [TextMate's](https://macromates.com/textmate/manual/snippets#variables) documentation if you want to better understand it.
+
+```json
+"bullit points": {
+    "prefix": "bullit",
+    "body": [
+        "${TM_SELECTED_TEXT/^.+$/- $0/gm}"
+    ],
+    "description": "add markdown bullets"
+}
+```
+
+![Adding bullet points](./img/variable-regex.gif)
