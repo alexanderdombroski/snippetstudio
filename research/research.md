@@ -11,3 +11,5 @@ Topics that DEFINITLY require research
 - [Import/Export snippets from other IDEs](https://github.com/alexanderdombroski/snippetstudio/discussions/23)
 
 Add files to folders within this folder to help plan, size, and gain proof of concept for these future features
+
+If you're adding a script that needs a package, add as a dependency of the `research/package.json`.

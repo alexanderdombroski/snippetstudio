@@ -1,0 +1,9 @@
+{
+  "name": "research",
+  "version": "1.0.0",
+  "description": "Packages used for scripts in this file can be installed here",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
