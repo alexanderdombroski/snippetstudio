@@ -1,5 +1,6 @@
-
-
+.markdown header {
+  margin-bottom: 1rem;
+}
 .markdown img, .markdown svg {
   display: block;
   margin: 0 auto;
@@ -9,4 +10,3 @@
     max-width: 80%;
   }
 }
-/*  */
