@@ -15,18 +15,18 @@ Thanks for taking the time to contribute! Please follow these steps and guidelin
 ### Steps to Contribute
 
 1. Fork the repository
-2. Create a new branch (`git switch -c feature-name`)
-3. Make your changes
-4. Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-5. Test code with the [launch config](https://code.visualstudio.com/docs/debugtest/debugging#_launch-configurations)
-5. Push your branch (`git push origin feature-name`)
-6. Open a Pull Request
+2. Make your changes
+3. Use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+4. Test code with the [launch config](https://code.visualstudio.com/docs/debugtest/debugging#_launch-configurations)
+5. Push your branch and open your fork on github
+6. Open a Pull Request (press the `contribute` then `open pull request` buttons)
+7. Request a review
 
 See ["Your First Extension"](https://code.visualstudio.com/api/get-started/your-first-extension) for additional help.
 
 ## Contributing to docs
 
-This site uses Docusaurus inside of the docs/ directory. I will turn on `edit this page` links soon.
+This site uses Docusaurus inside of the docs/ directory.
 
 ---
 
