@@ -20,14 +20,13 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [Unreleased] - Date
+## [Unreleased] - DATE
 
-### Added
+### Fixed
 
-- **Web Support** (v3.0)
-  - Use vscode.workspace.fs to create project snippets
-  - Global Snippet Commands not visible to web users
-  - Modify CI/CD to package as separate extension, or fork repo?
+- Global snippets correctly create keybinding without language scope
+- Add keybinding command doesn't crash if `keybindings.json` doesn't exists
+- Global snippets always recognized in tree view and don't get auto assigned a language
 
 ## [2.6.0] - 2025-10-04
 
