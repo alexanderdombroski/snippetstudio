@@ -28,12 +28,15 @@ async function promptAddKeybinding(item: TreePathItem) {
 		readJsonC(keyBindPath),
 	]);
 
-	const langs: string[] = (snippet?.scope ?? getCurrentLanguage() ?? 'plaintext').split(',');
 	const placeholder = 'INSERT_KEY_BINDING_HERE';
+	const isGlobalSnippet = item.path.endsWith('.code-snippets') && !snippet?.scope;
+	const langs: string[] = (snippet?.scope ?? getCurrentLanguage() ?? 'plaintext').split(',');
 	(keybindings as Object[]).push({
 		key: placeholder,
 		command: 'editor.action.insertSnippet',
-		when: `editorTextFocus && (${langs.map((lang) => `editorLangId == ${lang}`).join(' || ')})`,
+		when: isGlobalSnippet
+			? 'editorTextFocus'
+			: `editorTextFocus && (${langs.map((lang) => `editorLangId == ${lang}`).join(' || ')})`,
 		args: {
 			snippet: snippetBodyAsString(snippet.body),
 		},

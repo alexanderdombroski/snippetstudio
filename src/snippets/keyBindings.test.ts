@@ -7,6 +7,7 @@ import { TreePathItem } from '../ui/templates';
 import { readSnippet } from '../snippets/updateSnippets';
 import { snippetBodyAsString } from '../utils/string';
 import type { Position } from 'vscode';
+import path from 'node:path';
 
 vi.mock('../utils/profile');
 vi.mock('../utils/jsoncFilesIO');
@@ -41,7 +42,7 @@ describe('keyBindings', () => {
 
 			await promptAddKeybinding(item);
 
-			expect(writeJson).toHaveBeenCalledWith('/profile/keybindings.json', [
+			expect(writeJson).toHaveBeenCalledWith(path.join('/profile/keybindings.json'), [
 				{
 					key: 'INSERT_KEY_BINDING_HERE',
 					command: 'editor.action.insertSnippet',
@@ -55,6 +56,43 @@ describe('keyBindings', () => {
 			expect(executeCommand).toHaveBeenCalledWith('workbench.action.files.revert');
 			expect(editor.selection).toBeDefined();
 			expect(editor.revealRange).toHaveBeenCalled();
+		});
+
+		it('should not have editorLangId when snippet is global', async () => {
+			const item = new TreePathItem('my-snippet', 0, '/path/to/snippet.code-snippets');
+			const snippet = { prefix: 'p', body: 'b' };
+			const keybindings: any[] = [];
+			const doc = {
+				getText: () => `[{"key": "INSERT_KEY_BINDING_HERE"}]`,
+				positionAt: vi.fn((index) => ({ line: 0, character: index, translate: vi.fn() })),
+			} as any;
+			const editor = {
+				selection: new Selection(
+					{ line: 0, character: 0 } as Position,
+					{ line: 0, character: 0 } as Position
+				),
+				revealRange: vi.fn(),
+			} as any;
+
+			(getActiveProfilePath as Mock).mockResolvedValue('/profile');
+			(readSnippet as Mock).mockResolvedValue(snippet);
+			(readJsonC as Mock).mockResolvedValue(keybindings);
+			(snippetBodyAsString as Mock).mockReturnValue('b');
+			(openTextDocument as Mock).mockResolvedValue(doc);
+			(showTextDocument as Mock).mockResolvedValue(editor);
+
+			await promptAddKeybinding(item);
+
+			expect(writeJson).toHaveBeenCalledWith(path.join('/profile/keybindings.json'), [
+				{
+					key: 'INSERT_KEY_BINDING_HERE',
+					command: 'editor.action.insertSnippet',
+					when: 'editorTextFocus',
+					args: {
+						snippet: 'b',
+					},
+				},
+			]);
 		});
 	});
 });
