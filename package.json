@@ -749,7 +749,8 @@
             },
             "required": [
               "command"
-            ]
+            ],
+						"additionalProperties": false
           }
         }
 			},
