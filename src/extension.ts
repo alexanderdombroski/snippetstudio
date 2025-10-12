@@ -4,6 +4,8 @@ import vscode, { getConfiguration } from './vscode';
 import SnippetViewProvider from './ui/SnippetViewProvider';
 import LocationTreeProvider from './ui/LocationTreeProvider';
 
+import { getShellView } from './ui/shell';
+
 import {
 	initSnippetCommands,
 	initSnippetFileCommands,
@@ -59,6 +61,11 @@ export async function activate(context: ExtensionContext) {
 	}
 
 	console.log('The extension "snippetstudio" is now active!');
+}
+
+export function activate(context: vscode.ExtensionContext) {
+    // other registrations...
+    getShellView(context);
 }
 
 /** This method is called when your extension is deactivated */
