@@ -27,7 +27,7 @@ async function promptAddKeybinding(item: TreePathItem) {
 	// Read snippet and keybindings, handling case where keybindings file doesn't exist
 	const [snippet, keybindings] = await Promise.all([
 		readSnippet(item.path, snippetTitle) as Promise<VSCodeSnippet>,
-		readJsonC(keyBindPath).catch(() => []), // Return empty array if file doesn't exist
+		readJsonC(keyBindPath), // Return empty array if file doesn't exist
 	]);
 
 	const placeholder = 'INSERT_KEY_BINDING_HERE';

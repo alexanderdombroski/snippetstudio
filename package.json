@@ -110,8 +110,7 @@
 			},
 			{
 				"view": "shellSnippets",
-				"contents": "Your Shell Snippets will appear here!",
-				"when": "empty"
+				"contents": "Your Shell Snippets will appear here!"
 			}
 		],
 		"commands": [
