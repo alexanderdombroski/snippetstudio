@@ -859,6 +859,7 @@
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.1",
 		"@octokit/core": "^7.0.3",
+		"fast-xml-parser": "^5.3.0",
 		"strip-json-comments": "^5.0.3"
 	},
 	"types": "src/types/index.d.ts"
