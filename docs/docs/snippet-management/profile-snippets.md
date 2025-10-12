@@ -1,8 +1,7 @@
 ---
-id: profile-snippets
+sidebar_label: Profile Snippets
 title: Working with profile snippets
-sidebar_label: Profile snippets
-description: How to use and share snippets between profiles with SnippetStudio and VS Code.
+sidebar_position: 7
 ---
 
 # Working with profile snippets
