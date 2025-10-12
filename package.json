@@ -729,7 +729,30 @@
 						}
 					},
 					"additionalProperties": false
-				}
+				},
+				"snippetstudio.shell.snippets": {
+          "type": "array",
+          "description": "A collection of shell command snippets to run or paste in the terminal.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "properties": {
+              "command": {
+                "type": "string",
+                "description": "The shell command to be executed or pasted."
+              },
+              "runImmediately": {
+                "type": "boolean",
+                "description": "If true, the command is executed immediately; otherwise, it is pasted into the terminal.",
+                "default": false
+              }
+            },
+            "required": [
+              "command"
+            ],
+						"additionalProperties": false
+          }
+        }
 			},
 			"order": 0
 		},
