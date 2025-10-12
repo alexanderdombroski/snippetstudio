@@ -46,15 +46,19 @@ Import and export snippets using [GitHub gists](https://alexanderdombroski.githu
 
 VS Code already has [powerful syncing](https://code.visualstudio.com/docs/configure/settings-sync) that provides a way to backup your snippets.
 
+### Snippet Keybindings
+
+Command to easily add [attach a keybinding](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/keybinding-snippets) to a snippet. These are bound to the target languages by default.
+
 ### Profile Support
 
-Snippets added to the active profile, or choose files to sync across all profiles
+Snippets added to the active profile, or choose files to [sync across all profiles](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/profile-snippets).
 
-Import snippets from your friend's profile backups, or profile templates
+Import snippets from your friend's profile backups, or profile templates.
 
 ### Extension Snippets
 
-Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/working-with-extension-snippets) them to be more helpful
+Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/extension-snippets) them to be more helpful
 
 ## Requirements
 
