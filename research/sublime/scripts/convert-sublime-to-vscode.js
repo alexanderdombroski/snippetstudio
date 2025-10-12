@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
  * Convert a Sublime Text snippet (XML) into a VS Code snippet definition (JSON).
  * @param {string} inputPath - Absolute path to the Sublime snippet file.
  * @param {string} outputPath - Absolute path for the resulting VS Code snippet file.
+ * @returns {string} path
  */
 export function convertSublimeToVsCode(inputPath, outputPath) {
   if (!fs.existsSync(inputPath)) {
@@ -46,6 +47,7 @@ export function convertSublimeToVsCode(inputPath, outputPath) {
     },
   };
 
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, `${JSON.stringify(vscodeSnippet, null, 2)}\n`, "utf8");
   return outputPath;
 }

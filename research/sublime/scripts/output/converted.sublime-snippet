@@ -1,6 +1,0 @@
-<snippet>
-  <content>&lt;![CDATA[console.log(&apos;${1:message}&apos;);
-${2}]]&gt;</content>
-  <tabTrigger>log</tabTrigger>
-  <description>Log to console</description>
-</snippet>
