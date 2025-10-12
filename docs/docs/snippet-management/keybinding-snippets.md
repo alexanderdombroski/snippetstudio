@@ -1,7 +1,7 @@
 ---
 title: Keybinding Snippets
 sidebar_label: Keybinding Snippets
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 # Keybinding Snippets
