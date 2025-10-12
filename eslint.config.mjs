@@ -138,4 +138,13 @@ export default [
 			'jsdoc/require-jsdoc': 'off',
 		},
 	},
+	{
+		files: ['**/*.js'],
+		plugins: {
+			jsdoc,
+		},
+		rules: {
+			'jsdoc/no-types': 'off'
+		},
+	},
 ];
