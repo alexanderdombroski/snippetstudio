@@ -331,6 +331,26 @@
 				"command": "snippetstudio.profile.import",
 				"title": "Copy Snippets from .code-profile",
 				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.shell.create",
+				"title": "Create Shell Snippet",
+				"icon": "$(plus)"
+			},
+			{
+				"command": "snippetstudio.shell.delete",
+				"title": "Delete Shell Snippet",
+				"icon": "$(trash)"
+			},
+			{
+				"command": "snippetstudio.shell.edit",
+				"title": "Edit Shell Snippet",
+				"icon": "$(pencil)"
+			},
+			{
+				"command": "snippetstudio.shell.run",
+				"title": "Run Shell Snippet",
+				"icon": "$(run)"
 			}
 		],
 		"menus": {
@@ -473,6 +493,11 @@
 					"command": "snippetstudio.profile.import",
 					"group": "inline_import",
 					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.shell.create",
+					"group": "navigation",
+					"when": "view == shell-snippets"
 				}
 			],
 			"view/item/context": [
@@ -560,6 +585,21 @@
 					"command": "snippetstudio.extension.extract",
 					"group": "inline",
 					"when": "viewItem == extension-snippet-path"
+				},
+				{
+					"command": "snippetstudio.shell.edit",
+					"group": "navigation",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.delete",
+					"group": "navigation",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.run",
+					"group": "inline",
+					"when": "viewItem == shell-snippet"
 				}
 			]
 		},
