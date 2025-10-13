@@ -11,6 +11,7 @@ import {
 	initSnippetUICommands,
 	initSnippetLinkCommands,
 } from './commands';
+import { initSnippetShellCommands } from './ui/shell/commands';
 
 import { initGlobalStore } from './utils/context';
 
@@ -52,6 +53,7 @@ export async function activate(context: ExtensionContext) {
 	initSnippetFileCommands(context);
 	initSnippetGistsCommands(context);
 	initSnippetLinkCommands(context);
+	initSnippetShellCommands(context);
 
 	if (getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
 		const { createStatusBar } = await import('./ui/statusBar.js');
