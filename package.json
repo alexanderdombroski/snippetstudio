@@ -70,7 +70,6 @@
 				}
 			]
 		},
-		
 		"views": {
 			"snippet-manager-view-container": [
 				{
@@ -93,8 +92,9 @@
 					"icon": "$(database)"
 				},
 				{
-					"id": "shellSnippets",
+					"id": "shell-snippets",
 					"name": "Shell Snippets",
+					"type": "tree",
 					"icon": "$(terminal)"
 				}
 			]
@@ -109,7 +109,7 @@
 				"contents": "This is where snippet files of ALL languages being loaded in will appear!"
 			},
 			{
-				"view": "shellSnippets",
+				"view": "shell-snippets",
 				"contents": "Your Shell Snippets will appear here!"
 			}
 		],
