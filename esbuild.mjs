@@ -48,7 +48,6 @@ async function writeCjsWrapper() {
 		'};',
 	].join('\n');
 
-	// await fs.rename('dist/extension.js', 'dist/extension.mjs');
 	await fs.writeFile(path.join(outdir, 'extension.js'), code);
 }
 
@@ -66,29 +65,30 @@ async function main() {
 		splitting: true,
 		external: ['vscode', ...(await import('node:module')).builtinModules],
 		logLevel: 'silent',
-		plugins: [
-			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin,
-		],
+		plugins: [esbuildProblemMatcherPlugin],
 		minifySyntax: true,
-		outExtension: {
-			'.js': '.mjs'
-		},
-		define: {
-			'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production),
-		},
+		outExtension: { '.js': '.mjs' },
+		define: { 'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production) },
 		drop: production ? ['console', 'debugger'] : [],
 		chunkNames: 'chunks/[name]-[hash]',
-		metafile: production
+		metafile: production, // optional: generate metafile only in production
 	});
+
 	if (watch) {
 		await ctx.watch();
 		await writeCjsWrapper();
 	} else {
 		const result = await ctx.rebuild();
 		await writeCjsWrapper();
+
+		// Create profile folder
 		await fs.mkdir('./profile', { recursive: true });
-		await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile));
+
+		// Only write metafile if it exists
+		if (result.metafile) {
+			await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile, null, 2));
+		}
+
 		await ctx.dispose();
 	}
 }

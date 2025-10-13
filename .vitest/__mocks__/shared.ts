@@ -9,7 +9,7 @@ import type {
 	Command,
 	AccessibilityInformation,
 } from 'vscode';
-import { vi, type Mocked } from 'vitest';
+import { vi } from 'vitest';
 import { Position } from './vscode';
 
 const disposableMock: Disposable = { dispose: vi.fn() };
@@ -20,15 +20,16 @@ export const context = {
 		store: vi.fn(),
 		delete: vi.fn(),
 		onDidChange: { event: vi.fn() } as any,
+		keys: vi.fn(async () => []), // fixed TS error by adding keys
 	},
 	subscriptions: [disposableMock],
 	globalState: {
 		get: vi.fn(),
-		keys: vi.fn(),
+		keys: vi.fn(async () => []),
 		update: vi.fn(),
 		setKeysForSync: vi.fn(),
 	},
-} as Mocked<Partial<ExtensionContext>> as Mocked<ExtensionContext>;
+} as unknown as ExtensionContext; // cast as unknown to avoid strict TS issues
 
 export const TextEditor = class {
 	document: {

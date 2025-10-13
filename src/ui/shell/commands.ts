@@ -4,22 +4,26 @@ import { registerCommand } from '../../vscode';
 
 /** Registers and lazy loads all shell snippet commands */
 export async function initSnippetShellCommands(context: ExtensionContext) {
-	context.subscriptions.push(
-		registerCommand('snippetstudio.shell.create', async () => {
-			const { createShellSnippet } = await import('./handlers.js');
-			createShellSnippet();
-		}),
-		registerCommand('snippetstudio.shell.edit', async (item: ShellTreeItem) => {
-			const { editShellSnippet } = await import('./handlers.js');
-			editShellSnippet(item);
-		}),
-		registerCommand('snippetstudio.shell.delete', async (item: ShellTreeItem) => {
-			const { deleteShellSnippet } = await import('./handlers.js');
-			deleteShellSnippet(item);
-		}),
-		registerCommand('snippetstudio.shell.run', async (item: ShellTreeItem) => {
-			const { runShellSnippet } = await import('./handlers.js');
-			runShellSnippet(item);
-		})
-	);
+  context.subscriptions.push(
+    registerCommand('snippetstudio.shell.create', async () => {
+      const { createShellSnippet } = await import('./handlers.js');
+      createShellSnippet();
+    }),
+    registerCommand('snippetstudio.shell.edit', async (item: ShellTreeItem) => {
+      const { editShellSnippet } = await import('./handlers.js');
+      editShellSnippet(item);
+    }),
+    registerCommand('snippetstudio.shell.delete', async (item: ShellTreeItem) => {
+      const { deleteShellSnippet } = await import('./handlers.js');
+      deleteShellSnippet(item);
+    }),
+    registerCommand('snippetstudio.shell.run', async (item: ShellTreeItem) => {
+      const { runShellSnippet } = await import('./handlers.js');
+      runShellSnippet(item);
+    }),
+    registerCommand('snippetstudio.shell.define', async () => {
+      const { defineShellSnippet } = await import('./handlers.js');
+      defineShellSnippet();
+    })
+  );
 }
