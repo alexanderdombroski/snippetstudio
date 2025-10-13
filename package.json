@@ -90,6 +90,12 @@
 					"name": "Locations Manager",
 					"type": "tree",
 					"icon": "$(database)"
+				},
+				{
+					"id": "shell-snippets",
+					"name": "Shell Snippets",
+					"type": "tree",
+					"icon": "$(terminal)"
 				}
 			]
 		},
@@ -101,6 +107,10 @@
 			{
 				"view": "location-manager",
 				"contents": "This is where snippet files of ALL languages being loaded in will appear!"
+			},
+			{
+				"view": "shell-snippets",
+				"contents": "Your Shell Snippets will appear here!"
 			}
 		],
 		"commands": [
