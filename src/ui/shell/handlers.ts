@@ -24,6 +24,7 @@ export async function runShellSnippet(item: ShellTreeItem) {
 	if (item.command) {
 		const commandText =
 			typeof item.command === 'string' ? item.command : String(item.command);
+
 		terminal.sendText(commandText);
 
 		if (item.runImmediately) {
@@ -43,15 +44,13 @@ export async function defineShellSnippet() {
 		prompt: 'Enter the new shell command',
 		placeHolder: 'e.g., ls -la',
 	});
-	if (!command) {
-		return; // user cancelled
-	}
+	if (!command) return; // user cancelled
 
 	// Step 2: Ask if it should run immediately
-	const runImmediately = await vscode.window.showQuickPick(['Yes', 'No'], {
+	const runImmediatelyPick = await vscode.window.showQuickPick(['Yes', 'No'], {
 		placeHolder: 'Run immediately when executed?',
 	});
-	const runImmediatelyBool = runImmediately === 'Yes';
+	const runImmediately = runImmediatelyPick === 'Yes';
 
 	// Step 3: Get current shell snippets (local or global)
 	const config = vscode.workspace.getConfiguration('snippetstudio.shell');
@@ -59,13 +58,20 @@ export async function defineShellSnippet() {
 		config.get<{ command: string; runImmediately: boolean }[]>('snippets') || [];
 
 	// Step 4: Add the new snippet
-	snippets.push({ command, runImmediately: runImmediatelyBool });
+	snippets.push({ command, runImmediately });
 
 	// Step 5: Save back to configuration (workspace)
 	await config.update('snippets', snippets, vscode.ConfigurationTarget.Workspace);
 
 	// Step 6: Refresh the tree view
 	await vscode.commands.executeCommand('snippetstudio.shell.refresh');
+
+	// Step 7: Optionally run immediately in the terminal
+	if (runImmediately) {
+		const terminal = vscode.window.createTerminal('Snippet Terminal');
+		terminal.show();
+		terminal.sendText(command);
+	}
 
 	vscode.window.showInformationMessage(`Shell snippet added: ${command}`);
 }
