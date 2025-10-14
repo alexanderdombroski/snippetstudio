@@ -16,10 +16,15 @@ import type { TreePathItem } from '../ui/templates';
 import type { VSCodeSnippet } from '../types';
 import { getCurrentLanguage } from '../utils/language';
 import { snippetBodyAsString } from '../utils/string';
+import { exists } from '../utils/fsInfo';
+import fs from 'node:fs/promises';
 
 /** Handler for the add keybindings commmand */
 async function promptAddKeybinding(item: TreePathItem) {
 	const keyBindPath = await getKeybindingsFilePath();
+	if (!(await exists(keyBindPath))) {
+		await fs.writeFile(keyBindPath, '[]', 'utf-8');
+	}
 
 	const snippetTitle = item.description?.toString() ?? '';
 	const { readSnippet } = await import('../snippets/updateSnippets.js');

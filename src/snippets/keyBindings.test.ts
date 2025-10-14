@@ -8,12 +8,15 @@ import { readSnippet } from '../snippets/updateSnippets';
 import { snippetBodyAsString } from '../utils/string';
 import type { Position } from 'vscode';
 import path from 'node:path';
+import { exists } from '../utils/fsInfo';
+import { writeFile } from 'node:fs/promises';
 
 vi.mock('../utils/profile');
 vi.mock('../utils/jsoncFilesIO');
 vi.mock('../snippets/updateSnippets.js');
 vi.mock('../utils/language');
 vi.mock('../utils/string');
+vi.mock('../utils/fsInfo');
 
 describe('keyBindings', () => {
 	describe('promptAddKeybinding', () => {
@@ -93,6 +96,20 @@ describe('keyBindings', () => {
 					},
 				},
 			]);
+		});
+		it('should create keybindings.json if it does not exist', async () => {
+			const item = new TreePathItem('my-snippet', 0, '/path/to/snippet.json');
+			const snippet = { prefix: 'p', body: 'b', scope: 'javascript' };
+			const keybindings: any[] = [];
+
+			(exists as Mock).mockResolvedValue(false);
+			(getActiveProfilePath as Mock).mockResolvedValue('/profile');
+			(readSnippet as Mock).mockResolvedValue(snippet);
+			(readJsonC as Mock).mockResolvedValue(keybindings);
+
+			await promptAddKeybinding(item);
+
+			expect(writeFile).toHaveBeenCalledWith(path.join('/profile/keybindings.json'), '[]', 'utf-8');
 		});
 	});
 });
