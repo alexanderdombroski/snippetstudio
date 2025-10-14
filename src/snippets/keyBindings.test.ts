@@ -95,4 +95,33 @@ describe('keyBindings', () => {
 			]);
 		});
 	});
+			it('should create keybindings.json if it does not exist', async () => {
+			const item = new TreePathItem('my-snippet', 0, '/path/to/snippet.json');
+			const snippet = { prefix: 'p', body: 'b', scope: 'javascript' };
+			const keybindings: any[] = [];
+
+			// Mock fs helpers before calling the function
+			vi.mock('../utils/fsInfo', () => ({
+				exists: vi.fn().mockResolvedValue(false), 
+			}));
+			vi.mock('node:fs/promises', () => ({
+				writeFile: vi.fn().mockResolvedValue(undefined), 
+			}));
+
+			const { writeFile } = await import('node:fs/promises');
+			const { exists } = await import('../utils/fsInfo');
+
+			(getActiveProfilePath as Mock).mockResolvedValue('/profile');
+			(readSnippet as Mock).mockResolvedValue(snippet);
+			(readJsonC as Mock).mockResolvedValue(keybindings);
+
+			await promptAddKeybinding(item);
+
+			expect(writeFile).toHaveBeenCalledWith(
+				path.join('/profile/keybindings.json'),
+				'[]',
+				'utf-8'
+			);
+		});
+
 });
