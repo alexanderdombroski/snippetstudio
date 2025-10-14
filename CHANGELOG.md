@@ -22,6 +22,11 @@
 
 ## [Unreleased] - DATE
 
+### Added
+
+- Shell Snippets View to create and run saved terminal commands
+- Shell Snippets can be scoped to the workspace or globally
+
 ### Fixed
 
 - Global snippets correctly create keybinding without language scope
