@@ -14,14 +14,14 @@ const customPlugin = {
 				schema: [],
 			},
 			create(context) {
-				function checkImportSource(node, value) {
+				const checkImportSource = (node, value) => {
 					if (/\.(js|ts)$/.test(value)) {
 						context.report({
 							node,
 							message: "Import paths should not include extensions '.js' or '.ts'",
 						});
 					}
-				}
+				};
 
 				return {
 					ImportDeclaration(node) {
@@ -111,7 +111,7 @@ export default [
 						FunctionDeclaration: true,
 						MethodDefinition: true,
 					},
-					checkConstructors: false
+					checkConstructors: false,
 				},
 			],
 			'jsdoc/require-returns': 'off',
@@ -139,12 +139,12 @@ export default [
 		},
 	},
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', '**/*.mjs'],
 		plugins: {
 			jsdoc,
 		},
 		rules: {
-			'jsdoc/no-types': 'off'
+			'jsdoc/no-types': 'off',
 		},
 	},
 ];

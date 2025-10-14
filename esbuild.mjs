@@ -7,9 +7,6 @@ const watch = process.argv.includes('--watch');
 
 const outdir = 'dist';
 
-/**
- * @type {import('esbuild').Plugin}
- */
 const esbuildProblemMatcherPlugin = {
 	name: 'esbuild-problem-matcher',
 
@@ -27,8 +24,8 @@ const esbuildProblemMatcherPlugin = {
 	},
 };
 
+/** Add an auto-generated CommonJS wrapper for VS Code entry point */
 async function writeCjsWrapper() {
-	// Auto-generated CommonJS wrapper for VS Code entry point
 	const code = [
 		'let mod;',
 		'',
@@ -48,10 +45,10 @@ async function writeCjsWrapper() {
 		'};',
 	].join('\n');
 
-	// await fs.rename('dist/extension.js', 'dist/extension.mjs');
 	await fs.writeFile(path.join(outdir, 'extension.js'), code);
 }
 
+/** Function to minify and bundle code */
 async function main() {
 	const ctx = await context({
 		entryPoints: ['src/extension.ts'],
@@ -66,21 +63,19 @@ async function main() {
 		splitting: true,
 		external: ['vscode', ...(await import('node:module')).builtinModules],
 		logLevel: 'silent',
-		plugins: [
-			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin,
-		],
+		plugins: [esbuildProblemMatcherPlugin],
 		minifySyntax: true,
 		outExtension: {
-			'.js': '.mjs'
+			'.js': '.mjs',
 		},
 		define: {
 			'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production),
 		},
 		drop: production ? ['console', 'debugger'] : [],
 		chunkNames: 'chunks/[name]-[hash]',
-		metafile: production
+		metafile: production,
 	});
+
 	if (watch) {
 		await ctx.watch();
 		await writeCjsWrapper();
@@ -88,7 +83,9 @@ async function main() {
 		const result = await ctx.rebuild();
 		await writeCjsWrapper();
 		await fs.mkdir('./profile', { recursive: true });
-		await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile));
+		if (result.metafile) {
+			await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile, null, 2));
+		}
 		await ctx.dispose();
 	}
 }

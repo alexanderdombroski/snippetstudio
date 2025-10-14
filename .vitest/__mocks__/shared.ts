@@ -20,6 +20,7 @@ export const context = {
 		store: vi.fn(),
 		delete: vi.fn(),
 		onDidChange: { event: vi.fn() } as any,
+		keys: vi.fn(async () => []),
 	},
 	subscriptions: [disposableMock],
 	globalState: {
@@ -51,6 +52,7 @@ export const TextEditor = class {
 	}
 };
 
+/** Mock for TreeView Item */
 export class TreeItem implements TreeViewItem {
 	// Core properties
 	label: string;
