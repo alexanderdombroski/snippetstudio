@@ -793,12 +793,12 @@
 							},
 							"runImmediately": {
 								"type": "boolean",
-								"description": "If true, the command is executed immediately; otherwise, it is pasted into the terminal.",
-								"default": false
+								"description": "If true, the command is executed immediately; otherwise, it is pasted into the terminal."
 							}
 						},
 						"required": [
-							"command"
+							"command",
+							"runImmediately"
 						],
 						"additionalProperties": false
 					}

@@ -7,7 +7,13 @@ export type {
 	ProfileAssociations,
 	SnippetLinks,
 } from './profileTypes';
-export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData } from './snippetTypes';
+export type {
+	VSCodeSnippet,
+	VSCodeSnippets,
+	SnippetMap,
+	SnippetData,
+	ShellSnippet,
+} from './snippetTypes';
 export type {
 	SnippetContribution,
 	PackageJsonSnippetsSection,
