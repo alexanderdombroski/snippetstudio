@@ -1,8 +1,14 @@
-import vscode, { showErrorMessage, createTerminal, ThemeIcon } from '../../vscode';
-import type { ShellTreeItem } from './ShellViewProvider';
-
-/** Command handler to create a new shell snippet */
-export function createShellSnippet() {}
+import type { QuickPickItem } from 'vscode';
+import vscode, {
+	showErrorMessage,
+	createTerminal,
+	ThemeIcon,
+	showInputBox,
+	showQuickPick,
+	showInformationMessage,
+} from '../../vscode';
+import { getShellView, type ShellTreeItem } from './ShellViewProvider';
+import { getShellSnippets, setShellSnippets } from './config';
 
 /** Command handler to edit an existing shell snippet */
 // eslint-disable-next-line no-unused-vars
@@ -27,41 +33,45 @@ export async function runShellSnippet(item: ShellTreeItem) {
 	}
 }
 
-/** Command handler to define a new shell snippet */
-export async function defineShellSnippet() {
-	// Step 1: Ask user for command string
-	const command = await vscode.window.showInputBox({
+/** Command handler to create a new shell snippet */
+export async function createShellSnippet() {
+	const command = await showInputBox({
 		prompt: 'Enter the new shell command',
 		placeHolder: 'e.g., ls -la',
 	});
-	// eslint-disable-next-line curly
-	if (!command) return; // user cancelled
 
-	// Step 2: Ask if it should run immediately
-	const runImmediatelyPick = await vscode.window.showQuickPick(['Yes', 'No'], {
-		placeHolder: 'Run immediately when executed?',
-	});
-	const runImmediately = runImmediatelyPick === 'Yes';
-
-	// Step 3: Get current shell snippets (local or global)
-	const config = vscode.workspace.getConfiguration('snippetstudio.shell');
-	const snippets = config.get<{ command: string; runImmediately: boolean }[]>('snippets') || [];
-
-	// Step 4: Add the new snippet
-	snippets.push({ command, runImmediately });
-
-	// Step 5: Save back to configuration (workspace)
-	await config.update('snippets', snippets, vscode.ConfigurationTarget.Workspace);
-
-	// Step 6: Refresh the tree view
-	await vscode.commands.executeCommand('snippetstudio.shell.refresh');
-
-	// Step 7: Optionally run immediately in the terminal
-	if (runImmediately) {
-		const terminal = vscode.window.createTerminal('Snippet Terminal');
-		terminal.show();
-		terminal.sendText(command);
+	if (command === undefined) {
+		return;
 	}
 
-	vscode.window.showInformationMessage(`Shell snippet added: ${command}`);
+	const options: (QuickPickItem & { id: string })[] = [
+		{ label: 'Run immediately when executed?', id: 'runImmediately' },
+		{ label: 'Remember only for this workspace ', id: 'isLocal' },
+	];
+
+	const selected = await showQuickPick(options, {
+		title: 'Define command configuration behavior',
+		canPickMany: true,
+	});
+
+	if (selected === undefined) {
+		return;
+	}
+
+	const runImmediately = selected.some((opt) => opt.id === 'runImmediately');
+	const isLocal = selected.some((opt) => opt.id === 'isLocal');
+
+	const snippets = getShellSnippets()[Number(isLocal)];
+
+	snippets.push({ command, runImmediately });
+
+	await setShellSnippets(
+		snippets,
+		isLocal ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global
+	);
+
+	const view = getShellView();
+	view.refresh();
+
+	showInformationMessage(`Shell snippet added: ${command}`);
 }

@@ -10,16 +10,11 @@ export function getShellSnippets(): [ShellSnippet[], ShellSnippet[]] {
 	const config = getConfiguration('snippetstudio');
 
 	const inspected = config.inspect<ShellSnippet[]>('shell.snippets');
-	const userSnippets = defineScope(false, inspected?.globalValue);
-	const workspaceSnippets = defineScope(true, inspected?.workspaceValue);
+	const userSnippets = inspected?.globalValue ?? [];
+	const workspaceSnippets = inspected?.workspaceValue ?? [];
 
 	return [userSnippets, workspaceSnippets];
 }
-
-const defineScope = (
-	isLocal: boolean,
-	configValue?: Pick<ShellSnippet, 'command' | 'runImmediately'>[]
-): ShellSnippet[] => configValue?.map((props) => ({ ...props, isLocal })) ?? [];
 
 /**
  * Updates the shell snippets configuration.
