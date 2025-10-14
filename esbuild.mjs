@@ -7,9 +7,6 @@ const watch = process.argv.includes('--watch');
 
 const outdir = 'dist';
 
-/**
- * @type {import('esbuild').Plugin}
- */
 const esbuildProblemMatcherPlugin = {
 	name: 'esbuild-problem-matcher',
 
@@ -27,8 +24,8 @@ const esbuildProblemMatcherPlugin = {
 	},
 };
 
+/** Add an auto-generated CommonJS wrapper for VS Code entry point */
 async function writeCjsWrapper() {
-	// Auto-generated CommonJS wrapper for VS Code entry point
 	const code = [
 		'let mod;',
 		'',
@@ -51,6 +48,7 @@ async function writeCjsWrapper() {
 	await fs.writeFile(path.join(outdir, 'extension.js'), code);
 }
 
+/** Function to minify and bundle code */
 async function main() {
 	const ctx = await context({
 		entryPoints: ['src/extension.ts'],
@@ -67,11 +65,15 @@ async function main() {
 		logLevel: 'silent',
 		plugins: [esbuildProblemMatcherPlugin],
 		minifySyntax: true,
-		outExtension: { '.js': '.mjs' },
-		define: { 'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production) },
+		outExtension: {
+			'.js': '.mjs',
+		},
+		define: {
+			'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production),
+		},
 		drop: production ? ['console', 'debugger'] : [],
 		chunkNames: 'chunks/[name]-[hash]',
-		metafile: production, // optional: generate metafile only in production
+		metafile: production,
 	});
 
 	if (watch) {
@@ -80,15 +82,10 @@ async function main() {
 	} else {
 		const result = await ctx.rebuild();
 		await writeCjsWrapper();
-
-		// Create profile folder
 		await fs.mkdir('./profile', { recursive: true });
-
-		// Only write metafile if it exists
 		if (result.metafile) {
 			await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile, null, 2));
 		}
-
 		await ctx.dispose();
 	}
 }
