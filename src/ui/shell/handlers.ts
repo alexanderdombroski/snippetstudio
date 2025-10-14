@@ -1,39 +1,29 @@
-import vscode from '../../vscode';
+import vscode, { showErrorMessage, createTerminal, ThemeIcon } from '../../vscode';
 import type { ShellTreeItem } from './ShellViewProvider';
 
 /** Command handler to create a new shell snippet */
-export function createShellSnippet() {
-	vscode.window.showInformationMessage('Create Shell Snippet - implement UI or logic here');
-}
+export function createShellSnippet() {}
 
 /** Command handler to edit an existing shell snippet */
-export function editShellSnippet(item: ShellTreeItem) {
-	vscode.window.showInformationMessage(`Edit Shell Snippet: ${item.label}`);
-}
+// eslint-disable-next-line no-unused-vars
+export function editShellSnippet(item: ShellTreeItem) {}
 
 /** Command handler to delete a shell snippet */
-export function deleteShellSnippet(item: ShellTreeItem) {
-	vscode.window.showInformationMessage(`Delete Shell Snippet: ${item.label}`);
-}
+// eslint-disable-next-line no-unused-vars
+export function deleteShellSnippet(item: ShellTreeItem) {}
 
 /** Command handler to run a shell command snippet */
 export async function runShellSnippet(item: ShellTreeItem) {
-	const terminal = vscode.window.createTerminal('Snippet Terminal');
-	terminal.show();
-
-	if (item.command) {
-		const commandText =
-			typeof item.command === 'string' ? item.command : String(item.command);
-
-		terminal.sendText(commandText);
-
-		if (item.runImmediately) {
-			terminal.sendText(commandText);
-		}
-
-		vscode.window.showInformationMessage(`Running Shell Snippet: ${item.label}`);
-	} else {
-		vscode.window.showErrorMessage('No command found for this shell snippet.');
+	try {
+		const terminals = vscode.window.terminals;
+		let terminal = terminals.find(
+			(terminal) => terminal.name === 'snippetstudio' && terminal.exitStatus === undefined
+		);
+		terminal ??= createTerminal({ iconPath: new ThemeIcon('repo'), name: 'snippetstudio' });
+		terminal.show(true);
+		terminal.sendText(String(item.label), item.runImmediately);
+	} catch (error) {
+		await showErrorMessage(`Failed to run command because ${JSON.stringify(error)}`);
 	}
 }
 
@@ -44,6 +34,7 @@ export async function defineShellSnippet() {
 		prompt: 'Enter the new shell command',
 		placeHolder: 'e.g., ls -la',
 	});
+	// eslint-disable-next-line curly
 	if (!command) return; // user cancelled
 
 	// Step 2: Ask if it should run immediately
@@ -54,8 +45,7 @@ export async function defineShellSnippet() {
 
 	// Step 3: Get current shell snippets (local or global)
 	const config = vscode.workspace.getConfiguration('snippetstudio.shell');
-	const snippets =
-		config.get<{ command: string; runImmediately: boolean }[]>('snippets') || [];
+	const snippets = config.get<{ command: string; runImmediately: boolean }[]>('snippets') || [];
 
 	// Step 4: Add the new snippet
 	snippets.push({ command, runImmediately });
