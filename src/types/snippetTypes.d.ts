@@ -38,4 +38,13 @@ interface SnippetData {
 	filename: string;
 }
 
+export interface ShellSnippet {
+	/** The shell command to be executed or pasted */
+	command: string;
+	/** If true, the command is executed immediately; otherwise, it is pasted into the terminal */
+	runImmediately: boolean;
+	/** Whether the snippet is stored scoped everywhere for the user, or just the workspace */
+	isLocal: boolean;
+}
+
 export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData };

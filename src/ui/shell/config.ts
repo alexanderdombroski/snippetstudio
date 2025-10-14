@@ -1,26 +1,17 @@
 import type { ConfigurationTarget } from 'vscode';
+import type { ShellSnippet } from '../../types';
 import { getConfiguration } from '../../vscode';
 
-/** Represents a shell snippet configuration */
-export interface ShellSnippet {
-	/** The shell command to be executed or pasted */
-	command: string;
-
-	/** If true, the command is executed immediately; otherwise, it is pasted into the terminal */
-	runImmediately?: boolean;
-}
-
 /**
- * Returns a tuple of shell snippets stored in [user, workspace] configuration.
+ * Get the user's shell snippets
  * @returns A tuple containing [user config snippets, workspace config snippets]
  */
 export function getShellSnippets(): [ShellSnippet[], ShellSnippet[]] {
-	const userConfig = getConfiguration('snippetstudio', null);
-	const workspaceConfig = getConfiguration('snippetstudio');
+	const config = getConfiguration('snippetstudio');
 
-	const userSnippets = userConfig.inspect<ShellSnippet[]>('shell.snippets')?.globalValue ?? [];
-	const workspaceSnippets =
-		workspaceConfig.inspect<ShellSnippet[]>('shell.snippets')?.workspaceValue ?? [];
+	const inspected = config.inspect<ShellSnippet[]>('shell.snippets');
+	const userSnippets = inspected?.globalValue ?? [];
+	const workspaceSnippets = inspected?.workspaceValue ?? [];
 
 	return [userSnippets, workspaceSnippets];
 }
