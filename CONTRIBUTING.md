@@ -15,7 +15,7 @@ Thanks for taking the time to contribute! Please follow these steps and guidelin
 
 ### Testing the Extension
 
-VS Code makes it easy to test extensions. You can [run the extension using the debugger](https://code.visualstudio.com/docs/debugtest/debugging#_start-a-debugging-session). This will only work if the project is opened as the root of the workspace. ie (`.vscode/launch.json` is at the root of the filetree).
+VS Code makes it easy to test extensions. You can [run the extension using the debugger](https://code.visualstudio.com/docs/debugtest/debugging#_start-a-debugging-session). This will only fully work if the project is opened as the root of the workspace and you've installed the extensions listed in `.vscode/extensions.json`.
 
 If you're testing for another IDE, you can package the extension as a vsix and install it.
 
