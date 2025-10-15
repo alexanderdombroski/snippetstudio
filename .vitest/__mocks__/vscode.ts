@@ -1,4 +1,4 @@
-// __mocks__/vscode.ts
+/* eslint-disable jsdoc/require-jsdoc */
 import { vi } from 'vitest';
 
 // Basic classes and constructors
@@ -70,6 +70,7 @@ export const Event = {};
 export const onDidChangeTextDocument = vi.fn();
 export const getConfiguration = vi.fn().mockReturnValue({
 	get: vi.fn(),
+	inspect: vi.fn(),
 	update: vi.fn(),
 });
 export const openTextDocument = vi.fn();
@@ -182,4 +183,5 @@ export default {
 	TextEditorRevealType: {},
 	ProgressLocation: {},
 	Location: class {},
+	ConfigurationTarget: {},
 };
