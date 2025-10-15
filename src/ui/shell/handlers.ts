@@ -6,17 +6,82 @@ import vscode, {
 	showInputBox,
 	showQuickPick,
 	showInformationMessage,
+	showWarningMessage,
 } from '../../vscode';
 import { getShellView, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 
 /** Command handler to edit an existing shell snippet */
-// eslint-disable-next-line no-unused-vars
-export function editShellSnippet(item: ShellTreeItem) {}
+export async function editShellSnippet(item: ShellTreeItem) {
+	try {
+		const command = await showInputBox({
+			prompt: 'Edit shell command',
+			placeHolder: 'e.g., ls -la',
+			value: String(item.label),
+		});
+
+		if (command === undefined || command.trim() === '') {
+			return;
+		}
+
+		const snippets = getShellSnippets();
+		const [globalSnippets, localSnippets] = snippets;
+
+		const list = item.isLocal ? localSnippets : globalSnippets;
+		const index = list.findIndex((s) => s.command === item.label);
+
+		if (index === -1) {
+			await showErrorMessage('Snippet not found for editing.');
+			return;
+		}
+
+		list[index].command = command;
+
+		await setShellSnippets(
+			list,
+			item.isLocal ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global
+		);
+
+		const view = getShellView();
+		view.refresh();
+
+		await showInformationMessage(`Shell snippet updated: ${command}`);
+	} catch (err) {
+		await showErrorMessage(`Failed to edit snippet: ${String(err)}`);
+	}
+}
 
 /** Command handler to delete a shell snippet */
-// eslint-disable-next-line no-unused-vars
-export function deleteShellSnippet(item: ShellTreeItem) {}
+export async function deleteShellSnippet(item: ShellTreeItem) {
+	try {
+		const confirm = await showWarningMessage(
+			`Delete shell snippet "${item.label}"?`,
+			{ modal: true },
+			'Yes',
+			'No'
+		);
+
+		if (confirm !== 'Yes') return;
+
+		const snippets = getShellSnippets();
+		const [globalSnippets, localSnippets] = snippets;
+
+		const list = item.isLocal ? localSnippets : globalSnippets;
+		const filtered = list.filter((s) => s.command !== item.label);
+
+		await setShellSnippets(
+			filtered,
+			item.isLocal ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global
+		);
+
+		const view = getShellView();
+		view.refresh();
+
+		await showInformationMessage(`Shell snippet deleted: ${item.label}`);
+	} catch (err) {
+		await showErrorMessage(`Failed to delete snippet: ${String(err)}`);
+	}
+}
 
 /** Command handler to run a shell command snippet */
 export async function runShellSnippet(item: ShellTreeItem) {
