@@ -6,6 +6,7 @@ import type {
 	TreeItemLabel,
 } from 'vscode';
 import vscode, { TreeItem } from '../../vscode';
+import { getShellSnippets } from './config';
 
 let shellViewProvider: ShellViewProvider | undefined;
 
@@ -36,23 +37,45 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 		new vscode.EventEmitter<TreeItemType | null>();
 	readonly onDidChangeTreeData: Event<TreeItemType | null> = this._onDidChangeTreeData.event;
 
+	/** Holds the current shell snippet items */
+	private treeItems: ShellTreeItem[] = [];
+
 	/** Inits the tree view */
-	constructor() {}
+	constructor() {
+		this.refresh();
+	}
 
 	/** Returns a shell snippet */
 	getTreeItem(element: TreeItemType): TreeItemType {
 		return element;
 	}
 
-	/** Returns a all levels of shell snippets recursively */
-	// eslint-disable-next-line
+	/** Returns all shell snippets */
 	getChildren(element?: TreeItemType): Thenable<TreeItemType[]> {
-		// Minimal functionality for now
-		return Promise.resolve([]);
+		if (element) {
+			return Promise.resolve([]);
+		}
+		return Promise.resolve(this.treeItems);
 	}
 
 	/** Refresh the view */
 	refresh(): void {
+		const allSnippets = getShellSnippets(); // returns [globalSnippets, localSnippets]
+		const [globalSnippets, localSnippets] = allSnippets;
+
+		const newItems: ShellTreeItem[] = [];
+
+		// Create tree items for global snippets
+		for (const snippet of globalSnippets) {
+			newItems.push(new ShellTreeItem(snippet.command, false, snippet.runImmediately));
+		}
+
+		// Create tree items for local snippets
+		for (const snippet of localSnippets) {
+			newItems.push(new ShellTreeItem(snippet.command, true, snippet.runImmediately));
+		}
+
+		this.treeItems = newItems;
 		this._onDidChangeTreeData.fire(null);
 	}
 }
