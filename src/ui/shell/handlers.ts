@@ -6,39 +6,33 @@ import vscode, {
 	showInputBox,
 	showQuickPick,
 	showInformationMessage,
-	showWarningMessage,
+	getConfiguration,
 } from '../../vscode';
 import { getShellView, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
+import { getConfirmation } from '../../utils/user';
 
 /** Command handler to edit an existing shell snippet */
 export async function editShellSnippet(item: ShellTreeItem) {
 	try {
-		const command = await showInputBox({
-			prompt: 'Edit shell command',
-			placeHolder: 'e.g., ls -la',
-			value: String(item.label),
-		});
+		const command = await getCommand(item.label);
 
-		if (command === undefined || command.trim() === '') {
+		if (!command) {
 			return;
 		}
 
-		const snippets = getShellSnippets();
-		const [globalSnippets, localSnippets] = snippets;
-
-		const list = item.isLocal ? localSnippets : globalSnippets;
-		const index = list.findIndex((s) => s.command === item.label);
+		const snippets = getShellSnippets()[Number(item.isLocal)];
+		const index = snippets.findIndex((s) => s.command === item.label);
 
 		if (index === -1) {
 			await showErrorMessage('Snippet not found for editing.');
 			return;
 		}
 
-		list[index].command = command;
+		snippets[index].command = command;
 
 		await setShellSnippets(
-			list,
+			snippets,
 			item.isLocal ? vscode.ConfigurationTarget.Workspace : vscode.ConfigurationTarget.Global
 		);
 
@@ -47,27 +41,22 @@ export async function editShellSnippet(item: ShellTreeItem) {
 
 		await showInformationMessage(`Shell snippet updated: ${command}`);
 	} catch (err) {
-		await showErrorMessage(`Failed to edit snippet: ${String(err)}`);
+		await showErrorMessage(`Failed to edit snippet: ${err}`);
 	}
 }
 
 /** Command handler to delete a shell snippet */
 export async function deleteShellSnippet(item: ShellTreeItem) {
 	try {
-		const confirm = await showWarningMessage(
-			`Delete shell snippet "${item.label}"?`,
-			{ modal: true },
-			'Yes',
-			'No'
-		);
+		if (
+			getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
+			!(await getConfirmation(`Delete shell snippet "${item.label}"?`))
+		) {
+			return;
+		}
 
-		if (confirm !== 'Yes') return;
-
-		const snippets = getShellSnippets();
-		const [globalSnippets, localSnippets] = snippets;
-
-		const list = item.isLocal ? localSnippets : globalSnippets;
-		const filtered = list.filter((s) => s.command !== item.label);
+		const snippets = getShellSnippets()[Number(item.isLocal)];
+		const filtered = snippets.filter((s) => s.command !== item.label);
 
 		await setShellSnippets(
 			filtered,
@@ -79,7 +68,7 @@ export async function deleteShellSnippet(item: ShellTreeItem) {
 
 		await showInformationMessage(`Shell snippet deleted: ${item.label}`);
 	} catch (err) {
-		await showErrorMessage(`Failed to delete snippet: ${String(err)}`);
+		await showErrorMessage(`Failed to delete snippet: ${err}`);
 	}
 }
 
@@ -100,12 +89,9 @@ export async function runShellSnippet(item: ShellTreeItem) {
 
 /** Command handler to create a new shell snippet */
 export async function createShellSnippet() {
-	const command = await showInputBox({
-		prompt: 'Enter the new shell command',
-		placeHolder: 'e.g., ls -la',
-	});
+	const command = await getCommand();
 
-	if (command === undefined) {
+	if (!command) {
 		return;
 	}
 
@@ -139,4 +125,15 @@ export async function createShellSnippet() {
 	view.refresh();
 
 	showInformationMessage(`Shell snippet added: ${command}`);
+}
+
+/** Get a shell command from the user */
+async function getCommand(value: string = ''): Promise<string | undefined> {
+	const command = await showInputBox({
+		prompt: 'Enter the new shell command',
+		placeHolder: 'e.g., ls -la',
+		value,
+	});
+
+	return command?.trim();
 }

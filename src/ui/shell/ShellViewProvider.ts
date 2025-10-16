@@ -1,10 +1,4 @@
-import type {
-	Event,
-	EventEmitter,
-	TreeItem as TreeItemType,
-	TreeDataProvider,
-	TreeItemLabel,
-} from 'vscode';
+import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import vscode, { TreeItem } from '../../vscode';
 import { getShellSnippets } from './config';
 
@@ -22,7 +16,7 @@ export function getShellView(): ShellViewProvider {
 /** Constructs a tree item to be used in the shell snippet view */
 export class ShellTreeItem extends TreeItem {
 	constructor(
-		public readonly label: string | TreeItemLabel,
+		public readonly label: string,
 		public readonly isLocal: boolean,
 		public readonly runImmediately: boolean
 	) {
@@ -51,17 +45,16 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	}
 
 	/** Returns all shell snippets */
-	getChildren(element?: TreeItemType): Thenable<TreeItemType[]> {
+	getChildren(element?: TreeItemType): TreeItemType[] {
 		if (element) {
-			return Promise.resolve([]);
+			return [];
 		}
-		return Promise.resolve(this.treeItems);
+		return this.treeItems;
 	}
 
 	/** Refresh the view */
 	refresh(): void {
-		const allSnippets = getShellSnippets(); // returns [globalSnippets, localSnippets]
-		const [globalSnippets, localSnippets] = allSnippets;
+		const [globalSnippets, localSnippets] = getShellSnippets();
 
 		const newItems: ShellTreeItem[] = [];
 
