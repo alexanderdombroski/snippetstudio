@@ -1,11 +1,6 @@
-import type {
-	Event,
-	EventEmitter,
-	TreeItem as TreeItemType,
-	TreeDataProvider,
-	TreeItemLabel,
-} from 'vscode';
+import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import vscode, { TreeItem } from '../../vscode';
+import { getShellSnippets } from './config';
 
 let shellViewProvider: ShellViewProvider | undefined;
 
@@ -21,7 +16,7 @@ export function getShellView(): ShellViewProvider {
 /** Constructs a tree item to be used in the shell snippet view */
 export class ShellTreeItem extends TreeItem {
 	constructor(
-		public readonly label: string | TreeItemLabel,
+		public readonly label: string,
 		public readonly isLocal: boolean,
 		public readonly runImmediately: boolean
 	) {
@@ -36,23 +31,44 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 		new vscode.EventEmitter<TreeItemType | null>();
 	readonly onDidChangeTreeData: Event<TreeItemType | null> = this._onDidChangeTreeData.event;
 
+	/** Holds the current shell snippet items */
+	private treeItems: ShellTreeItem[] = [];
+
 	/** Inits the tree view */
-	constructor() {}
+	constructor() {
+		this.refresh();
+	}
 
 	/** Returns a shell snippet */
 	getTreeItem(element: TreeItemType): TreeItemType {
 		return element;
 	}
 
-	/** Returns a all levels of shell snippets recursively */
-	// eslint-disable-next-line
-	getChildren(element?: TreeItemType): Thenable<TreeItemType[]> {
-		// Minimal functionality for now
-		return Promise.resolve([]);
+	/** Returns all shell snippets */
+	getChildren(element?: TreeItemType): TreeItemType[] {
+		if (element) {
+			return [];
+		}
+		return this.treeItems;
 	}
 
 	/** Refresh the view */
 	refresh(): void {
+		const [globalSnippets, localSnippets] = getShellSnippets();
+
+		const newItems: ShellTreeItem[] = [];
+
+		// Create tree items for global snippets
+		for (const snippet of globalSnippets) {
+			newItems.push(new ShellTreeItem(snippet.command, false, snippet.runImmediately));
+		}
+
+		// Create tree items for local snippets
+		for (const snippet of localSnippets) {
+			newItems.push(new ShellTreeItem(snippet.command, true, snippet.runImmediately));
+		}
+
+		this.treeItems = newItems;
 		this._onDidChangeTreeData.fire(null);
 	}
 }
