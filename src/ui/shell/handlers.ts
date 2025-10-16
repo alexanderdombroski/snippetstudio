@@ -11,6 +11,7 @@ import vscode, {
 import { getShellView, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
+import { findInactiveTerminal } from './utils';
 
 /** Command handler to edit an existing shell snippet */
 export async function editShellSnippet(item: ShellTreeItem) {
@@ -75,15 +76,12 @@ export async function deleteShellSnippet(item: ShellTreeItem) {
 /** Command handler to run a shell command snippet */
 export async function runShellSnippet(item: ShellTreeItem) {
 	try {
-		const terminals = vscode.window.terminals;
-		let terminal = terminals.find(
-			(terminal) => terminal.name === 'snippetstudio' && terminal.exitStatus === undefined
-		);
+		let terminal = await findInactiveTerminal();
 		terminal ??= createTerminal({ iconPath: new ThemeIcon('repo'), name: 'snippetstudio' });
 		terminal.show(true);
-		terminal.sendText(String(item.label), item.runImmediately);
-	} catch (error) {
-		await showErrorMessage(`Failed to run command because ${JSON.stringify(error)}`);
+		terminal.sendText(item.label, item.runImmediately);
+	} catch (err) {
+		await showErrorMessage(`Failed to run command because ${err}`);
 	}
 }
 
