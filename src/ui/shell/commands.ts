@@ -1,6 +1,7 @@
 import type { ExtensionContext } from 'vscode';
 import type { ShellTreeItem } from './ShellViewProvider';
 import { registerCommand } from '../../vscode';
+import { getShellSnippets } from './config';
 
 /** Registers and lazy loads all shell snippet commands */
 export async function initSnippetShellCommands(context: ExtensionContext) {
@@ -22,4 +23,9 @@ export async function initSnippetShellCommands(context: ExtensionContext) {
 			runShellSnippet(item);
 		})
 	);
+
+	if (getShellSnippets().flat(1).length) {
+		const { getShellView } = await import('./ShellViewProvider.js');
+		getShellView();
+	}
 }

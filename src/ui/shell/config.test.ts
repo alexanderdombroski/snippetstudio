@@ -1,4 +1,4 @@
-import { describe, it, expect, Mock, vi, beforeEach } from 'vitest';
+import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
 import { getShellSnippets, setShellSnippets } from './config';
 import vscode, { getConfiguration } from '../../vscode';
 
