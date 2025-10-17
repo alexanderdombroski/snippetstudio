@@ -45,8 +45,8 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	readonly onDidChangeTreeData: Event<TreeItemType | null> = this._onDidChangeTreeData.event;
 
 	/** Holds the current shell snippet items */
-	private globalShellItems: ShellTreeItem[] = [];
-	private localShellItems: ShellTreeItem[] = [];
+	private globalItems: ShellTreeItem[] = [];
+	private localItems: ShellTreeItem[] = [];
 
 	/** Inits the tree view */
 	constructor() {
@@ -61,17 +61,13 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	/** Returns all shell snippets */
 	getChildren(element?: TreeItemType): TreeItemType[] {
 		if (element?.label === 'Global Shell Snippets') {
-			return this.globalShellItems;
+			return this.globalItems;
 		} else if (element?.label === 'Local Shell Snippets') {
-			return this.localShellItems;
+			return this.localItems;
 		}
 		return [
-			new ShellTreeDropdown(
-				'Global Shell Snippets',
-				Boolean(this.globalShellItems.length),
-				'globe'
-			),
-			new ShellTreeDropdown('Local Shell Snippets', Boolean(this.localShellItems.length), 'globe'),
+			new ShellTreeDropdown('Global Shell Snippets', Boolean(this.globalItems.length), 'globe'),
+			new ShellTreeDropdown('Local Shell Snippets', Boolean(this.localItems.length), 'folder'),
 		];
 	}
 
@@ -79,10 +75,10 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	refresh(): void {
 		const [globalSnippets, localSnippets] = getShellSnippets();
 
-		this.globalShellItems = globalSnippets.map(
+		this.globalItems = globalSnippets.map(
 			(snippet) => new ShellTreeItem(snippet.command, false, snippet.runImmediately)
 		);
-		this.localShellItems = localSnippets.map(
+		this.localItems = localSnippets.map(
 			(snippet) => new ShellTreeItem(snippet.command, true, snippet.runImmediately)
 		);
 
