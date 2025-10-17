@@ -1,5 +1,5 @@
 import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
-import vscode, { TreeItem } from '../../vscode';
+import vscode, { TreeItem, None, Expanded, ThemeIcon } from '../../vscode';
 import { getShellSnippets } from './config';
 
 let shellViewProvider: ShellViewProvider | undefined;
@@ -20,8 +20,21 @@ export class ShellTreeItem extends TreeItem {
 		public readonly isLocal: boolean,
 		public readonly runImmediately: boolean
 	) {
-		super(label, vscode.TreeItemCollapsibleState.None);
+		super(label, None);
 		this.contextValue = 'shell-snippet';
+	}
+}
+
+/** Constructs a dropdown to organize shell items */
+class ShellTreeDropdown extends TreeItem {
+	constructor(
+		public readonly label: string,
+		public readonly hasItems: boolean,
+		public readonly icon: string
+	) {
+		super(label, hasItems ? Expanded : None);
+		this.iconPath = new ThemeIcon(icon);
+		this.contextValue = 'shell-dropdown';
 	}
 }
 
@@ -32,7 +45,8 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	readonly onDidChangeTreeData: Event<TreeItemType | null> = this._onDidChangeTreeData.event;
 
 	/** Holds the current shell snippet items */
-	private treeItems: ShellTreeItem[] = [];
+	private globalShellItems: ShellTreeItem[] = [];
+	private localShellItems: ShellTreeItem[] = [];
 
 	/** Inits the tree view */
 	constructor() {
@@ -46,29 +60,32 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 
 	/** Returns all shell snippets */
 	getChildren(element?: TreeItemType): TreeItemType[] {
-		if (element) {
-			return [];
+		if (element?.label === 'Global Shell Snippets') {
+			return this.globalShellItems;
+		} else if (element?.label === 'Local Shell Snippets') {
+			return this.localShellItems;
 		}
-		return this.treeItems;
+		return [
+			new ShellTreeDropdown(
+				'Global Shell Snippets',
+				Boolean(this.globalShellItems.length),
+				'globe'
+			),
+			new ShellTreeDropdown('Local Shell Snippets', Boolean(this.localShellItems.length), 'globe'),
+		];
 	}
 
 	/** Refresh the view */
 	refresh(): void {
 		const [globalSnippets, localSnippets] = getShellSnippets();
 
-		const newItems: ShellTreeItem[] = [];
+		this.globalShellItems = globalSnippets.map(
+			(snippet) => new ShellTreeItem(snippet.command, false, snippet.runImmediately)
+		);
+		this.localShellItems = localSnippets.map(
+			(snippet) => new ShellTreeItem(snippet.command, true, snippet.runImmediately)
+		);
 
-		// Create tree items for global snippets
-		for (const snippet of globalSnippets) {
-			newItems.push(new ShellTreeItem(snippet.command, false, snippet.runImmediately));
-		}
-
-		// Create tree items for local snippets
-		for (const snippet of localSnippets) {
-			newItems.push(new ShellTreeItem(snippet.command, true, snippet.runImmediately));
-		}
-
-		this.treeItems = newItems;
 		this._onDidChangeTreeData.fire(null);
 	}
 }
