@@ -24,7 +24,7 @@ export async function initSnippetShellCommands(context: ExtensionContext) {
 		})
 	);
 
-	if (getShellSnippets().flat(1).length) {
+	if (getShellSnippets().flat().length) {
 		const { getShellView } = await import('./ShellViewProvider.js');
 		getShellView();
 	}
