@@ -90,7 +90,6 @@ export default [
 			'no-restricted-imports': ['error', { patterns: ['**/*.test*'] }],
 
 			'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
-			curly: 'warn',
 			eqeqeq: 'warn',
 			'no-throw-literal': 'warn',
 			semi: 'warn',
