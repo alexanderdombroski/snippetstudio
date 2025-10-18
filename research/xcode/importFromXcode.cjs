@@ -2,6 +2,8 @@
 // importFromXcode.js
 // Minimal script to read Xcode .codesnippet plist files and log title/body/description/prefix
 
+/* eslint-disable jsdoc/require-jsdoc */
+
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
