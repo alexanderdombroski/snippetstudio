@@ -46,7 +46,7 @@ async function getSavePathFromDialog(
 
 	const options: SaveDialogOptions = {
 		title: `Save ${basename}`,
-		defaultUri: defaultUri,
+		defaultUri,
 		saveLabel: 'Save',
 	};
 

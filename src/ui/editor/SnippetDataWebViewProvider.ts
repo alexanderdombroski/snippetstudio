@@ -11,7 +11,7 @@ import type {
 import { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
-import SnippetDataManager from './SnippetDataManager';
+import type SnippetDataManager from './SnippetDataManager';
 import type { SnippetData } from '../../types';
 
 /** */

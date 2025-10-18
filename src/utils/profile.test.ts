@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import path from 'node:path';
 import type { ProfileInfo, ProfileAssociations } from '../types';
 import {

@@ -11,7 +11,7 @@ import type {
 } from 'vscode';
 import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
 import type { SnippetData } from '../../types';
-import SnippetDataManager from './SnippetDataManager';
+import type SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 import { highlightSnippetInsertionFeatures } from '../syntax';
 

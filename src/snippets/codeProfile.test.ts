@@ -6,7 +6,7 @@ import https from 'node:https';
 import { chooseLocalGlobal } from '../utils/user';
 import { getGistId } from '../git/utils';
 import { context } from '../../.vitest/__mocks__/shared';
-import { ClientRequest } from 'node:http';
+import type { ClientRequest } from 'node:http';
 
 vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/user');

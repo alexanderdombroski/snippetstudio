@@ -94,6 +94,7 @@ export default [
 			eqeqeq: 'warn',
 			'no-throw-literal': 'warn',
 			semi: 'warn',
+			'object-shorthand': 'warn',
 		},
 	},
 	jsdoc.configs['flat/recommended-typescript'],
@@ -103,6 +104,7 @@ export default [
 			jsdoc,
 		},
 		rules: {
+			'@typescript-eslint/consistent-type-imports': 'warn',
 			'jsdoc/require-jsdoc': [
 				'warn',
 				{

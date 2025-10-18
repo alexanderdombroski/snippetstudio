@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import path from 'node:path';
 import {
 	TreePathItem,
-	SnippetCategoryTreeItem,
+	type SnippetCategoryTreeItem,
 	createTreeItemFromSnippet,
 	createTreeItemFromFilePath,
 	selectedLanguageTemplate,
