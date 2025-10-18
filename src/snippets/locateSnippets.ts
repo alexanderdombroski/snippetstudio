@@ -124,7 +124,7 @@ async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 	const snippetFiles: string[] = [];
 
 	const langIds = await getLanguages();
-	for (var langId of langIds) {
+	for (const langId of langIds) {
 		const snippetFile = path.join(globalDir, `${langId}.json`);
 		(await exists(snippetFile)) && snippetFiles.push(snippetFile);
 	}

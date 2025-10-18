@@ -95,6 +95,7 @@ export default [
 			'no-throw-literal': 'warn',
 			semi: 'warn',
 			'object-shorthand': 'warn',
+			'no-var': 'warn',
 		},
 	},
 	jsdoc.configs['flat/recommended-typescript'],
