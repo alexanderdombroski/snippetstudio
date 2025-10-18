@@ -1,3 +1,7 @@
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
 import type { QuickPickItem } from 'vscode';
 import vscode, {
 	showErrorMessage,
