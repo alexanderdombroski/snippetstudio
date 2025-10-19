@@ -54,7 +54,7 @@ Command to easily add [attach a keybinding](https://alexanderdombroski.github.io
 
 Snippets added to the active profile, or choose files to [sync across all profiles](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/profile-snippets).
 
-Import snippets from your friend's profile backups, or profile templates.
+Import snippets from your friend's [profile backups](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/backup-and-restore-snippets) or profile templates.
 
 ### Extension Snippets
 
