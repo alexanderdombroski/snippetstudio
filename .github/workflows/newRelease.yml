@@ -51,6 +51,13 @@ jobs:
           npx @vscode/vsce package
           echo "VSIX_PATH=$(ls *.vsix)" >> $GITHUB_ENV
 
+      - name: Delete tag on publish prep failure
+        if: failure()
+        run: |
+          TAG_REF=${GITHUB_REF#refs/tags/}
+          git push origin :refs/tags/$TAG_REF --no-verify
+          echo "Deployment failed. Deleted tag $TAG_REF"
+
       - name: Create GitHub Release
         id: create_release
         run: |
