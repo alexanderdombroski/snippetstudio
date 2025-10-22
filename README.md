@@ -66,7 +66,7 @@ Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/
 
 ## Known Issues
 
-[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-83.2%25-limegreen)
+[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-79.4%25-green)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
 
