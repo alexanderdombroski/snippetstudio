@@ -11,9 +11,9 @@ vi.mock('../../utils/jsoncFilesIO', async () => ({
 	readSnippetFile: vi.fn(),
 }));
 vi.mock('./SnippetPeekProvider', () => ({
-	default: vi.fn().mockImplementation(() => ({
-		showPeek,
-	})),
+	default: vi.fn(function (this: { showPeek: Function }) {
+		this.showPeek = showPeek;
+	}),
 }));
 
 describe('peekAtSnippet', () => {

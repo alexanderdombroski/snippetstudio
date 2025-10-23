@@ -19,7 +19,9 @@ export const Uri = {
 	from: vi.fn((obj) => obj),
 };
 export const SnippetString = vi.fn();
-export const CompletionItem = vi.fn((label: string) => ({ label }));
+export const CompletionItem = vi.fn(function (this: { label: string }, label: string) {
+	this.label = label;
+});
 export const MarkdownString = vi.fn();
 export const ThemeIcon = class {
 	iconPath: string;
