@@ -24,7 +24,9 @@ type Coverage = {
 	};
 };
 
+/** Simple dot reporter that also includes dynamic imports as covered */
 export default class CoverageBalancer extends DotReporter {
+	/** Runs after coverage is calculated, but not reported */
 	async onCoverage(coverage: Coverage): Promise<void> {
 		const tasks: Promise<void>[] = Object.keys(coverage.data).map((file) =>
 			this.fixCoverage(coverage, file)
@@ -44,9 +46,7 @@ export default class CoverageBalancer extends DotReporter {
 	}
 }
 
-/**
- * Finds all lines in a file that contain a dynamic import() expression.
- */
+/** Finds all lines in a file that contain a dynamic import() expression. */
 async function findDynamicImports(filePath: string): Promise<{ line: number; content: string }[]> {
 	const fileContent = await fs.readFile(filePath, 'utf-8');
 	const lines = fileContent.split(/\r?\n/);

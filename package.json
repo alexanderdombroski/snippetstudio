@@ -890,8 +890,8 @@
 		"@types/vscode": "^1.99.0",
 		"@typescript-eslint/eslint-plugin": "^8.43.0",
 		"@typescript-eslint/parser": "^8.43.0",
-		"@vitest/coverage-v8": "^4.0.1",
-		"@vitest/ui": "^4.0.1",
+		"@vitest/coverage-v8": "^3.2.4",
+		"@vitest/ui": "^3.2.4",
 		"@vscode/vsce": "^3.6.2",
 		"esbuild": "^0.25.8",
 		"esbuild-visualizer": "^0.7.0",
@@ -904,7 +904,7 @@
 		"ovsx": "^0.10.5",
 		"prettier": "^3.6.2",
 		"typescript": "^5.8.3",
-		"vitest": "^4.0.1"
+		"vitest": "^3.2.4"
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.1",
