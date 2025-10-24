@@ -15,7 +15,7 @@ import vscode, {
 import { getShellView, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
-import { findInactiveTerminal } from './utils';
+import { findInactiveTerminal, getDefaultShellProfile, getShellProfileNames } from './utils';
 
 /** Command handler to edit an existing shell snippet */
 export async function editShellSnippet(item: ShellTreeItem) {
@@ -23,6 +23,23 @@ export async function editShellSnippet(item: ShellTreeItem) {
 		const command = await getCommand(item.label);
 
 		if (!command) {
+			return;
+		}
+
+		// Get available shell profiles for editing
+		const profileNames = getShellProfileNames();
+		const profileItems: QuickPickItem[] = profileNames.map(name => ({
+			label: name,
+			description: name === item.profile ? 'Current' : undefined,
+			picked: name === item.profile
+		}));
+
+		const selectedProfile = await showQuickPick(profileItems, {
+			title: 'Select shell profile for this snippet',
+			placeHolder: 'Choose the shell profile to use when running this snippet',
+		});
+
+		if (selectedProfile === undefined) {
 			return;
 		}
 
@@ -35,6 +52,7 @@ export async function editShellSnippet(item: ShellTreeItem) {
 		}
 
 		snippets[index].command = command;
+		snippets[index].profile = selectedProfile.label;
 
 		await setShellSnippets(
 			snippets,
@@ -80,8 +98,38 @@ export async function deleteShellSnippet(item: ShellTreeItem) {
 /** Command handler to run a shell command snippet */
 export async function runShellSnippet(item: ShellTreeItem) {
 	try {
+		// Get the profile configuration to create the correct terminal
+		const platform = process.platform === 'win32' ? 'windows' : 
+			process.platform === 'darwin' ? 'osx' : 'linux';
+		
+		const config = getConfiguration('terminal.integrated');
+		const profiles = config.get<Record<string, any>>(`profiles.${platform}`) || {};
+		const profileConfig = profiles[item.profile];
+		
+		// Create terminal options based on the profile
+		const terminalOptions: any = {
+			iconPath: new ThemeIcon('repo'),
+			name: `snippetstudio (${item.profile})`
+		};
+		
+		// If profile has specific configuration, use it
+		if (profileConfig) {
+			if (profileConfig.path) {
+				terminalOptions.shellPath = profileConfig.path;
+			}
+			if (profileConfig.args) {
+				terminalOptions.shellArgs = profileConfig.args;
+			}
+		}
+		
+		// Find an existing terminal with the same profile or create a new one
 		let terminal = await findInactiveTerminal();
-		terminal ??= createTerminal({ iconPath: new ThemeIcon('repo'), name: 'snippetstudio' });
+		
+		// If no inactive terminal or we need a specific profile, create a new terminal
+		if (!terminal || item.profile !== getDefaultShellProfile()) {
+			terminal = createTerminal(terminalOptions);
+		}
+		
 		terminal.show(true);
 		terminal.sendText(item.label, item.runImmediately);
 	} catch (err) {
@@ -94,6 +142,26 @@ export async function createShellSnippet() {
 	const command = await getCommand();
 
 	if (!command) {
+		return;
+	}
+
+	// Get available shell profiles
+	const profileNames = getShellProfileNames();
+	const defaultProfile = getDefaultShellProfile();
+
+	// Create profile selection items
+	const profileItems: QuickPickItem[] = profileNames.map(name => ({
+		label: name,
+		description: name === defaultProfile ? 'Default' : undefined,
+		picked: name === defaultProfile
+	}));
+
+	const selectedProfile = await showQuickPick(profileItems, {
+		title: 'Select shell profile for this snippet',
+		placeHolder: 'Choose the shell profile to use when running this snippet',
+	});
+
+	if (selectedProfile === undefined) {
 		return;
 	}
 
@@ -116,7 +184,7 @@ export async function createShellSnippet() {
 
 	const snippets = getShellSnippets()[Number(isLocal)];
 
-	snippets.push({ command, runImmediately });
+	snippets.push({ command, runImmediately, profile: selectedProfile.label });
 
 	await setShellSnippets(
 		snippets,
