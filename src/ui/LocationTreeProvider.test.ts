@@ -85,7 +85,7 @@ describe('ui/LocationTreeProvider', () => {
 
 	it('should debounce refresh calls', async () => {
 		vi.useFakeTimers();
-		const refreshSpy = vi.spyOn(provider, '__refresh');
+		const refreshSpy = vi.spyOn(provider, '_refresh');
 
 		provider.debounceRefresh();
 		provider.debounceRefresh();

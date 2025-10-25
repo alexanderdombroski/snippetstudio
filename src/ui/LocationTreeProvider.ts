@@ -23,13 +23,13 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	// ---------- Constructor ---------- //
 
 	constructor() {
-		this.__refresh();
+		this._refresh();
 	}
 
 	// ---------- Refresh Methods ---------- //
 
 	/** finds all snippet files and redisplays them */
-	async __refresh() {
+	async _refresh() {
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
 		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
 		const links = await getLinkedSnippets();
@@ -75,7 +75,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 			clearTimeout(this.debounceTimer); // Clear previous timer
 		}
 		this.debounceTimer = setTimeout(async () => {
-			await this.__refresh(); // Call __refresh after delay
+			await this._refresh(); // Call _refresh after delay
 			this.debounceTimer = undefined; // Clear timer
 		}, 400); // Adjust delay as needed (e.g., 200ms)
 	}

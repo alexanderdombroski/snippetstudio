@@ -15,7 +15,7 @@ import { titleCase } from '../../utils/string';
 function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetEditorProvider) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.editor.save', async () => {
-			await __saveSnippet(provider);
+			await _saveSnippet(provider);
 		}),
 		registerCommand('snippetstudio.editor.cancel', () => {
 			const uri = getCurrentUri();
@@ -45,7 +45,7 @@ function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetE
 }
 
 /** saves a snippet and closes the editor */
-export async function __saveSnippet(provider: SnippetEditorProvider) {
+export async function _saveSnippet(provider: SnippetEditorProvider) {
 	const editor = vscode.window.activeTextEditor;
 	if (editor?.document.uri.scheme !== 'snippetstudio') {
 		return;

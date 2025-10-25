@@ -20,7 +20,7 @@ import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
 /** returns the location of downloaded extensions for current platform and os */
-export function __getExtensionsDirPath(): string {
+export function _getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
 		'Visual Studio Code': '.vscode',
 		'Visual Studio Code - Insiders': '.vscode-insiders',
@@ -33,7 +33,7 @@ export function __getExtensionsDirPath(): string {
 
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
-	const extDirPath = __getExtensionsDirPath();
+	const extDirPath = _getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
@@ -73,7 +73,7 @@ export function flattenScopedExtensionSnippets(
 
 /** finds all extension snippet files and groups them by extension */
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	const dir = __getExtensionsDirPath();
+	const dir = _getExtensionsDirPath();
 	if (!(await exists(dir))) {
 		return {};
 	}

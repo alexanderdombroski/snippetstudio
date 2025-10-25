@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, type Mock, beforeEach } from 'vitest';
 import fs from 'node:fs/promises';
 import {
-	__getGlobalLangSnippetFiles,
+	_getGlobalLangSnippetFiles,
 	findCodeSnippetsFiles,
 	locateAllSnippetFiles,
 	locateSnippetFiles,
@@ -35,10 +35,7 @@ describe('locateSnippets', () => {
 	describe('locateSnippetFiles', () => {
 		beforeEach(() => {
 			(exists as Mock).mockResolvedValue(true);
-			(fs.readdir as Mock).mockResolvedValue([
-				'favorites.code-snippets',
-				'other-language.json',
-			]);
+			(fs.readdir as Mock).mockResolvedValue(['favorites.code-snippets', 'other-language.json']);
 			(getCurrentLanguage as Mock).mockReturnValue('python');
 		});
 		it('should find snippets files of the current language', async () => {
@@ -69,7 +66,7 @@ describe('locateSnippets', () => {
 				'typescript.json',
 				'python.json',
 			]);
-			const files = await __getGlobalLangSnippetFiles('/global/path', 'typescript');
+			const files = await _getGlobalLangSnippetFiles('/global/path', 'typescript');
 			expect(files.length).toBe(2);
 		});
 	});

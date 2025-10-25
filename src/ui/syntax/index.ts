@@ -52,7 +52,7 @@ export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 			?.filter((dg) => dg.range.intersection(range))
 			.forEach((dg) => {
 				supressedDiagnostics.push({ range: dg.range });
-				supressedDiagnosticsOverLine.push({ range: __moveRangeDown(dg.range, document) });
+				supressedDiagnosticsOverLine.push({ range: _moveRangeDown(dg.range, document) });
 				diagnostics.splice(diagnostics.indexOf(dg), 1);
 			});
 	}
@@ -65,7 +65,7 @@ export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 }
 
 /** moves a vscode range down a line and shrinks it to fit the textdocument */
-export function __moveRangeDown(range: RangeType, document: TextDocument): RangeType {
+export function _moveRangeDown(range: RangeType, document: TextDocument): RangeType {
 	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
 	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);
 
