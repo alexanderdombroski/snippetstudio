@@ -1,6 +1,7 @@
-import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import vscode, { TreeItem, None, Expanded, ThemeIcon } from '../../vscode';
+import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import { getShellSnippets } from './config';
+import { getDefaultShellProfile } from './utils';
 
 let shellViewProvider: ShellViewProvider | undefined;
 
@@ -18,10 +19,11 @@ export class ShellTreeItem extends TreeItem {
 	constructor(
 		public readonly label: string,
 		public readonly isLocal: boolean,
-		public readonly runImmediately: boolean
+		public readonly runImmediately: boolean,
+		public readonly profile: string
 	) {
 		super(label, None);
-		this.contextValue = 'shell-snippet';
+		(this as any).contextValue = 'shell-snippet';
 	}
 }
 
@@ -33,8 +35,8 @@ class ShellTreeDropdown extends TreeItem {
 		public readonly icon: string
 	) {
 		super(label, hasItems ? Expanded : None);
-		this.iconPath = new ThemeIcon(icon);
-		this.contextValue = 'shell-dropdown';
+		(this as any).iconPath = new ThemeIcon(icon);
+		(this as any).contextValue = 'shell-dropdown';
 	}
 }
 
@@ -74,12 +76,23 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	/** Refresh the view */
 	refresh(): void {
 		const [globalSnippets, localSnippets] = getShellSnippets();
+		const defaultProfile = getDefaultShellProfile();
 
 		this.globalItems = globalSnippets.map(
-			(snippet) => new ShellTreeItem(snippet.command, false, snippet.runImmediately)
+			(snippet) => new ShellTreeItem(
+				snippet.command, 
+				false, 
+				snippet.runImmediately, 
+				snippet.profile || defaultProfile
+			)
 		);
 		this.localItems = localSnippets.map(
-			(snippet) => new ShellTreeItem(snippet.command, true, snippet.runImmediately)
+			(snippet) => new ShellTreeItem(
+				snippet.command, 
+				true, 
+				snippet.runImmediately, 
+				snippet.profile || defaultProfile
+			)
 		);
 
 		this._onDidChangeTreeData.fire(null);

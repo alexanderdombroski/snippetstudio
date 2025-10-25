@@ -43,6 +43,8 @@ export interface ShellSnippet {
 	command: string;
 	/** If true, the command is executed immediately; otherwise, it is pasted into the terminal */
 	runImmediately: boolean;
+	/** The shell profile to use when running this snippet */
+	profile: string;
 }
 
 export type { VSCodeSnippet, VSCodeSnippets, SnippetMap, SnippetData };

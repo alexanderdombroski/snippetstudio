@@ -23,7 +23,7 @@ describe('initSnippetShellCommands', () => {
 	it("should lazy load the view logic if there's snippets", async () => {
 		await initSnippetShellCommands(context);
 		expect(getShellView).not.toBeCalled();
-		(getShellSnippets as Mock).mockReturnValue([{ label: 'echo "Hello"' }]);
+		(getShellSnippets as Mock).mockReturnValue([[{ command: 'echo "Hello"', runImmediately: false, profile: 'bash' }], []]);
 		await initSnippetShellCommands(context);
 		expect(getShellView).toBeCalled();
 	});

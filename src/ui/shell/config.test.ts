@@ -12,8 +12,8 @@ describe('shell snippets config io', () => {
 
 	describe('getShellSnippets', () => {
 		it('should return workspace and global snippets', () => {
-			const globalValue = ['ffmpeg convert out.gif'];
-			const workspaceValue = ['docker compose up'];
+			const globalValue = [{ command: 'ffmpeg convert out.gif', runImmediately: false, profile: 'bash' }];
+			const workspaceValue = [{ command: 'docker compose up', runImmediately: true, profile: 'PowerShell' }];
 			(config.inspect as Mock).mockReturnValue({ globalValue, workspaceValue });
 			const snippets = getShellSnippets();
 			expect(snippets).toStrictEqual([globalValue, workspaceValue]);
