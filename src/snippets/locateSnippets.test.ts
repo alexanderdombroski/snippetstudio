@@ -36,8 +36,8 @@ describe('locateSnippets', () => {
 		beforeEach(() => {
 			(exists as Mock).mockResolvedValue(true);
 			(fs.readdir as Mock).mockResolvedValue([
-				'global/favorites.code-snippets',
-				'global/other-language.json',
+				'favorites.code-snippets',
+				'other-language.json',
 			]);
 			(getCurrentLanguage as Mock).mockReturnValue('python');
 		});
