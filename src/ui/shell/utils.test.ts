@@ -8,6 +8,9 @@ describe('shell utils', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		(getConfiguration as Mock).mockReturnValue(config);
+		Object.defineProperty(process, 'platform', {
+			value: 'win32',
+		});
 	});
 
 	describe('getDefaultShellProfile', () => {

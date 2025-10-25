@@ -24,8 +24,6 @@ function getPlatformKey(): string {
 			return 'windows';
 		case 'darwin':
 			return 'osx';
-		case 'linux':
-			return 'linux';
 		default:
 			return 'linux'; // fallback
 	}
@@ -36,7 +34,7 @@ export function getDefaultShellProfile(): string {
 	const platform = getPlatformKey();
 	const config = getConfiguration('terminal.integrated');
 	const defaultProfile = config.get<string>(`defaultProfile.${platform}`);
-	
+
 	// If no default profile is set, return a reasonable default
 	if (!defaultProfile) {
 		switch (platform) {
@@ -50,7 +48,7 @@ export function getDefaultShellProfile(): string {
 				return 'bash';
 		}
 	}
-	
+
 	return defaultProfile;
 }
 
@@ -59,13 +57,7 @@ export function getAllShellProfiles(): Record<string, any> {
 	const platform = getPlatformKey();
 	const config = getConfiguration('terminal.integrated');
 	const profiles = config.get<Record<string, any>>(`profiles.${platform}`) || {};
-	
-	// Add the default profile if it's not in the profiles list
-	const defaultProfile = getDefaultShellProfile();
-	if (!profiles[defaultProfile]) {
-		profiles[defaultProfile] = {};
-	}
-	
+
 	return profiles;
 }
 
