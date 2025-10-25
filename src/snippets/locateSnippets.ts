@@ -26,7 +26,7 @@ async function locateSnippetFiles(langId?: string): Promise<string[]> {
 		: [await getActiveProfileSnippetsDir()];
 
 	const globalTasks = globalDirs.map((dir) => {
-		return getGlobalLangSnippetFiles(dir, langId);
+		return _getGlobalLangSnippetFiles(dir, langId);
 	});
 
 	const localTask = (async () => {
@@ -44,7 +44,7 @@ async function locateSnippetFiles(langId?: string): Promise<string[]> {
  * Searches and finds the global snippets file for a given language.
  * @returns returns a global snippet filepath, or empty string if couldn't find it.
  */
-async function getGlobalLangSnippetFiles(
+export async function _getGlobalLangSnippetFiles(
 	globalSnippetsPath: string,
 	langId?: string
 ): Promise<string[]> {

@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import {
-	__escapeAllSnippetInsertionFeatures,
-	__initEditing,
-	__newSnippetEditorUri,
+	_escapeAllSnippetInsertionFeatures,
+	_initEditing,
+	_newSnippetEditorUri,
 	editSnippet,
 } from './startEditor';
 import {
@@ -21,7 +21,7 @@ vi.mock('./startEditor', async () => {
 
 	return {
 		...actual,
-		__initEditing: vi.fn().mockResolvedValue({
+		_initEditing: vi.fn().mockResolvedValue({
 			mountSnippet: vi.fn(),
 			delete: vi.fn(),
 		}),
@@ -104,7 +104,7 @@ describe('startEditor', () => {
 			const result = await editSnippet(context, 'typescript', mockSnippetData, '');
 
 			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filename, false);
-			expect(__initEditing).not.toHaveBeenCalled();
+			expect(_initEditing).not.toHaveBeenCalled();
 			expect(result).toBeUndefined();
 		});
 
@@ -124,26 +124,26 @@ describe('startEditor', () => {
 			const startText = '() => $0 < $1';
 			const endText = '() => \\$0 < \\$1';
 
-			expect(__escapeAllSnippetInsertionFeatures(startText)).toBe(endText);
+			expect(_escapeAllSnippetInsertionFeatures(startText)).toBe(endText);
 		});
 		it("should escape placeholders that aren't placeholders", () => {
 			const startText = 'my ${1:computer} is cool';
 			const endText = 'my \\${1:computer} is cool';
 
-			expect(__escapeAllSnippetInsertionFeatures(startText)).toBe(endText);
+			expect(_escapeAllSnippetInsertionFeatures(startText)).toBe(endText);
 		});
 	});
 
 	describe('newSnippetEditorUri', () => {
 		it('should return a Uri', async () => {
-			const uri = __newSnippetEditorUri();
+			const uri = _newSnippetEditorUri();
 			expect(uri).toSatisfy(
 				({ scheme, path }) => scheme === 'snippetstudio' && path.includes('/snippets/snippet')
 			);
 		});
 		it('should return a new Uri every time', async () => {
-			const uri1 = __newSnippetEditorUri();
-			const uri2 = __newSnippetEditorUri();
+			const uri1 = _newSnippetEditorUri();
+			const uri2 = _newSnippetEditorUri();
 
 			expect(uri1.path).not.toBe(uri2.path);
 		});

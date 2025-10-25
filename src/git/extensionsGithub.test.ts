@@ -7,7 +7,7 @@ import vscode, { showInformationMessage, showQuickPick } from '../vscode';
 import { chooseLocalGlobal, getFileName } from '../utils/user';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 
-const { __fileTextRequest, __folderRequest, importBuiltinExtension } = extensionsGithub;
+const { _fileTextRequest, _folderRequest, importBuiltinExtension } = extensionsGithub;
 
 vi.mock('../utils/jsoncFilesIO', async () => {
 	const mod = await vi.importActual('../utils/jsoncFilesIO');
@@ -61,20 +61,20 @@ describe.skipIf(!process.env.GITHUB_TOKEN)('extensionsGithub', () => {
 
 	describe.concurrent('folderRequest', () => {
 		it.concurrent('should return data if response is an array', async () => {
-			const result = await __folderRequest(client, '');
+			const result = await _folderRequest(client, '');
 			const names = result?.map((i) => i.name);
 			expect(names).toContain('LICENSE.txt');
 			expect(names).toContain('README.md');
 		});
 
 		it.concurrent("will throw if the path doesn't exist", async () => {
-			await expect(__folderRequest(client, 'foo/bar')).rejects.toThrow();
+			await expect(_folderRequest(client, 'foo/bar')).rejects.toThrow();
 		});
 	});
 
 	describe.concurrent('fileTextRequest', () => {
 		it.concurrent('should return decoded text content', async () => {
-			const result = await __fileTextRequest(client, 'LICENSE.txt');
+			const result = await _fileTextRequest(client, 'LICENSE.txt');
 			expect(result).toContain('MIT License');
 		});
 	});

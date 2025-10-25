@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach, type Mock, type Mocked } from 'vitest';
 import initSnippetFeatureCommands, {
-	__getNextFeatureNumber,
-	__showVariableQuickPick,
-	__variableList,
+	_getNextFeatureNumber,
+	_showVariableQuickPick,
+	_variableList,
 } from './snippetFeatures';
 import vscode, {
 	getConfiguration,
@@ -106,7 +106,7 @@ describe('initSnippetFeatureCommands', () => {
 	});
 });
 
-describe('__getNextFeatureNumber', () => {
+describe('getNextFeatureNumber', () => {
 	let mockEditor: TextEditor;
 
 	beforeEach(() => {
@@ -120,31 +120,31 @@ describe('__getNextFeatureNumber', () => {
 	it('should start at 1 for an empty document', () => {
 		(mockEditor.document.getText as Mock).mockReturnValue('');
 		(getConfiguration as Mock).mockReturnValue({ get: vi.fn().mockReturnValue(true) });
-		expect(__getNextFeatureNumber(mockEditor)).toBe(1);
+		expect(_getNextFeatureNumber(mockEditor)).toBe(1);
 	});
 
 	it('should find the next available number', () => {
 		(mockEditor.document.getText as Mock).mockReturnValue('const a = ${1:foo}; const b = $2;');
 		(getConfiguration as Mock).mockReturnValue({ get: vi.fn().mockReturnValue(true) });
-		expect(__getNextFeatureNumber(mockEditor)).toBe(3);
+		expect(_getNextFeatureNumber(mockEditor)).toBe(3);
 	});
 
 	it('should ignore escaped dollar signs', () => {
 		(mockEditor.document.getText as Mock).mockReturnValue('const a = \\${1:foo};');
 		(getConfiguration as Mock).mockReturnValue({ get: vi.fn().mockReturnValue(true) });
-		expect(__getNextFeatureNumber(mockEditor)).toBe(1);
+		expect(_getNextFeatureNumber(mockEditor)).toBe(1);
 	});
 
 	it('should return a snippet placeholder if autoFill is off', () => {
 		(mockEditor.document.getText as Mock).mockReturnValue('');
 		(getConfiguration as Mock).mockReturnValue({ get: vi.fn().mockReturnValue(false) });
-		expect(__getNextFeatureNumber(mockEditor)).toBe('${1:1}');
+		expect(_getNextFeatureNumber(mockEditor)).toBe('${1:1}');
 	});
 });
 
-describe('__variableList', () => {
+describe('variableList', () => {
 	it('should return a comma-separated string of variables', () => {
-		const list = __variableList();
+		const list = _variableList();
 		expect(typeof list).toBe('string');
 		expect(list).toContain('TM_SELECTED_TEXT');
 		expect(list).toContain('LINE_COMMENT');
@@ -152,17 +152,17 @@ describe('__variableList', () => {
 	});
 });
 
-describe('__showVariableQuickPick', () => {
+describe('showVariableQuickPick', () => {
 	it('should show quick pick and return selected label', async () => {
 		(showQuickPick as Mock).mockResolvedValue({ label: 'TM_CURRENT_LINE' });
-		const result = await __showVariableQuickPick();
+		const result = await _showVariableQuickPick();
 		expect(showQuickPick).toHaveBeenCalled();
 		expect(result).toBe('TM_CURRENT_LINE');
 	});
 
 	it('should return undefined if nothing is selected', async () => {
 		(showQuickPick as Mock).mockResolvedValue(undefined);
-		const result = await __showVariableQuickPick();
+		const result = await _showVariableQuickPick();
 		expect(result).toBeUndefined();
 	});
 });

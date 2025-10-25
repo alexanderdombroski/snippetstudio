@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach, type Mock } from 'vitest';
-import SnippetEditorProvider, { __escapeDollarSignIfNeeded } from './SnippetEditorProvider';
+import SnippetEditorProvider, { _escapeDollarSignIfNeeded } from './SnippetEditorProvider';
 import SnippetDataManager from './SnippetDataManager';
 import type { Position as PositionType, TextEditor } from 'vscode';
 import vscode, { Position, getConfiguration, onDidChangeActiveTextEditor } from '../../vscode';
@@ -135,14 +135,14 @@ describe('SnippetEditorProvider', () => {
 		it('should auto-escape dollar signs when enabled', async () => {
 			provider.handleDocumentChange(changeEvent);
 
-			const newText = __escapeDollarSignIfNeeded('const a = $1', 11);
+			const newText = _escapeDollarSignIfNeeded('const a = $1', 11);
 			expect(newText).toBe('const a = \\$1');
 		});
 
 		it('should not auto-escape dollar signs when disabled', async () => {
 			provider.handleDocumentChange(changeEvent);
 
-			const newText = __escapeDollarSignIfNeeded('const a = ${4:placeholder}', 11);
+			const newText = _escapeDollarSignIfNeeded('const a = ${4:placeholder}', 11);
 			expect(newText).toBe('const a = \\${4:placeholder}');
 		});
 	});

@@ -1,7 +1,7 @@
 import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import type { TextDocument, TextEditor } from 'vscode';
 import vscode, { createTextEditorDecorationType, getConfiguration, Range } from '../../vscode';
-import { highlightSnippetInsertionFeatures, __moveRangeDown } from '.';
+import { highlightSnippetInsertionFeatures, _moveRangeDown } from '.';
 
 const expectedDecoration = createTextEditorDecorationType({});
 const expectedLocation = expect.anything();
@@ -66,11 +66,11 @@ describe('syntax', () => {
 		});
 	});
 
-	describe('__moveLocationDown', () => {
+	describe('moveRangeDown', () => {
 		it('should move a Location down one line', () => {
 			(editor.document.lineAt as Mock).mockReturnValue({ text: 'placeholder text' });
 			const range = new Range(0, 5, 0, 10);
-			const newLocation = __moveRangeDown(range, editor.document);
+			const newLocation = _moveRangeDown(range, editor.document);
 
 			expect(newLocation.start.line).toBe(1);
 			expect(newLocation.end.line).toBe(1);
