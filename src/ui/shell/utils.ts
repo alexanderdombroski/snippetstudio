@@ -17,6 +17,17 @@ function hasActiveChild(pid: number): boolean {
 	}
 }
 
+/** Finds a snippetstudio terminal that is availabe for use */
+export async function findInactiveTerminal(): Promise<Terminal | undefined> {
+	const terminals = vscode.window.terminals.filter((t) => t.name === 'snippetstudio');
+	for (const terminal of terminals) {
+		const pid = await terminal.processId;
+		if (pid === undefined || !hasActiveChild(pid)) {
+			return terminal;
+		}
+	}
+}
+
 /** Gets the platform-specific configuration key for terminal profiles */
 function getPlatformKey(): string {
 	switch (process.platform) {
@@ -65,15 +76,4 @@ export function getAllShellProfiles(): Record<string, any> {
 export function getShellProfileNames(): string[] {
 	const profiles = getAllShellProfiles();
 	return Object.keys(profiles).sort();
-}
-
-/** Finds a snippetstudio terminal that is availabe for use */
-export async function findInactiveTerminal(): Promise<Terminal | undefined> {
-	const terminals = vscode.window.terminals.filter((t) => t.name === 'snippetstudio');
-	for (const terminal of terminals) {
-		const pid = await terminal.processId;
-		if (pid === undefined || !hasActiveChild(pid)) {
-			return terminal;
-		}
-	}
 }
