@@ -908,7 +908,7 @@
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.2",
-		"@octokit/core": "^7.0.3",
+		"@octokit/core": "^7.0.5",
 		"strip-json-comments": "^5.0.3"
 	},
 	"types": "src/types/index.d.ts"
