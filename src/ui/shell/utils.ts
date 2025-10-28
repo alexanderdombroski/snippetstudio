@@ -36,7 +36,7 @@ function getPlatformKey(): string {
 		case 'darwin':
 			return 'osx';
 		default:
-			return 'linux'; // fallback
+			return 'linux';
 	}
 }
 
@@ -53,8 +53,6 @@ export function getDefaultShellProfile(): string {
 				return 'PowerShell';
 			case 'osx':
 				return 'zsh';
-			case 'linux':
-				return 'bash';
 			default:
 				return 'bash';
 		}
@@ -63,11 +61,20 @@ export function getDefaultShellProfile(): string {
 	return defaultProfile;
 }
 
+type ShellProfiles = {
+	[name: string]: ShellProfileConfig;
+};
+
+type ShellProfileConfig = {
+	path: string;
+	args?: string[];
+};
+
 /** Gets all available shell profiles for the current platform */
-export function getAllShellProfiles(): Record<string, any> {
+export function getAllShellProfiles(): ShellProfiles {
 	const platform = getPlatformKey();
 	const config = getConfiguration('terminal.integrated');
-	const profiles = config.get<Record<string, any>>(`profiles.${platform}`) || {};
+	const profiles = config.get<ShellProfiles>(`profiles.${platform}`) || {};
 
 	return profiles;
 }

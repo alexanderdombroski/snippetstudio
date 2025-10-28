@@ -794,11 +794,16 @@
 							"runImmediately": {
 								"type": "boolean",
 								"description": "If true, the command is executed immediately; otherwise, it is pasted into the terminal."
+							},
+							"profile": {
+								"type": "string",
+								"description": "Integrated Terminal profile. See `terminal.integrated.profiles` to see examples."
 							}
 						},
 						"required": [
 							"command",
-							"runImmediately"
+							"runImmediately",
+							"profile"
 						],
 						"additionalProperties": false
 					}

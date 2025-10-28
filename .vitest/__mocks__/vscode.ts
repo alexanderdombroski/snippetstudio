@@ -106,6 +106,7 @@ export const createQuickPick = vi.fn().mockImplementation(() => {
 	let acceptCallback: (() => void) | undefined;
 	let hideCallback: (() => void) | undefined;
 	const qp = {
+		dispose: vi.fn(),
 		selectedItems: [],
 		items: [],
 		show: vi.fn(() => {
