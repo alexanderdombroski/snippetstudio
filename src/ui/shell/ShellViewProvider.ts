@@ -2,6 +2,7 @@ import vscode, { TreeItem, None, Expanded, ThemeIcon } from '../../vscode';
 import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import { getShellSnippets } from './config';
 import { getDefaultShellProfile } from './utils';
+import type { ShellSnippet } from '../../types';
 
 let shellViewProvider: ShellViewProvider | undefined;
 
@@ -76,24 +77,16 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 	/** Refresh the view */
 	refresh(): void {
 		const [globalSnippets, localSnippets] = getShellSnippets();
-		const defaultProfile = getDefaultShellProfile();
+		const constructorHandler = (snippet: ShellSnippet, isLocal: boolean) =>
+			new ShellTreeItem(
+				snippet.command,
+				isLocal,
+				snippet.runImmediately,
+				snippet.profile || getDefaultShellProfile()
+			);
 
-		this.globalItems = globalSnippets.map(
-			(snippet) => new ShellTreeItem(
-				snippet.command, 
-				false, 
-				snippet.runImmediately, 
-				snippet.profile || defaultProfile
-			)
-		);
-		this.localItems = localSnippets.map(
-			(snippet) => new ShellTreeItem(
-				snippet.command, 
-				true, 
-				snippet.runImmediately, 
-				snippet.profile || defaultProfile
-			)
-		);
+		this.globalItems = globalSnippets.map((snippet) => constructorHandler(snippet, false));
+		this.localItems = localSnippets.map((snippet) => constructorHandler(snippet, true));
 
 		this._onDidChangeTreeData.fire(null);
 	}

@@ -81,38 +81,17 @@ export async function deleteShellSnippet(item: ShellTreeItem) {
 /** Command handler to run a shell command snippet */
 export async function runShellSnippet(item: ShellTreeItem) {
 	try {
-		// Get the profile configuration to create the correct terminal
-		const platform =
-			process.platform === 'win32' ? 'windows' : process.platform === 'darwin' ? 'osx' : 'linux';
-
-		const config = getConfiguration('terminal.integrated');
-		const profiles = config.get<Record<string, any>>(`profiles.${platform}`) || {};
-		const profileConfig = profiles[item.profile];
-
-		// Create terminal options based on the profile
-		const terminalOptions: any = {
-			iconPath: new ThemeIcon('repo'),
-			name: `snippetstudio (${item.profile})`,
-		};
-
-		// If profile has specific configuration, use it
-		if (profileConfig) {
-			if (profileConfig.path) {
-				terminalOptions.shellPath = profileConfig.path;
-			}
-			if (profileConfig.args) {
-				terminalOptions.shellArgs = profileConfig.args;
-			}
+		let terminal = await findInactiveTerminal(item.profile);
+		if (!terminal) {
+			const profiles = getAllShellProfiles();
+			const config = profiles[item.profile];
+			terminal = createTerminal({
+				iconPath: new ThemeIcon('repo'),
+				name: `snippetstudio - ${item.profile}`,
+				shellPath: config.path,
+				shellArgs: config.args,
+			});
 		}
-
-		// Find an existing terminal with the same profile or create a new one
-		let terminal = await findInactiveTerminal();
-
-		// If no inactive terminal or we need a specific profile, create a new terminal
-		if (!terminal || item.profile !== getDefaultShellProfile()) {
-			terminal = createTerminal(terminalOptions);
-		}
-
 		terminal.show(true);
 		terminal.sendText(item.label, item.runImmediately);
 	} catch (err) {

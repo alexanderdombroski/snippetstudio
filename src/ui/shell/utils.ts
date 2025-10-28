@@ -18,8 +18,8 @@ function hasActiveChild(pid: number): boolean {
 }
 
 /** Finds a snippetstudio terminal that is availabe for use */
-export async function findInactiveTerminal(): Promise<Terminal | undefined> {
-	const terminals = vscode.window.terminals.filter((t) => t.name === 'snippetstudio');
+export async function findInactiveTerminal(profile: string): Promise<Terminal | undefined> {
+	const terminals = vscode.window.terminals.filter((t) => t.name === `snippetstudio - ${profile}`);
 	for (const terminal of terminals) {
 		const pid = await terminal.processId;
 		if (pid === undefined || !hasActiveChild(pid)) {
