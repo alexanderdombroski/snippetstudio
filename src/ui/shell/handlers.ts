@@ -136,7 +136,7 @@ export async function createShellSnippet() {
 	const prePick = options.find(
 		({ id, label }) => id === 'profile' && label === defaultProfile
 	) as Item;
-	qp.selectedItems = [prePick];
+	qp.selectedItems = [options[1], prePick];
 
 	qp.show();
 
