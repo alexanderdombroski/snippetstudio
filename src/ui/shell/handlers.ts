@@ -8,7 +8,6 @@ import vscode, {
 	createTerminal,
 	ThemeIcon,
 	showInputBox,
-	showQuickPick,
 	showInformationMessage,
 	getConfiguration,
 	createQuickPick,
@@ -17,12 +16,7 @@ import vscode, {
 import { getShellView, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
-import {
-	findInactiveTerminal,
-	getAllShellProfiles,
-	getDefaultShellProfile,
-	getShellProfileNames,
-} from './utils';
+import { findInactiveTerminal, getAllShellProfiles, getDefaultShellProfile } from './utils';
 
 /** Command handler to edit an existing shell snippet */
 export async function editShellSnippet(item: ShellTreeItem) {
@@ -30,23 +24,6 @@ export async function editShellSnippet(item: ShellTreeItem) {
 		const command = await getCommand(item.label);
 
 		if (!command) {
-			return;
-		}
-
-		// Get available shell profiles for editing
-		const profileNames = getShellProfileNames();
-		const profileItems: QuickPickItem[] = profileNames.map((name) => ({
-			label: name,
-			description: name === item.profile ? 'Current' : undefined,
-			picked: name === item.profile,
-		}));
-
-		const selectedProfile = await showQuickPick(profileItems, {
-			title: 'Select shell profile for this snippet',
-			placeHolder: 'Choose the shell profile to use when running this snippet',
-		});
-
-		if (selectedProfile === undefined) {
 			return;
 		}
 
@@ -59,7 +36,6 @@ export async function editShellSnippet(item: ShellTreeItem) {
 		}
 
 		snippets[index].command = command;
-		snippets[index].profile = selectedProfile.label;
 
 		await setShellSnippets(
 			snippets,
