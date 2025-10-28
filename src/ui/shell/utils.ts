@@ -17,6 +17,17 @@ function hasActiveChild(pid: number): boolean {
 	}
 }
 
+/** Finds a snippetstudio terminal that is availabe for use */
+export async function findInactiveTerminal(profile: string): Promise<Terminal | undefined> {
+	const terminals = vscode.window.terminals.filter((t) => t.name === `snippetstudio - ${profile}`);
+	for (const terminal of terminals) {
+		const pid = await terminal.processId;
+		if (pid === undefined || !hasActiveChild(pid)) {
+			return terminal;
+		}
+	}
+}
+
 /** Gets the platform-specific configuration key for terminal profiles */
 function getPlatformKey(): string {
 	switch (process.platform) {
@@ -25,7 +36,7 @@ function getPlatformKey(): string {
 		case 'darwin':
 			return 'osx';
 		default:
-			return 'linux'; // fallback
+			return 'linux';
 	}
 }
 
@@ -42,8 +53,6 @@ export function getDefaultShellProfile(): string {
 				return 'PowerShell';
 			case 'osx':
 				return 'zsh';
-			case 'linux':
-				return 'bash';
 			default:
 				return 'bash';
 		}
@@ -52,28 +61,20 @@ export function getDefaultShellProfile(): string {
 	return defaultProfile;
 }
 
+type ShellProfiles = {
+	[name: string]: ShellProfileConfig;
+};
+
+type ShellProfileConfig = {
+	path: string;
+	args?: string[];
+};
+
 /** Gets all available shell profiles for the current platform */
-export function getAllShellProfiles(): Record<string, any> {
+export function getAllShellProfiles(): ShellProfiles {
 	const platform = getPlatformKey();
 	const config = getConfiguration('terminal.integrated');
-	const profiles = config.get<Record<string, any>>(`profiles.${platform}`) || {};
+	const profiles = config.get<ShellProfiles>(`profiles.${platform}`) || {};
 
 	return profiles;
-}
-
-/** Gets an array of profile names for quick pick selection */
-export function getShellProfileNames(): string[] {
-	const profiles = getAllShellProfiles();
-	return Object.keys(profiles).sort();
-}
-
-/** Finds a snippetstudio terminal that is availabe for use */
-export async function findInactiveTerminal(): Promise<Terminal | undefined> {
-	const terminals = vscode.window.terminals.filter((t) => t.name === 'snippetstudio');
-	for (const terminal of terminals) {
-		const pid = await terminal.processId;
-		if (pid === undefined || !hasActiveChild(pid)) {
-			return terminal;
-		}
-	}
 }

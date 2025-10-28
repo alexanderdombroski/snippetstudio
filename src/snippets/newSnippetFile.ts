@@ -140,6 +140,8 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 			});
 		});
 
+		quickPick.dispose();
+
 		const langIds = await getLanguages();
 
 		// Add Snippets to export object
