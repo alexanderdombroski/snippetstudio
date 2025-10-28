@@ -1,5 +1,5 @@
 import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
-import { getDefaultShellProfile, getAllShellProfiles, getShellProfileNames } from './utils';
+import { getDefaultShellProfile, getAllShellProfiles } from './utils';
 import { getConfiguration } from '../../vscode';
 
 const config = { get: vi.fn() };
@@ -41,15 +41,6 @@ describe('shell utils', () => {
 			(config.get as Mock).mockReturnValue(undefined);
 			const result = getAllShellProfiles();
 			expect(result).toEqual({});
-		});
-	});
-
-	describe('getShellProfileNames', () => {
-		it('should return sorted profile names', () => {
-			const profiles = { PowerShell: {}, bash: {}, zsh: {} };
-			(config.get as Mock).mockReturnValue(profiles);
-			const names = getShellProfileNames();
-			expect(names).toEqual(['PowerShell', 'bash', 'zsh']);
 		});
 	});
 });

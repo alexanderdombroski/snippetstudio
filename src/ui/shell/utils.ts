@@ -78,9 +78,3 @@ export function getAllShellProfiles(): ShellProfiles {
 
 	return profiles;
 }
-
-/** Gets an array of profile names for quick pick selection */
-export function getShellProfileNames(): string[] {
-	const profiles = getAllShellProfiles();
-	return Object.keys(profiles).sort();
-}
