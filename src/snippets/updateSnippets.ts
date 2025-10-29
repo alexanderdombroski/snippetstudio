@@ -31,11 +31,9 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 		return;
 	}
 
-	if (snippet.scope) {
-		if (path.extname(filepath) === '.json') {
-			delete snippet.scope;
-		}
-	} else if (path.extname(filepath) === '.code-snippets') {
+	if (path.extname(filepath) === '.json' || snippet.scope === 'global') {
+		delete snippet.scope;
+	} else if (!snippet.scope) {
 		snippet.scope = getCurrentLanguage() ?? 'plaintext';
 	}
 
@@ -94,6 +92,9 @@ async function moveSnippet(item: TreePathItem) {
 	}
 
 	const snippet = (await readSnippet(item.path, item.description as string)) as VSCodeSnippet;
+	if (path.extname(item.path) === '.code-snippets' && !snippet.scope) {
+		snippet.scope = 'global';
+	}
 
 	await Promise.all([
 		writeSnippet(selected.description, item.description as string, snippet),
