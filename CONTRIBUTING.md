@@ -34,6 +34,8 @@ If you're testing for another IDE, you can package the extension as a vsix and i
 
 See ["Your First Extension"](https://code.visualstudio.com/api/get-started/your-first-extension) for additional help.
 
+_If you want immediate feedback, you can add a comment `@coderabbitai review` and ai will give you a code review_
+
 ## Contributing to docs
 
 This site uses Docusaurus inside of the docs/ directory.
