@@ -197,6 +197,12 @@
 				"category": "snippetstudio"
 			},
 			{
+				"command": "snippetstudio.shell.refresh",
+				"title": "Refresh Shell Snippets",
+				"icon": "$(refresh)",
+				"category": "snippetstudio"
+			},
+			{
 				"command": "snippetstudio.file.createGlobalLang",
 				"title": "Create Global Snippets File",
 				"icon": "$(file-code)",
@@ -447,6 +453,11 @@
 				{
 					"command": "snippetstudio.refreshLocations",
 					"when": "view == location-manager",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.shell.refresh",
+					"when": "view == shell-snippets",
 					"group": "navigation"
 				},
 				{

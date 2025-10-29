@@ -21,6 +21,10 @@ export async function initSnippetShellCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.shell.run', async (item: ShellTreeItem) => {
 			const { runShellSnippet } = await import('./handlers.js');
 			runShellSnippet(item);
+		}),
+		registerCommand('snippetstudio.shell.refresh', async () => {
+			const { getShellView } = await import('./ShellViewProvider.js');
+			getShellView().refresh();
 		})
 	);
 

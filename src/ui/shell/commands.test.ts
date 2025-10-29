@@ -17,13 +17,16 @@ describe('initSnippetShellCommands', () => {
 		const spy = vi.spyOn(context.subscriptions, 'push');
 		await initSnippetShellCommands(context);
 		expect(spy).toBeCalled();
-		expect(registerCommand).toBeCalledTimes(4);
+		expect(registerCommand).toBeCalledTimes(5);
 	});
 
 	it("should lazy load the view logic if there's snippets", async () => {
 		await initSnippetShellCommands(context);
 		expect(getShellView).not.toBeCalled();
-		(getShellSnippets as Mock).mockReturnValue([[{ command: 'echo "Hello"', runImmediately: false, profile: 'bash' }], []]);
+		(getShellSnippets as Mock).mockReturnValue([
+			[{ command: 'echo "Hello"', runImmediately: false, profile: 'bash' }],
+			[],
+		]);
 		await initSnippetShellCommands(context);
 		expect(getShellView).toBeCalled();
 	});
