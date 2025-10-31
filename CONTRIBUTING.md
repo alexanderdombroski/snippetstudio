@@ -9,6 +9,8 @@ Thanks for taking the time to contribute! Please follow these steps and guidelin
 - Include steps to reproduce when applicable.
 - If an unassigned issue exists and you want to work on it, add a comment asking to be assigned and I can assign you
 
+_If you haven't created a fork and worked on an issue assigned to you, after a few weeks I will choose to assign someone else due to inactivity._
+
 ## Contributing to extension
 
 - For new features, submit a [feature request](https://github.com/alexanderdombroski/snippetstudio/issues/new?template=feature_request.yml)
