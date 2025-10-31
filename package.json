@@ -611,6 +611,11 @@
 					"command": "snippetstudio.shell.run",
 					"group": "inline",
 					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.create",
+					"group": "inline",
+					"when": "viewItem == shell-dropdown"
 				}
 			]
 		},
