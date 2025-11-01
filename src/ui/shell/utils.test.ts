@@ -1,5 +1,5 @@
 import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
-import { getDefaultShellProfile, getAllShellProfiles } from './utils';
+import { getDefaultShellProfile, getAllShellProfiles, findInactiveTerminal } from './utils';
 import { getConfiguration } from '../../vscode';
 
 const config = { get: vi.fn() };
@@ -10,6 +10,13 @@ describe('shell utils', () => {
 		(getConfiguration as Mock).mockReturnValue(config);
 		Object.defineProperty(process, 'platform', {
 			value: 'win32',
+		});
+	});
+
+	describe('findInactiveTerminal', () => {
+		it('should return undefined if no terminal is inactive', async () => {
+			const terminal = await findInactiveTerminal('zsh');
+			expect(terminal).toBeUndefined();
 		});
 	});
 

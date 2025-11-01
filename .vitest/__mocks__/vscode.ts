@@ -154,6 +154,8 @@ export default {
 		onDidChangeVisibleTextEditors: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
 		registerWebviewViewProvider: vi.fn(),
+		createTreeView: vi.fn(),
+		terminals: [],
 	},
 	languages: {
 		registerCompletionItemProvider: vi.fn(),
@@ -187,4 +189,5 @@ export default {
 	ProgressLocation: {},
 	Location: class {},
 	ConfigurationTarget: {},
+	QuickPickItemKind: { Seperator: 0 },
 };

@@ -100,7 +100,7 @@ export async function runShellSnippet(item: ShellTreeItem) {
 }
 
 /** Command handler to create a new shell snippet */
-export async function createShellSnippet(item: ShellTreeDropdown) {
+export async function createShellSnippet(item?: ShellTreeDropdown) {
 	const command = await getCommand();
 
 	if (!command) {

@@ -6,7 +6,7 @@ import { getShellSnippets } from './config';
 /** Registers and lazy loads all shell snippet commands */
 export async function initSnippetShellCommands(context: ExtensionContext) {
 	context.subscriptions.push(
-		registerCommand('snippetstudio.shell.create', async (item: ShellTreeDropdown) => {
+		registerCommand('snippetstudio.shell.create', async (item?: ShellTreeDropdown) => {
 			const { createShellSnippet } = await import('./handlers.js');
 			createShellSnippet(item);
 		}),
