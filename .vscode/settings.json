@@ -12,5 +12,12 @@
 	"typescript.tsc.autoDetect": "off",
 	"[typescript][json][jsonc]": {
 		"editor.tabSize": 2
-	}
+	},
+	"snippetstudio.shell.snippets": [
+		{
+			"command": "npm run package && npx vsce package",
+			"runImmediately": true,
+			"profile": "zsh"
+		}
+	]
 }
