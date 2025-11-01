@@ -13,7 +13,7 @@ import vscode, {
 	createQuickPick,
 	showWarningMessage,
 } from '../../vscode';
-import { getShellView, type ShellTreeItem } from './ShellViewProvider';
+import { getShellView, type ShellTreeDropdown, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
 import { findInactiveTerminal, getAllShellProfiles, getDefaultShellProfile } from './utils';
@@ -100,7 +100,7 @@ export async function runShellSnippet(item: ShellTreeItem) {
 }
 
 /** Command handler to create a new shell snippet */
-export async function createShellSnippet() {
+export async function createShellSnippet(item: ShellTreeDropdown) {
 	const command = await getCommand();
 
 	if (!command) {
@@ -136,7 +136,9 @@ export async function createShellSnippet() {
 	const prePick = options.find(
 		({ id, label }) => id === 'profile' && label === defaultProfile
 	) as Item;
-	qp.selectedItems = [options[1], prePick];
+	const preselectedOptions = [options[1], prePick];
+	if (item?.isLocal === false) preselectedOptions.push(options[2]);
+	qp.selectedItems = preselectedOptions;
 
 	qp.show();
 

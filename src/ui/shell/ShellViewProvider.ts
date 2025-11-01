@@ -29,11 +29,12 @@ export class ShellTreeItem extends TreeItem {
 }
 
 /** Constructs a dropdown to organize shell items */
-class ShellTreeDropdown extends TreeItem {
+export class ShellTreeDropdown extends TreeItem {
 	constructor(
 		public readonly label: string,
 		public readonly hasItems: boolean,
-		public readonly icon: string
+		public readonly icon: string,
+		public readonly isLocal: boolean
 	) {
 		super(label, hasItems ? Expanded : None);
 		(this as any).iconPath = new ThemeIcon(icon);
@@ -69,8 +70,18 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 			return this.localItems;
 		}
 		return [
-			new ShellTreeDropdown('Global Shell Snippets', Boolean(this.globalItems.length), 'globe'),
-			new ShellTreeDropdown('Local Shell Snippets', Boolean(this.localItems.length), 'folder'),
+			new ShellTreeDropdown(
+				'Global Shell Snippets',
+				Boolean(this.globalItems.length),
+				'globe',
+				true
+			),
+			new ShellTreeDropdown(
+				'Local Shell Snippets',
+				Boolean(this.localItems.length),
+				'folder',
+				false
+			),
 		];
 	}
 
