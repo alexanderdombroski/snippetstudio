@@ -60,6 +60,10 @@ Import snippets from your friend's [profile backups](https://alexanderdombroski.
 
 Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/extension-snippets) them to be more helpful
 
+### Shell Snippets
+
+Save terminal commands commonly ran in the terminal across workspaces or globally. Hit the run button to automatically create a terminal and run it.
+
 ## Requirements
 
 **Web Version:** This extension is not currently stable for [web versions](https://code.visualstudio.com/api/extension-guides/web-extensions) of VS Code due to its reliance on Node.js file system APIs.
