@@ -1,8 +1,16 @@
 import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
-import { getDefaultShellProfile, getAllShellProfiles, findInactiveTerminal } from './utils';
+import {
+	getDefaultShellProfile,
+	getAllShellProfiles,
+	findInactiveTerminal,
+	_hasActiveChild,
+} from './utils';
 import { getConfiguration } from '../../vscode';
+import { execSync } from 'node:child_process';
 
 const config = { get: vi.fn() };
+
+vi.mock('node:child_process');
 
 describe('shell utils', () => {
 	beforeEach(() => {
@@ -10,6 +18,16 @@ describe('shell utils', () => {
 		(getConfiguration as Mock).mockReturnValue(config);
 		Object.defineProperty(process, 'platform', {
 			value: 'win32',
+		});
+	});
+
+	describe('hasActiveChild', () => {
+		it('should find if a terminal process has children processes', () => {
+			const mockPid = 54234;
+			(execSync as Mock).mockReturnValue('56432');
+			const active = _hasActiveChild(mockPid);
+			expect(execSync).toBeCalled();
+			expect(active).toBe(true);
 		});
 	});
 

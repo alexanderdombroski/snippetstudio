@@ -3,7 +3,7 @@ import type { Terminal } from 'vscode';
 import vscode, { getConfiguration } from '../../vscode';
 
 /** Tells whether a shell PID has a command running */
-function hasActiveChild(pid: number): boolean {
+export function _hasActiveChild(pid: number): boolean {
 	try {
 		const cmd =
 			process.platform === 'win32'
@@ -22,7 +22,7 @@ export async function findInactiveTerminal(profile: string): Promise<Terminal | 
 	const terminals = vscode.window.terminals.filter((t) => t.name === `snippetstudio - ${profile}`);
 	for (const terminal of terminals) {
 		const pid = await terminal.processId;
-		if (pid === undefined || !hasActiveChild(pid)) {
+		if (pid === undefined || !_hasActiveChild(pid)) {
 			return terminal;
 		}
 	}

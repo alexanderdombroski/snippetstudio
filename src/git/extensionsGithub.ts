@@ -17,7 +17,7 @@ import { exists } from '../utils/fsInfo';
 export async function importBuiltinExtension(context: ExtensionContext) {
 	const client = await getOctokitClient(context);
 
-	const snippetDirs = await __getDirsWithSnippets(client);
+	const snippetDirs = await _getDirsWithSnippets(client);
 	if (snippetDirs === undefined) {
 		return;
 	}
@@ -89,7 +89,7 @@ export async function importBuiltinExtension(context: ExtensionContext) {
 }
 
 /** finds all extension folders with snippets within the vscode repo */
-export async function __getDirsWithSnippets(client: Octokit) {
+export async function _getDirsWithSnippets(client: Octokit) {
 	const res = await _folderRequest(client, 'extensions');
 	const folders = res?.filter((item) => item.type === 'dir') ?? [];
 
