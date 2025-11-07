@@ -85,6 +85,12 @@ export async function runShellSnippet(item: ShellTreeItem) {
 		if (!terminal) {
 			const profiles = getAllShellProfiles();
 			const config = profiles[item.profile];
+			if (!config?.path) {
+				showWarningMessage(
+					`Shell profile ${item.profile} not recognized. Recreate command with new profile or add ${item.profile} profile to VS Code configuration.`
+				);
+				return;
+			}
 			terminal = createTerminal({
 				iconPath: new ThemeIcon('repo'),
 				name: `snippetstudio - ${item.profile}`,

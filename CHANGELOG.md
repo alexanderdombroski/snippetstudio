@@ -21,6 +21,13 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [2.7.1] - DATE
+
+### Fixed
+
+- Added warning if an unknown integrated terminal profile configuration is used
+
+
 ## [2.7.0] - 2025-10-31
 
 ### Added

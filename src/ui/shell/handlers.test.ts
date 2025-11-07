@@ -6,7 +6,7 @@ import {
 	runShellSnippet,
 } from './handlers';
 import { getShellSnippets, setShellSnippets } from './config';
-import { getShellView, type ShellTreeDropdown } from './ShellViewProvider';
+import { getShellView, type ShellTreeItem, type ShellTreeDropdown } from './ShellViewProvider';
 import vscode, {
 	createQuickPick,
 	createTerminal,
@@ -45,7 +45,7 @@ describe('Shell Command Handlers', () => {
 			]);
 			const item = { label: 'ls', isLocal: true };
 
-			await editShellSnippet(item as any);
+			await editShellSnippet(item as ShellTreeItem);
 
 			expect(showInputBox).toHaveBeenCalled();
 			const updatedSnippets = [{ command: 'ls -la', runImmediately: false, profile: 'bash' }];
@@ -62,7 +62,7 @@ describe('Shell Command Handlers', () => {
 			(getShellSnippets as Mock).mockReturnValue([[], []]);
 			const item = { label: 'ls', isLocal: true };
 
-			await editShellSnippet(item as any);
+			await editShellSnippet(item as ShellTreeItem);
 
 			expect(showErrorMessage).toHaveBeenCalledWith('Snippet not found for editing.');
 			expect(setShellSnippets).not.toHaveBeenCalled();
@@ -72,7 +72,7 @@ describe('Shell Command Handlers', () => {
 			(showInputBox as Mock).mockResolvedValue(undefined);
 			const item = { label: 'ls', isLocal: true };
 
-			await editShellSnippet(item as any);
+			await editShellSnippet(item as ShellTreeItem);
 
 			expect(setShellSnippets).not.toHaveBeenCalled();
 		});
@@ -84,7 +84,7 @@ describe('Shell Command Handlers', () => {
 			});
 			const item = { label: 'ls', isLocal: true };
 
-			await editShellSnippet(item as any);
+			await editShellSnippet(item as ShellTreeItem);
 
 			expect(showErrorMessage).toHaveBeenCalledWith('Failed to edit snippet: Error: test error');
 		});
@@ -100,7 +100,7 @@ describe('Shell Command Handlers', () => {
 			]);
 			const item = { label: 'ls', isLocal: true };
 
-			await deleteShellSnippet(item as any);
+			await deleteShellSnippet(item as ShellTreeItem);
 
 			expect(getConfirmation).toHaveBeenCalledWith('Delete shell snippet "ls"?');
 			expect(setShellSnippets).toHaveBeenCalledWith([], vscode.ConfigurationTarget.Workspace);
@@ -113,7 +113,7 @@ describe('Shell Command Handlers', () => {
 			(getConfirmation as Mock).mockResolvedValue(false);
 			const item = { label: 'ls', isLocal: true };
 
-			await deleteShellSnippet(item as any);
+			await deleteShellSnippet(item as ShellTreeItem);
 
 			expect(setShellSnippets).not.toHaveBeenCalled();
 		});
@@ -126,7 +126,7 @@ describe('Shell Command Handlers', () => {
 			]);
 			const item = { label: 'ls', isLocal: true };
 
-			await deleteShellSnippet(item as any);
+			await deleteShellSnippet(item as ShellTreeItem);
 
 			expect(getConfirmation).not.toHaveBeenCalled();
 			expect(setShellSnippets).toHaveBeenCalledWith([], vscode.ConfigurationTarget.Workspace);
@@ -140,7 +140,7 @@ describe('Shell Command Handlers', () => {
 			(findInactiveTerminal as Mock).mockResolvedValue(terminal as any);
 			const item = { label: 'echo "hello"', runImmediately: true, profile: 'bash' };
 
-			await runShellSnippet(item as any);
+			await runShellSnippet(item as ShellTreeItem);
 
 			expect(findInactiveTerminal).toHaveBeenCalledWith('bash');
 			expect(terminal.show).toHaveBeenCalledWith(true);
@@ -156,7 +156,7 @@ describe('Shell Command Handlers', () => {
 			(createTerminal as Mock).mockReturnValue(terminal as any);
 			const item = { label: 'echo "hello"', runImmediately: false, profile: 'bash' };
 
-			await runShellSnippet(item as any);
+			await runShellSnippet(item as ShellTreeItem);
 
 			expect(createTerminal).toHaveBeenCalled();
 			expect(terminal.show).toHaveBeenCalledWith(true);
@@ -167,9 +167,19 @@ describe('Shell Command Handlers', () => {
 			(findInactiveTerminal as Mock).mockRejectedValue('test error');
 			const item = { label: 'echo "hello"', runImmediately: false, profile: 'bash' };
 
-			await runShellSnippet(item as any);
+			await runShellSnippet(item as ShellTreeItem);
 
 			expect(showErrorMessage).toHaveBeenCalledWith('Failed to run command because test error');
+		});
+
+		it("should warn if a shell profile isn't recognized.", async () => {
+			(findInactiveTerminal as Mock).mockReturnValue(undefined);
+			const item = { label: 'echo "hello"', runImmediately: true, profile: 'MacOS Powershell+' };
+
+			await runShellSnippet(item as ShellTreeItem);
+
+			expect(showWarningMessage).toBeCalled();
+			expect(createTerminal).not.toBeCalled();
 		});
 	});
 
@@ -183,7 +193,7 @@ describe('Shell Command Handlers', () => {
 		it('should create a new shell snippet', async () => {
 			(showInputBox as Mock).mockResolvedValue('npm install');
 
-			await createShellSnippet({ isLocal: false } as any);
+			await createShellSnippet({ isLocal: false } as ShellTreeDropdown);
 
 			expect(showInputBox).toHaveBeenCalled();
 			expect(createQuickPick).toBeCalled();
@@ -194,7 +204,7 @@ describe('Shell Command Handlers', () => {
 		it('should not create if user cancels command input', async () => {
 			(showInputBox as Mock).mockResolvedValue(undefined);
 
-			await createShellSnippet({ isLocal: false } as any);
+			await createShellSnippet({ isLocal: false } as ShellTreeDropdown);
 
 			expect(createQuickPick).not.toHaveBeenCalled();
 			expect(setShellSnippets).not.toHaveBeenCalled();
@@ -211,7 +221,7 @@ describe('Shell Command Handlers', () => {
 			(showInputBox as Mock).mockResolvedValue('npm install');
 			(getAllShellProfiles as Mock).mockReturnValue({ zsh: { path: '/bin/zsh' } }); // bash is default, but not in list
 
-			await createShellSnippet({ isLocal: false } as any);
+			await createShellSnippet({ isLocal: false } as ShellTreeDropdown);
 
 			expect(showWarningMessage).toHaveBeenCalled();
 		});
