@@ -83,7 +83,7 @@ export async function runShellSnippet(item: ShellTreeItem) {
 	try {
 		let terminal = await findInactiveTerminal(item.profile);
 		if (!terminal) {
-			const profiles = getAllShellProfiles();
+			const profiles = await getAllShellProfiles();
 			const config = profiles[item.profile];
 			if (!config?.path) {
 				showWarningMessage(
@@ -125,10 +125,10 @@ export async function createShellSnippet(item?: ShellTreeDropdown) {
 	];
 
 	const defaultProfile = getDefaultShellProfile();
-	const profiles = getAllShellProfiles();
+	const profiles = await getAllShellProfiles();
 	if (!(defaultProfile in profiles)) {
 		showWarningMessage(
-			"VS Code configuration for `terminal.integrated.profiles` will cause issues because profile list is empty or doesn't contain the default."
+			"VS Code configuration for `terminal.integrated.profiles` will cause issues because profile list contains no shell executables or doesn't contain the default."
 		);
 		return;
 	}

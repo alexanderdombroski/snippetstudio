@@ -1,6 +1,7 @@
 import { execSync } from 'node:child_process';
 import type { Terminal } from 'vscode';
 import vscode, { getConfiguration } from '../../vscode';
+import { access, constants } from 'fs/promises';
 
 /** Tells whether a shell PID has a command running */
 export function _hasActiveChild(pid: number): boolean {
@@ -71,10 +72,41 @@ type ShellProfileConfig = {
 };
 
 /** Gets all available shell profiles for the current platform */
-export function getAllShellProfiles(): ShellProfiles {
+export async function getAllShellProfiles(): Promise<ShellProfiles> {
 	const platform = getPlatformKey();
 	const config = getConfiguration('terminal.integrated');
 	const profiles = config.get<ShellProfiles>(`profiles.${platform}`) || {};
 
-	return profiles;
+	const entries = await Promise.all(
+		Object.entries(profiles).map(async ([key, profile]) =>
+			commandExists(profile.path) || (await isExecutablePath(profile.path)) ? [key, profile] : null
+		)
+	);
+
+	return Object.fromEntries(entries.filter((kvp) => kvp !== null));
+}
+
+/**
+ * Check if a given path exists and is executable.
+ * @param filePath - Absolute or relative path to a file.
+ * @returns true if the file exists and is executable, false otherwise.
+ */
+export async function isExecutablePath(filePath: string): Promise<boolean> {
+	try {
+		await access(filePath, constants.X_OK);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+/** Check if a command or path to an executable exists. */
+export function commandExists(command: string): boolean {
+	try {
+		const cmd = process.platform === 'win32' ? `where ${command}` : `command -v ${command}`;
+		execSync(cmd, { stdio: 'ignore' });
+		return true;
+	} catch {
+		return false;
+	}
 }

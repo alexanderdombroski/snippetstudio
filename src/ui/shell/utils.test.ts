@@ -11,6 +11,10 @@ import { execSync } from 'node:child_process';
 const config = { get: vi.fn() };
 
 vi.mock('node:child_process');
+vi.mock('fs/promises', () => ({
+	access: vi.fn(() => Promise.resolve()),
+	constants: { X_OK: 1 },
+}));
 
 describe('shell utils', () => {
 	beforeEach(() => {
@@ -54,17 +58,17 @@ describe('shell utils', () => {
 	});
 
 	describe('getAllShellProfiles', () => {
-		it('should return configured profiles', () => {
+		it('should return configured profiles', async () => {
 			const profiles = { PowerShell: {}, bash: {} };
 			(config.get as Mock).mockReturnValue(profiles);
-			const result = getAllShellProfiles();
+			const result = await getAllShellProfiles();
 			expect(result).toEqual(profiles);
 			expect(config.get).toBeCalledWith('profiles.windows');
 		});
 
-		it('should return empty object when no profiles', () => {
+		it('should return empty object when no profiles', async () => {
 			(config.get as Mock).mockReturnValue(undefined);
-			const result = getAllShellProfiles();
+			const result = await getAllShellProfiles();
 			expect(result).toEqual({});
 		});
 	});

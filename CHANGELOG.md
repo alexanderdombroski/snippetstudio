@@ -26,7 +26,7 @@
 ### Fixed
 
 - Added warning if an unknown integrated terminal profile configuration is used
-
+- VS Code recommended shell configs won't be used if they aren't on your system
 
 ## [2.7.0] - 2025-10-31
 
