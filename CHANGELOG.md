@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [2.7](#270---2025-10-31) - Shell Snippets
+- [2.7](#271---2025-11-08) - Shell Snippets
 - [2.6](#260---2025-10-04) - Simplified View Options
 - [2.5](#250---2025-09-15) - Snippet Peeks
 - [2.4](#241---2025-09-11) - Cursor Support
@@ -21,7 +21,7 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [2.7.1] - DATE
+## [2.7.1] - 2025-11-08
 
 ### Added
 
