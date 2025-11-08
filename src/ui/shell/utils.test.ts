@@ -4,9 +4,11 @@ import {
 	getAllShellProfiles,
 	findInactiveTerminal,
 	_hasActiveChild,
+	_isExecutablePath,
 } from './utils';
 import { getConfiguration } from '../../vscode';
 import { execSync } from 'node:child_process';
+import { access } from 'node:fs/promises';
 
 const config = { get: vi.fn() };
 
@@ -32,6 +34,14 @@ describe('shell utils', () => {
 			const active = _hasActiveChild(mockPid);
 			expect(execSync).toBeCalled();
 			expect(active).toBe(true);
+		});
+		it('should report false when terminal process has no children processes', () => {
+			const mockPid = 54234;
+			(execSync as Mock).mockImplementationOnce(() => {
+				throw new Error();
+			});
+			const active = _hasActiveChild(mockPid);
+			expect(active).toBe(false);
 		});
 	});
 
@@ -70,6 +80,22 @@ describe('shell utils', () => {
 			(config.get as Mock).mockReturnValue(undefined);
 			const result = await getAllShellProfiles();
 			expect(result).toEqual({});
+		});
+	});
+
+	describe('isExecutablePath', () => {
+		it('should report when a path is an executable', async () => {
+			const mockPath = 'user/example/bin/git';
+			const isExe = await _isExecutablePath(mockPath);
+			expect(isExe).toBe(true);
+		});
+		it("should report when a path isn't executable", async () => {
+			const mockPath = 'user/example.txt';
+			(access as Mock).mockImplementationOnce(() => {
+				throw new Error();
+			});
+			const isExe = await _isExecutablePath(mockPath);
+			expect(isExe).toBe(false);
 		});
 	});
 });

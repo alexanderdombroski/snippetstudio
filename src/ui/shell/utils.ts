@@ -1,7 +1,7 @@
 import { execSync } from 'node:child_process';
 import type { Terminal } from 'vscode';
 import vscode, { getConfiguration } from '../../vscode';
-import { access, constants } from 'fs/promises';
+import { access, constants } from 'node:fs/promises';
 
 /** Tells whether a shell PID has a command running */
 export function _hasActiveChild(pid: number): boolean {
@@ -79,7 +79,7 @@ export async function getAllShellProfiles(): Promise<ShellProfiles> {
 
 	const entries = await Promise.all(
 		Object.entries(profiles).map(async ([key, profile]) =>
-			commandExists(profile.path) || (await isExecutablePath(profile.path)) ? [key, profile] : null
+			commandExists(profile.path) || (await _isExecutablePath(profile.path)) ? [key, profile] : null
 		)
 	);
 
@@ -91,7 +91,7 @@ export async function getAllShellProfiles(): Promise<ShellProfiles> {
  * @param filePath - Absolute or relative path to a file.
  * @returns true if the file exists and is executable, false otherwise.
  */
-export async function isExecutablePath(filePath: string): Promise<boolean> {
+export async function _isExecutablePath(filePath: string): Promise<boolean> {
 	try {
 		await access(filePath, constants.X_OK);
 		return true;
