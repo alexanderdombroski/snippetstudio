@@ -357,6 +357,10 @@
 				"command": "snippetstudio.shell.run",
 				"title": "Run Shell Snippet",
 				"icon": "$(run)"
+			},
+			{
+				"command": "snippetstudio.shell.manageProfiles",
+				"title": "Manage shell profile settings"
 			}
 		],
 		"menus": {
@@ -506,9 +510,9 @@
 					"when": "view == location-manager"
 				},
 				{
-					"command": "snippetstudio.shell.create",
-					"group": "navigation",
-					"when": "view == shell-snippets"
+					"command": "snippetstudio.shell.manageProfiles",
+					"when": "view == shell-snippets",
+					"group": "inline"
 				}
 			],
 			"view/item/context": [

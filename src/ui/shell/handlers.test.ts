@@ -3,6 +3,7 @@ import {
 	createShellSnippet,
 	deleteShellSnippet,
 	editShellSnippet,
+	manageProfiles,
 	runShellSnippet,
 } from './handlers';
 import { getShellSnippets, setShellSnippets } from './config';
@@ -10,13 +11,19 @@ import { getShellView, type ShellTreeItem, type ShellTreeDropdown } from './Shel
 import vscode, {
 	createQuickPick,
 	createTerminal,
+	executeCommand,
 	getConfiguration,
 	showErrorMessage,
 	showInformationMessage,
 	showInputBox,
 	showWarningMessage,
 } from '../../vscode';
-import { findInactiveTerminal, getAllShellProfiles, getDefaultShellProfile } from './utils';
+import {
+	findInactiveTerminal,
+	getAllShellProfiles,
+	getDefaultShellProfile,
+	getPlatformKey,
+} from './utils';
 import { getConfirmation } from '../../utils/user';
 
 vi.mock('./config');
@@ -224,6 +231,17 @@ describe('Shell Command Handlers', () => {
 			await createShellSnippet({ isLocal: false } as ShellTreeDropdown);
 
 			expect(showWarningMessage).toHaveBeenCalled();
+		});
+	});
+
+	describe('manageProfiles', () => {
+		it('should open settings', async () => {
+			(getPlatformKey as Mock).mockReturnValue('linux');
+			await manageProfiles();
+			expect(executeCommand).toBeCalledWith(
+				'workbench.action.openSettings',
+				expect.stringContaining(getPlatformKey())
+			);
 		});
 	});
 });

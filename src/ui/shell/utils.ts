@@ -30,7 +30,7 @@ export async function findInactiveTerminal(profile: string): Promise<Terminal | 
 }
 
 /** Gets the platform-specific configuration key for terminal profiles */
-function getPlatformKey(): string {
+export function getPlatformKey(): string {
 	switch (process.platform) {
 		case 'win32':
 			return 'windows';

@@ -12,11 +12,18 @@ import vscode, {
 	getConfiguration,
 	createQuickPick,
 	showWarningMessage,
+	executeCommand,
+	showQuickPick,
 } from '../../vscode';
 import { getShellView, type ShellTreeDropdown, type ShellTreeItem } from './ShellViewProvider';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
-import { findInactiveTerminal, getAllShellProfiles, getDefaultShellProfile } from './utils';
+import {
+	findInactiveTerminal,
+	getAllShellProfiles,
+	getDefaultShellProfile,
+	getPlatformKey,
+} from './utils';
 
 /** Command handler to edit an existing shell snippet */
 export async function editShellSnippet(item: ShellTreeItem) {
@@ -214,4 +221,19 @@ async function getCommand(prevValue: string = ''): Promise<string | undefined> {
 	});
 
 	return command?.trim();
+}
+
+/** Open vscode settings to manage profiles */
+export async function manageProfiles() {
+	const key = getPlatformKey();
+	const settings: QuickPickItem[] = [
+		{ label: `terminal.integrated.profiles.${key}` },
+		{ label: `terminal.integrated.defaultProfile.${key}` },
+	];
+	const setting = await showQuickPick(settings, { title: 'Pick a setting to open' });
+
+	executeCommand(
+		'workbench.action.openSettings',
+		setting?.label ?? `terminal.integrated profile ${key}`
+	);
 }

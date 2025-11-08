@@ -17,7 +17,7 @@ describe('initSnippetShellCommands', () => {
 		const spy = vi.spyOn(context.subscriptions, 'push');
 		await initSnippetShellCommands(context);
 		expect(spy).toBeCalled();
-		expect(registerCommand).toBeCalledTimes(5);
+		expect(registerCommand).toBeCalledTimes(6);
 	});
 
 	it("should lazy load the view logic if there's snippets", async () => {

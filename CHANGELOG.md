@@ -23,6 +23,10 @@
 
 ## [2.7.1] - DATE
 
+### Added
+
+- Command to help manage shell profiles
+
 ### Fixed
 
 - Added warning if an unknown integrated terminal profile configuration is used
