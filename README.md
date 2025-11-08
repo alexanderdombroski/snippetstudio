@@ -70,7 +70,7 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 
 ## Known Issues
 
-[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-84.5%25-limegreen)
+[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-84.9%25-limegreen)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
 
