@@ -61,7 +61,7 @@ jobs:
       - name: Create GitHub Release
         id: create_release
         run: |
-          curl -s https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/main/CHANGELOG.md -o CHANGELOG.md  
+          curl -s https://raw.githubusercontent.com/${{ github.repository }}/main/CHANGELOG.md -o CHANGELOG.md  
           if [ $? -ne 0 ]; then
             echo "Failed to download CHANGELOG.md"
             exit 1
@@ -79,7 +79,7 @@ jobs:
           COMMIT_LINK="[Commits](https://github.com/${{ github.repository }}/commits/${{ github.ref_name }})"
           COMPARE_LINK="[Compare](https://github.com/${{ github.repository }}/compare/$(git describe --tags --abbrev=0 ${{ github.ref_name }}~1)...${{ github.ref_name }})"
 
-          CHANGELOG="See the full [changelog](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)."
+          CHANGELOG="See the full [changelog](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)."
           RELEASE_BODY=$(printf "%s\n\n%s\n\n## GitHub Links\n\n%s - %s - %s" "$(cat release_notes.txt)" "$CHANGELOG" "$TREE_LINK" "$COMMIT_LINK" "$COMPARE_LINK")
 
           gh release create ${{ github.ref_name }} \
