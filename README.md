@@ -73,7 +73,7 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 - [VS Code](https://code.visualstudio.com/)
 - [VS Code Insiders](https://code.visualstudio.com/insiders/)
 - [VSCodium](https://vscodium.com/)
-- [Cursur](https://cursor.com/)
+- [Cursor](https://cursor.com/)
 - [Antigravity](https://antigravity.google/)
 
 See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/19) for more info about adding support for other platforms.
