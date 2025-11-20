@@ -22,6 +22,7 @@ import vscode from '../../vscode';
 /** returns the location of downloaded extensions for current platform and os */
 export function _getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
+		Antigravity: '.antigravity',
 		'Visual Studio Code': '.vscode',
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',
