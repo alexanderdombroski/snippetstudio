@@ -58,6 +58,7 @@ export function _initUserPath(): string | undefined {
 /** returns the vscode user path based on platform and os */
 export function getUserPath(): string {
 	const appNames: Record<string, string> = {
+		Antigravity: 'Antigravity',
 		'Visual Studio Code': 'Code',
 		'Visual Studio Code - Insiders': 'Code - Insiders',
 		VSCodium: 'VSCodium',

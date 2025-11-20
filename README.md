@@ -68,6 +68,16 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 
 **Web Version:** This extension is not currently stable for [web versions](https://code.visualstudio.com/api/extension-guides/web-extensions) of VS Code due to its reliance on Node.js file system APIs.
 
+### Supported Platforms
+
+- [VS Code](https://code.visualstudio.com/)
+- [VS Code Insiders](https://code.visualstudio.com/insiders/)
+- [VSCodium](https://vscodium.com/)
+- [Cursor](https://cursor.com/)
+- [Antigravity](https://antigravity.google/)
+
+See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/19) for more info about adding support for other platforms.
+
 ## Known Issues
 
 [![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-84.9%25-limegreen)

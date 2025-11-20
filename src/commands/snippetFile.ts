@@ -28,7 +28,7 @@ function initSnippetFileCommands(context: ExtensionContext) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.file.createGlobalLang', async () => {
 			const { createGlobalLangFile } = await import('../snippets/newSnippetFile.js');
-			createGlobalLangFile();
+			await createGlobalLangFile();
 			refreshAll();
 		})
 	);
