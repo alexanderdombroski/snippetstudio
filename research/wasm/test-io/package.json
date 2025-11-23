@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "scripts": {
+    "compare": "node read-pkg.mjs && node read-pkg-wasm.mjs",
+    "build": "cd rust && wasm-pack build --target nodejs --release"
+  }
+}

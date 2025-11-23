@@ -24,5 +24,14 @@ Improve speed of computation-related tasks (after fileIO)
 
 ### Reading package files
 
-How much can WASM improve the speed of reading several package.json to locate extesion snippets?
+> Q: How much can WASM improve the speed of reading several package.json to locate extesion snippets?
 
+> A: Not enough computation involved, so the overhead makes it slower
+
+## Conclusion
+
+After more reading:
+
+- WASM is only good for number crunching tasks
+- Almost always slower for string manipulation
+- This extension currently has no need for WASM

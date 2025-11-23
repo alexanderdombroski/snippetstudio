@@ -1,0 +1,9 @@
+# Compiled output
+target
+
+# Rust toolchain files (optional)
+rustfmt.toml.bk
+.rustc_info.json
+
+# Backup files
+**/*.rs.bk

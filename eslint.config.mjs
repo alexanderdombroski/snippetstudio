@@ -135,7 +135,7 @@ export default [
 		plugins: {
 			jsdoc,
 		},
-		files: ['**/*.test.ts'],
+		files: ['**/*.test.ts', '**/pkg/*.js'],
 		rules: {
 			'jsdoc/require-jsdoc': 'off',
 		},
