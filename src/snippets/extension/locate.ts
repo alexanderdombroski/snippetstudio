@@ -19,6 +19,8 @@ import type {
 import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
+const extensionsWithNoSnippets = new Set();
+
 /** returns the location of downloaded extensions for current platform and os */
 export function _getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
@@ -85,8 +87,11 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 		async (
 			dirent
 		): Promise<[string, { name: string; files: SnippetContribution[] }] | undefined> => {
+			if (extensionsWithNoSnippets.has(dirent.name)) return;
+
 			const pkgPath = path.join(dir, dirent.name, 'package.json');
 			if (!(await exists(pkgPath))) {
+				extensionsWithNoSnippets.add(dirent.name);
 				return;
 			}
 
@@ -98,6 +103,7 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 				});
 				return [dirent.name, { name: pkg.name, files: snippets }];
 			}
+			extensionsWithNoSnippets.add(dirent.name);
 		}
 	);
 

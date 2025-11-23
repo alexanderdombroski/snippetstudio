@@ -22,6 +22,16 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [2.9.0] - Unreleased
+
+### Added
+
+- Performance optimizations for loading snippets of other extensions
+
+### Fixed
+
+### Changed
+
 ## [2.8.0] - 2025-11-19
 
 ### Added
