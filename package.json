@@ -284,6 +284,12 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.file.listSnippets",
+				"title": "List snippets in this file",
+				"icon": "$(list-tree)",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
 				"title": "Create language-specific Snippet",
 				"shortTitle": "Create Language Snippet",
@@ -590,6 +596,11 @@
 					"command": "snippetstudio.file.link",
 					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
 					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.file.listSnippets",
+					"group": "inline",
+					"when": "(viewItem =~ /snippet-filepath/) && (view == location-manager)"
 				},
 				{
 					"command": "snippetstudio.extension.modify",

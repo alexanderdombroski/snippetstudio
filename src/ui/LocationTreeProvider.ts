@@ -18,6 +18,8 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	private globalTreeItems: TreeItem[] = [];
 	private extensionTreeItems: [TreeItem, TreeItem[]][] = [];
 	private profileDropdownItems: { [location: string]: TreeItem[] } = {};
+	private trackedFiles = new Set<string>();
+	private trackedSnippets: { [location: string]: TreeItem[] } = {};
 	private debounceTimer: NodeJS.Timeout | undefined;
 
 	// ---------- Constructor ---------- //
@@ -126,6 +128,12 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		this.profileDropdowns = profileDropdowns;
 
 		return topLevelDropdowns;
+	}
+
+	/** Load Snippets in the location view */
+	async trackFile(filepath: string) {
+		this.trackedFiles.add(filepath);
+		this._refresh();
 	}
 
 	// ---------- Event Emitters ---------- //

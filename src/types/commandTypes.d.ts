@@ -1,5 +1,5 @@
 interface CommandMap {
-	[command: string]: () => void;
+	[command: string]: (...args: any[]) => void;
 }
 
 type DiagnosticsLevel = 'all' | 'suppressed' | 'none';

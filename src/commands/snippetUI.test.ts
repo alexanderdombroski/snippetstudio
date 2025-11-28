@@ -10,8 +10,8 @@ describe('Snippet UI Commands', () => {
 		vi.spyOn(context.subscriptions, 'push');
 		initSnippetUICommands(context, mockCommandMap);
 
-		expect(registerCommand).toHaveBeenCalledTimes(6);
-		expect(context.subscriptions.push).toHaveBeenCalledTimes(5);
+		expect(registerCommand).toHaveBeenCalledTimes(7);
+		expect(context.subscriptions.push).toHaveBeenCalledTimes(6);
 
 		const registeredCommands = (registerCommand as Mock).mock.calls.map((call) => call[0]);
 		expect(registeredCommands).toEqual(
@@ -20,6 +20,7 @@ describe('Snippet UI Commands', () => {
 				'snippetstudio.openSettings',
 				'snippetstudio.refresh',
 				'snippetstudio.refreshLocations',
+				'snippetstudio.file.listSnippets',
 				'snippetstudio.file.open.Explorer',
 				'snippetstudio.file.open.Terminal',
 			])

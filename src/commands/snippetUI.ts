@@ -8,7 +8,7 @@ import {
 	ThemeIcon,
 } from '../vscode';
 import type { CommandMap } from '../types';
-import type { SnippetCategoryTreeItem } from '../ui/templates';
+import type { SnippetCategoryTreeItem, TreePathItem } from '../ui/templates';
 
 /** register ui related commands */
 function initSnippetUICommands(context: ExtensionContext, commandMap: CommandMap) {
@@ -36,6 +36,13 @@ function initSnippetUICommands(context: ExtensionContext, commandMap: CommandMap
 	context.subscriptions.push(
 		registerCommand('snippetstudio.refreshLocations', () => {
 			commandMap['snippetstudio.refreshLocations']();
+		})
+	);
+
+	// List Snippets
+	context.subscriptions.push(
+		registerCommand('snippetstudio.file.listSnippets', async (item: TreePathItem) => {
+			commandMap['snippetstudio.file.listSnippets'](item.path);
 		})
 	);
 

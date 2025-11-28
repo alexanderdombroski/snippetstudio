@@ -48,6 +48,7 @@ export async function activate(context: ExtensionContext) {
 		'snippetstudio.refresh': treeDataProvider.debounceRefresh.bind(treeDataProvider),
 		'snippetstudio.refreshLocations':
 			locationTreeProvider.debounceRefresh.bind(locationTreeProvider),
+		'snippetstudio.file.listSnippets': locationTreeProvider.trackFile.bind(locationTreeProvider),
 	});
 	initSnippetCommands(context);
 	initSnippetFileCommands(context);
