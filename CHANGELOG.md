@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [2.9](#290---2025-11-28) - Snippets in Location View
 - [2.8](#280---2025-11-19) - Antigravity Support
 - [2.7](#271---2025-11-08) - Shell Snippets
 - [2.6](#260---2025-10-04) - Simplified View Options
@@ -22,15 +23,12 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [2.9.0] - Unreleased
+## [2.9.0] - 2025-11-28
 
 ### Added
 
+- Command to temporarily list snippets in the location view without switching languages
 - Performance optimizations for loading snippets of other extensions
-
-### Fixed
-
-### Changed
 
 ## [2.8.0] - 2025-11-19
 
