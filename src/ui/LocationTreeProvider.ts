@@ -6,10 +6,13 @@ import {
 	type SnippetCategoryTreeItem,
 	snippetLocationTemplate,
 	extensionTreeItems,
+	createTreeItemFromSnippet,
+	type TreePathItem,
 } from './templates';
 import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
 import { getActiveProfile } from '../utils/profile';
+import { readJsoncFilesAsync } from '../utils/jsoncFilesIO';
 
 /** Tree View to display all snippet files and locations */
 export default class LocationTreeProvider implements TreeDataProvider<TreeItem> {
@@ -33,7 +36,9 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	/** finds all snippet files and redisplays them */
 	async _refresh() {
 		const [locals, globals, profiles] = await locateAllSnippetFiles();
-		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
+		this.localTreeItems = locals.map((fp) =>
+			snippetLocationTemplate(fp, 'snippet-filepath', this.trackedFiles.has(fp))
+		);
 		const links = await getLinkedSnippets();
 		const activeProfileLocation = (await getActiveProfile()).location;
 		const snippetIsLinked = (fp: string, location: string) => {
@@ -45,7 +50,8 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 				fp,
 				snippetIsLinked(fp, activeProfileLocation)
 					? 'snippet-filepath global linked'
-					: 'snippet-filepath global'
+					: 'snippet-filepath global',
+				this.trackedFiles.has(fp)
 			)
 		);
 		this.profileDropdownItems = Object.fromEntries(
@@ -57,18 +63,33 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 							fp,
 							snippetIsLinked(fp, location)
 								? 'snippet-filepath profile linked'
-								: 'snippet-filepath profile'
+								: 'snippet-filepath profile',
+							this.trackedFiles.has(fp)
 						)
 					),
 				];
 			})
 		);
+		await this.loadTrackSnippets();
 		if (getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
 			const { findAllExtensionSnippetsFiles } = await import('../snippets/extension/locate.js');
 			const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
 			this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
 		}
 		this._onDidChangeTreeData.fire();
+	}
+
+	/** Updates tracked Snippets to include snippets from tracked files */
+	private async loadTrackSnippets() {
+		const snippetsFilesMap = await readJsoncFilesAsync(Array.from(this.trackedFiles));
+		this.trackedSnippets = Object.fromEntries(
+			snippetsFilesMap.map(([fp, snippets]) => {
+				const snippetItems = Object.entries(snippets).map(([title, snippet]) =>
+					createTreeItemFromSnippet(title, snippet, fp)
+				);
+				return [fp, snippetItems];
+			})
+		);
 	}
 
 	/** ensures a refresh doesn't happen too often */
@@ -110,6 +131,11 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 				);
 			} else if (element.contextValue?.includes('category-dropdown')) {
 				return this.profileDropdownItems[element.description as string];
+			}
+
+			const path = (element as TreePathItem).path as string;
+			if (this.trackedFiles.has(path)) {
+				return this.trackedSnippets[path];
 			}
 			return [];
 		}
