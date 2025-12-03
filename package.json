@@ -932,7 +932,7 @@
 		"@vitest/ui": "^3.2.4",
 		"@vscode/vsce": "^3.7.0",
 		"esbuild": "^0.25.8",
-		"esbuild-lazy-analyzer": "^1.0.0",
+		"esbuild-lazy-analyzer": "^1.2.0",
 		"esbuild-visualizer": "^0.7.0",
 		"eslint": "^9.35.0",
 		"eslint-plugin-import": "^2.32.0",
