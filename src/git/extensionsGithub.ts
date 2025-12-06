@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext, QuickPickItem } from 'vscode';
+import type { QuickPickItem } from 'vscode';
 import vscode, { showQuickPick, showInformationMessage } from '../vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
@@ -14,8 +14,8 @@ import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { exists } from '../utils/fsInfo';
 
 /** scans the vscode repository for all extensions with snippets and allows user to choose some to save */
-export async function importBuiltinExtension(context: ExtensionContext) {
-	const client = await getOctokitClient(context);
+export async function importBuiltinExtension() {
+	const client = await getOctokitClient();
 
 	const snippetDirs = await _getDirsWithSnippets(client);
 	if (snippetDirs === undefined) {

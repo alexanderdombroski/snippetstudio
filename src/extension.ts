@@ -6,10 +6,11 @@ import LocationTreeProvider from './ui/LocationTreeProvider';
 
 import {
 	initSnippetCommands,
+	initSnippetExtensionCommands,
 	initSnippetFileCommands,
-	initSnippetGistsCommands,
+	initSnippetGithubCommands,
 	initSnippetUICommands,
-	initSnippetLinkCommands,
+	initSnippetProfileCommands,
 } from './commands';
 import { initSnippetShellCommands } from './ui/shell/commands';
 
@@ -36,25 +37,21 @@ export async function activate(context: ExtensionContext) {
 	);
 
 	// Create and register the Tree View
-	const treeDataProvider = new SnippetViewProvider();
+	const treeDataProvider = new SnippetViewProvider(context);
 	vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
-	const locationTreeProvider = new LocationTreeProvider();
+	const locationTreeProvider = new LocationTreeProvider(context);
 	vscode.window.createTreeView('location-manager', {
 		treeDataProvider: locationTreeProvider,
 	});
 
 	// Register Commands
-	initSnippetUICommands(context, {
-		'snippetstudio.refresh': treeDataProvider.debounceRefresh.bind(treeDataProvider),
-		'snippetstudio.refreshLocations':
-			locationTreeProvider.debounceRefresh.bind(locationTreeProvider),
-		'snippetstudio.file.listSnippets': locationTreeProvider.trackFile.bind(locationTreeProvider),
-	});
+	initSnippetUICommands(context);
 	initSnippetCommands(context);
 	initSnippetFileCommands(context);
-	initSnippetGistsCommands(context);
-	initSnippetLinkCommands(context);
+	initSnippetExtensionCommands(context);
+	initSnippetGithubCommands(context);
 	initSnippetShellCommands(context);
+	initSnippetProfileCommands(context);
 
 	if (getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
 		const { createStatusBar } = await import('./ui/statusBar.js');

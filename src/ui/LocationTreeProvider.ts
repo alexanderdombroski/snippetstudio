@@ -1,5 +1,5 @@
-import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode, { getConfiguration } from '../vscode';
+import type { TreeItem, TreeDataProvider, Event, EventEmitter, ExtensionContext } from 'vscode';
+import vscode, { getConfiguration, registerCommand } from '../vscode';
 import { locateAllSnippetFiles } from '../snippets/locateSnippets';
 import {
 	snippetLocationDropdownTemplates,
@@ -27,7 +27,12 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 
 	// ---------- Constructor ---------- //
 
-	constructor() {
+	constructor(context: ExtensionContext) {
+		context.subscriptions.push(
+			registerCommand('snippetstudio.refreshLocations', this.debounceRefresh.bind(this)),
+			registerCommand('snippetstudio.file.listSnippets', this.trackFile.bind(this))
+		);
+
 		this._refresh();
 	}
 
@@ -157,8 +162,8 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	}
 
 	/** Load Snippets in the location view */
-	async trackFile(filepath: string) {
-		this.trackedFiles.add(filepath);
+	async trackFile(item: TreePathItem) {
+		this.trackedFiles.add(item.path);
 		this._refresh();
 	}
 

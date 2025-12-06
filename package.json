@@ -279,7 +279,7 @@
 				"when": false
 			},
 			{
-				"command": "snippetstudio.file.link",
+				"command": "snippetstudio.profile.link",
 				"title": "Choose profiles to use file",
 				"when": false
 			},
@@ -593,7 +593,7 @@
 					"when": "viewItem =~ /global-dropdown/"
 				},
 				{
-					"command": "snippetstudio.file.link",
+					"command": "snippetstudio.profile.link",
 					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
 					"group": "navigation"
 				},

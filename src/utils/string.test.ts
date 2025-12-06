@@ -50,7 +50,7 @@ describe('string utils', () => {
 
 	describe('unTabMultiline', () => {
 		const mockEditor = new TextEditor();
-		const getText: Mock = mockEditor.document.getText;
+		const getText = mockEditor.document.getText as Mock;
 
 		it('should return an empty string for an empty selection', async () => {
 			const selection = { isEmpty: true } as SelectionType;

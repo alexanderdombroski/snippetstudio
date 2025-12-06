@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext, QuickPickItem } from 'vscode';
+import type { QuickPickItem } from 'vscode';
 import { showQuickPick } from '../../vscode';
 import path from 'node:path';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
@@ -41,7 +41,7 @@ async function extractAllSnippets(item: TreePathItem) {
 }
 
 /** Handler for extension.modify */
-async function extractAndModify(item: TreePathItem, context: ExtensionContext) {
+async function extractAndModify(item: TreePathItem) {
 	const langs = await getExtensionSnippetLangs(item.path);
 	const savePath = await chooseSnippetFile(langs);
 	if (savePath === undefined) {
@@ -64,7 +64,7 @@ async function extractAndModify(item: TreePathItem, context: ExtensionContext) {
 	const langId = langs.includes(active) ? active : langs[0];
 
 	const { editSnippet } = await import('../../ui/editor/startEditor.js');
-	await editSnippet(context, langId, snippetData, snippetBodyAsString(snippet?.body));
+	await editSnippet(langId, snippetData, snippetBodyAsString(snippet?.body));
 }
 
 /** Given a list of languages, have the user select an existing snipppet file */

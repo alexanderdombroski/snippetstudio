@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import onDoubleClick from './doubleClickHandler';
-import { TreePathItem } from '../ui/templates';
+import { onDoubleClick, refreshAll } from '.';
+import { TreePathItem } from '../../ui/templates';
+import { executeCommand } from '../../vscode';
 
 const item: TreePathItem = new TreePathItem('hello', 0, 'world');
 
@@ -82,5 +83,13 @@ describe('onDoubleClick', () => {
 		doubleClickHandler(item);
 
 		expect(callback).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe('refreshAll', () => {
+	it('should refresh both snippet views', async () => {
+		refreshAll();
+		expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
+		expect(executeCommand).toBeCalledWith('snippetstudio.refreshLocations');
 	});
 });

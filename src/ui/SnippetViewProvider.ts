@@ -1,5 +1,5 @@
-import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode, { getConfiguration, onDidChangeActiveTextEditor } from '../vscode';
+import type { TreeItem, TreeDataProvider, Event, EventEmitter, ExtensionContext } from 'vscode';
+import vscode, { getConfiguration, onDidChangeActiveTextEditor, registerCommand } from '../vscode';
 import loadSnippets from '../snippets/loadSnippets';
 import {
 	unloadedDropdownTemplate,
@@ -33,7 +33,10 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	// ---------- Constructor ---------- //
 
 	/** inits snippet view and refreshing */
-	constructor() {
+	constructor(context: ExtensionContext) {
+		context.subscriptions.push(
+			registerCommand('snippetstudio.refresh', this.debounceRefresh.bind(this))
+		);
 		this.langId = getCurrentLanguage();
 		(async () => {
 			this._activePaths = [

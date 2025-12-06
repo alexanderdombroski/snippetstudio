@@ -11,6 +11,7 @@ import { findAllExtensionSnippetsFiles } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getActiveProfile } from '../utils/profile';
 import { TreeItem } from '../vscode';
+import { context } from '../../.vitest/__mocks__/shared';
 
 vi.mock('../snippets/locateSnippets');
 vi.mock('./templates');
@@ -61,7 +62,7 @@ describe('ui/LocationTreeProvider', () => {
 			[createTreeItem('profile1', 'category-dropdown', 'profile1')],
 		]);
 
-		provider = new LocationTreeProvider();
+		provider = new LocationTreeProvider(context);
 		// The constructor calls refresh, so we need to wait for promises to resolve.
 		await new Promise(setImmediate);
 	});

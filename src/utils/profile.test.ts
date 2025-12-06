@@ -17,7 +17,7 @@ import { context } from '../../.vitest/__mocks__/shared';
 import type { Uri } from 'vscode';
 
 vi.mock('./context', () => ({
-	getExtensionContext: vi.fn(),
+	getExtensionContext: vi.fn(() => Promise.resolve(context)),
 	getUserPath: vi.fn(),
 }));
 

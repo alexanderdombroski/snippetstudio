@@ -5,7 +5,6 @@ import fs from 'node:fs/promises';
 import https from 'node:https';
 import { chooseLocalGlobal } from '../utils/user';
 import { getGistId } from '../git/utils';
-import { context } from '../../.vitest/__mocks__/shared';
 import type { ClientRequest } from 'node:http';
 
 vi.mock('../utils/jsoncFilesIO');
@@ -37,14 +36,14 @@ describe.concurrent('codeProfile', () => {
 	describe('importCodeProfileSnippets', () => {
 		it('should return if no source is selected', async () => {
 			(showQuickPick as Mock).mockResolvedValue(undefined);
-			await importCodeProfileSnippets(context);
+			await importCodeProfileSnippets();
 			expect(chooseLocalGlobal).not.toHaveBeenCalled();
 		});
 
 		it('should return if no save directory is chosen', async () => {
 			(showQuickPick as Mock).mockResolvedValue({ run: () => Promise.resolve(['content']) });
 			(chooseLocalGlobal as Mock).mockResolvedValue(undefined);
-			await importCodeProfileSnippets(context);
+			await importCodeProfileSnippets();
 			expect(fs.writeFile).not.toHaveBeenCalled();
 		});
 	});
@@ -56,7 +55,7 @@ describe.concurrent('codeProfile', () => {
 				const gistIdWithNoSnippets = 'ddac491daeff48c5f1346ba2960462fa';
 				(getGistId as Mock).mockReturnValue(gistIdWithNoSnippets);
 
-				await _fromGist(context);
+				await _fromGist();
 
 				expect(showInformationMessage).toBeCalled();
 			}

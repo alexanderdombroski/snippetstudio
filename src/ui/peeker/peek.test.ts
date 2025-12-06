@@ -20,7 +20,7 @@ describe('peekAtSnippet', () => {
 	it('should create the peek provider and show a peek', async () => {
 		const spy = vi.spyOn(context.subscriptions, 'push');
 
-		await peekAtSnippet(context, '/test/path.ts', 'snippet1');
+		await peekAtSnippet('/test/path.ts', 'snippet1');
 
 		expect(SnippetPeekProvider).toBeCalled();
 		expect(vscode.workspace.registerTextDocumentContentProvider).toBeCalled();

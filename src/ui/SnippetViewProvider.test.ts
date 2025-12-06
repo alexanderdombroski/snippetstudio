@@ -13,6 +13,7 @@ import { findAllExtensionSnipppetsByLang } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
 import { TreeItem, onDidChangeActiveTextEditor } from '../vscode';
+import { context } from '../../.vitest/__mocks__/shared';
 
 vi.mock('../snippets/loadSnippets');
 vi.mock('./templates');
@@ -75,7 +76,7 @@ describe('ui/SnippetViewProvider', () => {
 		);
 		(extensionCategoryDropdown as Mock).mockReturnValue(createTreeItem('Extension Snippets'));
 
-		provider = new SnippetViewProvider();
+		provider = new SnippetViewProvider(context);
 		// Wait for async constructor parts
 		await new Promise(setImmediate);
 	});

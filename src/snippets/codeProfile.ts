@@ -2,7 +2,6 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext } from 'vscode';
 import { showOpenDialog, showInformationMessage, showQuickPick, showInputBox } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
@@ -13,7 +12,7 @@ import { chooseLocalGlobal } from '../utils/user';
 import { exists } from '../utils/fsInfo';
 
 /** command handler to import all snippets from a .code-profile file at a chosen location */
-export async function importCodeProfileSnippets(context: ExtensionContext) {
+export async function importCodeProfileSnippets() {
 	const items = [
 		{
 			label: 'From profile template',
@@ -23,7 +22,7 @@ export async function importCodeProfileSnippets(context: ExtensionContext) {
 		{
 			label: 'From a gist',
 			description: 'import snippets from a .code-profile file from a gist',
-			run: () => _fromGist(context),
+			run: () => _fromGist(),
 		},
 		{
 			label: 'From a file',
@@ -119,7 +118,7 @@ async function _fromFile(): Promise<string[] | undefined> {
 }
 
 /** attempts to reads a .code-profile from a gist */
-export async function _fromGist(context: ExtensionContext): Promise<string[] | undefined> {
+export async function _fromGist(): Promise<string[] | undefined> {
 	const { getGistId } = await import('../git/utils.js');
 	const gistId = await getGistId();
 	if (gistId === undefined) {
@@ -127,7 +126,7 @@ export async function _fromGist(context: ExtensionContext): Promise<string[] | u
 	}
 
 	const { getOctokitClient } = await import('../git/octokit.js');
-	const client = await getOctokitClient(context);
+	const client = await getOctokitClient();
 
 	const response = await client.request('GET /gists/{gist_id}', { gist_id: gistId });
 	const files = Object.values(response.data.files ?? {}).filter(

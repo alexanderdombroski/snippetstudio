@@ -1,5 +1,5 @@
 export type { GenericJson, JSONObject, JSONArray } from './fileIOTypes';
-export type { CommandMap, DiagnosticsLevel } from './commandTypes';
+export type { DiagnosticsLevel } from './commandTypes';
 export type {
 	GlobalStorage,
 	ProfileInfo,

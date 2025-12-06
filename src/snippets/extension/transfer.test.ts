@@ -11,7 +11,6 @@ import { readSnippet } from '../../snippets/updateSnippets';
 import { editSnippet } from '../../ui/editor/startEditor';
 import { getCurrentLanguage } from '../../utils/language';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
-import { context } from '../../../.vitest/__mocks__/shared';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
 
 vi.mock('../../utils/jsoncFilesIO');
@@ -82,7 +81,7 @@ describe('transfer extension snippets', () => {
 			(locateSnippetFiles as Mock).mockResolvedValue(['/path/to/snippets.json']);
 			(showQuickPick as Mock).mockResolvedValue(undefined);
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(treePathItem);
 
 			expect(editSnippet).not.toBeCalled();
 		});
@@ -97,10 +96,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(treePathItem);
 
 			expect(editSnippet).toBeCalledWith(
-				context,
 				'typescript',
 				expect.objectContaining({
 					scope: 'typescript,javascript',
@@ -120,10 +118,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(treePathItem);
 
 			expect(editSnippet).toBeCalledWith(
-				context,
 				'typescript',
 				expect.not.objectContaining({
 					scope: expect.any(String),
@@ -142,9 +139,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('rust');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(treePathItem);
 
-			expect(editSnippet).toBeCalledWith(context, 'javascript', expect.any(Object), 'body');
+			expect(editSnippet).toBeCalledWith('javascript', expect.any(Object), 'body');
 		});
 	});
 });

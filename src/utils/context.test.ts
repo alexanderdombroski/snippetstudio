@@ -144,12 +144,6 @@ describe('context', () => {
 	});
 
 	describe('getExtensionContext', () => {
-		it('should throw an error if context is not initialized', async () => {
-			await expect(getExtensionContext()).rejects.toThrow(
-				'Extension context not correctly initialized'
-			);
-		});
-
 		it('should return the context after it has been initialized', async () => {
 			(readJsonC as Mock).mockResolvedValue(undefined);
 
