@@ -917,8 +917,8 @@
 		"test": "vitest watch",
 		"test:env": "node .vitest/createEnv.mts",
 		"test:ui": "vitest watch --ui",
-		"coverage": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=text --coverage.reporter=text-summary",
-		"coverage:publish": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
+		"coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text --coverage.reporter=text-summary",
+		"coverage:publish": "vitest run --coverage --reporter=dot --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
 		"coverage:report": "npm run coverage:publish && open ./coverage/index.html",
 		"prepare": "husky"
 	},
@@ -928,8 +928,8 @@
 		"@types/vscode": "^1.99.0",
 		"@typescript-eslint/eslint-plugin": "^8.48.1",
 		"@typescript-eslint/parser": "^8.48.1",
-		"@vitest/coverage-v8": "^3.2.4",
-		"@vitest/ui": "^3.2.4",
+		"@vitest/coverage-v8": "^4.0.15",
+		"@vitest/ui": "^4.0.15",
 		"@vscode/vsce": "^3.7.1",
 		"esbuild": "^0.27.1",
 		"esbuild-lazy-analyzer": "^1.2.0",
@@ -943,7 +943,7 @@
 		"ovsx": "^0.10.7",
 		"prettier": "^3.7.4",
 		"typescript": "^5.9.3",
-		"vitest": "^3.2.4"
+		"vitest": "^4.0.15"
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.3",
