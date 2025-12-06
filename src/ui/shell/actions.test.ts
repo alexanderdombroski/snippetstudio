@@ -5,7 +5,7 @@ import {
 	editShellSnippet,
 	manageProfiles,
 	runShellSnippet,
-} from './handlers';
+} from './actions';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getShellView, type ShellTreeItem, type ShellTreeDropdown } from './ShellViewProvider';
 import vscode, {
@@ -26,10 +26,10 @@ import {
 } from './utils';
 import { getConfirmation } from '../../utils/user';
 
-vi.mock('./config');
+vi.mock('../../ui/shell/config');
 vi.mock('../../utils/user');
-vi.mock('./utils');
-vi.mock('./ShellViewProvider', () => ({
+vi.mock('../../ui/shell/utils');
+vi.mock('../../ui/shell/ShellViewProvider', () => ({
 	getShellView: vi.fn(() => ({
 		refresh: vi.fn(),
 	})),

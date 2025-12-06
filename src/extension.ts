@@ -1,5 +1,5 @@
 import type { ExtensionContext } from 'vscode';
-import vscode, { getConfiguration } from './vscode';
+import vscode, { executeCommand, getConfiguration } from './vscode';
 
 import SnippetViewProvider from './ui/SnippetViewProvider';
 import LocationTreeProvider from './ui/LocationTreeProvider';
@@ -11,10 +11,11 @@ import {
 	initSnippetGithubCommands,
 	initSnippetUICommands,
 	initSnippetProfileCommands,
+	initSnippetShellCommands,
 } from './commands';
-import { initSnippetShellCommands } from './ui/shell/commands';
 
 import { initGlobalStore } from './utils/context';
+import { getShellSnippets } from './ui/shell/config';
 
 /** This method is called when your extension is activated */
 export async function activate(context: ExtensionContext) {
@@ -52,6 +53,10 @@ export async function activate(context: ExtensionContext) {
 	initSnippetGithubCommands(context);
 	initSnippetShellCommands(context);
 	initSnippetProfileCommands(context);
+
+	if (getShellSnippets().flat().length) {
+		executeCommand('snippetstudio.shell.refresh');
+	}
 
 	if (getConfiguration('snippetstudio').get<boolean>('statusBar.showItem')) {
 		const { createStatusBar } = await import('./ui/statusBar.js');
