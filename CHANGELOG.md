@@ -23,6 +23,18 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [3.0.0] - UNRELEASED
+
+### Added
+
+- Performance improvements to location and snippets view
+
+### Fixed
+
+### Changed
+
+- Removed command to track snippets in location manager. All snippets are lazily tracked now
+
 ## [2.9.0] - 2025-11-28
 
 ### Added
