@@ -273,7 +273,7 @@
 				"shortTitle": "Insert Placeholder Transformation"
 			},
 			{
-				"command": "snippetstudio.file.createSnippetAt",
+				"command": "snippetstudio.snippet.createAt",
 				"title": "New Snippet at the given file",
 				"icon": "$(plus)",
 				"when": false
@@ -290,14 +290,14 @@
 				"when": false
 			},
 			{
-				"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+				"command": "snippetstudio.snippet.fromSelection",
 				"title": "Create language-specific Snippet",
 				"shortTitle": "Create Language Snippet",
 				"category": "snippetstudio",
 				"when": false
 			},
 			{
-				"command": "snippetstudio.snippet.export",
+				"command": "snippetstudio.file.export",
 				"title": "Export Snippets to Code Snippets File",
 				"shortTitle": "Export Snippets",
 				"category": "snippetstudio"
@@ -409,7 +409,7 @@
 			],
 			"editor/context": [
 				{
-					"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+					"command": "snippetstudio.snippet.fromSelection",
 					"when": "editor.hasSelection",
 					"group": "snippetstudio"
 				},
@@ -486,7 +486,7 @@
 					"when": "view == location-manager"
 				},
 				{
-					"command": "snippetstudio.snippet.export",
+					"command": "snippetstudio.file.export",
 					"group": "inline",
 					"when": "view == location-manager"
 				},
@@ -573,7 +573,7 @@
 					"group": "navigation"
 				},
 				{
-					"command": "snippetstudio.file.createSnippetAt",
+					"command": "snippetstudio.snippet.createAt",
 					"when": "viewItem =~ /snippet-filepath/",
 					"group": "inline"
 				},

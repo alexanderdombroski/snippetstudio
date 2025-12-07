@@ -7,8 +7,8 @@ describe('Snippet Commands', () => {
 		expectCommandsRegistered(initSnippetCommands, [
 			'snippetstudio.snippet.showBody',
 			'snippetstudio.snippet.addGlobal',
-			'snippetstudio.file.createSnippetAt',
-			'snippetstudio.snippet.createGlobalLangSnippetFromSelection',
+			'snippetstudio.snippet.createAt',
+			'snippetstudio.snippet.fromSelection',
 			'snippetstudio.snippet.edit',
 			'snippetstudio.snippet.delete',
 			'snippetstudio.snippet.move',

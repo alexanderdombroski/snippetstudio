@@ -11,7 +11,7 @@ describe('Snippet File Commands', () => {
 			'snippetstudio.file.createProjectSnippets',
 			'snippetstudio.file.createGlobalSnippets',
 			'snippetstudio.file.delete',
-			'snippetstudio.snippet.export',
+			'snippetstudio.file.export',
 		]);
 	});
 });

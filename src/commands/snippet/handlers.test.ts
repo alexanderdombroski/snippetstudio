@@ -4,8 +4,8 @@ import {
 	getLangFromSnippetFilePath,
 	showBodyHandler,
 	addGlobalHandler,
-	createSnippetAtHandler,
-	createGlobalLangSnippetFromSelectionHandler,
+	createAtHandler,
+	fromSelectionHandler,
 	editHandler,
 	deleteSnippetHandler,
 	moveHandler,
@@ -131,7 +131,7 @@ describe('handlers', () => {
 				path: '/path/to/javascript.json',
 			};
 
-			await createSnippetAtHandler(item);
+			await createAtHandler(item);
 
 			expect(editSnippet).toBeCalledWith(
 				'javascript',
@@ -159,7 +159,7 @@ describe('handlers', () => {
 				path: '/path/to/snippets.code-snippets',
 			};
 
-			await createSnippetAtHandler(item);
+			await createAtHandler(item);
 
 			expect(editSnippet).toBeCalledWith(
 				'python',
@@ -187,7 +187,7 @@ describe('handlers', () => {
 				path: '/path/to/snippets.code-snippets',
 			};
 
-			await createSnippetAtHandler(item);
+			await createAtHandler(item);
 
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
@@ -215,7 +215,7 @@ describe('handlers', () => {
 				path: '/path/to/snippets.code-snippets',
 			};
 
-			await createSnippetAtHandler(item);
+			await createAtHandler(item);
 
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
@@ -240,7 +240,7 @@ describe('handlers', () => {
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 
-			await createGlobalLangSnippetFromSelectionHandler();
+			await fromSelectionHandler();
 
 			expect(editSnippet).toBeCalledWith(
 				'python',
@@ -262,7 +262,7 @@ describe('handlers', () => {
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 
-			await createGlobalLangSnippetFromSelectionHandler();
+			await fromSelectionHandler();
 
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
@@ -284,7 +284,7 @@ describe('handlers', () => {
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 
-			await createGlobalLangSnippetFromSelectionHandler();
+			await fromSelectionHandler();
 
 			expect(editSnippet).toBeCalledWith(
 				'python',

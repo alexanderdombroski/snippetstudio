@@ -19,7 +19,7 @@ export default function initSnippetFileCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.file.createProjectSnippets', createProjectSnippetsHandler),
 		registerCommand('snippetstudio.file.createGlobalSnippets', createGlobalSnippetsHandler),
 		registerCommand('snippetstudio.file.delete', deleteHandler),
-		registerCommand('snippetstudio.snippet.export', exportHandler)
+		registerCommand('snippetstudio.file.export', exportHandler)
 	);
 }
 

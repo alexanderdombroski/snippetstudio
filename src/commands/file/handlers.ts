@@ -36,7 +36,7 @@ export async function deleteHandler(treeItem: TreePathItem) {
 	refreshAll();
 }
 
-/** snippetstudio.snippet.export command handler */
+/** snippetstudio.file.export command handler */
 export async function exportHandler() {
 	const { exportSnippets } = await import('../../snippets/newSnippetFile.js');
 	await exportSnippets();

@@ -4,8 +4,8 @@ import { onDoubleClick } from '../utils';
 import {
 	showBodyHandler,
 	addGlobalHandler,
-	createSnippetAtHandler,
-	createGlobalLangSnippetFromSelectionHandler,
+	createAtHandler,
+	fromSelectionHandler,
 	editHandler,
 	deleteSnippetHandler,
 	moveHandler,
@@ -17,11 +17,8 @@ function initSnippetCommands(context: ExtensionContext) {
 	context.subscriptions.push(
 		registerCommand('snippetstudio.snippet.showBody', onDoubleClick(showBodyHandler)),
 		registerCommand('snippetstudio.snippet.addGlobal', addGlobalHandler),
-		registerCommand('snippetstudio.file.createSnippetAt', createSnippetAtHandler),
-		registerCommand(
-			'snippetstudio.snippet.createGlobalLangSnippetFromSelection',
-			createGlobalLangSnippetFromSelectionHandler
-		),
+		registerCommand('snippetstudio.snippet.createAt', createAtHandler),
+		registerCommand('snippetstudio.snippet.fromSelection', fromSelectionHandler),
 		registerCommand('snippetstudio.snippet.edit', editHandler),
 		registerCommand('snippetstudio.snippet.delete', deleteSnippetHandler),
 		registerCommand('snippetstudio.snippet.move', moveHandler),

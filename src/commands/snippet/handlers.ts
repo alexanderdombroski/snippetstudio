@@ -49,8 +49,8 @@ export async function addGlobalHandler() {
 	);
 }
 
-/** snippetstudio.file.createSnippetAt command handler */
-export async function createSnippetAtHandler(item: TreePathItem) {
+/** snippetstudio.snippet.createAt command handler */
+export async function createAtHandler(item: TreePathItem) {
 	const filename = item.path;
 	const langId =
 		getLangFromSnippetFilePath(filename) ??
@@ -71,8 +71,8 @@ export async function createSnippetAtHandler(item: TreePathItem) {
 	);
 }
 
-/** snippetstudio.snippet.createGlobalLangSnippetFromSelection command handler */
-export async function createGlobalLangSnippetFromSelectionHandler() {
+/** snippetstudio.snippet.fromSelection command handler */
+export async function fromSelectionHandler() {
 	const langId = getCurrentLanguage() ?? 'plaintext';
 	const filename = await getGlobalLangFile(langId);
 
