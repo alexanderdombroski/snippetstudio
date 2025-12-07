@@ -20,7 +20,10 @@ export async function peekAtSnippet(filepath: string, preferred: string) {
 		);
 	}
 
-	const snippets = (await readSnippetFile(filepath, true)) as VSCodeSnippets;
+	const snippets = (await readSnippetFile(filepath, {
+		tryFlatten: true,
+		showError: true,
+	})) as VSCodeSnippets;
 
 	await snippetPeekProvider.showPeek(snippets, preferred);
 }

@@ -23,7 +23,7 @@ import { isSnippetLinked } from './links/config';
 
 /** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
 async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
-	const snippets = await readSnippetFile(filepath);
+	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		showWarningMessage(
 			`Read Operation failed. Write operation of ${titleKey} to ${path.basename(filepath)} canceled.`
@@ -43,7 +43,7 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 
 /** removes a single snippet from a snippet file */
 async function deleteSnippet(filepath: string, titleKey: string) {
-	const snippets = await readSnippetFile(filepath);
+	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		return;
 	}
@@ -60,7 +60,7 @@ async function readSnippet(
 	snippetTitle: string,
 	tryFlatten?: boolean
 ): Promise<VSCodeSnippet | undefined> {
-	const snippets = await readSnippetFile(filepath, tryFlatten);
+	const snippets = await readSnippetFile(filepath, { tryFlatten, showError: true });
 	if (snippets === undefined || snippets[snippetTitle] === undefined) {
 		console.error(
 			`Read Operation failed. Could not find ${snippetTitle} inside of ${path.basename(filepath)}.`

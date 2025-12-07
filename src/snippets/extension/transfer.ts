@@ -32,7 +32,7 @@ async function extractAllSnippets(item: TreePathItem) {
 	const langs = await getExtensionSnippetLangs(item.path);
 	const scope = langs.join(',');
 
-	const snippets = await readSnippetFile(item.path, true);
+	const snippets = await readSnippetFile(item.path, { tryFlatten: true, showError: true });
 	if (snippets === undefined) {
 		return;
 	}
