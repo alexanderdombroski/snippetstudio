@@ -284,12 +284,6 @@
 				"when": false
 			},
 			{
-				"command": "snippetstudio.file.listSnippets",
-				"title": "List snippets in this file",
-				"icon": "$(list-tree)",
-				"when": false
-			},
-			{
 				"command": "snippetstudio.snippet.fromSelection",
 				"title": "Create language-specific Snippet",
 				"shortTitle": "Create Language Snippet",
@@ -524,7 +518,7 @@
 			"view/item/context": [
 				{
 					"command": "snippetstudio.file.open",
-					"when": "(viewItem =~ /snippet-filepath/) || (viewItem == extension-snippet-path)",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "navigation"
 				},
 				{
@@ -539,12 +533,12 @@
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/) && !(viewItem =~ /extension/)",
 					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/) && !(viewItem =~ /extension/)",
 					"group": "inline"
 				},
 				{
@@ -574,7 +568,7 @@
 				},
 				{
 					"command": "snippetstudio.snippet.createAt",
-					"when": "viewItem =~ /snippet-filepath/",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/)",
 					"group": "inline"
 				},
 				{
@@ -594,13 +588,8 @@
 				},
 				{
 					"command": "snippetstudio.profile.link",
-					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
+					"when": "((viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
 					"group": "navigation"
-				},
-				{
-					"command": "snippetstudio.file.listSnippets",
-					"group": "inline",
-					"when": "(viewItem =~ /snippet-filepath/) && (view == location-manager)"
 				},
 				{
 					"command": "snippetstudio.extension.modify",
@@ -610,7 +599,7 @@
 				{
 					"command": "snippetstudio.extension.extract",
 					"group": "inline",
-					"when": "viewItem == extension-snippet-path"
+					"when": "viewItem == extension-snippet-filepath"
 				},
 				{
 					"command": "snippetstudio.shell.edit",

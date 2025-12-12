@@ -15,7 +15,7 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
 import { locateAllSnippetFiles } from './locateSnippets';
-import type { TreePathItem } from '../ui/templates';
+import type { SnippetTreeItem } from '../ui/templates';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
 
@@ -72,7 +72,7 @@ async function readSnippet(
 }
 
 /** Handler for the snippet.move command */
-async function moveSnippet(item: TreePathItem) {
+async function moveSnippet(item: SnippetTreeItem) {
 	const [actives, locals, profiles] = await locateAllSnippetFiles();
 	const profileFiles = Object.values(profiles)
 		.map((files) => files)
@@ -91,13 +91,13 @@ async function moveSnippet(item: TreePathItem) {
 		return;
 	}
 
-	const snippet = (await readSnippet(item.path, item.description as string)) as VSCodeSnippet;
+	const snippet = (await readSnippet(item.path, item.description)) as VSCodeSnippet;
 	if (path.extname(item.path) === '.code-snippets' && !snippet.scope) {
 		snippet.scope = 'global';
 	}
 
 	await Promise.all([
-		writeSnippet(selected.description, item.description as string, snippet),
+		writeSnippet(selected.description, item.description, snippet),
 		executeCommand('snippetstudio.snippet.delete', item),
 	]);
 }

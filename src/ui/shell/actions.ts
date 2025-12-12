@@ -15,7 +15,8 @@ import vscode, {
 	executeCommand,
 	showQuickPick,
 } from '../../vscode';
-import { getShellView, type ShellTreeDropdown, type ShellTreeItem } from './ShellViewProvider';
+import { getShellView } from './ShellViewProvider';
+import type { ShellTreeDropdown, ShellTreeItem } from '../templates';
 import { getShellSnippets, setShellSnippets } from './config';
 import { getConfirmation } from '../../utils/user';
 import {

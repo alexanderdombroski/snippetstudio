@@ -1,10 +1,10 @@
 import { refreshAll } from '../utils';
-import type { TreePathItem } from '../../ui/templates';
+import type { SnippetFileTreeItem } from '../../ui/templates';
 
 /** snippetstudio.profile.link command handler */
-export async function linkHandler(item: TreePathItem) {
+export async function linkHandler(item: SnippetFileTreeItem) {
 	const { manageLinkLocations } = await import('../../snippets/links/commands.js');
-	await manageLinkLocations(!!item.contextValue?.includes('linked'), item.path);
+	await manageLinkLocations(!!item.contextValue?.includes('linked'), item.filepath);
 	refreshAll();
 }
 

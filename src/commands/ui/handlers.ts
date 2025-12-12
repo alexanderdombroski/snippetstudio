@@ -1,5 +1,5 @@
 import { executeCommand, openExternal, Uri, createTerminal, ThemeIcon } from '../../vscode';
-import type { SnippetCategoryTreeItem } from '../../ui/templates';
+import type { SnippetCategoryDropdown } from '../../ui/templates';
 
 /** snippetstudio.openView command handler */
 export function openViewHandler() {
@@ -12,12 +12,12 @@ export function openSettingsHandler() {
 }
 
 /** snippetstudio.file.open.Explorer command handler */
-export function openExplorerHandler(treeItem: SnippetCategoryTreeItem) {
+export function openExplorerHandler(treeItem: SnippetCategoryDropdown) {
 	openExternal(Uri.file(treeItem.folderPath));
 }
 
 /** snippetstudio.file.open.Terminal command handler */
-export function openTerminalHandler(treeItem: SnippetCategoryTreeItem) {
+export function openTerminalHandler(treeItem: SnippetCategoryDropdown) {
 	const terminal = createTerminal({
 		name: 'Global Snippets',
 		cwd: treeItem.folderPath,

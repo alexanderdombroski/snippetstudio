@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { onDoubleClick, refreshAll } from '.';
-import { TreePathItem } from '../../ui/templates';
+import { TreeItem } from '../../vscode';
 import { executeCommand } from '../../vscode';
 
-const item: TreePathItem = new TreePathItem('hello', 0, 'world');
+const item = new TreeItem('hello', 0);
 
 describe('onDoubleClick', () => {
 	beforeEach(() => {
@@ -50,8 +50,8 @@ describe('onDoubleClick', () => {
 	it('should handle different items independently', () => {
 		const callback = vi.fn();
 		const doubleClickHandler = onDoubleClick(callback);
-		const item1: TreePathItem = new TreePathItem('hi', 0, 'world');
-		const item2: TreePathItem = new TreePathItem('howdy', 0, 'world');
+		const item1 = new TreeItem('hi', 0);
+		const item2 = new TreeItem('howdy', 0);
 
 		doubleClickHandler(item1);
 		vi.advanceTimersByTime(100);

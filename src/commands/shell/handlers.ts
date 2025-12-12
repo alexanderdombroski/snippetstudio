@@ -1,4 +1,4 @@
-import type { ShellTreeDropdown, ShellTreeItem } from '../../ui/shell/ShellViewProvider';
+import type { ShellTreeDropdown, ShellTreeItem } from '../../ui/templates';
 
 /** snippetstudio.shell.create command handler */
 export async function createHandler(item?: ShellTreeDropdown) {

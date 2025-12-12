@@ -1,22 +1,20 @@
-import type { TreePathItem } from '../../ui/templates';
+import type { TreeItem } from 'vscode';
 import { executeCommand } from '../../vscode';
 
 /** only runs the callback after it is called in quick sucession */
-export function onDoubleClick(
-	callback: (item: TreePathItem) => void
-): (item: TreePathItem) => void {
+export function onDoubleClick(callback: (item: TreeItem) => void): (item: TreeItem) => void {
 	const clickTimestamps: { [key: string]: number } = {};
 	const doubleClickThreshold = 350; // Adjust as needed (milliseconds)
 
-	return (item: TreePathItem) => {
+	return (item: TreeItem) => {
 		const now = Date.now();
-		const lastClick = clickTimestamps[item.label.toString()] || 0;
+		const lastClick = clickTimestamps[String(item.label)] || 0;
 
 		if (now - lastClick < doubleClickThreshold) {
 			callback(item); // Execute callback on double-click
-			clickTimestamps[item.label.toString()] = 0; // Reset timestamp
+			clickTimestamps[String(item.label)] = 0; // Reset timestamp
 		} else {
-			clickTimestamps[item.label.toString()] = now; // Update timestamp
+			clickTimestamps[String(item.label)] = now; // Update timestamp
 		}
 	};
 }

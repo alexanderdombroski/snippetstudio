@@ -7,7 +7,8 @@ import {
 	runShellSnippet,
 } from './actions';
 import { getShellSnippets, setShellSnippets } from './config';
-import { getShellView, type ShellTreeItem, type ShellTreeDropdown } from './ShellViewProvider';
+import { getShellView } from './ShellViewProvider';
+import type { ShellTreeItem, ShellTreeDropdown } from '../templates';
 import vscode, {
 	createQuickPick,
 	createTerminal,

@@ -1,6 +1,6 @@
 import path from 'node:path';
 import { executeCommand, getConfiguration } from '../../vscode';
-import type { TreePathItem } from '../../ui/templates';
+import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getConfirmation, getSelection } from '../../utils/user';
@@ -28,9 +28,9 @@ export function getLangFromSnippetFilePath(filepath: string): string | undefined
 }
 
 /** snippetstudio.snippet.showBody command handler */
-export async function showBodyHandler(item: TreePathItem) {
+export async function showBodyHandler(item: SnippetTreeItem) {
 	const { peekAtSnippet } = await import('../../ui/peeker/peek.js');
-	await peekAtSnippet(item.path, item.description as string);
+	await peekAtSnippet(item.path, item.description);
 }
 
 /** snippetstudio.snippet.addGlobal command handler */
@@ -50,8 +50,8 @@ export async function addGlobalHandler() {
 }
 
 /** snippetstudio.snippet.createAt command handler */
-export async function createAtHandler(item: TreePathItem) {
-	const filename = item.path;
+export async function createAtHandler(item: SnippetFileTreeItem) {
+	const filename = item.filepath;
 	const langId =
 		getLangFromSnippetFilePath(filename) ??
 		(await selectLanguage()) ??
@@ -89,9 +89,9 @@ export async function fromSelectionHandler() {
 }
 
 /** snippetstudio.snippet.edit command handler */
-export async function editHandler(item: TreePathItem) {
+export async function editHandler(item: SnippetTreeItem) {
 	const langId = getCurrentLanguage() ?? 'plaintext';
-	const snippetTitle = item.description?.toString() ?? '';
+	const snippetTitle = item.description;
 	const { readSnippet } = await import('../../snippets/updateSnippets.js');
 	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
 	const snippetData: SnippetData = {
@@ -107,7 +107,7 @@ export async function editHandler(item: TreePathItem) {
 }
 
 /** snippetstudio.snippet.delete command handler */
-export async function deleteSnippetHandler(item: TreePathItem) {
+export async function deleteSnippetHandler(item: SnippetTreeItem) {
 	if (
 		getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
 		!(await getConfirmation(`Are you sure you want to delete "${item.description}"?`))
@@ -116,19 +116,19 @@ export async function deleteSnippetHandler(item: TreePathItem) {
 	}
 
 	const { deleteSnippet } = await import('../../snippets/updateSnippets.js');
-	await deleteSnippet(item.path, String(item.description));
+	await deleteSnippet(item.path, item.description);
 	executeCommand('snippetstudio.refresh');
 }
 
 /** snippetstudio.snippet.move command handler */
-export async function moveHandler(item: TreePathItem) {
+export async function moveHandler(item: SnippetTreeItem) {
 	const { moveSnippet } = await import('../../snippets/updateSnippets.js');
 	await moveSnippet(item);
 	executeCommand('snippetstudio.refresh');
 }
 
 /** snippetstudio.snippet.addKeybinding command handler */
-export async function addKeybindingHandler(item: TreePathItem) {
+export async function addKeybindingHandler(item: SnippetTreeItem) {
 	const { promptAddKeybinding } = await import('../../snippets/keyBindings.js');
 	await promptAddKeybinding(item);
 }

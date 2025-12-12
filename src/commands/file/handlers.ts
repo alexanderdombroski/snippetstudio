@@ -1,10 +1,10 @@
 import { showTextDocument, openTextDocument, Uri } from '../../vscode';
 import { refreshAll } from '../utils';
-import type { TreePathItem } from '../../ui/templates';
+import type { SnippetFileTreeItem } from '../../ui/templates';
 
 /** snippetstudio.file.open command handler */
-export async function openHandler(item: TreePathItem) {
-	const document = await openTextDocument(Uri.file(item.path));
+export async function openHandler(item: SnippetFileTreeItem) {
+	const document = await openTextDocument(Uri.file(item.filepath));
 	await showTextDocument(document);
 }
 
@@ -30,9 +30,9 @@ export async function createGlobalSnippetsHandler() {
 }
 
 /** snippetstudio.file.delete command handler */
-export async function deleteHandler(treeItem: TreePathItem) {
+export async function deleteHandler(treeItem: SnippetFileTreeItem) {
 	const { deleteSnippetFile } = await import('../../snippets/updateSnippets.js');
-	await deleteSnippetFile(treeItem.path);
+	await deleteSnippetFile(treeItem.filepath);
 	refreshAll();
 }
 

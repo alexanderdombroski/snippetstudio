@@ -10,14 +10,14 @@ import { chooseLocalGlobal, getFileName } from '../../utils/user';
 import { getExtensionSnippetLangs } from './locate';
 import { getCurrentLanguage } from '../../utils/language';
 import { snippetBodyAsString } from '../../utils/string';
-import type { TreePathItem } from '../../ui/templates';
+import type { ExtSnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
 
 /** Handler for extracting an extension snippet file */
-async function extractAllSnippets(item: TreePathItem) {
+async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
 	const basename = (await getFileName()) + '.code-snippets';
 	if (basename === 'undefined.code-snippets') {
 		return;
@@ -29,10 +29,10 @@ async function extractAllSnippets(item: TreePathItem) {
 
 	const fp = path.join(dirname, basename);
 
-	const langs = await getExtensionSnippetLangs(item.path);
+	const langs = await getExtensionSnippetLangs(item.filepath);
 	const scope = langs.join(',');
 
-	const snippets = await readSnippetFile(item.path, { tryFlatten: true, showError: true });
+	const snippets = await readSnippetFile(item.filepath, { tryFlatten: true, showError: true });
 	if (snippets === undefined) {
 		return;
 	}
@@ -41,7 +41,7 @@ async function extractAllSnippets(item: TreePathItem) {
 }
 
 /** Handler for extension.modify */
-async function extractAndModify(item: TreePathItem) {
+async function extractAndModify(item: SnippetTreeItem) {
 	const langs = await getExtensionSnippetLangs(item.path);
 	const savePath = await chooseSnippetFile(langs);
 	if (savePath === undefined) {
