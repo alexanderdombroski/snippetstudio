@@ -23,4 +23,4 @@ export default function initSnippetFileCommands(context: ExtensionContext) {
 	);
 }
 
-initSnippetFileCommands;
+
