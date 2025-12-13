@@ -53,4 +53,3 @@ After C.R.U.D-ing a snippet or snippet file, the extension sidebar tree-views *s
 *Or you can be cool and type these commands in the command prompt.*
 
 - `snippetstudio.refresh`
-- `snippetstudio.refreshLocations`

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { createGist, importGist } from './snippetGists';
-import { context } from '../../.vitest/__mocks__/shared';
 import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/user';
 import { mergeSnippetFiles } from '../snippets/newSnippetFile';
 import type { VSCodeSnippets } from '../types';
@@ -35,11 +34,11 @@ describe('snippetGists', () => {
 		});
 		it('should end early if user escapes quickpicks', async () => {
 			(getFileName as Mock).mockReturnValue(undefined);
-			await createGist(context);
+			await createGist();
 
 			(getFileName as Mock).mockReturnValue('backup');
 			(mergeSnippetFiles as Mock).mockReturnValue(undefined);
-			await createGist(context);
+			await createGist();
 
 			expect(showInputBox).not.toBeCalled();
 		});
@@ -48,7 +47,7 @@ describe('snippetGists', () => {
 			(mergeSnippetFiles as Mock).mockReturnValue(snippets);
 			(showInputBox as Mock).mockReturnValue(undefined);
 
-			await createGist(context);
+			await createGist();
 
 			expect(showInformationMessage).toBeCalled();
 		});
@@ -60,11 +59,11 @@ describe('snippetGists', () => {
 			const spy = vi.spyOn(octo, 'getOctokitClient');
 
 			(getGistId as Mock).mockReturnValue(undefined);
-			await importGist(context);
+			await importGist();
 
 			(getGistId as Mock).mockReturnValue(gistIdWithNoSnippets);
 			(chooseLocalGlobal as Mock).mockReturnValue(undefined);
-			await importGist(context);
+			await importGist();
 
 			expect(spy).not.toBeCalled();
 		});
@@ -78,11 +77,11 @@ describe('snippetGists', () => {
 			(getSavePathFromDialog as Mock).mockResolvedValue(savePath);
 			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 
-			const client = await octo.getOctokitClient(context);
+			const client = await octo.getOctokitClient();
 			const spy = vi.spyOn(client, 'request');
 			vi.spyOn(octo, 'getOctokitClient').mockResolvedValue(client);
 
-			await importGist(context);
+			await importGist();
 
 			expect(spy).toBeCalledWith('GET /gists/{gist_id}', { gist_id: gistIdWithNoSnippets });
 			expect(fs.writeFile).not.toBeCalled();

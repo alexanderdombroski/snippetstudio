@@ -17,6 +17,7 @@ import SnippetEditorProvider from './SnippetEditorProvider';
 import initSnippetEditorCommands from './snippetEditor';
 import initSnippetFeatureCommands from './snippetFeatures';
 import type { SnippetData } from '../../types';
+import { getExtensionContext } from '../../utils/context';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
 
@@ -42,12 +43,8 @@ export async function _initEditing(context: ExtensionContext): Promise<SnippetEd
 }
 
 /** start up a new buffer editor to create/edit a snippet */
-async function editSnippet(
-	context: ExtensionContext,
-	langId: string,
-	snippetData: SnippetData,
-	body: string = ''
-) {
+async function editSnippet(langId: string, snippetData: SnippetData, body: string = '') {
+	const context = await getExtensionContext();
 	try {
 		if (getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
 			const { createFile } = await import('../../snippets/newSnippetFile.js');

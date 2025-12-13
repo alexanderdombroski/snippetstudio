@@ -1,10 +1,11 @@
-import vscode, { TreeItem, None, Expanded, ThemeIcon } from '../../vscode';
+import vscode from '../../vscode';
 import type { Event, EventEmitter, TreeItem as TreeItemType, TreeDataProvider } from 'vscode';
 import { getShellSnippets } from './config';
 import { getDefaultShellProfile } from './utils';
 import type { ShellSnippet } from '../../types';
+import { ShellTreeItem, ShellTreeDropdown } from '../templates';
 
-let shellViewProvider: ShellViewProvider | undefined;
+let shellViewProvider: ShellViewProvider;
 
 /** Returns the singleton shell view provider class */
 export function getShellView(): ShellViewProvider {
@@ -13,33 +14,6 @@ export function getShellView(): ShellViewProvider {
 		vscode.window.createTreeView('shell-snippets', { treeDataProvider: shellViewProvider });
 	}
 	return shellViewProvider;
-}
-
-/** Constructs a tree item to be used in the shell snippet view */
-export class ShellTreeItem extends TreeItem {
-	constructor(
-		public readonly label: string,
-		public readonly isLocal: boolean,
-		public readonly runImmediately: boolean,
-		public readonly profile: string
-	) {
-		super(label, None);
-		(this as any).contextValue = 'shell-snippet';
-	}
-}
-
-/** Constructs a dropdown to organize shell items */
-export class ShellTreeDropdown extends TreeItem {
-	constructor(
-		public readonly label: string,
-		public readonly hasItems: boolean,
-		public readonly icon: string,
-		public readonly isLocal: boolean
-	) {
-		super(label, hasItems ? Expanded : None);
-		(this as any).iconPath = new ThemeIcon(icon);
-		(this as any).contextValue = 'shell-dropdown';
-	}
 }
 
 /** Tree View to display all shell snippets */

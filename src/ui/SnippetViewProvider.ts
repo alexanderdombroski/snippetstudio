@@ -1,48 +1,28 @@
 import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode, { getConfiguration, onDidChangeActiveTextEditor } from '../vscode';
-import loadSnippets from '../snippets/loadSnippets';
-import {
-	unloadedDropdownTemplate,
-	selectedLanguageTemplate,
-	extensionCategoryDropdown,
-	extensionSnippetsTreeItems,
-} from './templates';
+import vscode, { Collapsed, getConfiguration, None, onDidChangeActiveTextEditor } from '../vscode';
 import { getCurrentLanguage } from '../utils/language';
-import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
-import { getWorkspaceFolder, isParentDir, shortenFullPath } from '../utils/fsInfo';
 import path from 'node:path';
-import { getLinkedSnippets } from '../snippets/links/config';
-import { getUserPath } from '../utils/context';
-import type { SnippetLinks } from '../types';
+import { LanguageDropdown, SnippetFileTreeItem, SnippetTreeItem } from './templates';
+import { getCacheManager } from '../snippets/SnippetCacheManager';
 
-type ParentChildTreeItems = [TreeItem, TreeItem[]][];
+let provider: SnippetViewProvider;
+
+/** Returns the singleton cache manager */
+export function getSnippetViewProvider(): SnippetViewProvider {
+	provider ??= new SnippetViewProvider();
+	return provider;
+}
 
 /** Creates a tree view to display all snippets of the active language */
 export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
-	// ---------- Attributes ---------- //
-	private snippetTreeItems: ParentChildTreeItems | undefined;
-	private activeDropdowns: TreeItem[] | undefined;
-	private extensionDropdownsTuple: [TreeItem, ParentChildTreeItems][] | undefined;
 	private langId: string | undefined;
-	private debounceTimer: NodeJS.Timeout | undefined;
-	private _activePaths: string[] = [];
-	private _activeProfileLocation: string = '';
-	private _links: SnippetLinks = {};
-	private _userPath = getUserPath();
+	private expandedLangs = new Set<string>();
 
 	// ---------- Constructor ---------- //
 
 	/** inits snippet view and refreshing */
 	constructor() {
-		this.langId = getCurrentLanguage();
-		(async () => {
-			this._activePaths = [
-				shortenFullPath(await getActiveProfileSnippetsDir()),
-				shortenFullPath(path.join(getWorkspaceFolder() ?? 'not found', '.vscode')),
-			];
-		})().then(() => {
-			this.refresh();
-		});
+		this.refresh();
 
 		onDidChangeActiveTextEditor(async () => {
 			const newLangId = getCurrentLanguage();
@@ -55,19 +35,11 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 
 	// ---------- Refresh Methods ---------- //
 
+	private debounceTimer: NodeJS.Timeout | undefined;
+
 	/** reread and format all snippet files */
 	private async refresh() {
-		this._links = await getLinkedSnippets();
-		this._activeProfileLocation = (await getActiveProfile()).location;
-		this.snippetTreeItems = await loadSnippets();
-		this.activeDropdowns = this.snippetTreeItems?.map((group) => group[0])?.filter(this.isActive);
-		if (this.langId && getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
-			const { findAllExtensionSnipppetsByLang } = await import('../snippets/extension/locate.js');
-			const extensionSnippetsMap = await findAllExtensionSnipppetsByLang(this.langId);
-			this.extensionDropdownsTuple = extensionSnippetsTreeItems(extensionSnippetsMap);
-		} else {
-			this.extensionDropdownsTuple = undefined;
-		}
+		this.langId = getCurrentLanguage();
 		this._onDidChangeTreeData.fire();
 	}
 
@@ -91,73 +63,51 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 
 	/** loads the tree items recursively in groups */
 	async getChildren(element?: TreeItem): Promise<TreeItem[] | undefined> {
-		// Handle child items
-		if (element) {
-			if (element.contextValue === 'active-snippets') {
-				return this.activeDropdowns;
-			}
+		if (!this.langId) return;
 
-			if (element.contextValue === 'disabled-dropdown') {
-				return this.snippetTreeItems
-					?.map((group) => group[0])
-					.filter((fp) => !this.isActive(fp) && this.isNotLinkedActive(fp))
-					.reduce((acc: TreeItem[], curr) => {
-						if (
-							curr.contextValue?.includes('linked') &&
-							acc.some((item) => item.label === curr.label && item.contextValue?.includes('linked'))
-						) {
-							return acc;
-						}
-						acc.push(curr);
-						return acc;
-					}, []);
-			}
-
-			if (element.label === 'Extension Snippets') {
-				return this.extensionDropdownsTuple?.map((group) => group[0]);
-			}
-
-			if (element.contextValue === 'extension-dropdown') {
-				const match = this.extensionDropdownsTuple?.find(
-					([extDropdown]) => element.description === extDropdown.description
-				);
-				return match?.[1].map((group) => group[0]);
-			}
-
-			if (element.contextValue === 'extension-snippet-path') {
-				return this.extensionDropdownsTuple
-					?.flatMap(([, fileDropdowns]) => fileDropdowns)
-					.find(([fileDropdown]) => fileDropdown.description === element.description)?.[1];
-			}
-
-			const parentChild = this.snippetTreeItems?.find(
-				(group) => group[0].description === element.description
-			);
-			return parentChild ? parentChild[1] : undefined;
+		if (!element) {
+			return [new LanguageDropdown(this.langId, this.expandedLangs.has(this.langId))];
 		}
 
-		// Root level: Create parent items
-		const rootItems: TreeItem[] = [
-			selectedLanguageTemplate(this.langId, !!this.activeDropdowns?.length),
-		]; // Always add the template
-		this.extensionDropdownsTuple?.length && rootItems.push(extensionCategoryDropdown());
-		this.snippetTreeItems
-			?.map((group) => group[0])
-			?.filter((d) => this.isNotLinkedActive(d) && this.isNotLocal(d) && !this.isActive(d))
-			?.length && rootItems.push(unloadedDropdownTemplate());
+		const cache = getCacheManager();
+		if (element.contextValue === 'active-snippets') {
+			this.expandedLangs.add(this.langId);
+			const snippetGroups = await cache.getLangSnippets();
+			const links = cache.links;
 
-		return rootItems;
+			const items = snippetGroups.map(([file, snippets]) => {
+				const collapsible = Object.entries(snippets).some(
+					([, v]) => !v.scope || v.scope.includes(this.langId as string)
+				);
+				const contextValue =
+					path.basename(file) in links ? 'snippet-filepath linked' : 'snippet-filepath';
+				return new SnippetFileTreeItem(collapsible ? Collapsed : None, file, contextValue);
+			});
+
+			if (getConfiguration('snippetstudio').get<boolean>('alwaysShowProjectSnippetFiles')) {
+				return items;
+			}
+
+			return items.filter(
+				(item) => String(item.label).endsWith('json') || item.collapsibleState !== None
+			);
+		}
+
+		if (element.contextValue?.includes('snippet-filepath')) {
+			const filepath = (element as SnippetFileTreeItem).filepath;
+			const snippets = await cache.getSnippets(filepath, { showError: true });
+			if (snippets) {
+				let pairs = Object.entries(snippets);
+				if (filepath.endsWith('code-snippets')) {
+					pairs = pairs.filter(([, { scope }]) => !scope || scope.includes(this.langId as string));
+				}
+
+				return pairs.map(([title, snippet]) => new SnippetTreeItem(title, snippet, filepath));
+			}
+		}
+
+		return [];
 	}
-
-	private isActive = (fileItem: TreeItem) =>
-		this._activePaths.includes(path.dirname(String(fileItem.description)));
-	private isNotLinkedActive = (fileItem: TreeItem) =>
-		!(
-			(fileItem.label as string) in this._links &&
-			this._links[fileItem.label as string].includes(this._activeProfileLocation)
-		);
-	private isNotLocal = (fileItem: TreeItem) =>
-		!isParentDir(this._userPath, String(fileItem.description));
 
 	// ---------- Event Emitters ---------- //
 	private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | null | void> =

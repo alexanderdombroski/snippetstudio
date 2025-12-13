@@ -51,7 +51,7 @@ export async function manageLinkLocations(isAlreadyLinked: boolean, filepath: st
 			await removeFileLink(filename);
 		}
 
-		const snippets = (await readSnippetFile(filepath)) as VSCodeSnippets;
+		const snippets = (await readSnippetFile(filepath, { showError: true })) as VSCodeSnippets;
 		Promise.all(
 			selected.map(({ detail }) =>
 				writeSnippetFile(path.join(detail as string, filename), snippets, '', true)

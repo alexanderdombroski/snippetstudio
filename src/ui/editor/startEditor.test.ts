@@ -14,7 +14,6 @@ import {
 import { createFile } from '../../snippets/newSnippetFile';
 import type { Uri as UriType } from 'vscode';
 import type { SnippetData } from '../../types';
-import { context } from '../../../.vitest/__mocks__/shared';
 
 vi.mock('./startEditor', async () => {
 	const actual = await vi.importActual('./startEditor');
@@ -68,7 +67,7 @@ describe('startEditor', () => {
 			const langId = 'typescript';
 			const body = 'console.log("hello");';
 
-			const doc = await editSnippet(context, langId, mockSnippetData, body);
+			const doc = await editSnippet(langId, mockSnippetData, body);
 
 			expect(showTextDocument).toBeCalledWith(mockDoc, expect.anything());
 			expect(doc).toBe(mockDoc);
@@ -80,7 +79,7 @@ describe('startEditor', () => {
 			});
 			(createFile as Mock).mockResolvedValue('created');
 
-			await editSnippet(context, 'typescript', mockSnippetData, '');
+			await editSnippet('typescript', mockSnippetData, '');
 
 			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filename, false);
 		});
@@ -90,7 +89,7 @@ describe('startEditor', () => {
 				get: vi.fn().mockReturnValue(false),
 			});
 
-			await editSnippet(context, 'typescript', mockSnippetData, '');
+			await editSnippet('typescript', mockSnippetData, '');
 
 			expect(createFile).not.toHaveBeenCalled();
 		});
@@ -101,7 +100,7 @@ describe('startEditor', () => {
 			});
 			(createFile as Mock).mockResolvedValue('skipped');
 
-			const result = await editSnippet(context, 'typescript', mockSnippetData, '');
+			const result = await editSnippet('typescript', mockSnippetData, '');
 
 			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filename, false);
 			expect(_initEditing).not.toHaveBeenCalled();
@@ -112,7 +111,7 @@ describe('startEditor', () => {
 			const error = new Error('test error');
 			(getConfiguration as Mock).mockRejectedValue(error);
 
-			const result = await editSnippet(context, 'typescript', mockSnippetData, '');
+			const result = await editSnippet('typescript', mockSnippetData, '');
 
 			expect(showErrorMessage).toHaveBeenCalled();
 			expect(result).toBeUndefined();

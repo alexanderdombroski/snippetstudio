@@ -5,11 +5,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { readJson, readJsoncFilesAsync } from '../../utils/jsoncFilesIO';
+import { readJson } from '../../utils/jsoncFilesIO';
 import type {
 	ExtensionSnippetFilesMap,
-	ExtensionSnippets,
-	ExtensionSnippetsMap,
 	JSONObject,
 	PackageJsonSnippetsSection,
 	SnippetContribution,
@@ -109,45 +107,4 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 
 	const snippetPaths = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
 	return Object.fromEntries(snippetPaths);
-}
-
-// -------------------- Get By Language --------------------
-
-type ExtensionSnippetsMapKVP = [string, { name: string; snippets: ExtensionSnippets[] }];
-type TaskResult = Promise<ExtensionSnippetsMapKVP | undefined>;
-
-/** locates and reads all snippet files returning snippets of a specific language from downloaded extensions */
-export async function findAllExtensionSnipppetsByLang(
-	langId: string
-): Promise<ExtensionSnippetsMap> {
-	const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
-	if (Object.keys(extensionSnippetFilesMap).length === 0) {
-		return {};
-	}
-
-	const tasks: TaskResult[] = Object.entries(extensionSnippetFilesMap).map(
-		async ([extId, { name, files }]) => {
-			const filesToRead = files.filter(({ language }) => language === langId);
-			if (filesToRead.length === 0) {
-				return;
-			}
-
-			const snippets = await readJsoncFilesAsync(filesToRead.map(({ path }) => path));
-			const contributionsWithSnippets: ExtensionSnippets[] = snippets.map(([fp, s]) => {
-				return {
-					path: fp,
-					language: langId,
-					snippets: flattenScopedExtensionSnippets(s),
-				};
-			});
-			const result: ExtensionSnippetsMapKVP = [
-				extId,
-				{ name, snippets: contributionsWithSnippets },
-			];
-			return result;
-		}
-	);
-
-	const extensionSnippetMapKVPs = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
-	return Object.fromEntries(extensionSnippetMapKVPs);
 }

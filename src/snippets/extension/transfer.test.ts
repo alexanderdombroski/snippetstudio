@@ -2,7 +2,7 @@ import { vi, describe, it, expect, type Mock, beforeEach } from 'vitest';
 import { extractAllSnippets, extractAndModify } from './transfer';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
-import { TreePathItem } from '../../ui/templates';
+import { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { getExtensionSnippetLangs } from './locate';
 import type { VSCodeSnippet, VSCodeSnippets } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
@@ -11,7 +11,6 @@ import { readSnippet } from '../../snippets/updateSnippets';
 import { editSnippet } from '../../ui/editor/startEditor';
 import { getCurrentLanguage } from '../../utils/language';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
-import { context } from '../../../.vitest/__mocks__/shared';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
 
 vi.mock('../../utils/jsoncFilesIO');
@@ -30,15 +29,15 @@ vi.mock('../../utils/fsInfo');
 
 describe('transfer extension snippets', () => {
 	describe('extractAllSnippets', () => {
-		const treePathItem = new TreePathItem('label', 0, '/snippets/test.code-snippets');
+		const item = new SnippetFileTreeItem(0, 'label', '/snippets/test.code-snippets');
 
 		it("should end early if user doesn't select from quickpick", async () => {
 			(getFileName as Mock).mockReturnValue(undefined);
-			await extractAllSnippets(treePathItem);
+			await extractAllSnippets(item);
 
 			(getFileName as Mock).mockReturnValue('web-dev');
 			(chooseLocalGlobal as Mock).mockReturnValue(undefined);
-			await extractAllSnippets(treePathItem);
+			await extractAllSnippets(item);
 
 			expect(writeSnippetFile).not.toBeCalled();
 		});
@@ -55,7 +54,7 @@ describe('transfer extension snippets', () => {
 			};
 			(readSnippetFile as Mock).mockReturnValue(snippets);
 
-			await extractAllSnippets(treePathItem);
+			await extractAllSnippets(item);
 			expect(writeSnippetFile).toBeCalledWith(
 				'/user/snippets/web-dev.code-snippets',
 				snippets,
@@ -65,11 +64,11 @@ describe('transfer extension snippets', () => {
 	});
 
 	describe('extractAndModify', () => {
-		const treePathItem = new TreePathItem('label', 0, '/path/to/extension/snippets.code-snippets');
 		const snippet: VSCodeSnippet = {
 			prefix: 'prefix',
 			body: 'body',
 		};
+		const item = new SnippetTreeItem('label', snippet, '/path/to/extension/snippets.code-snippets');
 
 		beforeEach(() => {
 			(getWorkspaceFolder as Mock).mockReturnValue('/workspace');
@@ -82,7 +81,7 @@ describe('transfer extension snippets', () => {
 			(locateSnippetFiles as Mock).mockResolvedValue(['/path/to/snippets.json']);
 			(showQuickPick as Mock).mockResolvedValue(undefined);
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(item);
 
 			expect(editSnippet).not.toBeCalled();
 		});
@@ -97,10 +96,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(item);
 
 			expect(editSnippet).toBeCalledWith(
-				context,
 				'typescript',
 				expect.objectContaining({
 					scope: 'typescript,javascript',
@@ -120,10 +118,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(item);
 
 			expect(editSnippet).toBeCalledWith(
-				context,
 				'typescript',
 				expect.not.objectContaining({
 					scope: expect.any(String),
@@ -142,9 +139,9 @@ describe('transfer extension snippets', () => {
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(getCurrentLanguage as Mock).mockReturnValue('rust');
 
-			await extractAndModify(treePathItem, context);
+			await extractAndModify(item);
 
-			expect(editSnippet).toBeCalledWith(context, 'javascript', expect.any(Object), 'body');
+			expect(editSnippet).toBeCalledWith('javascript', expect.any(Object), 'body');
 		});
 	});
 });

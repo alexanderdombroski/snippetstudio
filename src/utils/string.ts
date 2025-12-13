@@ -1,6 +1,3 @@
-import { executeCommand, Selection, Position } from '../vscode';
-import type { Selection as SelectionType, TextEditor } from 'vscode';
-
 /** makes space delimited words become title case */
 function titleCase(str: string): string {
 	return str
@@ -19,47 +16,4 @@ function snippetBodyAsString(body: string | string[] | null | undefined) {
 	return Array.isArray(body) ? body.join('\n') : (body ?? '');
 }
 
-/** removes an equal amount of leading tabs from every line */
-async function unTabMultiline(selection: SelectionType, editor: TextEditor): Promise<string> {
-	if (selection.isEmpty) {
-		return '';
-	}
-
-	if (!selection.isSingleLine) {
-		const start = new Position(selection.start.line, 0);
-		selection = new Selection(start, editor.document.lineAt(selection.end.line).range.end);
-	}
-
-	await executeCommand('editor.action.indentationToSpaces');
-	const selectedText = editor.document.getText(selection);
-	const lines = selectedText.split(/\r\n|\r|\n/);
-	const spaces = countMinSpaces(lines);
-
-	return lines.map((line) => line.substring(spaces)).join('\n');
-}
-
-/** for every line, find the one with the least amount of spaces */
-function countMinSpaces(lines: string[]): number {
-	let minCount = 9999;
-	for (let line of lines) {
-		if (line.trim().length === 0) {
-			continue;
-		}
-
-		let count = 0;
-		for (let char of line) {
-			if (char === ' ') {
-				count += 1;
-			} else {
-				minCount = Math.min(count, minCount);
-				break;
-			}
-		}
-	}
-	if (minCount === 9999) {
-		return 0;
-	}
-	return minCount;
-}
-
-export { titleCase, snippetBodyAsString, unTabMultiline, capitalize };
+export { titleCase, snippetBodyAsString, capitalize };

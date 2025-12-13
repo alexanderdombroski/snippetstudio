@@ -12,7 +12,7 @@ Pick and choose snippets to copy to a `.code-snippets` file.
 
 At this point, you probably have *TONS* of snippets!
 
-1. Choose `Export Snippets` in the <i className="codicon codicon-ellipsis"></i> three-dot menu of **Location Manager** or run the command `snippetstudio.snippet.export` in the command prompt.
+1. Choose `Export Snippets` in the <i className="codicon codicon-ellipsis"></i> three-dot menu of **Location Manager** or run the command `snippetstudio.file.export` in the command prompt.
 2. Choose a **filename**
 3. Choose a **folder save location**
 4. Choose which **snippet files** to include in the export

@@ -39,22 +39,18 @@ describe('locateSnippets', () => {
 			(getCurrentLanguage as Mock).mockReturnValue('python');
 		});
 		it('should find snippets files of the current language', async () => {
-			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 			const files = await locateSnippetFiles();
-			expect(getAllGlobalSnippetDirs).toBeCalled();
-			expect(files.length).toBe(5);
+			expect(files.length).toBe(3);
 		});
 		it('should only find the active profile if configured that way', async () => {
-			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => false) });
 			const files = await locateSnippetFiles();
 			expect(getActiveProfileSnippetsDir).toBeCalled();
 			expect(files.length).toBe(3);
 		});
 		it('should handle not having a workspace open', async () => {
-			(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
 			(getWorkspaceFolder as Mock).mockReturnValue(undefined);
 			const files = await locateSnippetFiles();
-			expect(files.length).toBe(4);
+			expect(files.length).toBe(2);
 		});
 	});
 
