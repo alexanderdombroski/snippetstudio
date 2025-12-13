@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [3.0](#300---2025-12-13) - Lazily Read Snippets
 - [2.9](#290---2025-11-28) - Snippets in Location View
 - [2.8](#280---2025-11-19) - Antigravity Support
 - [2.7](#271---2025-11-08) - Shell Snippets
@@ -23,12 +24,13 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [3.0.0] - UNRELEASED
+## [3.0.0] - 2025-12-13
 
 ### Added
 
-- Performance improvements to location and snippets view, and extension startup time
 - Extension and profile snippets now viewable in the location view
+- Performance improvements to location and snippets view, and extension startup time
+- Add support for Trae IDE
 
 ### Fixed
 
@@ -37,9 +39,9 @@
 
 ### Changed
 
-- Removed command to track snippets in location manager. All snippets are lazily tracked until opening the file dropdown
-- Improved spacing to display linked snippets
-- Removed setting that hides profile and extension snippets because they no longer offer any benefit
+- Removed command to track snippets in location view. Snippet files are now only read when the file dropdown opens
+- Improved spacing of linked snippets in tree view
+- Removed settings to hide profile and extension snippets because they no longer offer any benefit
 
 ## [2.9.0] - 2025-11-28
 

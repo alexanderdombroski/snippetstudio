@@ -22,5 +22,3 @@ export default function initSnippetFileCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.file.export', exportHandler)
 	);
 }
-
-

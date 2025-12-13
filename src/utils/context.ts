@@ -63,6 +63,7 @@ export function getUserPath(): string {
 		'Visual Studio Code - Insiders': 'Code - Insiders',
 		VSCodium: 'VSCodium',
 		Cursor: 'Cursor',
+		Trae: 'Trae',
 	};
 	const appName = appNames[vscode.env.appName] ?? 'Code';
 	switch (process.platform) {

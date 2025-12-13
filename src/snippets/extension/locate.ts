@@ -27,6 +27,7 @@ export function _getExtensionsDirPath(): string {
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',
 		Cursor: '.cursor',
+		Trae: '.trae',
 	};
 	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');
