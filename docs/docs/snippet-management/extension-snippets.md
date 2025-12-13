@@ -50,19 +50,10 @@ _Note: This won't edit the snippet in the extension itself, but will only make a
 - Only need one or two snippets from a large extension
 - Want to customize a specific snippet without affecting others
 
-## Hide Extension Snippets
-
-You can disable these features. Click on the <i className="codicon codicon-gear"></i> to edit extension settings, then set `snippetstudio.view.showExtensions` to `false`.
-
-**Use Case:** Hide extension snippets when:
-- You want to simplify the snippet and location manager view
-- You want a slight increase in performance. The extension won't scan installed extensions for snippets at all, reducing background fileIO operations
-
 ## Troubleshooting
 
 **Q: I can't see any extension snippets**
 - Make sure you have extensions with snippets installed
-- Check if `snippetstudio.view.showExtensions` is enabled in settings
 - You must have at least one custom snippet file created for snippets to appear in the locations manager view
 - Snippets won't appear if the extension didn't use properly formatted JSON.
 

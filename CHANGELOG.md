@@ -27,7 +27,8 @@
 
 ### Added
 
-- Performance improvements to location and snippets view
+- Performance improvements to location and snippets view, and extension startup time
+- Extension and profile snippets now viewable in the location view
 
 ### Fixed
 
@@ -36,8 +37,9 @@
 
 ### Changed
 
-- Removed command to track snippets in location manager. All snippets are lazily tracked now
+- Removed command to track snippets in location manager. All snippets are lazily tracked until opening the file dropdown
 - Improved spacing to display linked snippets
+- Removed setting that hides profile and extension snippets because they no longer offer any benefit
 
 ## [2.9.0] - 2025-11-28
 

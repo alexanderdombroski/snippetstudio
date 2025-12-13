@@ -582,7 +582,7 @@
 				},
 				{
 					"command": "snippetstudio.profile.link",
-					"when": "((viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
+					"when": "((viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/) && ((viewItem =~ /global/) || (viewItem =~/profile/)))",
 					"group": "navigation"
 				},
 				{
@@ -664,16 +664,6 @@
 		"configuration": {
 			"title": "SnippetStudio Configuration",
 			"properties": {
-				"snippetstudio.view.showProfiles": {
-					"type": "boolean",
-					"default": true,
-					"description": "Display snippets from other profiles in the snippets and location views."
-				},
-				"snippetstudio.view.showExtensions": {
-					"type": "boolean",
-					"default": true,
-					"description": "Display extension snippets in the snippets and location views."
-				},
 				"snippetstudio.confirmSnippetDeletion": {
 					"type": "boolean",
 					"default": false,
