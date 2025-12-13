@@ -17,12 +17,7 @@ import {
 	SnippetTreeItem,
 } from './templates';
 import path from 'node:path';
-import {
-	getActiveProfile,
-	getActiveProfileSnippetsDir,
-	getPathFromProfileLocation,
-	getProfiles,
-} from '../utils/profile';
+import { getActiveProfile, getActiveProfileSnippetsDir, getProfiles } from '../utils/profile';
 import { getCacheManager } from '../snippets/SnippetCacheManager';
 import { getWorkspaceFolder } from '../utils/fsInfo';
 import type { VSCodeSnippets } from '../types';
@@ -171,11 +166,10 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		if (element.contextValue?.includes('profile-dropdown')) {
 			const location = element.description as string;
 			const files = cache.profile[location];
-			const dir = getPathFromProfileLocation(location);
-			const contextValue = this.isSnippetLinked(dir, location)
-				? 'snippet-filepath profile linked'
-				: 'snippet-filepath profile';
 			return files.map((file) => {
+				const contextValue = this.isSnippetLinked(path.basename(file), location)
+					? 'snippet-filepath profile linked'
+					: 'snippet-filepath profile';
 				const snippets = cache.snippets.get(file);
 				return new SnippetFileTreeItem(this.getCollapsibleState(snippets), file, contextValue);
 			});
