@@ -905,7 +905,6 @@
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.10",
 		"@types/node": "^22.19.1",
 		"@types/vscode": "^1.99.0",
 		"@typescript-eslint/eslint-plugin": "^8.48.1",
