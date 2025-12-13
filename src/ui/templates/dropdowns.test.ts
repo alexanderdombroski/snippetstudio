@@ -26,7 +26,7 @@ describe('dropdowns', () => {
 
 	describe('LanguageDropdown', () => {
 		it('should create a language dropdown with correct properties', () => {
-			const dropdown = new LanguageDropdown('typescript');
+			const dropdown = new LanguageDropdown('typescript', false);
 
 			expect(dropdown.label).toBe('typescript');
 			expect(dropdown.collapsibleState).toBe(Collapsed);
@@ -35,7 +35,7 @@ describe('dropdowns', () => {
 		});
 
 		it('should have code icon', () => {
-			const dropdown = new LanguageDropdown('javascript');
+			const dropdown = new LanguageDropdown('javascript', true);
 			expect(dropdown.iconPath).toBeDefined();
 		});
 	});

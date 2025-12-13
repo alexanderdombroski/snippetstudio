@@ -6,8 +6,8 @@ import { getPathFromProfileLocation } from '../../utils/profile';
 
 /** Dropdown for a VS Code language */
 export class LanguageDropdown extends TreeItem {
-	constructor(lang: string) {
-		super(lang, Collapsed);
+	constructor(lang: string, expanded: boolean) {
+		super(lang, expanded ? Expanded : Collapsed);
 		this.iconPath = new ThemeIcon('code');
 		this.tooltip = 'The language of the open file';
 		this.contextValue = 'active-snippets';

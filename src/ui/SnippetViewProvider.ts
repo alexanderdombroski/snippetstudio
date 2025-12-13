@@ -16,6 +16,7 @@ export function getSnippetViewProvider(): SnippetViewProvider {
 /** Creates a tree view to display all snippets of the active language */
 export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	private langId: string | undefined;
+	private expandedLangs = new Set<string>();
 
 	// ---------- Constructor ---------- //
 
@@ -65,11 +66,12 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 		if (!this.langId) return;
 
 		if (!element) {
-			return [new LanguageDropdown(this.langId)];
+			return [new LanguageDropdown(this.langId, this.expandedLangs.has(this.langId))];
 		}
 
 		const cache = getCacheManager();
 		if (element.contextValue === 'active-snippets') {
+			this.expandedLangs.add(this.langId);
 			const snippetGroups = await cache.getLangSnippets();
 			const links = cache.links;
 
