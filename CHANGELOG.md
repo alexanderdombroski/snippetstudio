@@ -31,9 +31,13 @@
 
 ### Fixed
 
+- Export Snippets command correctly refreshes
+- Creating/Editing snippets reliably triggers refresh
+
 ### Changed
 
 - Removed command to track snippets in location manager. All snippets are lazily tracked now
+- Improved spacing to display linked snippets
 
 ## [2.9.0] - 2025-11-28
 

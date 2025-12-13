@@ -3,10 +3,9 @@ import type {
 	TreeDataProvider,
 	Event,
 	EventEmitter,
-	ExtensionContext,
 	TreeItemCollapsibleState,
 } from 'vscode';
-import vscode, { Collapsed, None, registerCommand } from '../vscode';
+import vscode, { Collapsed, None } from '../vscode';
 import {
 	AllExtensionDropdown,
 	AllProfilesDropdown,
@@ -27,6 +26,15 @@ import {
 import { getCacheManager } from '../snippets/SnippetCacheManager';
 import { getWorkspaceFolder } from '../utils/fsInfo';
 import type { VSCodeSnippets } from '../types';
+import { getSnippetViewProvider } from './SnippetViewProvider';
+
+let provider: LocationTreeProvider;
+
+/** Returns the singleton cache manager */
+export function getLocationTreeProvider(): LocationTreeProvider {
+	provider ??= new LocationTreeProvider();
+	return provider;
+}
 
 /** Tree View to display all snippet files and locations */
 export default class LocationTreeProvider implements TreeDataProvider<TreeItem> {
@@ -34,11 +42,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 
 	// ---------- Constructor ---------- //
 
-	constructor(context: ExtensionContext) {
-		context.subscriptions.push(
-			registerCommand('snippetstudio.refreshLocations', this.debounceRefresh.bind(this))
-		);
-
+	constructor() {
 		getCacheManager()
 			.updateActiveFiles()
 			.then(() => this._onDidChangeTreeData.fire());
@@ -47,25 +51,32 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 	// ---------- Refresh Methods ---------- //
 
 	/** finds all snippet files and redisplays them */
-	async _refresh() {
+	async _refresh(hard?: boolean) {
 		const cache = getCacheManager();
-		await Promise.all([
-			cache.updateActiveFiles(),
-			cache.updateExtensionFiles(),
-			cache.updateProfileFiles(),
-			cache.hardRefresh(),
-		]);
 
+		const refreshTasks = [cache.updateActiveFiles()];
+
+		if (hard) {
+			refreshTasks.push(
+				cache.updateExtensionFiles(),
+				cache.updateProfileFiles(),
+				cache.hardRefresh()
+			);
+		}
+
+		await Promise.all(refreshTasks);
+
+		getSnippetViewProvider().debounceRefresh();
 		this._onDidChangeTreeData.fire();
 	}
 
 	/** ensures a refresh doesn't happen too often */
-	public debounceRefresh() {
+	public debounceRefresh(hard?: boolean) {
 		if (this.debounceTimer) {
 			clearTimeout(this.debounceTimer); // Clear previous timer
 		}
 		this.debounceTimer = setTimeout(async () => {
-			await this._refresh(); // Call _refresh after delay
+			await this._refresh(hard); // Call _refresh after delay
 			this.debounceTimer = undefined; // Clear timer
 		}, 400); // Adjust delay as needed (e.g., 200ms)
 	}

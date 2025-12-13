@@ -61,7 +61,7 @@ describe('updateSnippets', () => {
 			const snippet = { prefix: 'p', body: 'b' };
 			(readSnippetFile as Mock).mockResolvedValue({ title: snippet });
 			vi.spyOn(console, 'error');
-			const result = await readSnippet('test.json', 'title');
+			const result = await readSnippet('test2.json', 'title');
 
 			expect(console.error).not.toBeCalled();
 			expect(result).toEqual(snippet);
@@ -72,7 +72,13 @@ describe('updateSnippets', () => {
 		it('should not move if no file is selected', async () => {
 			(locateAllSnippetFiles as Mock).mockReturnValue([[], [], {}]);
 			(showQuickPick as Mock).mockReturnValue(undefined);
-			await moveSnippet({ path: '/global/snippet', label: 'snippet', collapsibleState: 0 });
+			await moveSnippet({
+				path: '/global/snippet',
+				label: 'snippet',
+				collapsibleState: 0,
+				description: 'title',
+				contextValue: 'snippet',
+			});
 			expect(showInformationMessage).not.toBeCalled();
 		});
 	});

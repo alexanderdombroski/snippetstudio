@@ -1,5 +1,4 @@
 import type { ExtSnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
-import { executeCommand } from '../../vscode';
 import { refreshAll } from '../utils';
 
 /** snippetstudio.extension.extract command handler */
@@ -20,5 +19,5 @@ export async function fetchHandler() {
 export async function modifyHandler(item: SnippetTreeItem) {
 	const { extractAndModify } = await import('../../snippets/extension/transfer.js');
 	await extractAndModify(item);
-	executeCommand('snippetstudio.refresh');
+	refreshAll(true);
 }

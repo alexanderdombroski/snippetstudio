@@ -15,7 +15,12 @@ beforeAll(() => {
 describe('handlers', () => {
 	describe('linkHandler', () => {
 		it('should run the command', async () => {
-			await linkHandler({ label: 'hi', collapsibleState: 1, path: 'python.json' });
+			await linkHandler({
+				label: 'hi',
+				collapsibleState: 1,
+				filepath: 'python.json',
+				contextValue: 'file',
+			});
 			expect(manageLinkLocations).toBeCalled();
 			expect(refreshAll).toBeCalled();
 		});

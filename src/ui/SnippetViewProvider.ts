@@ -1,15 +1,17 @@
-import type { TreeItem, TreeDataProvider, Event, EventEmitter, ExtensionContext } from 'vscode';
-import vscode, {
-	Collapsed,
-	getConfiguration,
-	None,
-	onDidChangeActiveTextEditor,
-	registerCommand,
-} from '../vscode';
+import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
+import vscode, { Collapsed, getConfiguration, None, onDidChangeActiveTextEditor } from '../vscode';
 import { getCurrentLanguage } from '../utils/language';
 import path from 'node:path';
 import { LanguageDropdown, SnippetFileTreeItem, SnippetTreeItem } from './templates';
 import { getCacheManager } from '../snippets/SnippetCacheManager';
+
+let provider: SnippetViewProvider;
+
+/** Returns the singleton cache manager */
+export function getSnippetViewProvider(): SnippetViewProvider {
+	provider ??= new SnippetViewProvider();
+	return provider;
+}
 
 /** Creates a tree view to display all snippets of the active language */
 export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
@@ -18,10 +20,7 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 	// ---------- Constructor ---------- //
 
 	/** inits snippet view and refreshing */
-	constructor(context: ExtensionContext) {
-		context.subscriptions.push(
-			registerCommand('snippetstudio.refresh', this.debounceRefresh.bind(this))
-		);
+	constructor() {
 		this.refresh();
 
 		onDidChangeActiveTextEditor(async () => {
@@ -96,9 +95,12 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 			const filepath = (element as SnippetFileTreeItem).filepath;
 			const snippets = await cache.getSnippets(filepath, { showError: true });
 			if (snippets) {
-				return Object.entries(snippets).map(
-					([title, snippet]) => new SnippetTreeItem(title, snippet, filepath)
-				);
+				let pairs = Object.entries(snippets);
+				if (filepath.endsWith('code-snippets')) {
+					pairs = pairs.filter(([, { scope }]) => !scope || scope.includes(this.langId as string));
+				}
+
+				return pairs.map(([title, snippet]) => new SnippetTreeItem(title, snippet, filepath));
 			}
 		}
 

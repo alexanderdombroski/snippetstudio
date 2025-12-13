@@ -1,11 +1,12 @@
 import path from 'node:path';
-import { executeCommand, getConfiguration } from '../../vscode';
+import { getConfiguration } from '../../vscode';
 import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getConfirmation, getSelection } from '../../utils/user';
 import { snippetBodyAsString } from '../../utils/string';
 import { getGlobalLangFile } from '../../utils/profile';
+import { refreshAll } from '../utils';
 
 /** gets default snippet prefix from configuration */
 export function defaultPrefix(): string {
@@ -103,7 +104,7 @@ export async function editHandler(item: SnippetTreeItem) {
 	const body = snippetBodyAsString(snippet?.body);
 	const { editSnippet } = await import('../../ui/editor/startEditor.js');
 	await editSnippet(langId, snippetData, body);
-	executeCommand('snippetstudio.refresh');
+	refreshAll(true);
 }
 
 /** snippetstudio.snippet.delete command handler */
@@ -117,14 +118,14 @@ export async function deleteSnippetHandler(item: SnippetTreeItem) {
 
 	const { deleteSnippet } = await import('../../snippets/updateSnippets.js');
 	await deleteSnippet(item.path, item.description);
-	executeCommand('snippetstudio.refresh');
+	refreshAll(true);
 }
 
 /** snippetstudio.snippet.move command handler */
 export async function moveHandler(item: SnippetTreeItem) {
 	const { moveSnippet } = await import('../../snippets/updateSnippets.js');
 	await moveSnippet(item);
-	executeCommand('snippetstudio.refresh');
+	refreshAll(true);
 }
 
 /** snippetstudio.snippet.addKeybinding command handler */

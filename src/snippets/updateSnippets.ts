@@ -18,6 +18,7 @@ import { locateAllSnippetFiles } from './locateSnippets';
 import type { SnippetTreeItem } from '../ui/templates';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
+import { getCacheManager } from './SnippetCacheManager';
 
 // -------------------------- CRUD operations --------------------------
 
@@ -43,8 +44,8 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 
 /** removes a single snippet from a snippet file */
 async function deleteSnippet(filepath: string, titleKey: string) {
-	const snippets = await readSnippetFile(filepath, { showError: true });
-	if (snippets === undefined) {
+	const snippets = await getCacheManager().getSnippets(filepath, { showError: true });
+	if (!snippets) {
 		return;
 	}
 
@@ -58,10 +59,13 @@ async function deleteSnippet(filepath: string, titleKey: string) {
 async function readSnippet(
 	filepath: string,
 	snippetTitle: string,
-	tryFlatten?: boolean
+	isExtensionSnippet?: boolean
 ): Promise<VSCodeSnippet | undefined> {
-	const snippets = await readSnippetFile(filepath, { tryFlatten, showError: true });
-	if (snippets === undefined || snippets[snippetTitle] === undefined) {
+	const snippets = await getCacheManager().getSnippets(filepath, {
+		isExtensionSnippet,
+		showError: true,
+	});
+	if (!snippets?.[snippetTitle]) {
 		console.error(
 			`Read Operation failed. Could not find ${snippetTitle} inside of ${path.basename(filepath)}.`
 		);
@@ -128,6 +132,7 @@ async function deleteSnippetFile(filepath: string) {
 
 	try {
 		await fs.unlink(filepath);
+		getCacheManager().remove(filepath);
 		showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
 	} catch (error) {
 		if (error instanceof Error) {

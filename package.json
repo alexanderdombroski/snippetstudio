@@ -191,12 +191,6 @@
 				"category": "snippetstudio"
 			},
 			{
-				"command": "snippetstudio.refreshLocations",
-				"title": "Refresh Locations",
-				"icon": "$(refresh)",
-				"category": "snippetstudio"
-			},
-			{
 				"command": "snippetstudio.shell.refresh",
 				"title": "Refresh Shell Snippets",
 				"icon": "$(refresh)",
@@ -455,7 +449,7 @@
 					"group": "navigation"
 				},
 				{
-					"command": "snippetstudio.refreshLocations",
+					"command": "snippetstudio.refresh",
 					"when": "view == location-manager",
 					"group": "navigation"
 				},
@@ -850,8 +844,7 @@
 							"onView:snippet-manager-view-container",
 							"onCommand:snippetstudio.openView",
 							"onCommand:snippetstudio.openSettings",
-							"onCommand:snippetstudio.refresh",
-							"onCommand:snippetstudio.refreshLocations"
+							"onCommand:snippetstudio.refresh"
 						]
 					},
 					{

@@ -5,7 +5,7 @@ import type { SnippetFileTreeItem } from '../../ui/templates';
 export async function linkHandler(item: SnippetFileTreeItem) {
 	const { manageLinkLocations } = await import('../../snippets/links/commands.js');
 	await manageLinkLocations(!!item.contextValue?.includes('linked'), item.filepath);
-	refreshAll();
+	refreshAll(true);
 }
 
 /** snippetstudio.profile.import command handler */

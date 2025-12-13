@@ -70,12 +70,12 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 	}
 	const capitalize = getConfiguration('snippetstudio').get<boolean>('autoCapitalizeSnippetName');
 	const { writeSnippet } = await import('../../snippets/updateSnippets.js');
-	writeSnippet(
+	await writeSnippet(
 		data.filename,
 		capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
 		snippet
 	);
-	executeCommand('snippetstudio.refresh');
+	await executeCommand('snippetstudio.refresh', true);
 	await executeCommand('workbench.action.closeActiveEditor');
 	await executeCommand('setContext', 'snippetstudio.editorVisible', false);
 }

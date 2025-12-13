@@ -16,7 +16,7 @@ import {
 } from '../../snippets/newSnippetFile';
 import { deleteSnippetFile } from '../../snippets/updateSnippets';
 import { showTextDocument, openTextDocument, Uri } from '../../vscode';
-import type { TreePathItem } from '../../ui/templates';
+import type { SnippetFileTreeItem } from '../../ui/templates';
 
 vi.mock('../../snippets/newSnippetFile');
 vi.mock('../../snippets/updateSnippets');
@@ -26,10 +26,11 @@ beforeAll(() => {
 	vi.clearAllMocks();
 });
 
-const item: TreePathItem = {
+const item: SnippetFileTreeItem = {
 	label: 'test',
 	collapsibleState: 1,
-	path: '/path/to/snippet.json',
+	filepath: '/path/to/snippet.json',
+	contextValue: 'snippet-file',
 };
 
 describe('handlers', () => {
@@ -77,6 +78,7 @@ describe('handlers', () => {
 		it('should export snippets', async () => {
 			await exportHandler();
 			expect(exportSnippets).toBeCalled();
+			expect(refreshAll).toBeCalled();
 		});
 	});
 });

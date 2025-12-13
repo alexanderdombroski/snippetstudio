@@ -6,7 +6,7 @@ import {
 	openTerminalHandler,
 } from './handlers';
 import { executeCommand, openExternal, Uri, createTerminal, ThemeIcon } from '../../vscode';
-import type { SnippetCategoryTreeItem } from '../../ui/templates';
+import type { SnippetCategoryDropdown } from '../../ui/templates';
 
 beforeAll(() => {
 	vi.clearAllMocks();
@@ -32,11 +32,10 @@ describe('handlers', () => {
 
 	describe('openExplorerHandler', () => {
 		it('should open external with the folder path', () => {
-			const mockTreeItem: SnippetCategoryTreeItem = {
+			const mockTreeItem: SnippetCategoryDropdown = {
 				label: 'Global Snippets',
 				folderPath: '/path/to/snippets',
 				collapsibleState: 1,
-				location: 'global',
 			};
 
 			openExplorerHandler(mockTreeItem);
@@ -46,11 +45,10 @@ describe('handlers', () => {
 
 	describe('openTerminalHandler', () => {
 		it('should create and show a terminal with the folder path', () => {
-			const mockTreeItem: SnippetCategoryTreeItem = {
+			const mockTreeItem: SnippetCategoryDropdown = {
 				label: 'Global Snippets',
 				folderPath: '/path/to/snippets',
 				collapsibleState: 1,
-				location: 'global',
 			};
 			const mockTerminal = {
 				show: vi.fn(),

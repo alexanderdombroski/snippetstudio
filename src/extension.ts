@@ -1,8 +1,8 @@
 import type { ExtensionContext } from 'vscode';
-import vscode, { executeCommand, getConfiguration } from './vscode';
+import vscode, { executeCommand, getConfiguration, registerCommand } from './vscode';
 
-import SnippetViewProvider from './ui/SnippetViewProvider';
-import LocationTreeProvider from './ui/LocationTreeProvider';
+import { getSnippetViewProvider } from './ui/SnippetViewProvider';
+import { getLocationTreeProvider } from './ui/LocationTreeProvider';
 
 import {
 	initSnippetCommands,
@@ -38,9 +38,15 @@ export async function activate(context: ExtensionContext) {
 	);
 
 	// Create and register the Tree View
-	const treeDataProvider = new SnippetViewProvider(context);
+	const treeDataProvider = getSnippetViewProvider();
+	const locationTreeProvider = getLocationTreeProvider();
+	context.subscriptions.push(
+		registerCommand('snippetstudio.refresh', (hard?: boolean) => {
+			locationTreeProvider.debounceRefresh(hard);
+		})
+	);
+
 	vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
-	const locationTreeProvider = new LocationTreeProvider(context);
 	vscode.window.createTreeView('location-manager', {
 		treeDataProvider: locationTreeProvider,
 	});

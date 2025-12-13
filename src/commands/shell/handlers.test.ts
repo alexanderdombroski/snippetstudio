@@ -15,7 +15,7 @@ import {
 	manageProfiles,
 } from '../../ui/shell/actions';
 import { getShellView } from '../../ui/shell/ShellViewProvider';
-import type { ShellTreeDropdown, ShellTreeItem } from '../../ui/shell/ShellViewProvider';
+import type { ShellTreeDropdown, ShellTreeItem } from '../../ui/templates';
 
 const mockRefresh = vi.fn();
 

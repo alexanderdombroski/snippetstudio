@@ -88,8 +88,7 @@ describe('onDoubleClick', () => {
 
 describe('refreshAll', () => {
 	it('should refresh both snippet views', async () => {
-		refreshAll();
-		expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
-		expect(executeCommand).toBeCalledWith('snippetstudio.refreshLocations');
+		refreshAll(true);
+		expect(executeCommand).toBeCalledWith('snippetstudio.refresh', expect.any(Boolean));
 	});
 });

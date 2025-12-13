@@ -33,11 +33,12 @@ export async function createGlobalSnippetsHandler() {
 export async function deleteHandler(treeItem: SnippetFileTreeItem) {
 	const { deleteSnippetFile } = await import('../../snippets/updateSnippets.js');
 	await deleteSnippetFile(treeItem.filepath);
-	refreshAll();
+	refreshAll(true);
 }
 
 /** snippetstudio.file.export command handler */
 export async function exportHandler() {
 	const { exportSnippets } = await import('../../snippets/newSnippetFile.js');
 	await exportSnippets();
+	refreshAll();
 }

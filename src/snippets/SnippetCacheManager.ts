@@ -33,15 +33,15 @@ export default class SnippetCacheManager {
 	// Snippets
 	snippets = new Map<string, VSCodeSnippets | null>();
 
-	/** Rereads all files */
+	/** Rereads files opened in the tree */
 	async hardRefresh() {
 		const tasks: Promise<void>[] = [];
-		for (const file in this.snippets.keys()) {
+		for (const file of this.snippets.keys()) {
 			if (this.snippets.get(file)) {
 				tasks.push(this.addSnippets(file, { isExtensionSnippet: isExtensionSnippetPath(file) }));
 			}
 		}
-		await Promise.all(tasks);
+		await Promise.all(tasks).then();
 	}
 
 	/** Adds the filepath to the map */

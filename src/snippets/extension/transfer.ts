@@ -5,7 +5,7 @@
 import type { QuickPickItem } from 'vscode';
 import { showQuickPick } from '../../vscode';
 import path from 'node:path';
-import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
+import { writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
 import { getExtensionSnippetLangs } from './locate';
 import { getCurrentLanguage } from '../../utils/language';
@@ -15,6 +15,7 @@ import type { SnippetData, VSCodeSnippet } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
+import { getCacheManager } from '../SnippetCacheManager';
 
 /** Handler for extracting an extension snippet file */
 async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
@@ -32,8 +33,13 @@ async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
 	const langs = await getExtensionSnippetLangs(item.filepath);
 	const scope = langs.join(',');
 
-	const snippets = await readSnippetFile(item.filepath, { tryFlatten: true, showError: true });
-	if (snippets === undefined) {
+	const cache = getCacheManager();
+	const snippets = await cache.getSnippets(item.filepath, {
+		isExtensionSnippet: true,
+		showError: true,
+	});
+
+	if (!snippets) {
 		return;
 	}
 	Object.values(snippets).forEach((obj) => (obj.scope = scope));

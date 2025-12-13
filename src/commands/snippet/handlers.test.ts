@@ -11,14 +11,16 @@ import {
 	moveHandler,
 	addKeybindingHandler,
 } from './handlers';
-import { executeCommand, getConfiguration } from '../../vscode';
+import { getConfiguration } from '../../vscode';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import { getConfirmation, getSelection } from '../../utils/user';
 import { getGlobalLangFile } from '../../utils/profile';
-import type { TreePathItem } from '../../ui/templates';
+import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { promptAddKeybinding } from '../../snippets/keyBindings';
 import { deleteSnippet, moveSnippet } from '../../snippets/updateSnippets';
+import { refreshAll } from '../utils';
 
+vi.mock('../utils');
 vi.mock('../../utils/language');
 vi.mock('../../utils/user');
 vi.mock('../../utils/profile');
@@ -31,11 +33,12 @@ beforeAll(() => {
 	vi.clearAllMocks();
 });
 
-const item: TreePathItem = {
+const item: SnippetTreeItem = {
 	label: 'test',
 	collapsibleState: 1,
 	path: '/path/to/snippet.json',
 	description: 'mySnippet',
+	contextValue: 'snippet',
 };
 
 describe('handlers', () => {
@@ -125,10 +128,11 @@ describe('handlers', () => {
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-			const item: TreePathItem = {
+			const item: SnippetFileTreeItem = {
 				label: 'test',
 				collapsibleState: 1,
-				path: '/path/to/javascript.json',
+				filepath: '/path/to/javascript.json',
+				contextValue: 'snippet-filepath',
 			};
 
 			await createAtHandler(item);
@@ -153,10 +157,11 @@ describe('handlers', () => {
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-			const item: TreePathItem = {
+			const item: SnippetFileTreeItem = {
 				label: 'test',
 				collapsibleState: 1,
-				path: '/path/to/snippets.code-snippets',
+				filepath: '/path/to/snippets.code-snippets',
+				contextValue: 'snippet-filepath',
 			};
 
 			await createAtHandler(item);
@@ -181,10 +186,11 @@ describe('handlers', () => {
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-			const item: TreePathItem = {
+			const item: SnippetFileTreeItem = {
 				label: 'test',
 				collapsibleState: 1,
-				path: '/path/to/snippets.code-snippets',
+				filepath: '/path/to/snippets.code-snippets',
+				contextValue: 'snippet-filepath',
 			};
 
 			await createAtHandler(item);
@@ -209,10 +215,11 @@ describe('handlers', () => {
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
 			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-			const item: TreePathItem = {
+			const item: SnippetFileTreeItem = {
 				label: 'test',
 				collapsibleState: 1,
-				path: '/path/to/snippets.code-snippets',
+				filepath: '/path/to/snippets.code-snippets',
+				contextValue: 'snippet-filepath',
 			};
 
 			await createAtHandler(item);
@@ -323,7 +330,7 @@ describe('handlers', () => {
 				},
 				'line 1\nline 2'
 			);
-			expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
+			expect(refreshAll).toBeCalled();
 		});
 
 		it('should use plaintext when no current language', async () => {
@@ -355,18 +362,21 @@ describe('handlers', () => {
 				body: 'code',
 			});
 
-			const itemNoDescription: TreePathItem = {
+			const itemNoDescription: SnippetTreeItem = {
 				...item,
-				description: undefined,
+				description: 'title',
 			};
 
 			await editHandler(itemNoDescription);
 
-			expect(readSnippet).toBeCalledWith('/path/to/snippet.json', '');
+			expect(readSnippet).toBeCalledWith('/path/to/snippet.json', 'title');
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				expect.objectContaining({
-					snippetTitle: '',
+					snippetTitle: 'title',
+					body: 'code',
+					filename: '/path/to/snippet.json',
+					prefix: 'test',
 				}),
 				'code'
 			);
@@ -385,7 +395,7 @@ describe('handlers', () => {
 
 			expect(getConfirmation).toBeCalledWith('Are you sure you want to delete "mySnippet"?');
 			expect(deleteSnippet).toBeCalledWith('/path/to/snippet.json', 'mySnippet');
-			expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
+			expect(refreshAll).toBeCalled();
 		});
 
 		it('should not delete snippet when not confirmed', async () => {
@@ -406,7 +416,7 @@ describe('handlers', () => {
 
 			expect(getConfirmation).not.toBeCalled();
 			expect(deleteSnippet).toBeCalledWith('/path/to/snippet.json', 'mySnippet');
-			expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
+			expect(refreshAll).toBeCalled();
 		});
 	});
 
@@ -414,7 +424,7 @@ describe('handlers', () => {
 		it('should move a snippet', async () => {
 			await moveHandler(item);
 			expect(moveSnippet).toBeCalledWith(item);
-			expect(executeCommand).toBeCalledWith('snippetstudio.refresh');
+			expect(refreshAll).toBeCalled();
 		});
 	});
 
