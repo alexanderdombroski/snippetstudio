@@ -30,7 +30,7 @@
 
 - Extension and profile snippets now viewable in the location view
 - Performance improvements to location and snippets view, and extension startup time
-- Add support for Trae IDE
+- Added support for Trae IDE
 
 ### Fixed
 
