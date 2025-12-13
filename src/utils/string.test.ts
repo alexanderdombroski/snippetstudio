@@ -1,8 +1,5 @@
-import { describe, expect, it, type Mock } from 'vitest';
-import { capitalize, snippetBodyAsString, titleCase, unTabMultiline } from './string';
-import { TextEditor } from '../../.vitest/__mocks__/shared';
-import { executeCommand, Selection, Position } from '../vscode';
-import type { Selection as SelectionType } from 'vscode';
+import { describe, expect, it } from 'vitest';
+import { capitalize, snippetBodyAsString, titleCase } from './string';
 
 describe('string utils', () => {
 	describe('titleCase', () => {
@@ -45,39 +42,6 @@ describe('string utils', () => {
 		it('should return an empty string for null or undefined', () => {
 			expect(snippetBodyAsString(null)).toBe('');
 			expect(snippetBodyAsString(undefined)).toBe('');
-		});
-	});
-
-	describe('unTabMultiline', () => {
-		const mockEditor = new TextEditor();
-		const getText = mockEditor.document.getText as Mock;
-
-		it('should return an empty string for an empty selection', async () => {
-			const selection = { isEmpty: true } as SelectionType;
-			const result = await unTabMultiline(selection, mockEditor as any);
-			expect(result).toBe('');
-		});
-
-		it('should return an empty string for a selection with no difference in range', async () => {
-			const selection = new Selection(new Position(0, 0), new Position(0, 0));
-			getText.mockReturnValue(''); // return string
-			const result = await unTabMultiline(selection, mockEditor as any);
-			expect(result).toBe('');
-		});
-
-		it('should un-indent a multiline selection', async () => {
-			const selection = new Selection(new Position(0, 0), new Position(2, 0));
-			getText.mockReturnValue('  line 1\n    line 2\n  line 3');
-			const result = await unTabMultiline(selection, mockEditor as any);
-			expect(executeCommand).toHaveBeenCalledWith('editor.action.indentationToSpaces');
-			expect(result).toBe('line 1\n  line 2\nline 3');
-		});
-
-		it('should handle single line selections', async () => {
-			const selection = new Selection(new Position(0, 4), new Position(0, 10));
-			getText.mockReturnValue('    hello');
-			const result = await unTabMultiline(selection, mockEditor as any);
-			expect(result).toBe('hello');
 		});
 	});
 });

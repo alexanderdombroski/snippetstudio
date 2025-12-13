@@ -16,6 +16,7 @@ import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
 import { getCacheManager } from '../SnippetCacheManager';
+import { editSnippet } from '../../ui/editor/startEditor';
 
 /** Handler for extracting an extension snippet file */
 async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
@@ -69,7 +70,6 @@ async function extractAndModify(item: SnippetTreeItem) {
 	const active = String(getCurrentLanguage());
 	const langId = langs.includes(active) ? active : langs[0];
 
-	const { editSnippet } = await import('../../ui/editor/startEditor.js');
 	await editSnippet(langId, snippetData, snippetBodyAsString(snippet?.body));
 }
 

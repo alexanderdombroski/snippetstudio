@@ -8,6 +8,7 @@ import {
 	showInformationMessage,
 	showErrorMessage,
 	showWarningMessage,
+	getConfiguration,
 } from '../vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
@@ -19,6 +20,7 @@ import type { SnippetTreeItem } from '../ui/templates';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
 import { getCacheManager } from './SnippetCacheManager';
+import { getConfirmation } from '../utils/user';
 
 // -------------------------- CRUD operations --------------------------
 
@@ -46,6 +48,13 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 async function deleteSnippet(filepath: string, titleKey: string) {
 	const snippets = await getCacheManager().getSnippets(filepath, { showError: true });
 	if (!snippets) {
+		return;
+	}
+
+	if (
+		getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
+		!(await getConfirmation(`Are you sure you want to delete "${titleKey}"?`))
+	) {
 		return;
 	}
 
