@@ -4,7 +4,6 @@ import {} from './templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, shortenFullPath, isParentDir } from '../utils/fsInfo';
-import { findAllExtensionSnipppetsByLang } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
 import { TreeItem, onDidChangeActiveTextEditor } from '../vscode';
@@ -36,7 +35,6 @@ describe('ui/SnippetViewProvider', () => {
 		(isParentDir as Mock).mockReturnValue(false);
 		(getUserPath as Mock).mockReturnValue('/user/path');
 		(getLinkedSnippets as Mock).mockResolvedValue({});
-		(findAllExtensionSnipppetsByLang as Mock).mockResolvedValue({});
 
 		provider = new SnippetViewProvider();
 		// Wait for async constructor parts
