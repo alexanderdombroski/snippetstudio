@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [3.1](#310---2025-12-15) - AbacusAI Support
 - [3.0](#300---2025-12-13) - Lazily Read Snippets
 - [2.9](#290---2025-11-28) - Snippets in Location View
 - [2.8](#280---2025-11-19) - Antigravity Support
@@ -23,6 +24,16 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [3.1.0] - 2025-12-15
+
+### Added
+
+- Added support for AbacusAI IDE
+
+### Fixed
+
+- Location view loads correctly in windows with no open workspace folder
 
 ## [3.0.0] - 2025-12-13
 
