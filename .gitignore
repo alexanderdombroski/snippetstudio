@@ -3,7 +3,6 @@ dist
 node_modules
 .vscode-test/
 *.vsix
-!snippetstudio-3.0.1-alpha.vsix
 
 .DS_STORE
 .env
