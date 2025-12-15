@@ -76,6 +76,7 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 - [Cursor](https://cursor.com/)
 - [Antigravity](https://antigravity.google/)
 - [Trae](https://www.trae.ai/)
+- [AbacusAI](https://desktop.abacus.ai/)
 
 See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/19) for more info about adding support for other platforms.
 

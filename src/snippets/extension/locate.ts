@@ -28,6 +28,7 @@ export function _getExtensionsDirPath(): string {
 		VSCodium: '.vscode-oss',
 		Cursor: '.cursor',
 		Trae: '.trae',
+		AbacusAI: '.abacusai',
 	};
 	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');

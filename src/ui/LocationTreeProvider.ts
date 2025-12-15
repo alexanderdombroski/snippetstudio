@@ -92,17 +92,21 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 
 		// Top Level
 		if (!element) {
-			const topLevelDropdowns: TreeItem[] = [];
-			topLevelDropdowns.push(
+			const topLevelDropdowns: TreeItem[] = [
 				new GlobalSnippetsDropdown(
 					await getActiveProfileSnippetsDir(),
 					Boolean(cache.globals.length)
 				),
-				new LocalSnippetsDropdown(
-					path.join(getWorkspaceFolder() as string, '.vscode'),
-					Boolean(cache.locals.length)
-				)
-			);
+			];
+			const workspaceDir = getWorkspaceFolder();
+			if (workspaceDir) {
+				topLevelDropdowns.push(
+					new LocalSnippetsDropdown(
+						path.join(workspaceDir, '.vscode'),
+						Boolean(cache.locals.length)
+					)
+				);
+			}
 			topLevelDropdowns.push(new AllExtensionDropdown());
 			if ((await getProfiles()).length > 1) {
 				topLevelDropdowns.push(new AllProfilesDropdown());

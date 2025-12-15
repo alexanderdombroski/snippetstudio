@@ -64,6 +64,7 @@ export function getUserPath(): string {
 		VSCodium: 'VSCodium',
 		Cursor: 'Cursor',
 		Trae: 'Trae',
+		AbacusAI: 'AbacusAI',
 	};
 	const appName = appNames[vscode.env.appName] ?? 'Code';
 	switch (process.platform) {
