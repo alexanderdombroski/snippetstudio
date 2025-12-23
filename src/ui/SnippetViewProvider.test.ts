@@ -6,7 +6,9 @@ import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile'
 import { getWorkspaceFolder, shortenFullPath, isParentDir } from '../utils/fsInfo';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
-import { TreeItem, onDidChangeActiveTextEditor } from '../vscode';
+import { TreeItem, onDidChangeActiveTextEditor, getConfiguration } from '../vscode';
+import { getCacheManager } from '../snippets/SnippetCacheManager';
+import type { TreeItem as TreeItemType } from 'vscode';
 
 vi.mock('../snippets/loadSnippets');
 vi.mock('./templates');
@@ -60,6 +62,43 @@ describe('ui/SnippetViewProvider', () => {
 		it('should return root items when element is undefined', async () => {
 			const children = await provider.getChildren();
 			expect(children).toHaveLength(1); // selected language only
+		});
+
+		it('should return snippet file entries for active-snippets and respect config filtering', async () => {
+			const cache = getCacheManager();
+			vi.spyOn(cache, 'getLangSnippets').mockResolvedValue([
+				[
+					'/path/a.code-snippets',
+					{
+						A: { body: 'a', scope: 'typescript', prefix: 'pre' },
+						B: { body: 'b', scope: 'other', prefix: 'pre' },
+					},
+				],
+				['/path/b.json', {}],
+			]);
+			cache.links = { 'a.code-snippets': ['profile1'] };
+
+			(getConfiguration as Mock).mockReturnValue({ get: () => false });
+			const items = await provider.getChildren({ contextValue: 'active-snippets' });
+			expect(items).toHaveLength(2);
+
+			(getConfiguration as Mock).mockReturnValue({ get: () => true });
+			const itemsAll = await provider.getChildren({ contextValue: 'active-snippets' });
+			expect(itemsAll).toHaveLength(2);
+		});
+
+		it('should return snippet children for a snippet-filepath (filters by language for code-snippets)', async () => {
+			const cache = getCacheManager();
+			const filepath = '/local/path/local.code-snippets';
+			cache.snippets.set(filepath, {
+				One: { body: '1', scope: 'typescript', prefix: 'pre' },
+				Two: { body: '2', scope: 'javascript', prefix: 'pre' },
+			});
+			const result = await provider.getChildren({
+				contextValue: 'snippet-filepath',
+				filepath,
+			} as TreeItemType);
+			expect(result).toHaveLength(1);
 		});
 	});
 
