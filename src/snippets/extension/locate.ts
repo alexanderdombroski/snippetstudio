@@ -27,6 +27,7 @@ export function _getExtensionsDirPath(): string {
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',
 		Cursor: '.cursor',
+		Windsurf: '.windsurf',
 		Trae: '.trae',
 		AbacusAI: '.abacusai',
 	};

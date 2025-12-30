@@ -74,6 +74,7 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 - [VS Code Insiders](https://code.visualstudio.com/insiders/)
 - [VSCodium](https://vscodium.com/)
 - [Cursor](https://cursor.com/)
+- [Windsurf](https://windsurf.com/)
 - [Antigravity](https://antigravity.google/)
 - [Trae](https://www.trae.ai/)
 - [AbacusAI](https://desktop.abacus.ai/)

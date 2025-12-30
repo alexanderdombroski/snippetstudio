@@ -152,20 +152,24 @@ describe('locate', () => {
 		it('should find the vscode extensions folder', () => {
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
-		it('should should update the path for the nightly build', () => {
+		it('should update the path for the nightly build', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
-		it('should should update the path for VSCodium', () => {
+		it('should update the path for VSCodium', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
 		});
-		it('should should update the path for Cursor', () => {
+		it('should update the path for Cursor', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.cursor`);
 		});
-		it('should default to VS Code', () => {
+		it('should update the path for Windsurf', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.windsurf`);
+		});
+		it('should default to VS Code', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 	});
