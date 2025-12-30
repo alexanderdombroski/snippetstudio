@@ -31,9 +31,7 @@
 ### Added
 
 - Windsurf Support
-
-### Fixed
-
+- TODO - rename snippets command
 
 ## [3.1.0] - 2025-12-15
 

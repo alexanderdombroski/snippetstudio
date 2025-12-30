@@ -197,6 +197,11 @@
 				"category": "snippetstudio"
 			},
 			{
+				"command": "snippetstudio.file.rename",
+				"title": "Rename Snippets File",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.file.createGlobalLang",
 				"title": "Create Global Snippets File",
 				"icon": "$(file-code)",
@@ -534,6 +539,11 @@
 					"command": "snippetstudio.file.delete",
 					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/) && !(viewItem =~ /extension/)",
 					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.file.rename",
+					"when": "(viewItem =~ /snippet-filepath/) && (viewItem =~ /mixed/)",
+					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.snippet.delete",

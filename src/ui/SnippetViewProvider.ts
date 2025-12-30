@@ -79,8 +79,10 @@ export default class SnippetViewProvider implements TreeDataProvider<TreeItem> {
 				const collapsible = Object.entries(snippets).some(
 					([, v]) => !v.scope || v.scope.includes(this.langId as string)
 				);
-				const contextValue =
-					path.basename(file) in links ? 'snippet-filepath linked' : 'snippet-filepath';
+				const base = path.basename(file);
+				let contextValue = 'snippet-filepath';
+				if (base.endsWith('.code-snippets')) contextValue += ' mixed';
+				if (base in links) contextValue += ' linked';
 				return new SnippetFileTreeItem(collapsible ? Collapsed : None, file, contextValue);
 			});
 

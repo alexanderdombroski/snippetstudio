@@ -120,9 +120,9 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 			const profile = await getActiveProfile();
 			return cache.globals.map((file) => {
 				const base = path.basename(file);
-				const contextValue = this.isSnippetLinked(base, profile.location)
-					? 'snippet-filepath global linked'
-					: 'snippet-filepath global';
+				let contextValue = 'snippet-filepath global';
+				if (base.endsWith('.code-snippets')) contextValue += ' mixed';
+				if (this.isSnippetLinked(base, profile.location)) contextValue += ' linked';
 				const snippets = cache.snippets.get(file);
 				return new SnippetFileTreeItem(this.getCollapsibleState(snippets), file, contextValue);
 			});
@@ -134,7 +134,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 				return new SnippetFileTreeItem(
 					this.getCollapsibleState(snippets),
 					file,
-					'snippet-filepath'
+					'snippet-filepath mixed'
 				);
 			});
 		}
@@ -171,9 +171,10 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 			const location = element.description as string;
 			const files = cache.profile[location];
 			return files.map((file) => {
-				const contextValue = this.isSnippetLinked(path.basename(file), location)
-					? 'snippet-filepath profile linked'
-					: 'snippet-filepath profile';
+				const base = path.basename(file);
+				let contextValue = 'snippet-filepath profile';
+				if (base.endsWith('.code-snippets')) contextValue += ' mixed';
+				if (this.isSnippetLinked(base, location)) contextValue += ' linked';
 				const snippets = cache.snippets.get(file);
 				return new SnippetFileTreeItem(this.getCollapsibleState(snippets), file, contextValue);
 			});
