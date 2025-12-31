@@ -25,7 +25,7 @@ import { getConfirmation } from '../utils/user';
 // -------------------------- CRUD operations --------------------------
 
 /** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
-async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
+export async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
 	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		showWarningMessage(
@@ -45,7 +45,7 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 }
 
 /** removes a single snippet from a snippet file */
-async function deleteSnippet(filepath: string, titleKey: string) {
+export async function deleteSnippet(filepath: string, titleKey: string) {
 	const snippets = await getCacheManager().getSnippets(filepath, { showError: true });
 	if (!snippets) {
 		return;
@@ -65,7 +65,7 @@ async function deleteSnippet(filepath: string, titleKey: string) {
 }
 
 /** Return a snippet from a snippet file. Use tryFlatten if the file is from an extension. */
-async function readSnippet(
+export async function readSnippet(
 	filepath: string,
 	snippetTitle: string,
 	isExtensionSnippet?: boolean
@@ -85,7 +85,7 @@ async function readSnippet(
 }
 
 /** Handler for the snippet.move command */
-async function moveSnippet(item: SnippetTreeItem) {
+export async function moveSnippet(item: SnippetTreeItem) {
 	const [actives, locals, profiles] = await locateAllSnippetFiles();
 	const profileFiles = Object.values(profiles)
 		.map((files) => files)
@@ -116,7 +116,7 @@ async function moveSnippet(item: SnippetTreeItem) {
 }
 
 /** deletes snippet file on user confirmation if not linked and exists */
-async function deleteSnippetFile(filepath: string) {
+export async function deleteSnippetFile(filepath: string) {
 	if (await isSnippetLinked(filepath)) {
 		showWarningMessage("Don't delete a linked snippet file until you unlink it first!");
 		return;
@@ -151,5 +151,3 @@ async function deleteSnippetFile(filepath: string) {
 		}
 	}
 }
-
-export { deleteSnippet, writeSnippet, readSnippet, moveSnippet, deleteSnippetFile };

@@ -6,6 +6,7 @@ import {
 	createGlobalSnippetsHandler,
 	deleteHandler,
 	exportHandler,
+	renameHandler,
 } from './handlers';
 import { refreshAll } from '../utils';
 import {
@@ -13,6 +14,7 @@ import {
 	createLocalSnippetsFile,
 	createGlobalSnippetsFile,
 	exportSnippets,
+	renameSnippetFile,
 } from '../../snippets/newSnippetFile';
 import { deleteSnippetFile } from '../../snippets/updateSnippets';
 import { showTextDocument, openTextDocument, Uri } from '../../vscode';
@@ -78,6 +80,14 @@ describe('handlers', () => {
 		it('should export snippets', async () => {
 			await exportHandler();
 			expect(exportSnippets).toBeCalled();
+			expect(refreshAll).toBeCalled();
+		});
+	});
+
+	describe('renameHandler', () => {
+		it('should rename a snippets file', async () => {
+			await renameHandler(item);
+			expect(renameSnippetFile).toBeCalled();
 			expect(refreshAll).toBeCalled();
 		});
 	});

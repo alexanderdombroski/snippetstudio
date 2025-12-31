@@ -12,6 +12,7 @@ describe('Snippet File Commands', () => {
 			'snippetstudio.file.createGlobalSnippets',
 			'snippetstudio.file.delete',
 			'snippetstudio.file.export',
+			'snippetstudio.file.rename',
 		]);
 	});
 });

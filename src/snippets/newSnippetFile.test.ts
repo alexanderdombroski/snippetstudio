@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, type Mock } from 'vitest';
+import { vi, describe, it, expect, beforeEach, type Mock } from 'vitest';
 import {
 	createFile,
 	createLocalSnippetsFile,
@@ -6,6 +6,7 @@ import {
 	createGlobalSnippetsFile,
 	exportSnippets,
 	mergeSnippetFiles,
+	renameSnippetFile,
 } from './newSnippetFile';
 import {
 	showWarningMessage,
@@ -18,7 +19,12 @@ import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
-import { isSnippetLinked } from './links/config';
+import {
+	getLinkedSnippets,
+	getLinkLocations,
+	isSnippetLinked,
+	updateAllSettings,
+} from './links/config';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
@@ -131,6 +137,56 @@ describe('newSnippetFile', () => {
 			await exportSnippets();
 
 			expect(writeSnippetFile).not.toBeCalled();
+		});
+	});
+
+	describe('renameSnippetFile', () => {
+		const fp = '/example/test.code-snippets';
+
+		beforeEach(() => {
+			vi.clearAllMocks();
+			(getFileName as Mock).mockReturnValue('new');
+			(exists as Mock).mockResolvedValue(false);
+			(isSnippetLinked as Mock).mockResolvedValue(false);
+		});
+
+		it('should exit early with no filename', async () => {
+			(getFileName as Mock).mockReturnValue(undefined);
+			await renameSnippetFile(fp);
+			expect(fs.rename).not.toBeCalled();
+		});
+
+		it('should exit early if not safe to rename', async () => {
+			(exists as Mock).mockResolvedValue(true);
+			await renameSnippetFile(fp);
+			expect(showWarningMessage).toBeCalled();
+			expect(fs.rename).not.toBeCalled();
+		});
+
+		it('should rename the file', async () => {
+			await renameSnippetFile(fp);
+			expect(fs.rename).toBeCalled();
+			expect(showInformationMessage).toBeCalled();
+		});
+
+		it('should warn if there would be a link override', async () => {
+			(isSnippetLinked as Mock).mockResolvedValue(true);
+			(getLinkedSnippets as Mock).mockResolvedValue({ 'new.code-snippets': ['/example/path'] });
+
+			await renameSnippetFile(fp);
+			expect(fs.rename).not.toBeCalled();
+			expect(showWarningMessage).toBeCalled();
+		});
+
+		it('should rename all linked files and update settings', async () => {
+			(isSnippetLinked as Mock).mockResolvedValue(true);
+			(getLinkedSnippets as Mock).mockResolvedValue({ 'test.code-snippets': ['/example/path'] });
+			(getLinkLocations as Mock).mockResolvedValue(['/example/path']);
+
+			await renameSnippetFile(fp);
+			expect(fs.rename).toBeCalled();
+			expect(showInformationMessage).toBeCalled();
+			expect(updateAllSettings).toBeCalled();
 		});
 	});
 });

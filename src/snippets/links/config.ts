@@ -43,7 +43,7 @@ export async function getLinkedSnippets(): Promise<SnippetLinks> {
 }
 
 /** Create or Read settings file, and write snippet links to settings */
-async function updateAllSettings(newLinksValue: SnippetLinks) {
+export async function updateAllSettings(newLinksValue: SnippetLinks) {
 	const { createFile } = await import('../newSnippetFile.js');
 	const profiles = await getProfiles();
 	const paths = profiles.map((p) => {
