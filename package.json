@@ -907,12 +907,12 @@
 	"devDependencies": {
 		"@types/node": "^22.19.1",
 		"@types/vscode": "^1.99.0",
-		"@typescript-eslint/eslint-plugin": "^8.49.0",
-		"@typescript-eslint/parser": "^8.49.0",
-		"@vitest/coverage-v8": "^4.0.15",
-		"@vitest/ui": "^4.0.15",
+		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/parser": "^8.51.0",
+		"@vitest/coverage-v8": "^4.0.16",
+		"@vitest/ui": "^4.0.16",
 		"@vscode/vsce": "^3.7.1",
-		"esbuild": "^0.27.1",
+		"esbuild": "^0.27.2",
 		"esbuild-lazy-analyzer": "^1.4.0",
 		"esbuild-visualizer": "^0.7.0",
 		"eslint": "^9.39.2",
@@ -924,7 +924,7 @@
 		"ovsx": "^0.10.7",
 		"prettier": "^3.7.4",
 		"typescript": "^5.9.3",
-		"vitest": "^4.0.15"
+		"vitest": "^4.0.16"
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.3",
