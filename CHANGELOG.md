@@ -5,7 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
-- [3.2](#320---date) - Windsurf Support
+- [3.2](#320---2025-12-31) - Windsurf Support
 - [3.1](#310---2025-12-15) - AbacusAI Support
 - [3.0](#300---2025-12-13) - Lazily Read Snippets
 - [2.9](#290---2025-11-28) - Snippets in Location View
@@ -26,12 +26,12 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [3.2.0] - DATE
+## [3.2.0] - 2025-12-31
 
 ### Added
 
 - Windsurf Support
-- Rename snippets command
+- Rename snippets command (helpful for linked snippets)
 
 ## [3.1.0] - 2025-12-15
 

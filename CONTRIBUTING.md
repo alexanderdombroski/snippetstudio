@@ -1,6 +1,6 @@
 # Contributing to SnippetStudio
 
-Thanks for taking the time to contribute! Please follow these steps and guidelines.
+Thanks for taking the time to contribute! Any help to improve the extension is welcome and appreciated! Please follow these steps and guidelines.
 
 ## Issues
 
@@ -9,7 +9,7 @@ Thanks for taking the time to contribute! Please follow these steps and guidelin
 - Include steps to reproduce when applicable.
 - If an unassigned issue exists and you want to work on it, add a comment asking to be assigned and I can assign you
 
-_If you haven't created a fork and worked on an issue assigned to you, after a few weeks I will choose to assign someone else due to inactivity._
+_If you haven't created a fork or worked on an issue assigned to you at all, after a few weeks I will choose to assign someone else due to inactivity._
 
 ## Contributing to extension
 
