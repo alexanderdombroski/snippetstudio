@@ -15,3 +15,7 @@ You can right click a snippet file and choose to link <i className="codicon codi
 1. Create snippets file
 2. Right click to "choose profiles to use this snippet"
 3. The snippet file will be moved/copied to the other profiles
+
+### Rename
+
+There is a rename snippets command. Using this on a linked snippet will rename the snippet file for all profiles and update settings to reflect the new name.
