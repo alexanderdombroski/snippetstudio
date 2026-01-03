@@ -4,8 +4,7 @@
 
 ## Table of Contents
 
-- [Unreleased](#unreleased---date)
-- [3.3](#330---unreleased) - Kiro Support
+- [3.3](#330---2026-01-03) - Kiro Support
 - [3.2](#320---2025-12-31) - Windsurf Support
 - [3.1](#310---2025-12-15) - AbacusAI Support
 - [3.0](#300---2025-12-13) - Lazily Read Snippets
@@ -27,17 +26,16 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [3.3.0] - UNRELEASED
+## [3.3.0] - 2026-01-03
 
 ### Added
 
 - Added Kiro IDE support
-- Buttons to views welcome for improved new user UX
-- Added HTML minification
+- Buttons to welcome views for improved new user UX
 
 ### Fixed
 
-- command to create project snippets shows outside of workspaces
+- Command to create project snippets shouldn't show outside of workspaces
 
 ### Removed
 
