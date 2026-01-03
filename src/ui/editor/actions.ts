@@ -14,7 +14,7 @@ import { snippetBodyAsString } from '../../utils/string';
 
 /** Started the editor for a new snippet of the current language */
 export async function createGlobalSnippet() {
-	const langId = getCurrentLanguage() ?? 'plaintext';
+	const langId = getCurrentLanguage() ?? (await selectLanguage()) ?? 'plaintext';
 
 	await editSnippet(
 		langId,

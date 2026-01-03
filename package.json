@@ -102,15 +102,15 @@
 		"viewsWelcome": [
 			{
 				"view": "snippet-manager-view",
-				"contents": "Snippets of the active language will appear here!"
+				"contents": "Snippets of the active language will appear here!\n[Choose a language](command:snippetstudio.snippet.addGlobal)"
 			},
 			{
 				"view": "location-manager",
-				"contents": "This is where snippet files of ALL languages being loaded in will appear!"
+				"contents": "This is where snippet files of ALL languages being loaded in will appear!\n[Create a snippet file](command:snippetstudio.file.createGlobalSnippets)"
 			},
 			{
 				"view": "shell-snippets",
-				"contents": "Your Shell Snippets will appear here!"
+				"contents": "Save commonly used terminal commands. Your shell snippets will appear here!\n[Create a shell snippet](command:snippetstudio.shell.create)"
 			}
 		],
 		"commands": [
