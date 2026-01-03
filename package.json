@@ -471,7 +471,7 @@
 				{
 					"command": "snippetstudio.file.createProjectSnippets",
 					"group": "inline",
-					"when": "view == location-manager"
+					"when": "view == location-manager && workspaceFolderCount > 0"
 				},
 				{
 					"command": "snippetstudio.file.createGlobalSnippets",

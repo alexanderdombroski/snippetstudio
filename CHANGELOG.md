@@ -32,11 +32,12 @@
 ### Added
 
 - Added Kiro IDE support
+- Buttons to views welcome for improved new user UX
 - TODO - experiment with HTML minification
 
 ### Fixed
 
-- TODO - improve shell snippets UX
+- command to create project snippets shows outside of workspaces
 
 ### Removed
 
