@@ -64,6 +64,7 @@ export function getUserPath(): string {
 		VSCodium: 'VSCodium',
 		Cursor: 'Cursor',
 		Windsurf: 'Windsurf',
+		Kiro: 'Kiro',
 		Trae: 'Trae',
 		AbacusAI: 'AbacusAI',
 	};

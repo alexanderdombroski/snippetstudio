@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Unreleased](#unreleased---date)
+- [3.3](#330---unreleased) - Kiro Support
 - [3.2](#320---2025-12-31) - Windsurf Support
 - [3.1](#310---2025-12-15) - AbacusAI Support
 - [3.0](#300---2025-12-13) - Lazily Read Snippets
@@ -25,6 +26,21 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [3.3.0] - UNRELEASED
+
+### Added
+
+- Added Kiro IDE support
+- TODO - experiment with HTML minification
+
+### Fixed
+
+- TODO - improve shell snippets UX
+
+### Removed
+
+- Backwards compatability for linked snippets before v2.1.0. If you've started the extension since 2.1 this won't cause problems.
 
 ## [3.2.0] - 2025-12-31
 

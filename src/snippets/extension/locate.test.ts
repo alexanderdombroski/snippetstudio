@@ -168,6 +168,10 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.windsurf`);
 		});
+		it('should update the path for Kiro', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Kiro' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.kiro`);
+		});
 		it('should default to VS Code', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
