@@ -55,7 +55,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 
 	// eslint-disable-next-line jsdoc/require-jsdoc, no-unused-vars
 	private async _getHtmlForWebview(webview: Webview) {
-		const htmlPath = Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
+		const htmlPath = Uri.joinPath(this._context.extensionUri, 'dist', 'snippetData.html');
 
 		try {
 			return await fs.readFile(htmlPath.fsPath, 'utf8');

@@ -33,7 +33,7 @@
 
 - Added Kiro IDE support
 - Buttons to views welcome for improved new user UX
-- TODO - experiment with HTML minification
+- Added HTML minification
 
 ### Fixed
 
