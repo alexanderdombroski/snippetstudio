@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
-import { createGist, importGist } from './snippetGists';
+import { _saveCodeSnippets, createGist, importGist } from './snippetGists';
 import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/user';
 import { mergeSnippetFiles } from '../snippets/newSnippetFile';
 import type { VSCodeSnippets } from '../types';
@@ -50,6 +50,16 @@ describe('snippetGists', () => {
 			await createGist();
 
 			expect(showInformationMessage).toBeCalled();
+		});
+	});
+
+	describe('saveCodeSnippets', () => {
+		it('it should return and report if no files were found', async () => {
+			vi.spyOn(octo, 'getOctokitClient').mockResolvedValue({
+				request: vi.fn().mockResolvedValue(undefined),
+			} as unknown as Octokit);
+			await _saveCodeSnippets('TEST_GIST_ID', '/test/example');
+			expect(showInformationMessage).toBeCalledWith(expect.stringContaining("Couldn't find"));
 		});
 	});
 

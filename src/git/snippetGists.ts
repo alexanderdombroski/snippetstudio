@@ -70,14 +70,14 @@ async function importGist() {
 		return;
 	}
 
-	await saveCodeSnippets(gistId, saveDir);
+	await _saveCodeSnippets(gistId, saveDir);
 }
 
 /** saves all snippets from a gist */
-async function saveCodeSnippets(gist_id: string, saveDir: string): Promise<void> {
+async function _saveCodeSnippets(gist_id: string, saveDir: string): Promise<void> {
 	const client = await getOctokitClient();
 	const response = await client.request('GET /gists/{gist_id}', { gist_id });
-	if (response.data.files === undefined) {
+	if (response?.data?.files === undefined) {
 		showInformationMessage("Couldn't find any files in this gist.");
 		return;
 	}
@@ -109,4 +109,4 @@ async function saveCodeSnippets(gist_id: string, saveDir: string): Promise<void>
 	showInformationMessage(`Saved ${fileCount} files in ${saveDir}`);
 }
 
-export { createGist, importGist };
+export { createGist, importGist, _saveCodeSnippets };
