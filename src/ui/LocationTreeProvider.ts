@@ -61,11 +61,6 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 				];
 			})
 		);
-		if (getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
-			const { findAllExtensionSnippetsFiles } = await import('../snippets/extension/locate.js');
-			const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
-			this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
-		}
 		this._onDidChangeTreeData.fire();
 	}
 
@@ -101,6 +96,11 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 			} else if (element.contextValue === 'profile-dropdown') {
 				return this.profileDropdowns;
 			} else if (element.label === 'Extension Snippets') {
+				if (this.extensionTreeItems.length === 0) {
+					const { findAllExtensionSnippetsFiles } = await import('../snippets/extension/locate.js');
+					const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
+					this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
+				}
 				return this.extensionTreeItems.map((item) => item[0]);
 			} else if (element.contextValue === 'extension-dropdown') {
 				return (
@@ -115,7 +115,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		const [topLevelDropdowns, profileDropdowns] = await snippetLocationDropdownTemplates(
 			this.globalTreeItems.length === 0,
 			this.localTreeItems.length === 0,
-			this.extensionTreeItems.length > 0,
+			getConfiguration('snippetstudio').get<boolean>('view.showExtensions'),
 			Object.fromEntries(
 				Object.entries(this.profileDropdownItems).map(([location, items]) => [
 					location,

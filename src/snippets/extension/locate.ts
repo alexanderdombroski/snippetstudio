@@ -31,6 +31,11 @@ export function __getExtensionsDirPath(): string {
 	return path.join(os.homedir(), appConfig, 'extensions');
 }
 
+/** returns the location of built-in extensions */
+export function __getBuiltInExtensionsDirPath(): string {
+	return path.join(vscode.env.appRoot, 'extensions');
+}
+
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
 	const extDirPath = __getExtensionsDirPath();
@@ -71,9 +76,13 @@ export function flattenScopedExtensionSnippets(
 
 // -------------------- All Extension Files --------------------
 
-/** finds all extension snippet files and groups them by extension */
-export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	const dir = __getExtensionsDirPath();
+// -------------------- All Extension Files --------------------
+
+/** scans a directory for extensions with snippets */
+async function scanExtensionsDir(
+	dir: string,
+	prefix: string = ''
+): Promise<ExtensionSnippetFilesMap> {
 	if (!(await exists(dir))) {
 		return {};
 	}
@@ -95,13 +104,26 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 				snippets.forEach((snippet) => {
 					snippet.path = path.resolve(dir, dirent.name, snippet.path);
 				});
-				return [dirent.name, { name: pkg.name, files: snippets }];
+				return [`${prefix}${dirent.name}`, { name: pkg.name, files: snippets }];
 			}
 		}
 	);
 
 	const snippetPaths = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
 	return Object.fromEntries(snippetPaths);
+}
+
+/** finds all extension snippet files and groups them by extension */
+export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
+	const userDir = __getExtensionsDirPath();
+	const builtInDir = __getBuiltInExtensionsDirPath();
+
+	const [userExtensions, builtInExtensions] = await Promise.all([
+		scanExtensionsDir(userDir),
+		scanExtensionsDir(builtInDir, 'builtin-'),
+	]);
+
+	return { ...userExtensions, ...builtInExtensions };
 }
 
 // -------------------- Get By Language --------------------
