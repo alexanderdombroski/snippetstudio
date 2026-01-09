@@ -115,7 +115,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 		const [topLevelDropdowns, profileDropdowns] = await snippetLocationDropdownTemplates(
 			this.globalTreeItems.length === 0,
 			this.localTreeItems.length === 0,
-			getConfiguration('snippetstudio').get<boolean>('view.showExtensions'),
+			Boolean(getConfiguration('snippetstudio').get<boolean>('view.showExtensions')),
 			Object.fromEntries(
 				Object.entries(this.profileDropdownItems).map(([location, items]) => [
 					location,

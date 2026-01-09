@@ -27,7 +27,7 @@ async function extractAllSnippets(item: TreePathItem) {
 		return;
 	}
 
-	const fp = path.join(dirname, basename);
+	const fp = path.join(dirname, basename).split(path.sep).join('/');
 
 	const langs = await getExtensionSnippetLangs(item.path);
 	const scope = langs.join(',');

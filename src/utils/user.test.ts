@@ -206,7 +206,7 @@ describe('user', () => {
 				get: vi.fn().mockReturnValue('downloads'),
 			} as any);
 			const result = await getSavePath();
-			expect(result).toBe(path.join('/downloads', 'test-file.code-snippets'));
+			expect(result).toBe('/downloads/test-file.code-snippets');
 		});
 
 		it('should use preconfigured path when export.location is "preconfigured"', async () => {
