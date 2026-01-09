@@ -1,22 +1,22 @@
-import type { ExtensionContext } from 'vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import vscode, { showInformationMessage, openExternal, Uri } from '../vscode';
+import { getExtensionContext } from '../utils/context';
 
 let client: Octokit | null = null;
 
 /** returns an octokit client (inits on first call) */
-async function getOctokitClient(context: ExtensionContext): Promise<Octokit> {
+async function getOctokitClient(): Promise<Octokit> {
 	if (!client) {
-		client = await createOctokitClient(context);
+		client = await createOctokitClient();
 	}
 	return client;
 }
 
 /** retrieves a token and inits the octokit client */
-async function createOctokitClient(context: ExtensionContext): Promise<Octokit> {
+async function createOctokitClient(): Promise<Octokit> {
 	const { Octokit } = await import('@octokit/core');
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
-
+	const context = await getExtensionContext();
 	let token = await context.secrets.get('GITHUB_TOKEN');
 
 	if (token === undefined || (await isTokenRevoked(token))) {

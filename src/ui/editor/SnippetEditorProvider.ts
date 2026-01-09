@@ -11,7 +11,7 @@ import type {
 } from 'vscode';
 import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
 import type { SnippetData } from '../../types';
-import SnippetDataManager from './SnippetDataManager';
+import type SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 import { highlightSnippetInsertionFeatures } from '../syntax';
 
@@ -67,10 +67,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 			change.text <= '9' &&
 			getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSigns')
 		) {
-			const newText = __escapeDollarSignIfNeeded(
-				changeEvent.document.getText(),
-				change.rangeOffset
-			);
+			const newText = _escapeDollarSignIfNeeded(changeEvent.document.getText(), change.rangeOffset);
 
 			if (newText === undefined) {
 				return;
@@ -229,7 +226,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
  * @param offset the position of the number inside the potential tabstop/placeholder/choice
  * @returns the updated text or undefined if nothing changed
  */
-export function __escapeDollarSignIfNeeded(text: string, offset: number): string | undefined {
+export function _escapeDollarSignIfNeeded(text: string, offset: number): string | undefined {
 	const testText = text.slice(offset - 2, offset);
 
 	if (/\$$/.test(testText)) {

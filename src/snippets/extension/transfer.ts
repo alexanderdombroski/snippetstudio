@@ -2,22 +2,24 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext, QuickPickItem } from 'vscode';
+import type { QuickPickItem } from 'vscode';
 import { showQuickPick } from '../../vscode';
 import path from 'node:path';
-import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
+import { writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
 import { getExtensionSnippetLangs } from './locate';
 import { getCurrentLanguage } from '../../utils/language';
 import { snippetBodyAsString } from '../../utils/string';
-import type { TreePathItem } from '../../ui/templates';
+import type { ExtSnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
+import { getCacheManager } from '../SnippetCacheManager';
+import { editSnippet } from '../../ui/editor/startEditor';
 
 /** Handler for extracting an extension snippet file */
-async function extractAllSnippets(item: TreePathItem) {
+async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
 	const basename = (await getFileName()) + '.code-snippets';
 	if (basename === 'undefined.code-snippets') {
 		return;
@@ -29,11 +31,16 @@ async function extractAllSnippets(item: TreePathItem) {
 
 	const fp = path.join(dirname, basename).split(path.sep).join('/');
 
-	const langs = await getExtensionSnippetLangs(item.path);
+	const langs = await getExtensionSnippetLangs(item.filepath);
 	const scope = langs.join(',');
 
-	const snippets = await readSnippetFile(item.path, true);
-	if (snippets === undefined) {
+	const cache = getCacheManager();
+	const snippets = await cache.getSnippets(item.filepath, {
+		isExtensionSnippet: true,
+		showError: true,
+	});
+
+	if (!snippets) {
 		return;
 	}
 	Object.values(snippets).forEach((obj) => (obj.scope = scope));
@@ -41,7 +48,7 @@ async function extractAllSnippets(item: TreePathItem) {
 }
 
 /** Handler for extension.modify */
-async function extractAndModify(item: TreePathItem, context: ExtensionContext) {
+async function extractAndModify(item: SnippetTreeItem) {
 	const langs = await getExtensionSnippetLangs(item.path);
 	const savePath = await chooseSnippetFile(langs);
 	if (savePath === undefined) {
@@ -63,8 +70,7 @@ async function extractAndModify(item: TreePathItem, context: ExtensionContext) {
 	const active = String(getCurrentLanguage());
 	const langId = langs.includes(active) ? active : langs[0];
 
-	const { editSnippet } = await import('../../ui/editor/startEditor.js');
-	await editSnippet(context, langId, snippetData, snippetBodyAsString(snippet?.body));
+	await editSnippet(langId, snippetData, snippetBodyAsString(snippet?.body));
 }
 
 /** Given a list of languages, have the user select an existing snipppet file */

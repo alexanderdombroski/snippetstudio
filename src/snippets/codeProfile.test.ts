@@ -1,12 +1,11 @@
 import { vi, describe, it, expect, type Mock } from 'vitest';
-import { __fromBuiltIn, __fromGist, __fromUrl, importCodeProfileSnippets } from './codeProfile';
+import { _fromBuiltIn, _fromGist, _fromUrl, importCodeProfileSnippets } from './codeProfile';
 import { showInformationMessage, showInputBox, showQuickPick } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import { chooseLocalGlobal } from '../utils/user';
 import { getGistId } from '../git/utils';
-import { context } from '../../.vitest/__mocks__/shared';
-import { ClientRequest } from 'node:http';
+import type { ClientRequest } from 'node:http';
 
 vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/user');
@@ -37,14 +36,14 @@ describe.concurrent('codeProfile', () => {
 	describe('importCodeProfileSnippets', () => {
 		it('should return if no source is selected', async () => {
 			(showQuickPick as Mock).mockResolvedValue(undefined);
-			await importCodeProfileSnippets(context);
+			await importCodeProfileSnippets();
 			expect(chooseLocalGlobal).not.toHaveBeenCalled();
 		});
 
 		it('should return if no save directory is chosen', async () => {
 			(showQuickPick as Mock).mockResolvedValue({ run: () => Promise.resolve(['content']) });
 			(chooseLocalGlobal as Mock).mockResolvedValue(undefined);
-			await importCodeProfileSnippets(context);
+			await importCodeProfileSnippets();
 			expect(fs.writeFile).not.toHaveBeenCalled();
 		});
 	});
@@ -56,7 +55,7 @@ describe.concurrent('codeProfile', () => {
 				const gistIdWithNoSnippets = 'ddac491daeff48c5f1346ba2960462fa';
 				(getGistId as Mock).mockReturnValue(gistIdWithNoSnippets);
 
-				await __fromGist(context);
+				await _fromGist();
 
 				expect(showInformationMessage).toBeCalled();
 			}
@@ -70,7 +69,7 @@ describe.concurrent('codeProfile', () => {
 			(showInputBox as Mock).mockResolvedValue(url);
 			mockHttps();
 
-			await __fromUrl();
+			await _fromUrl();
 			expect(https.get).toBeCalledWith(url, expect.any(Function));
 		});
 	});
@@ -80,14 +79,14 @@ describe.concurrent('codeProfile', () => {
 			(showQuickPick as Mock).mockReturnValue({ label: 'python' });
 			mockHttps();
 
-			await __fromBuiltIn();
+			await _fromBuiltIn();
 			expect(https.get).toBeCalledWith(expect.stringContaining('python'), expect.any(Function));
 		});
 		it('should cancel if no template is selected', async () => {
 			(showQuickPick as Mock).mockReturnValue(undefined);
 			mockHttps();
 
-			await __fromBuiltIn();
+			await _fromBuiltIn();
 			expect(https.get).not.toBeCalled();
 		});
 	});

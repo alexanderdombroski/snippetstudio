@@ -33,17 +33,12 @@ export async function getLinkedSnippets(): Promise<SnippetLinks> {
 		return {};
 	}
 	const settings = (await readJsonC(settingsPath)) as JSONObject;
-	let links = settings['snippetstudio.file.linkedFiles'] as string[] | SnippetLinks | undefined;
-	if (Array.isArray(links)) {
-		// TODO - remove in 3 months (for backwards compatibility)
-		const locations = (await getProfiles()).map(({ location }) => location);
-		links = Object.fromEntries(links.map((filename) => [filename, locations]));
-	}
+	const links = settings['snippetstudio.file.linkedFiles'] as SnippetLinks | undefined;
 	return links ?? {};
 }
 
 /** Create or Read settings file, and write snippet links to settings */
-async function updateAllSettings(newLinksValue: SnippetLinks) {
+export async function updateAllSettings(newLinksValue: SnippetLinks) {
 	const { createFile } = await import('../newSnippetFile.js');
 	const profiles = await getProfiles();
 	const paths = profiles.map((p) => {

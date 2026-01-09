@@ -1,4 +1,8 @@
-import type { SaveDialogOptions } from 'vscode';
+// -------------------------------------------------------------------
+// ---------- Lazy Loaded - Only import with await import() ----------
+// -------------------------------------------------------------------
+
+import type { SaveDialogOptions, TextEditor, Selection as SelectionType } from 'vscode';
 import vscode, {
 	getConfiguration,
 	showErrorMessage,
@@ -7,8 +11,10 @@ import vscode, {
 	showQuickPick,
 	Uri,
 	showSaveDialog,
+	executeCommand,
+	Selection,
+	Position,
 } from '../vscode';
-import { unTabMultiline } from './string';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
 import path from 'node:path';
 import { getActiveProfileSnippetsDir } from './profile';
@@ -32,7 +38,7 @@ async function getSelection(): Promise<string | undefined> {
 		false
 	);
 	if (autoUntab) {
-		return await unTabMultiline(editor.selection, editor);
+		return await _unTabMultiline(editor.selection, editor);
 	} else {
 		return editor.document.getText(editor.selection);
 	}
@@ -46,7 +52,7 @@ async function getSavePathFromDialog(
 
 	const options: SaveDialogOptions = {
 		title: `Save ${basename}`,
-		defaultUri: defaultUri,
+		defaultUri,
 		saveLabel: 'Save',
 	};
 
@@ -120,6 +126,49 @@ async function chooseLocalGlobal(): Promise<string | undefined> {
 	return choice?.description;
 }
 
+/** removes an equal amount of leading tabs from every line */
+async function _unTabMultiline(selection: SelectionType, editor: TextEditor): Promise<string> {
+	if (selection.isEmpty) {
+		return '';
+	}
+
+	if (!selection.isSingleLine) {
+		const start = new Position(selection.start.line, 0);
+		selection = new Selection(start, editor.document.lineAt(selection.end.line).range.end);
+	}
+
+	await executeCommand('editor.action.indentationToSpaces');
+	const selectedText = editor.document.getText(selection);
+	const lines = selectedText.split(/\r\n|\r|\n/);
+	const spaces = _countMinSpaces(lines);
+
+	return lines.map((line) => line.substring(spaces)).join('\n');
+}
+
+/** for every line, find the one with the least amount of spaces */
+function _countMinSpaces(lines: string[]): number {
+	let minCount = 9999;
+	for (let line of lines) {
+		if (line.trim().length === 0) {
+			continue;
+		}
+
+		let count = 0;
+		for (let char of line) {
+			if (char === ' ') {
+				count += 1;
+			} else {
+				minCount = Math.min(count, minCount);
+				break;
+			}
+		}
+	}
+	if (minCount === 9999) {
+		return 0;
+	}
+	return minCount;
+}
+
 export {
 	getConfirmation,
 	getSelection,
@@ -127,4 +176,5 @@ export {
 	getSavePath,
 	chooseLocalGlobal,
 	getSavePathFromDialog,
+	_unTabMultiline,
 };

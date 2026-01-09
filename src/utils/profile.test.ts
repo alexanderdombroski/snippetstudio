@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import path from 'node:path';
 import type { ProfileInfo, ProfileAssociations } from '../types';
 import {
@@ -7,6 +7,9 @@ import {
 	getPathFromProfileLocation,
 	getProfileIdFromPath,
 	getProfiles,
+	getActiveProfilePath,
+	getActiveProfileSnippetsDir,
+	getGlobalLangFile,
 } from './profile';
 import { getExtensionContext, getUserPath } from './context';
 import vscode from '../vscode';
@@ -14,7 +17,7 @@ import { context } from '../../.vitest/__mocks__/shared';
 import type { Uri } from 'vscode';
 
 vi.mock('./context', () => ({
-	getExtensionContext: vi.fn(),
+	getExtensionContext: vi.fn(() => Promise.resolve(context)),
 	getUserPath: vi.fn(),
 }));
 
@@ -154,6 +157,176 @@ describe('profile utils', () => {
 			expect(dirs).toContain(path.join(mockUserPath, 'profiles', '123', 'snippets'));
 			expect(dirs).toContain(path.join(mockUserPath, 'profiles', '456', 'snippets'));
 			expect(dirs).toContain(path.join(mockUserPath, 'snippets'));
+		});
+	});
+
+	describe('getActiveProfilePath', () => {
+		const mockProfiles: ProfileInfo[] = [{ location: '123', name: 'Work' }];
+		const mockWorkspaceUri = 'file:///path/to/workspace';
+
+		beforeEach(() => {
+			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
+				{ uri: { toString: () => mockWorkspaceUri } as Uri, name: 'Work', index: 0 },
+			]);
+		});
+
+		it('should return the user path for the default profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const profilePath = await getActiveProfilePath();
+			expect(profilePath).toBe(mockUserPath);
+		});
+
+		it('should return the correct path for a custom profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {
+					[mockWorkspaceUri]: '123',
+				},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const profilePath = await getActiveProfilePath();
+			expect(profilePath).toBe(path.join(mockUserPath, 'profiles', '123'));
+		});
+	});
+
+	describe('getActiveProfileSnippetsDir', () => {
+		const mockProfiles: ProfileInfo[] = [{ location: '123', name: 'Work' }];
+		const mockWorkspaceUri = 'file:///path/to/workspace';
+
+		beforeEach(() => {
+			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
+				{ uri: { toString: () => mockWorkspaceUri } as Uri, name: 'Work', index: 0 },
+			]);
+		});
+
+		it('should return the snippets directory for the default profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const snippetsDir = await getActiveProfileSnippetsDir();
+			expect(snippetsDir).toBe(path.join(mockUserPath, 'snippets'));
+		});
+
+		it('should return the snippets directory for a custom profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {
+					[mockWorkspaceUri]: '123',
+				},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const snippetsDir = await getActiveProfileSnippetsDir();
+			expect(snippetsDir).toBe(path.join(mockUserPath, 'profiles', '123', 'snippets'));
+		});
+	});
+
+	describe('getGlobalLangFile', () => {
+		const mockProfiles: ProfileInfo[] = [{ location: '123', name: 'Work' }];
+		const mockWorkspaceUri = 'file:///path/to/workspace';
+
+		beforeEach(() => {
+			vi.spyOn(vscode.workspace, 'workspaceFolders', 'get').mockReturnValue([
+				{ uri: { toString: () => mockWorkspaceUri } as Uri, name: 'Work', index: 0 },
+			]);
+		});
+
+		it('should return the global language file path for the default profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const langFile = await getGlobalLangFile('typescript');
+			expect(langFile).toBe(path.join(mockUserPath, 'snippets', 'typescript.json'));
+		});
+
+		it('should return the global language file path for a custom profile', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {
+					[mockWorkspaceUri]: '123',
+				},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const langFile = await getGlobalLangFile('javascript');
+			expect(langFile).toBe(
+				path.join(mockUserPath, 'profiles', '123', 'snippets', 'javascript.json')
+			);
+		});
+
+		it('should handle different language identifiers', async () => {
+			const mockAssociations: ProfileAssociations = {
+				workspaces: {},
+				emptyWindows: {},
+			};
+			(context.globalState.get as Mock).mockImplementation((key: string) => {
+				if (key === 'users') {
+					return mockProfiles;
+				}
+				if (key === 'profileAssociations') {
+					return mockAssociations;
+				}
+			});
+
+			const pythonFile = await getGlobalLangFile('python');
+			const rustFile = await getGlobalLangFile('rust');
+
+			expect(pythonFile).toBe(path.join(mockUserPath, 'snippets', 'python.json'));
+			expect(rustFile).toBe(path.join(mockUserPath, 'snippets', 'rust.json'));
 		});
 	});
 });

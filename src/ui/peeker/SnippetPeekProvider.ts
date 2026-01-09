@@ -97,7 +97,7 @@ export default class SnippetPeekProvider implements TextDocumentContentProvider 
 	}
 }
 
-/* c8 ignore start */
+/* v8 ignore next -- @preserve */
 
 /** returns the comment syntax for a given language */
 function getCommentToken(langId: string): string | [string, string] {
@@ -147,4 +147,3 @@ function getCommentToken(langId: string): string | [string, string] {
 			return '//';
 	}
 }
-/* c8 ignore stop */

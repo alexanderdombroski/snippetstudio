@@ -4,7 +4,13 @@
 
 ## Table of Contents
 
-- [Unreleased](#unreleased---date)
+- [3.3](#330---2026-01-03) - Kiro Support
+- [3.2](#320---2025-12-31) - Windsurf Support
+- [3.1](#310---2025-12-15) - AbacusAI Support
+- [3.0](#300---2025-12-13) - Lazily Read Snippets
+- [2.9](#290---2025-11-28) - Snippets in Location View
+- [2.8](#280---2025-11-19) - Antigravity Support
+- [2.7](#271---2025-11-08) - Shell Snippets
 - [2.6](#260---2025-10-04) - Simplified View Options
 - [2.5](#250---2025-09-15) - Snippet Peeks
 - [2.4](#241---2025-09-11) - Cursor Support
@@ -20,7 +26,91 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [Unreleased] - DATE
+## [3.3.0] - 2026-01-03
+
+### Added
+
+- Added Kiro IDE support
+- Buttons to welcome views for improved new user UX
+
+### Fixed
+
+- Command to create project snippets shouldn't show outside of workspaces
+
+### Removed
+
+- Backwards compatability for linked snippets before v2.1.0. If you've started the extension since 2.1 this won't cause problems.
+
+## [3.2.0] - 2025-12-31
+
+### Added
+
+- Windsurf Support
+- Rename snippets command (helpful for linked snippets)
+
+## [3.1.0] - 2025-12-15
+
+### Added
+
+- Added support for AbacusAI IDE
+
+### Fixed
+
+- Location view loads correctly in windows with no open workspace folder
+
+## [3.0.0] - 2025-12-13
+
+### Added
+
+- Extension and profile snippets now viewable in the location view
+- Performance improvements to location and snippets view, and extension startup time
+- Added support for Trae IDE
+
+### Fixed
+
+- Export Snippets command correctly refreshes
+- Creating/Editing snippets reliably triggers refresh
+
+### Changed
+
+- Removed command to track snippets in location view. Snippet files are now only read when the file dropdown opens
+- Improved spacing of linked snippets in tree view
+- Removed settings to hide profile and extension snippets because they no longer offer any benefit
+
+## [2.9.0] - 2025-11-28
+
+### Added
+
+- Command to temporarily list snippets in the location view without switching languages
+- Performance optimizations for loading snippets of other extensions
+
+## [2.8.0] - 2025-11-19
+
+### Added
+
+- Added Antigravity support
+
+### Fixed
+
+- Location Manager properly refreshes after creating language-specific global snippet file
+
+## [2.7.1] - 2025-11-08
+
+### Added
+
+- Command to help manage shell profiles
+
+### Fixed
+
+- Added warning if an unknown integrated terminal profile configuration is used
+- VS Code recommended shell configs won't be used if they aren't on your system
+
+## [2.7.0] - 2025-10-31
+
+### Added
+
+- Shell Snippets View to create and run saved terminal commands
+- Shell Snippets can be scoped to the workspace or globally
 
 ### Fixed
 

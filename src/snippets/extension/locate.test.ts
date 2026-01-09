@@ -9,7 +9,7 @@ import {
 	findAllExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
 	getExtensionSnippetLangs,
-	__getExtensionsDirPath,
+	_getExtensionsDirPath,
 } from './locate';
 import vscode from '../../vscode';
 
@@ -170,23 +170,31 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
 		});
 		it('should find the vscode extensions folder', () => {
-			expect(__getExtensionsDirPath()).toBe(configPath`.vscode`);
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
-		it('should should update the path for the nightly build', () => {
+		it('should update the path for the nightly build', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
-			expect(__getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
-		it('should should update the path for VSCodium', () => {
+		it('should update the path for VSCodium', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
-			expect(__getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
 		});
-		it('should should update the path for Cursor', () => {
+		it('should update the path for Cursor', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
-			expect(__getExtensionsDirPath()).toBe(configPath`.cursor`);
+			expect(_getExtensionsDirPath()).toBe(configPath`.cursor`);
+		});
+		it('should update the path for Windsurf', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.windsurf`);
+		});
+		it('should update the path for Kiro', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Kiro' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.kiro`);
 		});
 		it('should default to VS Code', () => {
-			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
-			expect(__getExtensionsDirPath()).toBe(configPath`.vscode`);
+			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 	});
 });

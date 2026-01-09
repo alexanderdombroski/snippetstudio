@@ -10,7 +10,13 @@ export default defineConfig({
 		coverage: {
 			provider: 'v8',
 			include: ['src/**'],
-			exclude: ['src/extension.ts', 'src/commands/index.ts', 'src/vscode.ts', '**/*.d.ts'],
+			exclude: [
+				'src/extension.ts', // Entrypoint
+				'src/commands/index.ts', // Barrel file
+				'src/ui/templates/index.ts', // Barrel file
+				'src/vscode.ts', // Barrel file
+				'**/*.d.ts', // types
+			],
 			watermarks: {
 				statements: [30, 60],
 				functions: [40, 70],

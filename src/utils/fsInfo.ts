@@ -49,6 +49,12 @@ function isParentDir(parent: string, child: string): boolean {
 	return !!relative && !relative.startsWith('..') && !path.isAbsolute(relative);
 }
 
+/** Detects whether snippet originates in extension folder */
+function isExtensionSnippetPath(fp: string): boolean {
+	const dir = path.posix.dirname(fp);
+	return /.+\/extensions\/[^/]+\/snippets$/.test(dir);
+}
+
 /** Check if a file/folder exists */
 async function exists(fp: string): Promise<boolean> {
 	try {
@@ -63,6 +69,7 @@ export {
 	getWorkspaceFolder,
 	getCurrentUri,
 	shortenFullPath,
+	isExtensionSnippetPath,
 	getDownloadsDirPath,
 	isParentDir,
 	exists,

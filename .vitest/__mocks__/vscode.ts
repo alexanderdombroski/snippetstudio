@@ -1,4 +1,4 @@
-// __mocks__/vscode.ts
+/* eslint-disable jsdoc/require-jsdoc */
 import { vi } from 'vitest';
 
 // Basic classes and constructors
@@ -19,7 +19,9 @@ export const Uri = {
 	from: vi.fn((obj) => obj),
 };
 export const SnippetString = vi.fn();
-export const CompletionItem = vi.fn((label: string) => ({ label }));
+export const CompletionItem = vi.fn(function (this: { label: string }, label: string) {
+	this.label = label;
+});
 export const MarkdownString = vi.fn();
 export const ThemeIcon = class {
 	iconPath: string;
@@ -70,6 +72,7 @@ export const Event = {};
 export const onDidChangeTextDocument = vi.fn();
 export const getConfiguration = vi.fn().mockReturnValue({
 	get: vi.fn(),
+	inspect: vi.fn(),
 	update: vi.fn(),
 });
 export const openTextDocument = vi.fn();
@@ -103,6 +106,7 @@ export const createQuickPick = vi.fn().mockImplementation(() => {
 	let acceptCallback: (() => void) | undefined;
 	let hideCallback: (() => void) | undefined;
 	const qp = {
+		dispose: vi.fn(),
 		selectedItems: [],
 		items: [],
 		show: vi.fn(() => {
@@ -150,6 +154,8 @@ export default {
 		onDidChangeVisibleTextEditors: vi.fn(),
 		setTextDocumentLanguage: vi.fn(),
 		registerWebviewViewProvider: vi.fn(),
+		createTreeView: vi.fn(),
+		terminals: [],
 	},
 	languages: {
 		registerCompletionItemProvider: vi.fn(),
@@ -182,4 +188,6 @@ export default {
 	TextEditorRevealType: {},
 	ProgressLocation: {},
 	Location: class {},
+	ConfigurationTarget: {},
+	QuickPickItemKind: { Seperator: 0 },
 };

@@ -66,15 +66,6 @@ describe('src/snippets/links/config.ts', () => {
 			const links = await getLinkedSnippets();
 			expect(links).toEqual(mockLinks);
 		});
-
-		it('should handle backward compatibility for string array', async () => {
-			const oldLinks = ['test.code-snippets'];
-			(readJsonC as Mock).mockResolvedValue({ 'snippetstudio.file.linkedFiles': oldLinks });
-			const links = await getLinkedSnippets();
-			expect(links).toEqual({
-				'test.code-snippets': ['__default__profile__', 'profile1'],
-			});
-		});
 	});
 
 	describe('addFileLink', () => {

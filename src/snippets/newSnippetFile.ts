@@ -19,10 +19,15 @@ import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
-import { isSnippetLinked } from './links/config';
+import {
+	getLinkedSnippets,
+	getLinkLocations,
+	isSnippetLinked,
+	updateAllSettings,
+} from './links/config';
 
 /** Creates an empty JSON file with {} and returns string alertStatus */
-async function createFile(
+export async function createFile(
 	filepath: string,
 	showInfoMessage: boolean = true,
 	notSnippetFile?: boolean
@@ -43,7 +48,7 @@ async function createFile(
 }
 
 /** prompts filename and creates empty snippets file in .vscode project folder */
-async function createLocalSnippetsFile(): Promise<void> {
+export async function createLocalSnippetsFile(): Promise<void> {
 	const cwd = getWorkspaceFolder();
 	if (!cwd) {
 		return;
@@ -58,7 +63,7 @@ async function createLocalSnippetsFile(): Promise<void> {
 }
 
 /** creates a language snippet file if doesn't exists */
-async function createGlobalLangFile(): Promise<void> {
+export async function createGlobalLangFile(): Promise<void> {
 	const langId = getCurrentLanguage() ?? (await selectLanguage());
 	if (langId === undefined) {
 		showErrorMessage('No recently used language.');
@@ -70,7 +75,7 @@ async function createGlobalLangFile(): Promise<void> {
 }
 
 /** creates a .code-snippets file in the user snippets folder */
-async function createGlobalSnippetsFile(): Promise<void> {
+export async function createGlobalSnippetsFile(): Promise<void> {
 	const dir = await getActiveProfileSnippetsDir();
 	const name = await getFileName();
 	if (name === undefined) {
@@ -82,7 +87,7 @@ async function createGlobalSnippetsFile(): Promise<void> {
 }
 
 /** creates a .code-snippets file with chosen snippets from chosen files */
-async function exportSnippets() {
+export async function exportSnippets() {
 	// Select Save Paths
 	const savePath = await getSavePath();
 	if (savePath === undefined) {
@@ -99,7 +104,7 @@ async function exportSnippets() {
 }
 
 /** Lets the user pick snippets from each file and merges them into one object */
-async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
+export async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 	const filepaths = await chooseSnippetFiles();
 	if (filepaths === undefined) {
 		return;
@@ -140,6 +145,8 @@ async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 				}
 			});
 		});
+
+		quickPick.dispose();
 
 		const langIds = await getLanguages();
 
@@ -190,11 +197,49 @@ async function chooseSnippetFiles(): Promise<string[] | undefined> {
 	return fileItems.map((item) => item.description);
 }
 
-export {
-	createGlobalLangFile,
-	createLocalSnippetsFile,
-	createGlobalSnippetsFile,
-	createFile,
-	exportSnippets,
-	mergeSnippetFiles,
-};
+/** Renames a snippet file */
+export async function renameSnippetFile(fp: string) {
+	const oldFile = path.basename(fp);
+	const newName = await getFileName(`Type a new name for ${oldFile} file.`);
+	if (!newName) {
+		return;
+	}
+
+	const newFile = newName + '.code-snippets';
+	const isLinked = await isSnippetLinked(fp);
+
+	const filesToCheck: string[] = [];
+	let links;
+	if (isLinked) {
+		links = await getLinkedSnippets();
+		if (Object.hasOwn(links, newFile)) {
+			showWarningMessage(
+				`Cannot rename file because ${newFile} is already linked in some other profile`
+			);
+			return;
+		}
+		filesToCheck.push(...(await getLinkLocations(fp)).map((dir) => path.join(dir, newFile)));
+	} else {
+		filesToCheck.push(path.join(path.dirname(fp), newFile));
+	}
+
+	const pathAlreadyUsed = (await Promise.all(filesToCheck.map((p) => exists(p)))).some(Boolean);
+	if (pathAlreadyUsed) {
+		showWarningMessage('A snippet file of that name already exists and would be overwritten');
+		return;
+	}
+
+	const task = async (newPath: string) => {
+		const oldPath = path.join(path.dirname(newPath), oldFile);
+		await fs.rename(oldPath, newPath);
+	};
+	await Promise.all(filesToCheck.map((fp) => task(fp)));
+
+	if (isLinked && links) {
+		links[newFile] = links[oldFile];
+		delete links[oldFile];
+		await updateAllSettings(links);
+	}
+
+	showInformationMessage(`Successfully renamed ${filesToCheck.length} files`);
+}

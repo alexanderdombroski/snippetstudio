@@ -127,13 +127,13 @@ describe('jsoncFilesIO', () => {
 		it('should call flattenScopedExtensionSnippets when tryFlatten is true', async () => {
 			const content = '{ "test": { "prefix": "tst" } }';
 			vi.mocked(fs.readFile).mockResolvedValue(content);
-			await readSnippetFile('test.jsonc', true);
+			await readSnippetFile('test.jsonc', { tryFlatten: true, showError: true });
 			expect(flattenScopedExtensionSnippets).toHaveBeenCalled();
 		});
 
 		it('should show an error message if reading fails', async () => {
 			vi.mocked(fs.readFile).mockRejectedValue(new Error('fail'));
-			const result = await readSnippetFile('test.jsonc');
+			const result = await readSnippetFile('test.jsonc', { showError: true });
 			expect(result).toBeUndefined();
 			expect(showErrorMessage).toHaveBeenCalledWith(
 				`Unable to read file ${path.basename('test.jsonc')}\n\n${'test.jsonc'}`

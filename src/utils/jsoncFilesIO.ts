@@ -59,18 +59,20 @@ export async function readJsoncFilesAsync(
 /** reads a vscode snippet or textmate formatted snippet file */
 export async function readSnippetFile(
 	filepath: string,
-	tryFlatten?: boolean
+	options?: { tryFlatten?: boolean; showError?: boolean }
 ): Promise<VSCodeSnippets | undefined> {
 	try {
 		const jsonc = await fs.readFile(filepath, 'utf-8');
 		const cleanedJson: VSCodeSnippets = await processJsonWithComments(jsonc);
-		if (tryFlatten) {
+		if (options?.tryFlatten) {
 			const { flattenScopedExtensionSnippets } = await import('../snippets/extension/locate.js');
 			return flattenScopedExtensionSnippets(cleanedJson);
 		}
 		return cleanedJson;
 	} catch {
-		showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
+		if (options?.showError) {
+			showErrorMessage(`Unable to read file ${path.basename(filepath)}\n\n${filepath}`);
+		}
 	}
 }
 

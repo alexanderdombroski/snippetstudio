@@ -8,6 +8,7 @@ import {
 	showInformationMessage,
 	showErrorMessage,
 	showWarningMessage,
+	getConfiguration,
 } from '../vscode';
 import type { VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
@@ -15,15 +16,17 @@ import path from 'node:path';
 import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
 import { locateAllSnippetFiles } from './locateSnippets';
-import type { TreePathItem } from '../ui/templates';
+import type { SnippetTreeItem } from '../ui/templates';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
+import { getCacheManager } from './SnippetCacheManager';
+import { getConfirmation } from '../utils/user';
 
 // -------------------------- CRUD operations --------------------------
 
 /** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
-async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
-	const snippets = await readSnippetFile(filepath);
+export async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
+	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		showWarningMessage(
 			`Read Operation failed. Write operation of ${titleKey} to ${path.basename(filepath)} canceled.`
@@ -31,11 +34,9 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 		return;
 	}
 
-	if (snippet.scope) {
-		if (path.extname(filepath) === '.json') {
-			delete snippet.scope;
-		}
-	} else if (path.extname(filepath) === '.code-snippets') {
+	if (path.extname(filepath) === '.json' || snippet.scope === 'global') {
+		delete snippet.scope;
+	} else if (!snippet.scope) {
 		snippet.scope = getCurrentLanguage() ?? 'plaintext';
 	}
 
@@ -44,9 +45,16 @@ async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeS
 }
 
 /** removes a single snippet from a snippet file */
-async function deleteSnippet(filepath: string, titleKey: string) {
-	const snippets = await readSnippetFile(filepath);
-	if (snippets === undefined) {
+export async function deleteSnippet(filepath: string, titleKey: string) {
+	const snippets = await getCacheManager().getSnippets(filepath, { showError: true });
+	if (!snippets) {
+		return;
+	}
+
+	if (
+		getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
+		!(await getConfirmation(`Are you sure you want to delete "${titleKey}"?`))
+	) {
 		return;
 	}
 
@@ -57,13 +65,16 @@ async function deleteSnippet(filepath: string, titleKey: string) {
 }
 
 /** Return a snippet from a snippet file. Use tryFlatten if the file is from an extension. */
-async function readSnippet(
+export async function readSnippet(
 	filepath: string,
 	snippetTitle: string,
-	tryFlatten?: boolean
+	isExtensionSnippet?: boolean
 ): Promise<VSCodeSnippet | undefined> {
-	const snippets = await readSnippetFile(filepath, tryFlatten);
-	if (snippets === undefined || snippets[snippetTitle] === undefined) {
+	const snippets = await getCacheManager().getSnippets(filepath, {
+		isExtensionSnippet,
+		showError: true,
+	});
+	if (!snippets?.[snippetTitle]) {
 		console.error(
 			`Read Operation failed. Could not find ${snippetTitle} inside of ${path.basename(filepath)}.`
 		);
@@ -74,7 +85,7 @@ async function readSnippet(
 }
 
 /** Handler for the snippet.move command */
-async function moveSnippet(item: TreePathItem) {
+export async function moveSnippet(item: SnippetTreeItem) {
 	const [actives, locals, profiles] = await locateAllSnippetFiles();
 	const profileFiles = Object.values(profiles)
 		.map((files) => files)
@@ -93,16 +104,19 @@ async function moveSnippet(item: TreePathItem) {
 		return;
 	}
 
-	const snippet = (await readSnippet(item.path, item.description as string)) as VSCodeSnippet;
+	const snippet = (await readSnippet(item.path, item.description)) as VSCodeSnippet;
+	if (path.extname(item.path) === '.code-snippets' && !snippet.scope) {
+		snippet.scope = 'global';
+	}
 
 	await Promise.all([
-		writeSnippet(selected.description, item.description as string, snippet),
+		writeSnippet(selected.description, item.description, snippet),
 		executeCommand('snippetstudio.snippet.delete', item),
 	]);
 }
 
 /** deletes snippet file on user confirmation if not linked and exists */
-async function deleteSnippetFile(filepath: string) {
+export async function deleteSnippetFile(filepath: string) {
 	if (await isSnippetLinked(filepath)) {
 		showWarningMessage("Don't delete a linked snippet file until you unlink it first!");
 		return;
@@ -127,6 +141,7 @@ async function deleteSnippetFile(filepath: string) {
 
 	try {
 		await fs.unlink(filepath);
+		getCacheManager().remove(filepath);
 		showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
 	} catch (error) {
 		if (error instanceof Error) {
@@ -136,5 +151,3 @@ async function deleteSnippetFile(filepath: string) {
 		}
 	}
 }
-
-export { deleteSnippet, writeSnippet, readSnippet, moveSnippet, deleteSnippetFile };

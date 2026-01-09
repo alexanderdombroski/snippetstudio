@@ -46,23 +46,45 @@ Import and export snippets using [GitHub gists](https://alexanderdombroski.githu
 
 VS Code already has [powerful syncing](https://code.visualstudio.com/docs/configure/settings-sync) that provides a way to backup your snippets.
 
+### Snippet Keybindings
+
+Command to easily add [attach a keybinding](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/keybinding-snippets) to a snippet. These are bound to the target languages by default.
+
 ### Profile Support
 
-Snippets added to the active profile, or choose files to sync across all profiles
+Snippets added to the active profile, or choose files to [sync across all profiles](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/profile-snippets).
 
-Import snippets from your friend's profile backups, or profile templates
+Import snippets from your friend's [profile backups](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/backup-and-restore-snippets) or profile templates.
 
 ### Extension Snippets
 
-Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/working-with-extension-snippets) them to be more helpful
+Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_install-snippets-from-the-marketplace) you download and [modify](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/extension-snippets) them to be more helpful
+
+### Shell Snippets
+
+Save terminal commands commonly ran in the terminal across workspaces or globally. Hit the run button to automatically create a terminal and run it.
 
 ## Requirements
 
 **Web Version:** This extension is not currently stable for [web versions](https://code.visualstudio.com/api/extension-guides/web-extensions) of VS Code due to its reliance on Node.js file system APIs.
 
+### Supported Platforms
+
+- [VS Code](https://code.visualstudio.com/)
+- [VS Code Insiders](https://code.visualstudio.com/insiders/)
+- [VSCodium](https://vscodium.com/)
+- [Cursor](https://cursor.com/)
+- [Windsurf](https://windsurf.com/)
+- [Antigravity](https://antigravity.google/)
+- [Kiro](https://kiro.dev/)
+- [Trae](https://www.trae.ai/)
+- [AbacusAI](https://desktop.abacus.ai/)
+
+See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/19) for more info about adding support for other platforms.
+
 ## Known Issues
 
-[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-83.2%25-limegreen)
+[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-87.8%25-limegreen)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
 

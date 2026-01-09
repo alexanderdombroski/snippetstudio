@@ -14,14 +14,14 @@ const customPlugin = {
 				schema: [],
 			},
 			create(context) {
-				function checkImportSource(node, value) {
+				const checkImportSource = (node, value) => {
 					if (/\.(js|ts)$/.test(value)) {
 						context.report({
 							node,
 							message: "Import paths should not include extensions '.js' or '.ts'",
 						});
 					}
-				}
+				};
 
 				return {
 					ImportDeclaration(node) {
@@ -90,10 +90,11 @@ export default [
 			'no-restricted-imports': ['error', { patterns: ['**/*.test*'] }],
 
 			'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
-			curly: 'warn',
 			eqeqeq: 'warn',
 			'no-throw-literal': 'warn',
 			semi: 'warn',
+			'object-shorthand': 'warn',
+			'no-var': 'warn',
 		},
 	},
 	jsdoc.configs['flat/recommended-typescript'],
@@ -103,6 +104,7 @@ export default [
 			jsdoc,
 		},
 		rules: {
+			'@typescript-eslint/consistent-type-imports': 'warn',
 			'jsdoc/require-jsdoc': [
 				'warn',
 				{
@@ -111,7 +113,7 @@ export default [
 						FunctionDeclaration: true,
 						MethodDefinition: true,
 					},
-					checkConstructors: false
+					checkConstructors: false,
 				},
 			],
 			'jsdoc/require-returns': 'off',
@@ -136,6 +138,15 @@ export default [
 		files: ['**/*.test.ts'],
 		rules: {
 			'jsdoc/require-jsdoc': 'off',
+		},
+	},
+	{
+		files: ['**/*.js', '**/*.mjs'],
+		plugins: {
+			jsdoc,
+		},
+		rules: {
+			'jsdoc/no-types': 'off',
 		},
 	},
 ];

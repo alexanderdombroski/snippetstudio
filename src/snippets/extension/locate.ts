@@ -5,11 +5,9 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
-import { readJson, readJsoncFilesAsync } from '../../utils/jsoncFilesIO';
+import { readJson } from '../../utils/jsoncFilesIO';
 import type {
 	ExtensionSnippetFilesMap,
-	ExtensionSnippets,
-	ExtensionSnippetsMap,
 	JSONObject,
 	PackageJsonSnippetsSection,
 	SnippetContribution,
@@ -19,13 +17,20 @@ import type {
 import { exists } from '../../utils/fsInfo';
 import vscode from '../../vscode';
 
+const extensionsWithNoSnippets = new Set();
+
 /** returns the location of downloaded extensions for current platform and os */
-export function __getExtensionsDirPath(): string {
+export function _getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
+		Antigravity: '.antigravity',
 		'Visual Studio Code': '.vscode',
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',
 		Cursor: '.cursor',
+		Windsurf: '.windsurf',
+		Kiro: '.kiro',
+		Trae: '.trae',
+		AbacusAI: '.abacusai',
 	};
 	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');
@@ -38,7 +43,7 @@ export function __getBuiltInExtensionsDirPath(): string {
 
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
-	const extDirPath = __getExtensionsDirPath();
+	const extDirPath = _getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
@@ -93,8 +98,11 @@ async function scanExtensionsDir(
 		async (
 			dirent
 		): Promise<[string, { name: string; files: SnippetContribution[] }] | undefined> => {
+			if (extensionsWithNoSnippets.has(dirent.name)) return;
+
 			const pkgPath = path.join(dir, dirent.name, 'package.json');
 			if (!(await exists(pkgPath))) {
+				extensionsWithNoSnippets.add(dirent.name);
 				return;
 			}
 
@@ -106,6 +114,7 @@ async function scanExtensionsDir(
 				});
 				return [`${prefix}${dirent.name}`, { name: pkg.name, files: snippets }];
 			}
+			extensionsWithNoSnippets.add(dirent.name);
 		}
 	);
 

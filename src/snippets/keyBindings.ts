@@ -12,22 +12,25 @@ import vscode, {
 import path from 'node:path';
 import { getActiveProfilePath } from '../utils/profile';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
-import type { TreePathItem } from '../ui/templates';
+import type { SnippetTreeItem } from '../ui/templates';
 import type { VSCodeSnippet } from '../types';
 import { getCurrentLanguage } from '../utils/language';
 import { snippetBodyAsString } from '../utils/string';
+import { exists } from '../utils/fsInfo';
+import fs from 'node:fs/promises';
 
 /** Handler for the add keybindings commmand */
-async function promptAddKeybinding(item: TreePathItem) {
+async function promptAddKeybinding(item: SnippetTreeItem) {
 	const keyBindPath = await getKeybindingsFilePath();
+	if (!(await exists(keyBindPath))) {
+		await fs.writeFile(keyBindPath, '[]', 'utf-8');
+	}
 
 	const snippetTitle = item.description?.toString() ?? '';
 	const { readSnippet } = await import('../snippets/updateSnippets.js');
-	
-	// Read snippet and keybindings, handling case where keybindings file doesn't exist
 	const [snippet, keybindings] = await Promise.all([
 		readSnippet(item.path, snippetTitle) as Promise<VSCodeSnippet>,
-		readJsonC(keyBindPath), // Return empty array if file doesn't exist
+		readJsonC(keyBindPath),
 	]);
 
 	const placeholder = 'INSERT_KEY_BINDING_HERE';

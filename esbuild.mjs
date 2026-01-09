@@ -1,15 +1,14 @@
 import { context } from 'esbuild';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import htmlnano from 'htmlnano';
 
 const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
 
 const outdir = 'dist';
+const outdirPath = path.join(import.meta.dirname, 'dist');
 
-/**
- * @type {import('esbuild').Plugin}
- */
 const esbuildProblemMatcherPlugin = {
 	name: 'esbuild-problem-matcher',
 
@@ -27,8 +26,24 @@ const esbuildProblemMatcherPlugin = {
 	},
 };
 
+/** Step to minifiy HTML file for webview */
+async function minifyHTML() {
+	const html = await fs.readFile(
+		path.join(import.meta.dirname, 'public', 'snippetData.html'),
+		'utf8'
+	);
+	const { html: minifiedHtml } = await htmlnano.process(html, {
+		collapseWhitespace: 'all',
+		removeComments: 'all',
+		minifyJs: true,
+		minifySvg: false,
+	});
+	const newPath = path.join(outdirPath, 'snippetData.html');
+	await fs.writeFile(newPath, minifiedHtml);
+}
+
+/** Add an auto-generated CommonJS wrapper for VS Code entry point */
 async function writeCjsWrapper() {
-	// Auto-generated CommonJS wrapper for VS Code entry point
 	const code = [
 		'let mod;',
 		'',
@@ -48,10 +63,10 @@ async function writeCjsWrapper() {
 		'};',
 	].join('\n');
 
-	// await fs.rename('dist/extension.js', 'dist/extension.mjs');
-	await fs.writeFile(path.join(outdir, 'extension.js'), code);
+	await fs.writeFile(path.join(outdirPath, 'extension.js'), code);
 }
 
+/** Function to minify and bundle code */
 async function main() {
 	const ctx = await context({
 		entryPoints: ['src/extension.ts'],
@@ -66,29 +81,29 @@ async function main() {
 		splitting: true,
 		external: ['vscode', ...(await import('node:module')).builtinModules],
 		logLevel: 'silent',
-		plugins: [
-			/* add to the end of plugins array */
-			esbuildProblemMatcherPlugin,
-		],
+		plugins: [esbuildProblemMatcherPlugin],
 		minifySyntax: true,
 		outExtension: {
-			'.js': '.mjs'
+			'.js': '.mjs',
 		},
 		define: {
 			'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production),
 		},
 		drop: production ? ['console', 'debugger'] : [],
 		chunkNames: 'chunks/[name]-[hash]',
-		metafile: production
+		metafile: production,
 	});
+
+	await fs.mkdir(outdirPath, { recursive: true });
+	await Promise.all([minifyHTML(), writeCjsWrapper()]);
 	if (watch) {
 		await ctx.watch();
-		await writeCjsWrapper();
 	} else {
 		const result = await ctx.rebuild();
-		await writeCjsWrapper();
 		await fs.mkdir('./profile', { recursive: true });
-		await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile));
+		if (result.metafile) {
+			await fs.writeFile('./profile/meta.json', JSON.stringify(result.metafile, null, 2));
+		}
 		await ctx.dispose();
 	}
 }
