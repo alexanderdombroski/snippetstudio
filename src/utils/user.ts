@@ -110,7 +110,7 @@ async function getSavePath() {
 		default:
 			break;
 	}
-	return savePath;
+	return savePath ? savePath.split(path.sep).join('/') : savePath;
 }
 
 /** Returns the base path to save a code snippets file */

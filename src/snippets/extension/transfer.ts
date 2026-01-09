@@ -29,7 +29,7 @@ async function extractAllSnippets(item: ExtSnippetFileTreeItem) {
 		return;
 	}
 
-	const fp = path.join(dirname, basename);
+	const fp = path.join(dirname, basename).split(path.sep).join('/');
 
 	const langs = await getExtensionSnippetLangs(item.filepath);
 	const scope = langs.join(',');

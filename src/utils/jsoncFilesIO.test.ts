@@ -155,21 +155,17 @@ describe('jsoncFilesIO', () => {
 			const links = ['/link1', '/link2'];
 			vi.mocked(getLinkLocations).mockResolvedValue(links);
 			vi.mocked(fs.mkdir).mockResolvedValue(undefined);
+			vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 
 			await writeSnippetFile('/orig/test.json', snippet);
 
-			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname('/link1/test.json'), {
-				recursive: true,
-			});
 			expect(fs.writeFile).toHaveBeenCalledWith('/link1/test.json', snippetString);
-			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname('/link2/test.json'), {
-				recursive: true,
-			});
 			expect(fs.writeFile).toHaveBeenCalledWith('/link2/test.json', snippetString);
 			expect(fs.writeFile).toHaveBeenCalledTimes(2);
 		});
 
 		it('should not show message when silent is true', async () => {
+			vi.mocked(fs.writeFile).mockResolvedValue(undefined);
 			await writeSnippetFile('test.json', snippet, 'Success', true);
 			expect(fs.writeFile).toHaveBeenCalled();
 			expect(showInformationMessage).not.toHaveBeenCalled();

@@ -44,7 +44,7 @@ export async function _getGlobalLangSnippetFiles(
 
 	const languageSnippetFilePath = path.join(globalSnippetsPath, `${langId}.json`);
 	if (langId && (await exists(languageSnippetFilePath))) {
-		paths.push(languageSnippetFilePath);
+		paths.push(languageSnippetFilePath.split(path.sep).join('/'));
 	}
 
 	const globalMixedSnippetsPaths = await findCodeSnippetsFiles(globalSnippetsPath);
@@ -62,7 +62,9 @@ export async function _getGlobalLangSnippetFiles(
 export async function findCodeSnippetsFiles(folderPath: string): Promise<string[]> {
 	if (await exists(folderPath)) {
 		const files = await fs.readdir(folderPath);
-		return files.filter((f) => f.endsWith('.code-snippets')).map((f) => path.join(folderPath, f));
+		return files
+			.filter((f) => f.endsWith('.code-snippets'))
+			.map((f) => path.join(folderPath, f).split(path.sep).join('/'));
 	}
 	return [];
 }
@@ -115,7 +117,7 @@ async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 	const langIds = await getLanguages();
 	for (const langId of langIds) {
 		const snippetFile = path.join(globalDir, `${langId}.json`);
-		(await exists(snippetFile)) && snippetFiles.push(snippetFile);
+		(await exists(snippetFile)) && snippetFiles.push(snippetFile.split(path.sep).join('/'));
 	}
 
 	const files = await findCodeSnippetsFiles(globalDir);

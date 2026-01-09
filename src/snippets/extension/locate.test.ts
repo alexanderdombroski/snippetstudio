@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import os from 'node:os';
+import path from 'node:path';
 import type { Dirent } from 'node:fs';
 import { afterAll, describe, expect, it, vi, type Mock } from 'vitest';
 import { exists } from '../../utils/fsInfo';
@@ -17,17 +18,31 @@ vi.mock('../../utils/jsoncFilesIO');
 vi.mock('node:os');
 
 function configPath(appConfigDir: TemplateStringsArray) {
-	return `/home/user/${appConfigDir}/extensions`;
+	return `C:\\home\\user\\${appConfigDir[0]}\\extensions`;
 }
 
-(os.homedir as Mock).mockReturnValue('/home/user');
+(os.homedir as Mock).mockReturnValue('C:\\home\\user');
+
+Object.defineProperty(vscode.env, 'appRoot', { value: '/mock/app/root' });
 
 describe('locate', () => {
 	describe('getExtensionSnippetLangs', () => {
 		it('should return the languages for a given snippet path', async () => {
-			const snippetPath =
-				'/home/user/.vscode/extensions/publisher.ext-name-0.0.1/snippets/javascript.json';
-			const pkgPath = '/home/user/.vscode/extensions/publisher.ext-name-0.0.1/package.json';
+			const snippetPath = path.join(
+				os.homedir(),
+				'.vscode',
+				'extensions',
+				'publisher.ext-name-0.0.1',
+				'snippets',
+				'javascript.json'
+			);
+			const pkgPath = path.join(
+				os.homedir(),
+				'.vscode',
+				'extensions',
+				'publisher.ext-name-0.0.1',
+				'package.json'
+			);
 			const pkg = {
 				contributes: {
 					snippets: [
@@ -93,10 +108,15 @@ describe('locate', () => {
 				{ name: 'ext2', isDirectory: () => true },
 				{ name: 'ext3-no-snippets', isDirectory: () => true },
 			] as Dirent[];
-			(fs.readdir as Mock).mockResolvedValue(dirents);
+			(fs.readdir as Mock).mockImplementation(async (dir) => {
+				if (dir === 'C:\\home\\user\\.vscode\\extensions') {
+					return dirents;
+				}
+				return []; // for built-in
+			});
 
 			(readJson as Mock).mockImplementation(async (p) => {
-				if (p === '/home/user/.vscode/extensions/ext1/package.json') {
+				if (p === 'C:\\home\\user\\.vscode\\extensions\\ext1\\package.json') {
 					return {
 						name: 'Extension 1',
 						contributes: {
@@ -104,7 +124,7 @@ describe('locate', () => {
 						},
 					};
 				}
-				if (p === '/home/user/.vscode/extensions/ext2/package.json') {
+				if (p === 'C:\\home\\user\\.vscode\\extensions\\ext2\\package.json') {
 					return {
 						name: 'Extension 2',
 						contributes: {
@@ -112,7 +132,7 @@ describe('locate', () => {
 						},
 					};
 				}
-				if (p === '/home/user/.vscode/extensions/ext3-no-snippets/package.json') {
+				if (p === 'C:\\home\\user\\.vscode\\extensions\\ext3-no-snippets\\package.json') {
 					return {
 						name: 'Extension 3',
 					};
@@ -128,7 +148,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'javascript',
-							path: '/home/user/.vscode/extensions/ext1/snippets/js.json',
+							path: 'C:\\home\\user\\.vscode\\extensions\\ext1\\snippets\\js.json',
 						},
 					],
 				},
@@ -137,7 +157,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'typescript',
-							path: '/home/user/.vscode/extensions/ext2/snippets/ts.json',
+							path: 'C:\\home\\user\\.vscode\\extensions\\ext2\\snippets\\ts.json',
 						},
 					],
 				},

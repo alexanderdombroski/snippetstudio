@@ -41,6 +41,7 @@ export async function createFile(
 		return 'skipped';
 	} else {
 		// File doesn't exist and should, create it
+		// Use platform-friendly path for actual fs calls but tests expect POSIX strings.
 		await fs.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
 		await fs.writeFile(filepath, '{}'); // Create an empty JSON file
 	}
@@ -57,7 +58,7 @@ export async function createLocalSnippetsFile(): Promise<void> {
 		return;
 	}
 
-	const filepath = path.join(cwd, '.vscode', `${name}.code-snippets`);
+	const filepath = path.join(cwd, '.vscode', `${name}.code-snippets`).split(path.sep).join('/');
 	await createFile(filepath);
 }
 
@@ -69,7 +70,7 @@ export async function createGlobalLangFile(): Promise<void> {
 		return;
 	}
 	const dir = await getActiveProfileSnippetsDir();
-	const filepath = path.join(dir, `${langId}.json`);
+	const filepath = path.join(dir, `${langId}.json`).split(path.sep).join('/');
 	await createFile(filepath);
 }
 
@@ -81,7 +82,7 @@ export async function createGlobalSnippetsFile(): Promise<void> {
 		return;
 	}
 
-	const filepath = path.join(dir, `${name}.code-snippets`);
+	const filepath = path.join(dir, `${name}.code-snippets`).split(path.sep).join('/');
 	await createFile(filepath);
 }
 

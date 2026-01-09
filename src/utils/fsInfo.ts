@@ -31,10 +31,11 @@ function shortenFullPath(fullPath: string): string {
 	const resolvedPath = path.resolve(fullPath);
 
 	if (resolvedPath.startsWith(resolvedhomeDir)) {
-		return `~${resolvedPath.slice(resolvedhomeDir.length)}`;
+		const result = `~${resolvedPath.slice(resolvedhomeDir.length)}`;
+		return result.split(path.sep).join('/');
 	}
 
-	return fullPath;
+	return fullPath.split(path.sep).join('/');
 }
 
 /** returns downloads directory path */
