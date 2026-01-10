@@ -21,22 +21,19 @@ function configPath(appConfigDir: TemplateStringsArray) {
 	return path.join(os.homedir(), appConfigDir[0], 'extensions');
 }
 
-(os.homedir as Mock).mockReturnValue('C:/home/user');
+(os.homedir as Mock).mockReturnValue('/home/user');
 
 describe('locate', () => {
 	describe('getExtensionSnippetLangs', () => {
 		it('should return the languages for a given snippet path', async () => {
+			const ext_base_path = configPath`.vscode`;
 			const snippetPath = path.join(
-				'C:/home/user/.vscode/extensions',
+				ext_base_path,
 				'publisher.ext-name-0.0.1',
 				'snippets',
 				'javascript.json'
 			);
-			const pkgPath = path.join(
-				'C:/home/user/.vscode/extensions',
-				'publisher.ext-name-0.0.1',
-				'package.json'
-			);
+			const pkgPath = path.join(ext_base_path, 'publisher.ext-name-0.0.1', 'package.json');
 			const pkg = {
 				contributes: {
 					snippets: [
@@ -105,7 +102,7 @@ describe('locate', () => {
 			(fs.readdir as Mock).mockResolvedValue(dirents);
 
 			(readJson as Mock).mockImplementation(async (p) => {
-				if (p === path.join('C:/home/user/.vscode/extensions', 'ext1', 'package.json')) {
+				if (p === path.join(os.homedir(), '.vscode', 'extensions', 'ext1', 'package.json')) {
 					return {
 						name: 'Extension 1',
 						contributes: {
@@ -113,7 +110,7 @@ describe('locate', () => {
 						},
 					};
 				}
-				if (p === path.join('C:/home/user/.vscode/extensions', 'ext2', 'package.json')) {
+				if (p === path.join(os.homedir(), '.vscode', 'extensions', 'ext2', 'package.json')) {
 					return {
 						name: 'Extension 2',
 						contributes: {
@@ -122,7 +119,7 @@ describe('locate', () => {
 					};
 				}
 				if (
-					p === path.join('C:/home/user/.vscode/extensions', 'ext3-no-snippets', 'package.json')
+					p === path.join(os.homedir(), '.vscode', 'extensions', 'ext3-no-snippets', 'package.json')
 				) {
 					return {
 						name: 'Extension 3',
@@ -139,7 +136,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'javascript',
-							path: path.join('C:/home/user/.vscode/extensions', 'ext1', 'snippets', 'js.json'),
+							path: path.join(os.homedir(), '.vscode', 'extensions', 'ext1', 'snippets', 'js.json'),
 						},
 					],
 				},
@@ -148,7 +145,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'typescript',
-							path: path.join('C:/home/user/.vscode/extensions', 'ext2', 'snippets', 'ts.json'),
+							path: path.join(os.homedir(), '.vscode', 'extensions', 'ext2', 'snippets', 'ts.json'),
 						},
 					],
 				},
