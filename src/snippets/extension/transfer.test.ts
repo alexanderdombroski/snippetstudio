@@ -44,8 +44,9 @@ describe('transfer extension snippets', () => {
 		});
 
 		it('should extract all snippets from the extension', async () => {
+			const snippetsPath = path.join('/user', 'snippets');
 			(getFileName as Mock).mockReturnValue('web-dev');
-			(chooseLocalGlobal as Mock).mockReturnValue('/user/snippets');
+			(chooseLocalGlobal as Mock).mockReturnValue(snippetsPath);
 			(getExtensionSnippetLangs as Mock).mockReturnValue(['typescript', 'javascript']);
 			const snippets: VSCodeSnippets = {
 				'simple-log': {
@@ -57,7 +58,7 @@ describe('transfer extension snippets', () => {
 
 			await extractAllSnippets(item);
 			expect(writeSnippetFile).toBeCalledWith(
-				path.join('/user/snippets', 'web-dev.code-snippets'),
+				path.join(snippetsPath, 'web-dev.code-snippets'),
 				snippets,
 				expect.any(String)
 			);
