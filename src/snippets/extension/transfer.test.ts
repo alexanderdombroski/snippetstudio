@@ -1,4 +1,5 @@
 import { vi, describe, it, expect, type Mock, beforeEach } from 'vitest';
+import path from 'node:path';
 import { extractAllSnippets, extractAndModify } from './transfer';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
@@ -43,8 +44,9 @@ describe('transfer extension snippets', () => {
 		});
 
 		it('should extract all snippets from the extension', async () => {
+			const snippetsPath = path.join('/user', 'snippets');
 			(getFileName as Mock).mockReturnValue('web-dev');
-			(chooseLocalGlobal as Mock).mockReturnValue('/user/snippets');
+			(chooseLocalGlobal as Mock).mockReturnValue(snippetsPath);
 			(getExtensionSnippetLangs as Mock).mockReturnValue(['typescript', 'javascript']);
 			const snippets: VSCodeSnippets = {
 				'simple-log': {
@@ -56,7 +58,7 @@ describe('transfer extension snippets', () => {
 
 			await extractAllSnippets(item);
 			expect(writeSnippetFile).toBeCalledWith(
-				'/user/snippets/web-dev.code-snippets',
+				path.join(snippetsPath, 'web-dev.code-snippets'),
 				snippets,
 				expect.any(String)
 			);

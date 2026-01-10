@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, type Mock, beforeEach } from 'vitest';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import {
 	_getGlobalLangSnippetFiles,
 	findCodeSnippetsFiles,
@@ -78,7 +79,7 @@ describe('locateSnippets', () => {
 			(exists as Mock).mockResolvedValue(true);
 			(fs.readdir as Mock).mockResolvedValue(['test.code-snippets', 'another.txt', 'data.json']);
 			const files = await findCodeSnippetsFiles('/path/to/folder');
-			expect(files).toEqual(['/path/to/folder/test.code-snippets']);
+			expect(files).toEqual([path.join('/path/to/folder', 'test.code-snippets')]);
 		});
 	});
 
@@ -104,19 +105,22 @@ describe('locateSnippets', () => {
 
 			const [locals, globals, profileSnippetsMap] = await locateAllSnippetFiles();
 
-			expect(locals).toEqual(['/workspace/.vscode/local.code-snippets']);
-			const tsSnippets = '/profiles/active/snippets/active.code-snippets';
+			expect(locals).toEqual([path.join('/workspace', '.vscode', 'local.code-snippets')]);
+			const tsSnippets = path.join('/profiles', 'active', 'snippets', 'active.code-snippets');
 			expect(globals).toEqual(
-				expect.arrayContaining([tsSnippets, '/profiles/active/snippets/typescript.json'])
+				expect.arrayContaining([
+					tsSnippets,
+					path.join('/profiles', 'active', 'snippets', 'typescript.json'),
+				])
 			);
 			expect(profileSnippetsMap).toEqual({
 				active: expect.arrayContaining([
-					'/profiles/active/snippets/active.code-snippets',
+					path.join('/profiles', 'active', 'snippets', 'active.code-snippets'),
 					tsSnippets,
 				]),
 				other: expect.arrayContaining([
-					'/profiles/other/snippets/other.code-snippets',
-					'/profiles/other/snippets/typescript.json',
+					path.join('/profiles', 'other', 'snippets', 'other.code-snippets'),
+					path.join('/profiles', 'other', 'snippets', 'typescript.json'),
 				]),
 			});
 		});

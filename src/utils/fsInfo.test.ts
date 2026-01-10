@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
@@ -31,7 +31,7 @@ describe('fsInfo', () => {
 		});
 
 		it('should return the path of the first workspace folder', () => {
-			const folderPath = '/test/workspace';
+			const folderPath = path.join('/test', 'workspace');
 			const mockFolders: WorkspaceFolder[] = [
 				{ uri: Uri.file(folderPath), name: 'mock-folder', index: 0 },
 			];
@@ -48,7 +48,7 @@ describe('fsInfo', () => {
 		});
 
 		it('should return the URI of the active text editor document', () => {
-			const uri = Uri.file('/test/file.txt'); // proper Uri
+			const uri = Uri.file(path.join('/test', 'file.txt')); // proper Uri
 			const mockDocument: Partial<TextDocument> = {
 				uri,
 			};
@@ -64,24 +64,22 @@ describe('fsInfo', () => {
 	});
 
 	describe('shortenFullPath', () => {
-		it('should shorten the path if it is inside the home directory', () => {
-			const homeDir = '/Users/testuser';
-			const fullPath = '/Users/testuser/some/path/file.txt';
+		const homeDir = path.join('/Users', 'testuser');
+		beforeEach(() => {
 			vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
+		});
+		it('should shorten the path if it is inside the home directory', () => {
+			const fullPath = path.join(homeDir, 'some', 'path', 'file.txt');
 			expect(shortenFullPath(fullPath)).toBe('~/some/path/file.txt');
 		});
 
 		it('should not shorten the path if it is not inside the home directory', () => {
-			const homeDir = '/Users/testuser';
-			const fullPath = '/another/path/file.txt';
-			vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
+			const fullPath = path.join('/another', 'path', 'file.txt');
 			expect(shortenFullPath(fullPath)).toBe(fullPath);
 		});
 
 		it('should handle root path correctly', () => {
-			const homeDir = '/Users/testuser';
 			const fullPath = '/';
-			vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
 			expect(shortenFullPath(fullPath)).toBe('/');
 		});
 	});

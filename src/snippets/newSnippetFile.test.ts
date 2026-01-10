@@ -15,6 +15,7 @@ import {
 	createQuickPick,
 } from '../vscode';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
@@ -69,7 +70,10 @@ describe('newSnippetFile', () => {
 			(exists as Mock).mockResolvedValue(false);
 			(isSnippetLinked as Mock).mockResolvedValue(false);
 			await createLocalSnippetsFile();
-			expect(fs.writeFile).toHaveBeenCalledWith('/workspace/.vscode/test.code-snippets', '{}');
+			expect(fs.writeFile).toHaveBeenCalledWith(
+				path.join('/workspace', '.vscode', 'test.code-snippets'),
+				'{}'
+			);
 		});
 	});
 
@@ -80,7 +84,7 @@ describe('newSnippetFile', () => {
 			(exists as Mock).mockResolvedValue(false);
 			(isSnippetLinked as Mock).mockResolvedValue(false);
 			await createGlobalLangFile();
-			expect(fs.writeFile).toHaveBeenCalledWith('/global/typescript.json', '{}');
+			expect(fs.writeFile).toHaveBeenCalledWith(path.join('/global', 'typescript.json'), '{}');
 		});
 	});
 
@@ -91,7 +95,7 @@ describe('newSnippetFile', () => {
 			(exists as Mock).mockResolvedValue(false);
 			(isSnippetLinked as Mock).mockResolvedValue(false);
 			await createGlobalSnippetsFile();
-			expect(fs.writeFile).toHaveBeenCalledWith('/global/test.code-snippets', '{}');
+			expect(fs.writeFile).toHaveBeenCalledWith(path.join('/global', 'test.code-snippets'), '{}');
 		});
 	});
 
