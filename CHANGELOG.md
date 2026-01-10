@@ -26,6 +26,17 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [3.4.0] - UNRELEASED
+
+### Added
+
+- TODO - Add built in extension snippet dropdowns
+- TODO - Add [new snippet transform preset regex patterns](https://code.visualstudio.com/updates/v1_108#_code-editing)
+
+### Fixed
+
+- TODO - Kiro IDE profile issues
+
 ## [3.3.0] - 2026-01-03
 
 ### Added
