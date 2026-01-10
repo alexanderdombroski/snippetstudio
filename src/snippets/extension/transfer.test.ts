@@ -1,4 +1,5 @@
 import { vi, describe, it, expect, type Mock, beforeEach } from 'vitest';
+import path from 'node:path';
 import { extractAllSnippets, extractAndModify } from './transfer';
 import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
@@ -57,7 +58,7 @@ describe('transfer extension snippets', () => {
 
 			await extractAllSnippets(treePathItem);
 			expect(writeSnippetFile).toBeCalledWith(
-				'/user/snippets/web-dev.code-snippets',
+				path.join('/user/snippets', 'web-dev.code-snippets'),
 				snippets,
 				expect.any(String)
 			);

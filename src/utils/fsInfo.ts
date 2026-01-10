@@ -31,7 +31,7 @@ function shortenFullPath(fullPath: string): string {
 	const resolvedPath = path.resolve(fullPath);
 
 	if (resolvedPath.startsWith(resolvedhomeDir)) {
-		return `~${resolvedPath.slice(resolvedhomeDir.length)}`;
+		return `~${resolvedPath.slice(resolvedhomeDir.length)}`.replace(/\\/g, '/');
 	}
 
 	return fullPath;

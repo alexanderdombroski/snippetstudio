@@ -158,14 +158,14 @@ describe('jsoncFilesIO', () => {
 
 			await writeSnippetFile('/orig/test.json', snippet);
 
-			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname('/link1/test.json'), {
+			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname(path.join('/link1', 'test.json')), {
 				recursive: true,
 			});
-			expect(fs.writeFile).toHaveBeenCalledWith('/link1/test.json', snippetString);
-			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname('/link2/test.json'), {
+			expect(fs.writeFile).toHaveBeenCalledWith(path.join('/link1', 'test.json'), snippetString);
+			expect(fs.mkdir).toHaveBeenCalledWith(path.dirname(path.join('/link2', 'test.json')), {
 				recursive: true,
 			});
-			expect(fs.writeFile).toHaveBeenCalledWith('/link2/test.json', snippetString);
+			expect(fs.writeFile).toHaveBeenCalledWith(path.join('/link2', 'test.json'), snippetString);
 			expect(fs.writeFile).toHaveBeenCalledTimes(2);
 		});
 

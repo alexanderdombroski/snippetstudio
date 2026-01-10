@@ -222,7 +222,7 @@ describe('user', () => {
 				}),
 			} as any);
 			const result = await getSavePath();
-			expect(result).toBe('/preconfigured/path/test-file.code-snippets');
+			expect(result).toBe(path.join('/preconfigured/path', 'test-file.code-snippets'));
 		});
 
 		it('should show error if preconfigured path is not set', async () => {
