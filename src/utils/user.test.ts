@@ -194,12 +194,12 @@ describe('user', () => {
 						return 'preconfigured';
 					}
 					if (key === 'export.preconfiguredExportPath') {
-						return '/preconfigured/path';
+						return path.join('/preconfigured', 'path');
 					}
 				}),
 			} as any);
 			const result = await getSavePath();
-			expect(result).toBe(path.join('/preconfigured/path', 'test-file.code-snippets'));
+			expect(result).toBe(path.join('/preconfigured', 'path', 'test-file.code-snippets'));
 		});
 
 		it('should show error if preconfigured path is not set', async () => {
