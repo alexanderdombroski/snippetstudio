@@ -4,7 +4,8 @@
 import { createRequire } from 'node:module';
 // @ts-expect-error ts(1470) - File will remain ESM
 const require = createRequire(import.meta.url);
-const vscode: typeof import('vscode') = require('vscode'); // Cursor requires a cjs require of vscode API
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+const vscode: typeof import('vscode') = require('vscode'); // Cursor requires a cjs require of vscode API because this file is bundled as ESM
 
 export const {
 	SnippetString,

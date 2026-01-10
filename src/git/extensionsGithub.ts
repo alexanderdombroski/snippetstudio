@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext, QuickPickItem } from 'vscode';
+import type { QuickPickItem } from 'vscode';
 import vscode, { showQuickPick, showInformationMessage } from '../vscode';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getOctokitClient } from './octokit';
@@ -14,10 +14,10 @@ import { flattenScopedExtensionSnippets } from '../snippets/extension/locate';
 import { exists } from '../utils/fsInfo';
 
 /** scans the vscode repository for all extensions with snippets and allows user to choose some to save */
-export async function importBuiltinExtension(context: ExtensionContext) {
-	const client = await getOctokitClient(context);
+export async function importBuiltinExtension() {
+	const client = await getOctokitClient();
 
-	const snippetDirs = await __getDirsWithSnippets(client);
+	const snippetDirs = await _getDirsWithSnippets(client);
 	if (snippetDirs === undefined) {
 		return;
 	}
@@ -41,8 +41,8 @@ export async function importBuiltinExtension(context: ExtensionContext) {
 
 	for (const selection of selections) {
 		const [snippetFiles, pkgContent] = await Promise.all([
-			__folderRequest(client, `extensions/${selection.label}/snippets`),
-			__fileTextRequest(client, `extensions/${selection.label}/package.json`),
+			_folderRequest(client, `extensions/${selection.label}/snippets`),
+			_fileTextRequest(client, `extensions/${selection.label}/package.json`),
 		]);
 
 		if (snippetFiles === undefined) {
@@ -59,7 +59,7 @@ export async function importBuiltinExtension(context: ExtensionContext) {
 
 		const snippetContents = await Promise.all(
 			verifiedSnippetFiles.map((file) =>
-				__fileTextRequest(client, `extensions/${selection.label}/snippets/${file.name}`)
+				_fileTextRequest(client, `extensions/${selection.label}/snippets/${file.name}`)
 			)
 		);
 
@@ -89,8 +89,8 @@ export async function importBuiltinExtension(context: ExtensionContext) {
 }
 
 /** finds all extension folders with snippets within the vscode repo */
-export async function __getDirsWithSnippets(client: Octokit) {
-	const res = await __folderRequest(client, 'extensions');
+export async function _getDirsWithSnippets(client: Octokit) {
+	const res = await _folderRequest(client, 'extensions');
 	const folders = res?.filter((item) => item.type === 'dir') ?? [];
 
 	const extFolders = Array(folders.length);
@@ -115,7 +115,7 @@ export async function __getDirsWithSnippets(client: Octokit) {
 						increment: (1 / extFolders.length) * 100,
 					});
 
-					const subItems = await __folderRequest(client, `extensions/${folder.name}`);
+					const subItems = await _folderRequest(client, `extensions/${folder.name}`);
 
 					const hasSnippets = subItems?.some(
 						(item) => item.type === 'dir' && item.name === 'snippets'
@@ -143,7 +143,7 @@ export async function __getDirsWithSnippets(client: Octokit) {
 }
 
 /** gets folder contents within vscode repo */
-export async function __folderRequest(client: Octokit, fp: string) {
+export async function _folderRequest(client: Octokit, fp: string) {
 	const { data } = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',
@@ -155,7 +155,7 @@ export async function __folderRequest(client: Octokit, fp: string) {
 }
 
 /** gets text content within vscode repo */
-export async function __fileTextRequest(client: Octokit, path: string): Promise<string> {
+export async function _fileTextRequest(client: Octokit, path: string): Promise<string> {
 	const { data }: any = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
 		owner: 'microsoft',
 		repo: 'vscode',

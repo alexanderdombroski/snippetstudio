@@ -11,7 +11,7 @@ import type {
 import { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
-import SnippetDataManager from './SnippetDataManager';
+import type SnippetDataManager from './SnippetDataManager';
 import type { SnippetData } from '../../types';
 
 /** */
@@ -55,7 +55,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 
 	// eslint-disable-next-line jsdoc/require-jsdoc, no-unused-vars
 	private async _getHtmlForWebview(webview: Webview) {
-		const htmlPath = Uri.joinPath(this._context.extensionUri, 'public', 'snippetData.html');
+		const htmlPath = Uri.joinPath(this._context.extensionUri, 'dist', 'snippetData.html');
 
 		try {
 			return await fs.readFile(htmlPath.fsPath, 'utf8');

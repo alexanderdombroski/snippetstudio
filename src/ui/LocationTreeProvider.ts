@@ -1,81 +1,77 @@
-import type { TreeItem, TreeDataProvider, Event, EventEmitter } from 'vscode';
-import vscode, { getConfiguration } from '../vscode';
-import { locateAllSnippetFiles } from '../snippets/locateSnippets';
+import type {
+	TreeItem,
+	TreeDataProvider,
+	Event,
+	EventEmitter,
+	TreeItemCollapsibleState,
+} from 'vscode';
+import vscode, { Collapsed, None } from '../vscode';
 import {
-	snippetLocationDropdownTemplates,
-	type SnippetCategoryTreeItem,
-	snippetLocationTemplate,
-	extensionTreeItems,
+	AllExtensionDropdown,
+	AllProfilesDropdown,
+	ExtensionDropdown,
+	GlobalSnippetsDropdown,
+	LocalSnippetsDropdown,
+	ProfileDropdown,
+	SnippetFileTreeItem,
+	SnippetTreeItem,
 } from './templates';
-import { getLinkedSnippets } from '../snippets/links/config';
 import path from 'node:path';
-import { getActiveProfile } from '../utils/profile';
+import { getActiveProfile, getActiveProfileSnippetsDir, getProfiles } from '../utils/profile';
+import { getCacheManager } from '../snippets/SnippetCacheManager';
+import { getWorkspaceFolder } from '../utils/fsInfo';
+import type { VSCodeSnippets } from '../types';
+import { getSnippetViewProvider } from './SnippetViewProvider';
+
+let provider: LocationTreeProvider;
+
+/** Returns the singleton cache manager */
+export function getLocationTreeProvider(): LocationTreeProvider {
+	provider ??= new LocationTreeProvider();
+	return provider;
+}
 
 /** Tree View to display all snippet files and locations */
 export default class LocationTreeProvider implements TreeDataProvider<TreeItem> {
-	private profileDropdowns: SnippetCategoryTreeItem[] = [];
-	private localTreeItems: TreeItem[] = [];
-	private globalTreeItems: TreeItem[] = [];
-	private extensionTreeItems: [TreeItem, TreeItem[]][] = [];
-	private profileDropdownItems: { [location: string]: TreeItem[] } = {};
 	private debounceTimer: NodeJS.Timeout | undefined;
 
 	// ---------- Constructor ---------- //
 
 	constructor() {
-		this.__refresh();
+		getCacheManager()
+			.updateActiveFiles()
+			.then(() => this._onDidChangeTreeData.fire());
 	}
 
 	// ---------- Refresh Methods ---------- //
 
 	/** finds all snippet files and redisplays them */
-	async __refresh() {
-		const [locals, globals, profiles] = await locateAllSnippetFiles();
-		this.localTreeItems = locals.map((p) => snippetLocationTemplate(p));
-		const links = await getLinkedSnippets();
-		const activeProfileLocation = (await getActiveProfile()).location;
-		const snippetIsLinked = (fp: string, location: string) => {
-			const base = path.basename(fp);
-			return base in links && links[base].includes(location);
-		};
-		this.globalTreeItems = globals.map((fp) =>
-			snippetLocationTemplate(
-				fp,
-				snippetIsLinked(fp, activeProfileLocation)
-					? 'snippet-filepath global linked'
-					: 'snippet-filepath global'
-			)
-		);
-		this.profileDropdownItems = Object.fromEntries(
-			Object.entries(profiles).map(([location, paths]) => {
-				return [
-					location,
-					paths.map((fp) =>
-						snippetLocationTemplate(
-							fp,
-							snippetIsLinked(fp, location)
-								? 'snippet-filepath profile linked'
-								: 'snippet-filepath profile'
-						)
-					),
-				];
-			})
-		);
-		if (getConfiguration('snippetstudio').get<boolean>('view.showExtensions')) {
-			const { findAllExtensionSnippetsFiles } = await import('../snippets/extension/locate.js');
-			const extensionSnippetFilesMap = await findAllExtensionSnippetsFiles();
-			this.extensionTreeItems = extensionTreeItems(extensionSnippetFilesMap);
+	async _refresh(hard?: boolean) {
+		const cache = getCacheManager();
+
+		const refreshTasks = [cache.updateActiveFiles()];
+
+		if (hard) {
+			refreshTasks.push(
+				cache.updateExtensionFiles(),
+				cache.updateProfileFiles(),
+				cache.hardRefresh()
+			);
 		}
+
+		await Promise.all(refreshTasks);
+
+		getSnippetViewProvider().debounceRefresh();
 		this._onDidChangeTreeData.fire();
 	}
 
 	/** ensures a refresh doesn't happen too often */
-	public debounceRefresh() {
+	public debounceRefresh(hard?: boolean) {
 		if (this.debounceTimer) {
 			clearTimeout(this.debounceTimer); // Clear previous timer
 		}
 		this.debounceTimer = setTimeout(async () => {
-			await this.__refresh(); // Call __refresh after delay
+			await this._refresh(hard); // Call _refresh after delay
 			this.debounceTimer = undefined; // Clear timer
 		}, 400); // Adjust delay as needed (e.g., 200ms)
 	}
@@ -89,44 +85,124 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 
 	/** recursively returns snippet files in groups layered as shown in the tree view */
 	async getChildren(element?: TreeItem | undefined): Promise<TreeItem[] | null | undefined> {
-		if (this.localTreeItems.length === 0 && this.globalTreeItems.length === 0) {
+		const cache = getCacheManager();
+		if (cache.snippets.size === 0) {
 			return [];
 		}
 
-		if (element) {
-			if (element.contextValue?.includes('global-dropdown')) {
-				return this.globalTreeItems;
-			} else if (element.contextValue?.includes('local-dropdown')) {
-				return this.localTreeItems;
-			} else if (element.contextValue === 'profile-dropdown') {
-				return this.profileDropdowns;
-			} else if (element.label === 'Extension Snippets') {
-				return this.extensionTreeItems.map((item) => item[0]);
-			} else if (element.contextValue === 'extension-dropdown') {
-				return (
-					this.extensionTreeItems.find(([fp]) => fp.description === element.description)?.[1] ?? []
+		// Top Level
+		if (!element) {
+			const topLevelDropdowns: TreeItem[] = [
+				new GlobalSnippetsDropdown(
+					await getActiveProfileSnippetsDir(),
+					Boolean(cache.globals.length)
+				),
+			];
+			const workspaceDir = getWorkspaceFolder();
+			if (workspaceDir) {
+				topLevelDropdowns.push(
+					new LocalSnippetsDropdown(
+						path.join(workspaceDir, '.vscode'),
+						Boolean(cache.locals.length)
+					)
 				);
-			} else if (element.contextValue?.includes('category-dropdown')) {
-				return this.profileDropdownItems[element.description as string];
 			}
-			return [];
+			topLevelDropdowns.push(new AllExtensionDropdown());
+			if ((await getProfiles()).length > 1) {
+				topLevelDropdowns.push(new AllProfilesDropdown());
+			}
+
+			return topLevelDropdowns;
 		}
 
-		const [topLevelDropdowns, profileDropdowns] = await snippetLocationDropdownTemplates(
-			this.globalTreeItems.length === 0,
-			this.localTreeItems.length === 0,
-			this.extensionTreeItems.length > 0,
-			Object.fromEntries(
-				Object.entries(this.profileDropdownItems).map(([location, items]) => [
-					location,
-					items.length === 0,
-				])
-			)
-		);
-		this.profileDropdowns = profileDropdowns;
+		// Dropdowns
+		if (element.contextValue?.includes('global-dropdown')) {
+			const profile = await getActiveProfile();
+			return cache.globals.map((file) => {
+				const base = path.basename(file);
+				let contextValue = 'snippet-filepath global';
+				if (base.endsWith('.code-snippets')) contextValue += ' mixed';
+				if (this.isSnippetLinked(base, profile.location)) contextValue += ' linked';
+				const snippets = cache.snippets.get(file);
+				return new SnippetFileTreeItem(this.getCollapsibleState(snippets), file, contextValue);
+			});
+		}
 
-		return topLevelDropdowns;
+		if (element.contextValue?.includes('local-dropdown')) {
+			return cache.locals.map((file) => {
+				const snippets = cache.snippets.get(file);
+				return new SnippetFileTreeItem(
+					this.getCollapsibleState(snippets),
+					file,
+					'snippet-filepath mixed'
+				);
+			});
+		}
+
+		if (element.label === 'Extension Snippets') {
+			await cache.updateExtensionFiles();
+			return Object.entries(cache.extension).map(
+				([extension, { name }]) => new ExtensionDropdown(extension, name)
+			);
+		}
+
+		if (element.contextValue === 'extension-dropdown') {
+			const files = cache.extension[element.description as string].files;
+			const paths = Array.from(new Set(files.map(({ path }) => path)));
+			return paths.map((file) => {
+				const snippets = cache.snippets.get(file);
+				return new SnippetFileTreeItem(
+					this.getCollapsibleState(snippets),
+					file,
+					'extension-snippet-filepath'
+				);
+			});
+		}
+
+		if (element.label === 'Profiles Snippets') {
+			const profiles = await getProfiles();
+			await cache.updateProfileFiles();
+			return profiles.map(
+				(profile) => new ProfileDropdown(profile, Boolean(cache.profile[profile.location].length))
+			);
+		}
+
+		if (element.contextValue?.includes('profile-dropdown')) {
+			const location = element.description as string;
+			const files = cache.profile[location];
+			return files.map((file) => {
+				const base = path.basename(file);
+				let contextValue = 'snippet-filepath profile';
+				if (base.endsWith('.code-snippets')) contextValue += ' mixed';
+				if (this.isSnippetLinked(base, location)) contextValue += ' linked';
+				const snippets = cache.snippets.get(file);
+				return new SnippetFileTreeItem(this.getCollapsibleState(snippets), file, contextValue);
+			});
+		}
+
+		// Snippets
+		if (element.contextValue?.includes('snippet-filepath')) {
+			const filepath = (element as SnippetFileTreeItem).filepath;
+			const isExtensionSnippet = element.contextValue === 'extension-snippet-filepath';
+			const contextValue = isExtensionSnippet ? 'extension-snippet' : 'snippet';
+			const snippets = await cache.getSnippets(filepath, { isExtensionSnippet, showError: true });
+			if (snippets) {
+				return Object.entries(snippets).map(
+					([title, snippet]) => new SnippetTreeItem(title, snippet, filepath, contextValue)
+				);
+			}
+		}
+
+		return [];
 	}
+
+	private getCollapsibleState = (
+		snippets: VSCodeSnippets | null | undefined
+	): TreeItemCollapsibleState =>
+		snippets && Object.keys(snippets).length === 0 ? None : Collapsed;
+
+	private isSnippetLinked = (basepath: string, location: string) =>
+		basepath in getCacheManager().links && getCacheManager().links[basepath].includes(location);
 
 	// ---------- Event Emitters ---------- //
 	private _onDidChangeTreeData: EventEmitter<TreeItem | undefined | null | void> =

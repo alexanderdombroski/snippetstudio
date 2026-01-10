@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, type Mock, type Mocked } from 'vitest';
-import initSnippetEditorCommands, { __saveSnippet } from './snippetEditor';
+import initSnippetEditorCommands, { _saveSnippet } from './snippetEditor';
 import vscode, {
 	executeCommand,
 	onDidChangeActiveTextEditor,
@@ -46,7 +46,7 @@ describe('saveSnippet', () => {
 			document: { uri: { scheme: 'file' } as Uri } as TextDocument,
 		} as TextEditor);
 
-		await __saveSnippet(mockEditor);
+		await _saveSnippet(mockEditor);
 		expect(mockEditor.getSnippetData).not.toHaveBeenCalled();
 	});
 
@@ -57,7 +57,7 @@ describe('saveSnippet', () => {
 
 		(mockEditor.getSnippetData as Mock).mockReturnValue(undefined);
 
-		await __saveSnippet(mockEditor);
+		await _saveSnippet(mockEditor);
 		expect(showErrorMessage).toHaveBeenCalled();
 	});
 
@@ -77,7 +77,7 @@ describe('saveSnippet', () => {
 			description: 'example snippet',
 		});
 
-		await __saveSnippet(mockEditor);
+		await _saveSnippet(mockEditor);
 		expect(writeSnippet).toHaveBeenCalled();
 		expect(executeCommand).toHaveBeenCalledTimes(3);
 	});

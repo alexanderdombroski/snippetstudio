@@ -1,18 +1,14 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
-import SnippetViewProvider from './SnippetViewProvider';
-import loadSnippets from '../snippets/loadSnippets';
-import {
-	selectedLanguageTemplate,
-	unloadedDropdownTemplate,
-	extensionCategoryDropdown,
-} from './templates';
+import SnippetViewProvider, { getSnippetViewProvider } from './SnippetViewProvider';
+import {} from './templates';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfile, getActiveProfileSnippetsDir } from '../utils/profile';
 import { getWorkspaceFolder, shortenFullPath, isParentDir } from '../utils/fsInfo';
-import { findAllExtensionSnipppetsByLang } from '../snippets/extension/locate';
 import { getLinkedSnippets } from '../snippets/links/config';
 import { getUserPath } from '../utils/context';
-import { TreeItem, onDidChangeActiveTextEditor } from '../vscode';
+import { TreeItem, onDidChangeActiveTextEditor, getConfiguration } from '../vscode';
+import { getCacheManager } from '../snippets/SnippetCacheManager';
+import type { TreeItem as TreeItemType } from 'vscode';
 
 vi.mock('../snippets/loadSnippets');
 vi.mock('./templates');
@@ -22,13 +18,6 @@ vi.mock('../utils/fsInfo');
 vi.mock('../snippets/extension/locate');
 vi.mock('../snippets/links/config');
 vi.mock('../utils/context');
-
-function createTreeItem(label: string, contextValue?: string, description?: string) {
-	const item = new TreeItem(label);
-	item.contextValue = contextValue;
-	item.description = description;
-	return item;
-}
 
 describe('ui/SnippetViewProvider', () => {
 	let provider: SnippetViewProvider;
@@ -48,32 +37,6 @@ describe('ui/SnippetViewProvider', () => {
 		(isParentDir as Mock).mockReturnValue(false);
 		(getUserPath as Mock).mockReturnValue('/user/path');
 		(getLinkedSnippets as Mock).mockResolvedValue({});
-		(loadSnippets as Mock).mockResolvedValue([
-			[
-				createTreeItem(
-					'active.code-snippets',
-					'snippet-filepath',
-					'/active/profile/dir/active.code-snippets'
-				),
-				[createTreeItem('active-snippet-1', 'snippet')],
-			],
-			[
-				createTreeItem(
-					'disabled.code-snippets',
-					'snippet-filepath',
-					'/some/other/path/disabled.code-snippets'
-				),
-				[createTreeItem('disabled-snippet-1', 'snippet')],
-			],
-		]);
-		(findAllExtensionSnipppetsByLang as Mock).mockResolvedValue({});
-		(selectedLanguageTemplate as Mock).mockReturnValue(
-			createTreeItem('typescript', 'active-snippets')
-		);
-		(unloadedDropdownTemplate as Mock).mockReturnValue(
-			createTreeItem('Disabled Snippets', 'disabled-dropdown')
-		);
-		(extensionCategoryDropdown as Mock).mockReturnValue(createTreeItem('Extension Snippets'));
 
 		provider = new SnippetViewProvider();
 		// Wait for async constructor parts
@@ -84,6 +47,12 @@ describe('ui/SnippetViewProvider', () => {
 		expect(provider).toBeDefined();
 	});
 
+	it('should return a singleton instance', () => {
+		const instance1 = getSnippetViewProvider();
+		const instance2 = getSnippetViewProvider();
+		expect(instance1).toBe(instance2);
+	});
+
 	it('getTreeItem should return the element itself', () => {
 		const treeItem = new TreeItem('test');
 		expect(provider.getTreeItem(treeItem)).toBe(treeItem);
@@ -91,41 +60,45 @@ describe('ui/SnippetViewProvider', () => {
 
 	describe('getChildren', () => {
 		it('should return root items when element is undefined', async () => {
-			const children = await provider.getChildren(undefined);
-			expect(children).toHaveLength(2); // selected language and disabled dropdown
-			expect(selectedLanguageTemplate).toHaveBeenCalled();
-			expect(unloadedDropdownTemplate).toHaveBeenCalled();
+			const children = await provider.getChildren();
+			expect(children).toHaveLength(1); // selected language only
 		});
 
-		it('should return active dropdowns for "active-snippets"', async () => {
-			const element = createTreeItem('typescript', 'active-snippets');
-			const children = await provider.getChildren(element);
-			expect(children).toHaveLength(1);
-			if (children) {
-				expect(children[0].label).toBe('active.code-snippets');
-			}
+		it('should return snippet file entries for active-snippets and respect config filtering', async () => {
+			const cache = getCacheManager();
+			vi.spyOn(cache, 'getLangSnippets').mockResolvedValue([
+				[
+					'/path/a.code-snippets',
+					{
+						A: { body: 'a', scope: 'typescript', prefix: 'pre' },
+						B: { body: 'b', scope: 'other', prefix: 'pre' },
+					},
+				],
+				['/path/b.json', {}],
+			]);
+			cache.links = { 'a.code-snippets': ['profile1'] };
+
+			(getConfiguration as Mock).mockReturnValue({ get: () => false });
+			const items = await provider.getChildren({ contextValue: 'active-snippets' });
+			expect(items).toHaveLength(2);
+
+			(getConfiguration as Mock).mockReturnValue({ get: () => true });
+			const itemsAll = await provider.getChildren({ contextValue: 'active-snippets' });
+			expect(itemsAll).toHaveLength(2);
 		});
 
-		it('should return disabled dropdowns for "disabled-dropdown"', async () => {
-			const element = createTreeItem('Disabled Snippets', 'disabled-dropdown');
-			const children = await provider.getChildren(element);
-			expect(children).toHaveLength(1);
-			if (children) {
-				expect(children[0].label).toBe('disabled.code-snippets');
-			}
-		});
-
-		it('should return snippets for a file path', async () => {
-			const element = createTreeItem(
-				'active.code-snippets',
-				'snippet-filepath',
-				'/active/profile/dir/active.code-snippets'
-			);
-			const children = await provider.getChildren(element);
-			expect(children).toHaveLength(1);
-			if (children) {
-				expect(children[0].label).toBe('active-snippet-1');
-			}
+		it('should return snippet children for a snippet-filepath (filters by language for code-snippets)', async () => {
+			const cache = getCacheManager();
+			const filepath = '/local/path/local.code-snippets';
+			cache.snippets.set(filepath, {
+				One: { body: '1', scope: 'typescript', prefix: 'pre' },
+				Two: { body: '2', scope: 'javascript', prefix: 'pre' },
+			});
+			const result = await provider.getChildren({
+				contextValue: 'snippet-filepath',
+				filepath,
+			} as TreeItemType);
+			expect(result).toHaveLength(1);
 		});
 	});
 

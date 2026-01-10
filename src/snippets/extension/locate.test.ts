@@ -9,7 +9,7 @@ import {
 	findAllExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
 	getExtensionSnippetLangs,
-	__getExtensionsDirPath,
+	_getExtensionsDirPath,
 } from './locate';
 import vscode from '../../vscode';
 
@@ -26,8 +26,17 @@ function configPath(appConfigDir: TemplateStringsArray) {
 describe('locate', () => {
 	describe('getExtensionSnippetLangs', () => {
 		it('should return the languages for a given snippet path', async () => {
-			const snippetPath = path.join('C:/home/user/.vscode/extensions', 'publisher.ext-name-0.0.1', 'snippets', 'javascript.json');
-			const pkgPath = path.join('C:/home/user/.vscode/extensions', 'publisher.ext-name-0.0.1', 'package.json');
+			const snippetPath = path.join(
+				'C:/home/user/.vscode/extensions',
+				'publisher.ext-name-0.0.1',
+				'snippets',
+				'javascript.json'
+			);
+			const pkgPath = path.join(
+				'C:/home/user/.vscode/extensions',
+				'publisher.ext-name-0.0.1',
+				'package.json'
+			);
 			const pkg = {
 				contributes: {
 					snippets: [
@@ -112,7 +121,9 @@ describe('locate', () => {
 						},
 					};
 				}
-				if (p === path.join('C:/home/user/.vscode/extensions', 'ext3-no-snippets', 'package.json')) {
+				if (
+					p === path.join('C:/home/user/.vscode/extensions', 'ext3-no-snippets', 'package.json')
+				) {
 					return {
 						name: 'Extension 3',
 					};
@@ -150,23 +161,31 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
 		});
 		it('should find the vscode extensions folder', () => {
-			expect(__getExtensionsDirPath()).toBe(path.join('C:/home/user', '.vscode', 'extensions'));
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
-		it('should should update the path for the nightly build', () => {
+		it('should update the path for the nightly build', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
-			expect(__getExtensionsDirPath()).toBe(path.join('C:/home/user', '.vscode-insiders', 'extensions'));
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
-		it('should should update the path for VSCodium', () => {
+		it('should update the path for VSCodium', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
-			expect(__getExtensionsDirPath()).toBe(path.join('C:/home/user', '.vscode-oss', 'extensions'));
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
 		});
-		it('should should update the path for Cursor', () => {
+		it('should update the path for Cursor', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
-			expect(__getExtensionsDirPath()).toBe(path.join('C:/home/user', '.cursor', 'extensions'));
+			expect(_getExtensionsDirPath()).toBe(configPath`.cursor`);
+		});
+		it('should update the path for Windsurf', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.windsurf`);
+		});
+		it('should update the path for Kiro', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'Kiro' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.kiro`);
 		});
 		it('should default to VS Code', () => {
-			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
-			expect(__getExtensionsDirPath()).toBe(path.join('C:/home/user', '.vscode', 'extensions'));
+			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
+			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 	});
 });

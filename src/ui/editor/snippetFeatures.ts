@@ -25,7 +25,7 @@ export default function initSnippetFeatureCommands(
 			// eslint-disable-next-line no-unused-vars
 			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
-					new SnippetString(`\\\$${__getNextFeatureNumber(editor)}$0`),
+					new SnippetString(`\\\$${_getNextFeatureNumber(editor)}$0`),
 					editor.selection
 				);
 			}
@@ -36,7 +36,7 @@ export default function initSnippetFeatureCommands(
 			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
 					new SnippetString(
-						`\\\${${__getNextFeatureNumber(editor)}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
+						`\\\${${_getNextFeatureNumber(editor)}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 					),
 					editor.selection
 				);
@@ -48,7 +48,7 @@ export default function initSnippetFeatureCommands(
 			(editor: TextEditor, edit: TextEditorEdit) => {
 				editor.insertSnippet(
 					new SnippetString(
-						`\\\${${__getNextFeatureNumber(editor)}|\${2:\${TM_SELECTED_TEXT:choice}},\${3:choice}|}$0`
+						`\\\${${_getNextFeatureNumber(editor)}|\${2:\${TM_SELECTED_TEXT:choice}},\${3:choice}|}$0`
 					),
 					editor.selection
 				);
@@ -63,7 +63,7 @@ export default function initSnippetFeatureCommands(
 				'snippetstudio.editor.insertVariable',
 				// eslint-disable-next-line no-unused-vars
 				async (editor: TextEditor, edit: TextEditorEdit) => {
-					const variable = await __showVariableQuickPick();
+					const variable = await _showVariableQuickPick();
 					if (variable !== undefined) {
 						editor.insertSnippet(new SnippetString(`\\\$${variable}`), editor.selection);
 					}
@@ -73,7 +73,7 @@ export default function initSnippetFeatureCommands(
 				'snippetstudio.editor.insertVariablePlaceholder',
 				// eslint-disable-next-line no-unused-vars
 				async (editor: TextEditor, edit: TextEditorEdit) => {
-					const variable = await __showVariableQuickPick();
+					const variable = await _showVariableQuickPick();
 					if (variable !== undefined) {
 						editor.insertSnippet(
 							new SnippetString(`\\\${${variable}:\${1:\${TM_SELECTED_TEXT:placeholder}}}$0`),
@@ -89,10 +89,7 @@ export default function initSnippetFeatureCommands(
 				'snippetstudio.editor.insertVariable',
 				// eslint-disable-next-line no-unused-vars
 				async (editor: TextEditor, edit: TextEditorEdit) => {
-					editor.insertSnippet(
-						new SnippetString(`$\${1|${__variableList()}|}$0`),
-						editor.selection
-					);
+					editor.insertSnippet(new SnippetString(`$\${1|${_variableList()}|}$0`), editor.selection);
 				}
 			),
 			registerTextEditorCommand(
@@ -101,7 +98,7 @@ export default function initSnippetFeatureCommands(
 				async (editor: TextEditor, edit: TextEditorEdit) => {
 					editor.insertSnippet(
 						new SnippetString(
-							`\\\${\${1|${__variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
+							`\\\${\${1|${_variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 						),
 						editor.selection
 					);
@@ -114,7 +111,7 @@ export default function initSnippetFeatureCommands(
 			'snippetstudio.editor.insertPlaceholderWithTranformation',
 			// eslint-disable-next-line no-unused-vars
 			async (editor: TextEditor, edit: TextEditorEdit) => {
-				const featureId = __getNextFeatureNumber(editor);
+				const featureId = _getNextFeatureNumber(editor);
 				editor.insertSnippet(
 					new SnippetString(
 						`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`
@@ -162,7 +159,7 @@ export default function initSnippetFeatureCommands(
 					);
 
 					const variable = new CompletionItem('variable', Event);
-					variable.insertText = new SnippetString(`$\${1|${__variableList()}|}$0`);
+					variable.insertText = new SnippetString(`$\${1|${_variableList()}|}$0`);
 					variable.detail = 'variable snippet insertion feature';
 					variable.documentation = new MarkdownString(
 						`With $name, you can insert the value of a variable. When a variable is unknown (that is, its name isn't defined) the name of the variable is inserted and it is transformed into a placeholder. ${source}`
@@ -170,7 +167,7 @@ export default function initSnippetFeatureCommands(
 
 					const variablePlaceholder = new CompletionItem('variablePlaceholder', Event);
 					variablePlaceholder.insertText = new SnippetString(
-						`\\\${\${1|${__variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
+						`\\\${\${1|${_variableList()}|}:\${2:\${TM_SELECTED_TEXT:placeholder}}}$0`
 					);
 					variablePlaceholder.detail = 'variablePlaceholder snippet insertion feature';
 					variablePlaceholder.documentation = new MarkdownString(
@@ -201,7 +198,7 @@ export default function initSnippetFeatureCommands(
 }
 
 /** finds the next unsused insertion feature number from the editor */
-export function __getNextFeatureNumber(editor: TextEditor): string | number {
+export function _getNextFeatureNumber(editor: TextEditor): string | number {
 	const regex = /(?<!\\)\$\{?(\d{1,2})/g;
 	const text = editor.document.getText();
 
@@ -221,12 +218,12 @@ export function __getNextFeatureNumber(editor: TextEditor): string | number {
 }
 
 /** returns a comma delimited list of snippet context variables */
-export function __variableList(): string {
+export function _variableList(): string {
 	return 'TM_SELECTED_TEXT,TM_CURRENT_LINE,TM_CURRENT_WORD,TM_LINE_INDEX,TM_LINE_NUMBER,TM_FILENAME,TM_FILENAME_BASE,TM_DIRECTORY,TM_FILEPATH,RELATIVE_FILEPATH,CLIPBOARD,WORKSPACE_NAME,WORKSPACE_FOLDER,CURSOR_INDEX,CURSOR_NUMBER,CURRENT_YEAR,CURRENT_YEAR_SHORT,CURRENT_MONTH,CURRENT_MONTH_NAME,CURRENT_MONTH_NAME_SHORT,CURRENT_DATE,CURRENT_DAY_NAME,CURRENT_DAY_NAME_SHORT,CURRENT_HOUR,CURRENT_MINUTE,CURRENT_SECOND,CURRENT_SECONDS_UNIX,CURRENT_TIMEZONE_OFFSET,RANDOM,RANDOM_HEX,UUID,BLOCK_COMMENT_START,BLOCK_COMMENT_END,LINE_COMMENT';
 }
 
 /** choose a variable from a quick pick */
-export async function __showVariableQuickPick(): Promise<string | undefined> {
+export async function _showVariableQuickPick(): Promise<string | undefined> {
 	const variables = [
 		// TextMate Variables
 		{

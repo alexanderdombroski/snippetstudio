@@ -2,7 +2,6 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext } from 'vscode';
 import {
 	showInputBox,
 	showInformationMessage,
@@ -20,8 +19,8 @@ import { getGistId } from './utils';
 import { exists } from '../utils/fsInfo';
 
 /** creates a new gist from exported snippets */
-async function createGist(context: ExtensionContext) {
-	const client = await getOctokitClient(context);
+async function createGist() {
+	const client = await getOctokitClient();
 
 	const filename = (await getFileName()) + '.code-snippets';
 	if (filename === 'undefined.code-snippets') {
@@ -60,7 +59,7 @@ async function createGist(context: ExtensionContext) {
 }
 
 /** gets a gist id and saves all snippets */
-async function importGist(context: ExtensionContext) {
+async function importGist() {
 	const gistId = await getGistId();
 	if (gistId === undefined) {
 		return;
@@ -71,18 +70,14 @@ async function importGist(context: ExtensionContext) {
 		return;
 	}
 
-	await saveCodeSnippets(context, gistId, saveDir);
+	await _saveCodeSnippets(gistId, saveDir);
 }
 
 /** saves all snippets from a gist */
-async function saveCodeSnippets(
-	context: ExtensionContext,
-	gist_id: string,
-	saveDir: string
-): Promise<void> {
-	const client = await getOctokitClient(context);
+async function _saveCodeSnippets(gist_id: string, saveDir: string): Promise<void> {
+	const client = await getOctokitClient();
 	const response = await client.request('GET /gists/{gist_id}', { gist_id });
-	if (response.data.files === undefined) {
+	if (response?.data?.files === undefined) {
 		showInformationMessage("Couldn't find any files in this gist.");
 		return;
 	}
@@ -114,4 +109,4 @@ async function saveCodeSnippets(
 	showInformationMessage(`Saved ${fileCount} files in ${saveDir}`);
 }
 
-export { createGist, importGist };
+export { createGist, importGist, _saveCodeSnippets };

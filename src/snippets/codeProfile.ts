@@ -2,7 +2,6 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { ExtensionContext } from 'vscode';
 import { showOpenDialog, showInformationMessage, showQuickPick, showInputBox } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
@@ -13,27 +12,27 @@ import { chooseLocalGlobal } from '../utils/user';
 import { exists } from '../utils/fsInfo';
 
 /** command handler to import all snippets from a .code-profile file at a chosen location */
-export async function importCodeProfileSnippets(context: ExtensionContext) {
+export async function importCodeProfileSnippets() {
 	const items = [
 		{
 			label: 'From profile template',
 			description: 'snippets typically created from a vscode profile template',
-			run: __fromBuiltIn,
+			run: _fromBuiltIn,
 		},
 		{
 			label: 'From a gist',
 			description: 'import snippets from a .code-profile file from a gist',
-			run: () => __fromGist(context),
+			run: () => _fromGist(),
 		},
 		{
 			label: 'From a file',
 			description: 'choose a .code-profile file in your file manager',
-			run: fromFile,
+			run: _fromFile,
 		},
 		{
 			label: 'From a url',
 			description: 'fetch the .code-profile file raw from a url',
-			run: __fromUrl,
+			run: _fromUrl,
 		},
 	];
 	const selection = await showQuickPick(items, {
@@ -92,7 +91,7 @@ async function saveCodeProfiles(
 // ------------------------------ Get Code Profile File Content ------------------------------
 
 /** pick a .code-profile file via file expolorer and  */
-async function fromFile(): Promise<string[] | undefined> {
+async function _fromFile(): Promise<string[] | undefined> {
 	const uris = await showOpenDialog({
 		canSelectFiles: true,
 		canSelectFolders: false,
@@ -119,7 +118,7 @@ async function fromFile(): Promise<string[] | undefined> {
 }
 
 /** attempts to reads a .code-profile from a gist */
-export async function __fromGist(context: ExtensionContext): Promise<string[] | undefined> {
+export async function _fromGist(): Promise<string[] | undefined> {
 	const { getGistId } = await import('../git/utils.js');
 	const gistId = await getGistId();
 	if (gistId === undefined) {
@@ -127,7 +126,7 @@ export async function __fromGist(context: ExtensionContext): Promise<string[] | 
 	}
 
 	const { getOctokitClient } = await import('../git/octokit.js');
-	const client = await getOctokitClient(context);
+	const client = await getOctokitClient();
 
 	const response = await client.request('GET /gists/{gist_id}', { gist_id: gistId });
 	const files = Object.values(response.data.files ?? {}).filter(
@@ -143,7 +142,7 @@ export async function __fromGist(context: ExtensionContext): Promise<string[] | 
 }
 
 /** gets the snippets from Microsoft's template code profiles */
-export async function __fromBuiltIn(): Promise<string[] | undefined> {
+export async function _fromBuiltIn(): Promise<string[] | undefined> {
 	const validProfiles = [
 		'python',
 		// 'angular',
@@ -168,7 +167,7 @@ export async function __fromBuiltIn(): Promise<string[] | undefined> {
 }
 
 /** gets file from user  code profile from a url with the raw file */
-export async function __fromUrl(): Promise<string[] | undefined> {
+export async function _fromUrl(): Promise<string[] | undefined> {
 	const url = await showInputBox({
 		title: 'Paste a URL to a raw .code-snippets file',
 	});

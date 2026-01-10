@@ -2,7 +2,7 @@
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
 	"description": "A snippets manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
-	"version": "2.6.0",
+	"version": "3.3.0",
 	"publisher": "AlexDombroski",
 	"author": {
 		"name": "Alex Dombroski",
@@ -70,7 +70,6 @@
 				}
 			]
 		},
-		
 		"views": {
 			"snippet-manager-view-container": [
 				{
@@ -93,8 +92,9 @@
 					"icon": "$(database)"
 				},
 				{
-					"id": "shellSnippets",
+					"id": "shell-snippets",
 					"name": "Shell Snippets",
+					"type": "tree",
 					"icon": "$(terminal)"
 				}
 			]
@@ -102,15 +102,15 @@
 		"viewsWelcome": [
 			{
 				"view": "snippet-manager-view",
-				"contents": "Snippets of the active language will appear here!"
+				"contents": "Snippets of the active language will appear here!\n[Choose a language](command:snippetstudio.snippet.addGlobal)"
 			},
 			{
 				"view": "location-manager",
-				"contents": "This is where snippet files of ALL languages being loaded in will appear!"
+				"contents": "This is where snippet files of ALL languages being loaded in will appear!\n[Create a snippet file](command:snippetstudio.file.createGlobalSnippets)"
 			},
 			{
-				"view": "shellSnippets",
-				"contents": "Your Shell Snippets will appear here!"
+				"view": "shell-snippets",
+				"contents": "Save commonly used terminal commands. Your shell snippets will appear here!\n[Create a shell snippet](command:snippetstudio.shell.create)"
 			}
 		],
 		"commands": [
@@ -191,10 +191,15 @@
 				"category": "snippetstudio"
 			},
 			{
-				"command": "snippetstudio.refreshLocations",
-				"title": "Refresh Locations",
+				"command": "snippetstudio.shell.refresh",
+				"title": "Refresh Shell Snippets",
 				"icon": "$(refresh)",
 				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.rename",
+				"title": "Rename Snippets File",
+				"when": false
 			},
 			{
 				"command": "snippetstudio.file.createGlobalLang",
@@ -267,25 +272,25 @@
 				"shortTitle": "Insert Placeholder Transformation"
 			},
 			{
-				"command": "snippetstudio.file.createSnippetAt",
+				"command": "snippetstudio.snippet.createAt",
 				"title": "New Snippet at the given file",
 				"icon": "$(plus)",
 				"when": false
 			},
 			{
-				"command": "snippetstudio.file.link",
+				"command": "snippetstudio.profile.link",
 				"title": "Choose profiles to use file",
 				"when": false
 			},
 			{
-				"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+				"command": "snippetstudio.snippet.fromSelection",
 				"title": "Create language-specific Snippet",
 				"shortTitle": "Create Language Snippet",
 				"category": "snippetstudio",
 				"when": false
 			},
 			{
-				"command": "snippetstudio.snippet.export",
+				"command": "snippetstudio.file.export",
 				"title": "Export Snippets to Code Snippets File",
 				"shortTitle": "Export Snippets",
 				"category": "snippetstudio"
@@ -331,6 +336,30 @@
 				"command": "snippetstudio.profile.import",
 				"title": "Copy Snippets from .code-profile",
 				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.shell.create",
+				"title": "Create Shell Snippet",
+				"icon": "$(plus)"
+			},
+			{
+				"command": "snippetstudio.shell.delete",
+				"title": "Delete Shell Snippet",
+				"icon": "$(trash)"
+			},
+			{
+				"command": "snippetstudio.shell.edit",
+				"title": "Edit Shell Snippet",
+				"icon": "$(pencil)"
+			},
+			{
+				"command": "snippetstudio.shell.run",
+				"title": "Run Shell Snippet",
+				"icon": "$(run)"
+			},
+			{
+				"command": "snippetstudio.shell.manageProfiles",
+				"title": "Manage shell profile settings"
 			}
 		],
 		"menus": {
@@ -373,7 +402,7 @@
 			],
 			"editor/context": [
 				{
-					"command": "snippetstudio.snippet.createGlobalLangSnippetFromSelection",
+					"command": "snippetstudio.snippet.fromSelection",
 					"when": "editor.hasSelection",
 					"group": "snippetstudio"
 				},
@@ -425,8 +454,13 @@
 					"group": "navigation"
 				},
 				{
-					"command": "snippetstudio.refreshLocations",
+					"command": "snippetstudio.refresh",
 					"when": "view == location-manager",
+					"group": "navigation"
+				},
+				{
+					"command": "snippetstudio.shell.refresh",
+					"when": "view == shell-snippets",
 					"group": "navigation"
 				},
 				{
@@ -437,7 +471,7 @@
 				{
 					"command": "snippetstudio.file.createProjectSnippets",
 					"group": "inline",
-					"when": "view == location-manager"
+					"when": "view == location-manager && workspaceFolderCount > 0"
 				},
 				{
 					"command": "snippetstudio.file.createGlobalSnippets",
@@ -445,7 +479,7 @@
 					"when": "view == location-manager"
 				},
 				{
-					"command": "snippetstudio.snippet.export",
+					"command": "snippetstudio.file.export",
 					"group": "inline",
 					"when": "view == location-manager"
 				},
@@ -473,12 +507,17 @@
 					"command": "snippetstudio.profile.import",
 					"group": "inline_import",
 					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.shell.manageProfiles",
+					"when": "view == shell-snippets",
+					"group": "inline"
 				}
 			],
 			"view/item/context": [
 				{
 					"command": "snippetstudio.file.open",
-					"when": "(viewItem =~ /snippet-filepath/) || (viewItem == extension-snippet-path)",
+					"when": "viewItem =~ /snippet-filepath/",
 					"group": "navigation"
 				},
 				{
@@ -493,13 +532,18 @@
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/) && !(viewItem =~ /extension/)",
 					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.file.delete",
-					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/)",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /linked/) && !(viewItem =~ /extension/)",
 					"group": "inline"
+				},
+				{
+					"command": "snippetstudio.file.rename",
+					"when": "(viewItem =~ /snippet-filepath/) && (viewItem =~ /mixed/)",
+					"group": "navigation"
 				},
 				{
 					"command": "snippetstudio.snippet.delete",
@@ -527,8 +571,8 @@
 					"group": "navigation"
 				},
 				{
-					"command": "snippetstudio.file.createSnippetAt",
-					"when": "viewItem =~ /snippet-filepath/",
+					"command": "snippetstudio.snippet.createAt",
+					"when": "(viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/)",
 					"group": "inline"
 				},
 				{
@@ -547,8 +591,8 @@
 					"when": "viewItem =~ /global-dropdown/"
 				},
 				{
-					"command": "snippetstudio.file.link",
-					"when": "((viewItem =~ /snippet-filepath/) && ((viewItem =~ /global/) || (viewItem =~/profile/)) && config.snippetstudio.view.showProfiles)",
+					"command": "snippetstudio.profile.link",
+					"when": "((viewItem =~ /snippet-filepath/) && !(viewItem =~ /extension/) && ((viewItem =~ /global/) || (viewItem =~/profile/)))",
 					"group": "navigation"
 				},
 				{
@@ -559,7 +603,27 @@
 				{
 					"command": "snippetstudio.extension.extract",
 					"group": "inline",
-					"when": "viewItem == extension-snippet-path"
+					"when": "viewItem == extension-snippet-filepath"
+				},
+				{
+					"command": "snippetstudio.shell.edit",
+					"group": "navigation",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.delete",
+					"group": "navigation",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.run",
+					"group": "inline",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.create",
+					"group": "inline",
+					"when": "viewItem == shell-dropdown"
 				}
 			]
 		},
@@ -610,16 +674,6 @@
 		"configuration": {
 			"title": "SnippetStudio Configuration",
 			"properties": {
-				"snippetstudio.view.showProfiles": {
-					"type": "boolean",
-					"default": true,
-					"description": "Display snippets from other profiles in the snippets and location views."
-				},
-				"snippetstudio.view.showExtensions": {
-					"type": "boolean",
-					"default": true,
-					"description": "Display extension snippets in the snippets and location views."
-				},
 				"snippetstudio.confirmSnippetDeletion": {
 					"type": "boolean",
 					"default": false,
@@ -739,6 +793,34 @@
 						}
 					},
 					"additionalProperties": false
+				},
+				"snippetstudio.shell.snippets": {
+					"type": "array",
+					"description": "A collection of shell command snippets to run or paste in the terminal.",
+					"default": [],
+					"items": {
+						"type": "object",
+						"properties": {
+							"command": {
+								"type": "string",
+								"description": "The shell command to be executed or pasted."
+							},
+							"runImmediately": {
+								"type": "boolean",
+								"description": "If true, the command is executed immediately; otherwise, it is pasted into the terminal."
+							},
+							"profile": {
+								"type": "string",
+								"description": "Integrated Terminal profile. See `terminal.integrated.profiles` to see examples."
+							}
+						},
+						"required": [
+							"command",
+							"runImmediately",
+							"profile"
+						],
+						"additionalProperties": false
+					}
 				}
 			},
 			"order": 0
@@ -762,8 +844,7 @@
 							"onView:snippet-manager-view-container",
 							"onCommand:snippetstudio.openView",
 							"onCommand:snippetstudio.openSettings",
-							"onCommand:snippetstudio.refresh",
-							"onCommand:snippetstudio.refreshLocations"
+							"onCommand:snippetstudio.refresh"
 						]
 					},
 					{
@@ -812,40 +893,45 @@
 		"package:local": "npm run package && vsce package && vsce ls --tree && npm run profile",
 		"check-types": "tsc --noEmit",
 		"lint": "eslint src",
-		"profile": "esbuild-visualizer --metadata ./profile/meta.json --filename ./profile/visualizer.html && open ./profile/visualizer.html",
+		"profile": "npm-run-all -p profile:*",
+		"profile:size": "esbuild-visualizer --metadata ./profile/meta.json --filename ./profile/visualizer.html && open ./profile/visualizer.html",
+		"profile:lazy": "esbuild-lazy-analyzer --metafile ./profile/meta.json --outmeta ./profile/lazy.json --outreport ./profile/lazy.html && open ./profile/lazy.html",
 		"test": "vitest watch",
 		"test:env": "node .vitest/createEnv.mts",
 		"test:ui": "vitest watch --ui",
-		"coverage": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=text --coverage.reporter=text-summary",
-		"coverage:publish": "vitest run --coverage --reporter=./.vitest/CoverageBalancer.ts --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
+		"coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text --coverage.reporter=text-summary",
+		"coverage:publish": "vitest run --coverage --reporter=dot --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
 		"coverage:report": "npm run coverage:publish && open ./coverage/index.html",
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.10",
-		"@types/node": "^24.1.0",
+		"@types/node": "^22.19.3",
 		"@types/vscode": "^1.99.0",
-		"@typescript-eslint/eslint-plugin": "^8.43.0",
-		"@typescript-eslint/parser": "^8.43.0",
-		"@vitest/coverage-v8": "^3.2.4",
-		"@vitest/ui": "^3.2.4",
-		"@vscode/vsce": "^3.6.2",
-		"esbuild": "^0.25.8",
+		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/parser": "^8.51.0",
+		"@vitest/coverage-v8": "^4.0.16",
+		"@vitest/ui": "^4.0.16",
+		"@vscode/vsce": "^3.7.1",
+		"cssnano": "^7.1.2",
+		"esbuild": "^0.27.2",
+		"esbuild-lazy-analyzer": "^1.4.0",
 		"esbuild-visualizer": "^0.7.0",
-		"eslint": "^9.35.0",
+		"eslint": "^9.39.2",
 		"eslint-plugin-import": "^2.32.0",
-		"eslint-plugin-jsdoc": "^59.0.2",
+		"eslint-plugin-jsdoc": "^61.5.0",
+		"htmlnano": "^3.0.0",
 		"husky": "^9.1.7",
-		"lint-staged": "^16.1.6",
+		"lint-staged": "^16.2.7",
 		"npm-run-all": "^4.1.5",
-		"ovsx": "^0.10.5",
-		"prettier": "^3.6.2",
-		"typescript": "^5.8.3",
-		"vitest": "^3.2.4"
+		"ovsx": "^0.10.7",
+		"prettier": "^3.7.4",
+		"terser": "^5.44.1",
+		"typescript": "^5.9.3",
+		"vitest": "^4.0.16"
 	},
 	"dependencies": {
-		"@octokit/auth-oauth-device": "^8.0.1",
-		"@octokit/core": "^7.0.3",
+		"@octokit/auth-oauth-device": "^8.0.3",
+		"@octokit/core": "^7.0.6",
 		"strip-json-comments": "^5.0.3"
 	},
 	"types": "src/types/index.d.ts"

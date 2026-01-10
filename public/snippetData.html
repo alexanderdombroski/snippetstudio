@@ -42,7 +42,7 @@
 				const desc = formData.get('description');
 				if (desc) data.description = desc;
 				const scope = formData.get('scope');
-				if (showScope && scope) data.scope = scope;
+				if (showScope) data.scope = scope || "global";
 
 				vscode.postMessage({ command: 'updateSnippetData', data: data });
 			});

@@ -17,11 +17,12 @@ import SnippetEditorProvider from './SnippetEditorProvider';
 import initSnippetEditorCommands from './snippetEditor';
 import initSnippetFeatureCommands from './snippetFeatures';
 import type { SnippetData } from '../../types';
+import { getExtensionContext } from '../../utils/context';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
 
 /** completes all setup of editor, snippet data view, and commands */
-export async function __initEditing(context: ExtensionContext): Promise<SnippetEditorProvider> {
+export async function _initEditing(context: ExtensionContext): Promise<SnippetEditorProvider> {
 	if (!snippetEditorProvider) {
 		const snippetDataManager = new SnippetDataManager();
 		const snippetDataView = new SnippetDataWebViewProvider(context, snippetDataManager);
@@ -42,12 +43,8 @@ export async function __initEditing(context: ExtensionContext): Promise<SnippetE
 }
 
 /** start up a new buffer editor to create/edit a snippet */
-async function editSnippet(
-	context: ExtensionContext,
-	langId: string,
-	snippetData: SnippetData,
-	body: string = ''
-) {
+async function editSnippet(langId: string, snippetData: SnippetData, body: string = '') {
+	const context = await getExtensionContext();
 	try {
 		if (getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
 			const { createFile } = await import('../../snippets/newSnippetFile.js');
@@ -56,13 +53,13 @@ async function editSnippet(
 				return;
 			}
 		}
-		const provider = await __initEditing(context);
+		const provider = await _initEditing(context);
 		if (
 			getConfiguration('snippetstudio').get<boolean>('editor.autoEscapeDollarSignsFromSelection')
 		) {
-			body = __escapeAllSnippetInsertionFeatures(body);
+			body = _escapeAllSnippetInsertionFeatures(body);
 		}
-		const uri = __newSnippetEditorUri(
+		const uri = _newSnippetEditorUri(
 			langId,
 			path.extname(snippetData.filename) === '.code-snippets'
 		);
@@ -88,7 +85,7 @@ async function editSnippet(
 let editorCount = 0;
 
 /** create a new editor uri */
-export function __newSnippetEditorUri(
+export function _newSnippetEditorUri(
 	langId: string = 'plaintext',
 	showScope: boolean = true
 ): UriType {
@@ -100,7 +97,7 @@ export function __newSnippetEditorUri(
 }
 
 /** Escapes all instances of placholders and tabstops */
-export function __escapeAllSnippetInsertionFeatures(str: string): string {
+export function _escapeAllSnippetInsertionFeatures(str: string): string {
 	// Escape tabstops
 	let escapedString = str.replace(/\$(\d+)/g, '\\$$$1');
 

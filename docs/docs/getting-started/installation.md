@@ -15,7 +15,16 @@ Let's *extend* VS Code's functionality by installing an extension!
 
 ### What you'll need
 
-- A desktop version of [VS Code](https://code.visualstudio.com/download). The extension isn't yet stable for web versions of VS Code <i className="codicon codicon-vscode"></i>
+A desktop version of VS Code or a fork of it. The extension isn't yet stable for web versions of VS Code <i className="codicon codicon-vscode"></i>
+
+- [VS Code](https://code.visualstudio.com/)
+- [VS Code Insiders](https://code.visualstudio.com/insiders/)
+- [VSCodium](https://vscodium.com/)
+- [Cursor](https://cursor.com/)
+- [Windsurf](https://windsurf.com/)
+- [Antigravity](https://antigravity.google/)
+- [Trae](https://www.trae.ai/)
+- [AbacusAI](https://desktop.abacus.ai/)
 
 ### Alternative Installation Method
 

@@ -11,16 +11,16 @@ vi.mock('../../utils/jsoncFilesIO', async () => ({
 	readSnippetFile: vi.fn(),
 }));
 vi.mock('./SnippetPeekProvider', () => ({
-	default: vi.fn().mockImplementation(() => ({
-		showPeek,
-	})),
+	default: vi.fn(function (this: { showPeek: Function }) {
+		this.showPeek = showPeek;
+	}),
 }));
 
 describe('peekAtSnippet', () => {
 	it('should create the peek provider and show a peek', async () => {
 		const spy = vi.spyOn(context.subscriptions, 'push');
 
-		await peekAtSnippet(context, '/test/path.ts', 'snippet1');
+		await peekAtSnippet('/test/path.ts', 'snippet1');
 
 		expect(SnippetPeekProvider).toBeCalled();
 		expect(vscode.workspace.registerTextDocumentContentProvider).toBeCalled();

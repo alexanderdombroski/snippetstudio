@@ -1,6 +1,7 @@
-import type { TextEditor } from 'vscode';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { TextEditor as TextEditorType } from 'vscode';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 import {
+	_unTabMultiline,
 	chooseLocalGlobal,
 	getConfirmation,
 	getFileName,
@@ -10,7 +11,6 @@ import {
 } from './user';
 import { getActiveProfileSnippetsDir } from './profile';
 import { getDownloadsDirPath, getWorkspaceFolder } from './fsInfo';
-import { unTabMultiline } from './string';
 import path from 'node:path';
 import vscode, {
 	getConfiguration,
@@ -21,10 +21,12 @@ import vscode, {
 	Uri,
 	showSaveDialog,
 } from '../vscode';
+import { TextEditor } from '../../.vitest/__mocks__/shared';
+import { executeCommand, Selection, Position } from '../vscode';
+import type { Selection as SelectionType } from 'vscode';
 
 vi.mock('./profile');
 vi.mock('./fsInfo');
-vi.mock('./string');
 
 afterEach(() => {
 	vi.restoreAllMocks();
@@ -68,7 +70,7 @@ describe('user', () => {
 		it('should return undefined if selection is empty', async () => {
 			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue({
 				selection: { isEmpty: true },
-			} as TextEditor);
+			} as TextEditorType);
 
 			const result = await getSelection();
 			expect(result).toBeUndefined();
@@ -79,7 +81,7 @@ describe('user', () => {
 			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue({
 				selection: { isEmpty: false },
 				document: { getText },
-			} as unknown as TextEditor);
+			} as unknown as TextEditorType);
 
 			vi.mocked(getConfiguration).mockReturnValue({
 				get: vi.fn().mockReturnValue(false),
@@ -88,31 +90,6 @@ describe('user', () => {
 			const result = await getSelection();
 
 			expect(result).toBe('  some text');
-			expect(unTabMultiline).not.toHaveBeenCalled();
-		});
-
-		it('should return selected text with untabbing when cleanupSnippetSelection is true', async () => {
-			const getText = vi.fn();
-			const editor = {
-				selection: {
-					isEmpty: false,
-				},
-				document: {
-					getText,
-				},
-			};
-			Object.defineProperty(vscode.window, 'activeTextEditor', {
-				value: editor,
-			});
-			vi.mocked(getConfiguration).mockReturnValue({
-				get: vi.fn().mockReturnValue(true),
-			} as any);
-			vi.mocked(unTabMultiline).mockResolvedValue('some text');
-
-			const result = await getSelection();
-
-			expect(unTabMultiline).toHaveBeenCalledWith(editor.selection, editor);
-			expect(result).toBe('some text');
 		});
 	});
 
@@ -304,6 +281,39 @@ describe('user', () => {
 			const result = await chooseLocalGlobal();
 
 			expect(result).toBeUndefined();
+		});
+	});
+
+	describe('unTabMultiline', () => {
+		const mockEditor = new TextEditor();
+		const getText = mockEditor.document.getText as Mock;
+
+		it('should return an empty string for an empty selection', async () => {
+			const selection = { isEmpty: true } as SelectionType;
+			const result = await _unTabMultiline(selection, mockEditor as any);
+			expect(result).toBe('');
+		});
+
+		it('should return an empty string for a selection with no difference in range', async () => {
+			const selection = new Selection(new Position(0, 0), new Position(0, 0));
+			getText.mockReturnValue(''); // return string
+			const result = await _unTabMultiline(selection, mockEditor as any);
+			expect(result).toBe('');
+		});
+
+		it('should un-indent a multiline selection', async () => {
+			const selection = new Selection(new Position(0, 0), new Position(2, 0));
+			getText.mockReturnValue('  line 1\n    line 2\n  line 3');
+			const result = await _unTabMultiline(selection, mockEditor as any);
+			expect(executeCommand).toHaveBeenCalledWith('editor.action.indentationToSpaces');
+			expect(result).toBe('line 1\n  line 2\nline 3');
+		});
+
+		it('should handle single line selections', async () => {
+			const selection = new Selection(new Position(0, 4), new Position(0, 10));
+			getText.mockReturnValue('    hello');
+			const result = await _unTabMultiline(selection, mockEditor as any);
+			expect(result).toBe('hello');
 		});
 	});
 });

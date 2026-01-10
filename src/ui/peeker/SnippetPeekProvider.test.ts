@@ -22,24 +22,39 @@ describe('SnippetPeekProvider', () => {
 	});
 
 	describe('showPeek', () => {
+		const snippets = {
+			'my-snippet': {
+				prefix: 'my-snippet',
+				body: ['console.log("hello world")'],
+				description: 'A snippet',
+			},
+		};
+		const editor = {
+			document: {
+				uri: Uri.parse('file:///test.ts'),
+			},
+			visibleRanges: [
+				{
+					start: {},
+				},
+			],
+		};
 		it('should show peek with correct locations', async () => {
-			const snippets = {
-				'my-snippet': {
-					prefix: 'my-snippet',
-					body: ['console.log("hello world")'],
-					description: 'A snippet',
-				},
-			};
-			const editor = {
-				document: {
-					uri: Uri.parse('file:///test.ts'),
-				},
-				visibleRanges: [
-					{
-						start: {},
-					},
-				],
-			};
+			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue(undefined);
+			(showTextDocument as Mock).mockResolvedValue(editor);
+
+			await provider.showPeek(snippets, 'my-snippet');
+
+			expect(executeCommand).toHaveBeenCalledWith(
+				'editor.action.peekLocations',
+				editor.document.uri,
+				editor.visibleRanges[0].start,
+				expect.any(Array),
+				'goto'
+			);
+		});
+		it('should work without an active language', async () => {
+			(getCurrentLanguage as Mock).mockReturnValue(undefined);
 			vi.spyOn(vscode.window, 'activeTextEditor', 'get').mockReturnValue(undefined);
 			(showTextDocument as Mock).mockResolvedValue(editor);
 
