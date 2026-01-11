@@ -74,11 +74,20 @@ export function flattenScopedExtensionSnippets(
 			}, {});
 }
 
-// -------------------- All Extension Files --------------------
+// -------------------- Built-in Extension Files --------------------
 
-/** finds all extension snippet files and groups them by extension */
-export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	const dir = _getExtensionsDirPath();
+/** returns the location of built-in extensions */
+export function getBuiltInExtensionsPath(): string {
+	return path.join(vscode.env.appRoot, 'extensions');
+}
+
+/** finds all built-in extension snippet files and groups them by extension */
+export async function findBuiltInExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
+	return findExtensionSnippetsFilesInDir(getBuiltInExtensionsPath());
+}
+
+/** finds all extension snippet files in a given directory and groups them by extension */
+async function findExtensionSnippetsFilesInDir(dir: string): Promise<ExtensionSnippetFilesMap> {
 	if (!(await exists(dir))) {
 		return {};
 	}
@@ -111,4 +120,11 @@ export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetF
 
 	const snippetPaths = (await Promise.all(tasks)).filter((res) => Array.isArray(res));
 	return Object.fromEntries(snippetPaths);
+}
+
+// -------------------- All Extension Files --------------------
+
+/** finds all extension snippet files and groups them by extension */
+export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
+	return findExtensionSnippetsFilesInDir(_getExtensionsDirPath());
 }
