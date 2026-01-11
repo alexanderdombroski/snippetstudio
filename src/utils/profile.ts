@@ -19,11 +19,17 @@ async function getActiveProfile(): Promise<ProfileInfo> {
 	const context = await getExtensionContext();
 	const profileAssociations = context.globalState.get<ProfileAssociations>('profileAssociations');
 	const userDataProfiles = await getProfiles();
-	const uri = vscode.workspace.workspaceFolders?.[0]?.uri.toString() as string;
-	return (
-		userDataProfiles.find((p) => p.location === profileAssociations?.workspaces?.[uri]) ??
-		getDefaultProfile()
-	);
+	const uri = vscode.workspace.workspaceFolders?.[0]?.uri.toString();
+	if (uri) {
+		return (
+			userDataProfiles.find((p) => p.location === profileAssociations?.workspaces?.[uri]) ??
+			getDefaultProfile()
+		);
+	}
+	const profiles = Object.values(profileAssociations?.emptyWindows ?? {});
+	return profiles.length && profiles.every((p) => p === profiles[0])
+		? (userDataProfiles.find((p) => p.location === profiles[0]) ?? getDefaultProfile())
+		: getDefaultProfile();
 }
 
 /** Returns the user path for the active profile */

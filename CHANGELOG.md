@@ -35,7 +35,7 @@
 
 ### Fixed
 
-- TODO - Kiro IDE profile issues
+- empty vscode windows use correct profile
 
 ## [3.3.0] - 2026-01-03
 
