@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
@@ -12,13 +12,6 @@ import {
 	isParentDir,
 	exists,
 } from './fsInfo';
-
-// Mock dependencies
-vi.mock('node:os', () => ({
-	default: {
-		homedir: vi.fn(),
-	},
-}));
 
 describe('fsInfo', () => {
 	describe('getWorkspaceFolder', () => {
@@ -64,13 +57,10 @@ describe('fsInfo', () => {
 	});
 
 	describe('shortenFullPath', () => {
-		const homeDir = path.join('/Users', 'testuser');
-		beforeEach(() => {
-			vi.spyOn(os, 'homedir').mockReturnValue(homeDir);
-		});
 		it('should shorten the path if it is inside the home directory', () => {
-			const fullPath = path.join(homeDir, 'some', 'path', 'file.txt');
-			expect(shortenFullPath(fullPath)).toBe('~/some/path/file.txt');
+			const partialPath = path.join('some', 'path', 'file.txt');
+			const fullPath = path.join(os.homedir(), partialPath);
+			expect(shortenFullPath(fullPath)).toBe(path.join('~', partialPath));
 		});
 
 		it('should not shorten the path if it is not inside the home directory', () => {

@@ -15,13 +15,10 @@ import vscode from '../../vscode';
 
 vi.mock('../../utils/fsInfo');
 vi.mock('../../utils/jsoncFilesIO');
-vi.mock('node:os');
 
 function configPath(appConfigDir: TemplateStringsArray) {
 	return path.join(os.homedir(), appConfigDir[0], 'extensions');
 }
-
-(os.homedir as Mock).mockReturnValue('/home/user');
 
 describe('locate', () => {
 	describe('getExtensionSnippetLangs', () => {
@@ -37,8 +34,8 @@ describe('locate', () => {
 			const pkg = {
 				contributes: {
 					snippets: [
-						{ language: 'javascript', path: './snippets/javascript.json' },
-						{ language: 'typescript', path: './snippets/typescript.json' },
+						{ language: 'javascript', path: path.join('snippets', 'javascript.json') },
+						{ language: 'typescript', path: path.join('snippets', 'typescript.json') },
 					],
 				},
 			};
