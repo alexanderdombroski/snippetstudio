@@ -41,7 +41,7 @@
 
 ### Removed
 
-- Command to fetch built-in extensions from the VS Code repo, as it is redundant now
+- Command to fetch built-in extensions from VS Code's repo, as it is redundant now
 
 ## [3.3.0] - 2026-01-03
 

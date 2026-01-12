@@ -34,6 +34,7 @@ There are a few ways to add them. Your curser must be in the snippet editor.
 | Variable                        |                `ctrl+shift+4`                |                `cmd+opt+4`                 |                  `alt+shift+4`                   |
 | Variable with Placeholder       |                `ctrl+shift+5`                |                `cmd+opt+5`                 |                  `alt+shift+5`                   |
 | Placeholder with Transformation |                `ctrl+shift+6`                |                `cmd+opt+6`                 |                  `alt+shift+6`                   |
+| Variable with Transformation    |                `ctrl+shift+7`                |                `cmd+opt+7`                 |                  `alt+shift+7`                   |
 
 ### Commands
 
