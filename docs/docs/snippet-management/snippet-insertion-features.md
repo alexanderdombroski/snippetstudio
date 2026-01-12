@@ -43,6 +43,7 @@ There are a few ways to add them. Your curser must be in the snippet editor.
 - Variables: `snippetstudio.editor.insertVariable`
 - Variables with Placeholders: `snippetstudio.editor.insertVariablePlaceholder`
 - Placeholders with Transformations: `snippetstudio.editor.insertPlaceholderWithTranformation`
+- Variables with Transformations: `snippetstudio.editor.insertVariableWithTransformation`
 
 ## Examples
 

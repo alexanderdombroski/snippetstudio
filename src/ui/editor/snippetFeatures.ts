@@ -56,6 +56,8 @@ export default function initSnippetFeatureCommands(
 		)
 	);
 
+	const presetTransformations =
+		'capitalize,upcase,downcase,pascalcase,camelcase,snakecase,kebabcase';
 	// Snippet Insertion Variables and Variables with Placeholders
 	if (getConfiguration('snippetstudio').get<boolean>('editor.useQuickPickForVariableInsertion')) {
 		context.subscriptions.push(
@@ -77,6 +79,22 @@ export default function initSnippetFeatureCommands(
 					if (variable !== undefined) {
 						editor.insertSnippet(
 							new SnippetString(`\\\${${variable}:\${1:\${TM_SELECTED_TEXT:placeholder}}}$0`),
+							editor.selection
+						);
+					}
+				}
+			),
+			registerTextEditorCommand(
+				'snippetstudio.editor.insertVariableWithTransformation',
+				// eslint-disable-next-line no-unused-vars
+				async (editor: TextEditor, edit: TextEditorEdit) => {
+					const variable = await _showVariableQuickPick();
+					if (variable !== undefined) {
+						const featureId = _getNextFeatureNumber(editor);
+						editor.insertSnippet(
+							new SnippetString(
+								`\\\${${variable}/(.*)/\\\${${featureId}:/\${2|${presetTransformations}|}}/}$0`
+							),
 							editor.selection
 						);
 					}
@@ -103,6 +121,19 @@ export default function initSnippetFeatureCommands(
 						editor.selection
 					);
 				}
+			),
+			registerTextEditorCommand(
+				'snippetstudio.editor.insertVariableWithTransformation',
+				// eslint-disable-next-line no-unused-vars
+				async (editor: TextEditor, edit: TextEditorEdit) => {
+					const featureId = _getNextFeatureNumber(editor);
+					editor.insertSnippet(
+						new SnippetString(
+							`\\\${\${1|${_variableList()}|}/(.*)/\\\${${featureId}:/\${2|${presetTransformations}|}}/}$0`
+						),
+						editor.selection
+					);
+				}
 			)
 		);
 	}
@@ -114,7 +145,7 @@ export default function initSnippetFeatureCommands(
 				const featureId = _getNextFeatureNumber(editor);
 				editor.insertSnippet(
 					new SnippetString(
-						`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|capitalize,upcase,downcase,pascalcase,camelcase|}}/}$0`
+						`\\\${${featureId}/(.*)/\\\${${featureId}:/\${2|${presetTransformations}|}}/}$0`
 					),
 					editor.selection
 				);
@@ -183,6 +214,15 @@ export default function initSnippetFeatureCommands(
 						`A transformation of a placeholder allows changing the inserted text for the placeholder when moving to the next tab stop. The inserted text is matched with the regular expression and the match or matches - depending on the options - are replaced with the specified replacement format text. Every occurrence of a placeholder can define its own transformation independently using the value of the first placeholder. ${source}`
 					);
 
+					const variableTransform = new CompletionItem('variableTransform', Event);
+					variableTransform.insertText = new SnippetString(
+						`\\\${\${1|${_variableList()}|}/(.*)/\\\${${id}:/\${2|${presetTransformations}|}}/}$0`
+					);
+					variableTransform.detail = 'variableTransform snippetInsertionFeature';
+					variableTransform.documentation = new MarkdownString(
+						`Transformations allow you to modify the value of a variable before it is inserted. ${source}`
+					);
+
 					return [
 						tabstop,
 						placeholder,
@@ -190,6 +230,7 @@ export default function initSnippetFeatureCommands(
 						variable,
 						variablePlaceholder,
 						placeholderTransform,
+						variableTransform,
 					];
 				},
 			}

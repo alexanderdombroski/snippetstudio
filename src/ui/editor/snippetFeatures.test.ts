@@ -52,7 +52,7 @@ describe('initSnippetFeatureCommands', () => {
 		vi.spyOn(context.subscriptions, 'push');
 		initSnippetFeatureCommands(context, mockProvider);
 
-		expect(registerTextEditorCommand).toHaveBeenCalledTimes(6);
+		expect(registerTextEditorCommand).toHaveBeenCalledTimes(7);
 		expect(context.subscriptions.push).toHaveBeenCalledTimes(5); // 3 commands sets + 1 listener + 1 provider
 
 		const registeredCommands = (registerTextEditorCommand as Mock).mock.calls.map(
@@ -67,6 +67,7 @@ describe('initSnippetFeatureCommands', () => {
 				'snippetstudio.editor.insertVariable',
 				'snippetstudio.editor.insertVariablePlaceholder',
 				'snippetstudio.editor.insertPlaceholderWithTranformation',
+				'snippetstudio.editor.insertVariableWithTransformation',
 			])
 		);
 	});
@@ -98,10 +99,11 @@ describe('initSnippetFeatureCommands', () => {
 				.filter(
 					(cmd) =>
 						cmd === 'snippetstudio.editor.insertVariable' ||
-						cmd === 'snippetstudio.editor.insertVariablePlaceholder'
+						cmd === 'snippetstudio.editor.insertVariablePlaceholder' ||
+						cmd === 'snippetstudio.editor.insertVariableWithTransformation'
 				);
 
-			expect(registeredCommands).toHaveLength(2);
+			expect(registeredCommands).toHaveLength(3);
 		});
 	});
 });
@@ -192,9 +194,9 @@ describe('CompletionItemProvider', () => {
 			{} as CompletionContext
 		) as CompletionItemType[];
 
-		expect(CompletionItem).toBeCalledTimes(6);
-		expect(MarkdownString).toBeCalledTimes(6);
-		expect(SnippetString).toBeCalledTimes(6);
+		expect(CompletionItem).toBeCalledTimes(7);
+		expect(MarkdownString).toBeCalledTimes(7);
+		expect(SnippetString).toBeCalledTimes(7);
 
 		expect(items.map((i) => i.label)).toEqual([
 			'tabstop',
@@ -203,6 +205,7 @@ describe('CompletionItemProvider', () => {
 			'variable',
 			'variablePlaceholder',
 			'placeholderTransform',
+			'variableTransform',
 		]);
 	});
 });

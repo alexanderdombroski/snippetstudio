@@ -31,11 +31,12 @@
 ### Added
 
 - Added built-in extension snippets to the location view
-- TODO - Add [new snippet transform preset regex patterns](https://code.visualstudio.com/updates/v1_108#_code-editing)
+- Added variable transform insertion feature
+- Added [new snippet transform preset regex patterns](https://code.visualstudio.com/updates/v1_108#_code-editing)
 
 ### Fixed
 
-- empty vscode windows use correct profile
+- Empty vscode windows use correct profile
 
 ## [3.3.0] - 2026-01-03
 
