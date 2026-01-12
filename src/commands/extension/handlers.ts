@@ -8,13 +8,6 @@ export async function extractHandler(item: ExtSnippetFileTreeItem) {
 	refreshAll();
 }
 
-/** snippetstudio.extension.fetch command handler */
-export async function fetchHandler() {
-	const { importBuiltinExtension } = await import('../../git/extensionsGithub.js');
-	await importBuiltinExtension();
-	refreshAll();
-}
-
 /** 'snippetstudio.extension.modify' command handler */
 export async function modifyHandler(item: SnippetTreeItem) {
 	const { extractAndModify } = await import('../../snippets/extension/transfer.js');

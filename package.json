@@ -335,11 +335,6 @@
 				"when": false
 			},
 			{
-				"command": "snippetstudio.extension.fetch",
-				"title": "Copy Built in Snippet Extension Files",
-				"category": "snippetstudio-github"
-			},
-			{
 				"command": "snippetstudio.profile.import",
 				"title": "Copy Snippets from .code-profile",
 				"category": "snippetstudio"
@@ -513,11 +508,6 @@
 				{
 					"command": "snippetstudio.github.browse",
 					"group": "inline_gist",
-					"when": "view == location-manager"
-				},
-				{
-					"command": "snippetstudio.extension.fetch",
-					"group": "inline_import",
 					"when": "view == location-manager"
 				},
 				{

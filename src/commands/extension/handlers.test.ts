@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
-import { extractHandler, fetchHandler, modifyHandler } from './handlers';
+import { extractHandler, modifyHandler } from './handlers';
 import { refreshAll } from '../utils';
-import { importBuiltinExtension } from '../../git/extensionsGithub';
 import { extractAllSnippets, extractAndModify } from '../../snippets/extension/transfer';
 
 vi.mock('../../snippets/extension/transfer');
@@ -22,13 +21,6 @@ describe('handlers', () => {
 				contextValue: 'ext-snippet-file',
 			});
 			expect(extractAllSnippets).toBeCalled();
-			expect(refreshAll).toBeCalled();
-		});
-	});
-	describe('fetchHandler', () => {
-		it('should run the command', async () => {
-			await fetchHandler();
-			expect(importBuiltinExtension).toBeCalled();
 			expect(refreshAll).toBeCalled();
 		});
 	});

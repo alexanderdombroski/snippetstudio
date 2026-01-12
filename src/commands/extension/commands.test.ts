@@ -6,7 +6,6 @@ describe('Snippet Extension Commands', () => {
 	it('should register all snippet file commands', () => {
 		expectCommandsRegistered(initSnippetExtensionCommands, [
 			'snippetstudio.extension.extract',
-			'snippetstudio.extension.fetch',
 			'snippetstudio.extension.modify',
 		]);
 	});

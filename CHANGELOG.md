@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [3.4](#340---2026-01-12) - Built-in Extensions
 - [3.3](#330---2026-01-03) - Kiro Support
 - [3.2](#320---2025-12-31) - Windsurf Support
 - [3.1](#310---2025-12-15) - AbacusAI Support
@@ -26,7 +27,7 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
-## [3.4.0] - UNRELEASED
+## [3.4.0] - 2026-01-12
 
 ### Added
 
@@ -37,6 +38,10 @@
 ### Fixed
 
 - Empty vscode windows use correct profile
+
+### Removed
+
+- Command to fetch built-in extensions from the VS Code repo, as it is redundant now
 
 ## [3.3.0] - 2026-01-03
 
