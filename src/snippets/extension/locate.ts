@@ -126,5 +126,9 @@ async function findExtensionSnippetsFilesInDir(dir: string): Promise<ExtensionSn
 
 /** finds all extension snippet files and groups them by extension */
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	return findExtensionSnippetsFilesInDir(_getExtensionsDirPath());
+	const [thirdParty, builtIn] = await Promise.all([
+		findExtensionSnippetsFilesInDir(_getExtensionsDirPath()),
+		findExtensionSnippetsFilesInDir(_getBuiltInExtensionsPath()),
+	]);
+	return { ...thirdParty, ...builtIn };
 }
