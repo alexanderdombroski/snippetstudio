@@ -38,7 +38,8 @@ export function _getExtensionsDirPath(): string {
 
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
-	const extDirPath = _getExtensionsDirPath();
+	const isBuiltIn = path.normalize(snippetPath).startsWith(path.normalize(vscode.env.appRoot));
+	const extDirPath = isBuiltIn ? _getBuiltInExtensionsPath() : _getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
