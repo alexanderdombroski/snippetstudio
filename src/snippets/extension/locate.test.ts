@@ -7,7 +7,9 @@ import { exists } from '../../utils/fsInfo';
 import { readJson } from '../../utils/jsoncFilesIO';
 import {
 	findAllExtensionSnippetsFiles,
+	findBuiltInExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
+	_getBuiltInExtensionsPath,
 	getExtensionSnippetLangs,
 	_getExtensionsDirPath,
 } from './locate';
@@ -180,6 +182,93 @@ describe('locate', () => {
 		it('should default to VS Code', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
 			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
+		});
+	});
+
+	describe('getBuiltInExtensionsPath', () => {
+		it('should return the path to built-in extensions', () => {
+			const mockAppRoot = '/mock/app/root';
+			Object.defineProperty(vscode.env, 'appRoot', { value: mockAppRoot });
+			expect(_getBuiltInExtensionsPath()).toBe(path.join(mockAppRoot, 'extensions'));
+		});
+	});
+
+	describe('findBuiltInExtensionSnippetsFiles', () => {
+		it('should return an empty object if built-in extensions directory does not exist', async () => {
+			(exists as Mock).mockResolvedValue(false);
+			const result = await findBuiltInExtensionSnippetsFiles();
+			expect(result).toEqual({});
+		});
+
+		it('should find all snippet files from built-in extensions', async () => {
+			(exists as Mock).mockResolvedValue(true);
+			const dirents = [
+				{ name: 'builtin-ext1', isDirectory: () => true },
+				{ name: 'builtin-ext2', isDirectory: () => true },
+				{ name: 'builtin-ext3-no-snippets', isDirectory: () => true },
+			] as Dirent[];
+			(fs.readdir as Mock).mockResolvedValue(dirents);
+
+			(readJson as Mock).mockImplementation(async (p) => {
+				const appRoot = vscode.env.appRoot;
+				if (p === path.join(appRoot, 'extensions', 'builtin-ext1', 'package.json')) {
+					return {
+						name: 'Built-in Extension 1',
+						contributes: {
+							snippets: [{ language: 'javascript', path: './snippets/js.json' }],
+						},
+					};
+				}
+				if (p === path.join(appRoot, 'extensions', 'builtin-ext2', 'package.json')) {
+					return {
+						name: 'Built-in Extension 2',
+						contributes: {
+							snippets: [{ language: 'typescript', path: './snippets/ts.json' }],
+						},
+					};
+				}
+				if (p === path.join(appRoot, 'extensions', 'builtin-ext3-no-snippets', 'package.json')) {
+					return {
+						name: 'Built-in Extension 3',
+					};
+				}
+				return {};
+			});
+
+			const result = await findBuiltInExtensionSnippetsFiles();
+
+			expect(result).toEqual({
+				'builtin-ext1': {
+					name: 'Built-in Extension 1',
+					files: [
+						{
+							language: 'javascript',
+							path: path.join(
+								vscode.env.appRoot,
+								'extensions',
+								'builtin-ext1',
+								'snippets',
+								'js.json'
+							),
+						},
+					],
+				},
+				'builtin-ext2': {
+					name: 'Built-in Extension 2',
+					files: [
+						{
+							language: 'typescript',
+							path: path.join(
+								vscode.env.appRoot,
+								'extensions',
+								'builtin-ext2',
+								'snippets',
+								'ts.json'
+							),
+						},
+					],
+				},
+			});
 		});
 	});
 });
