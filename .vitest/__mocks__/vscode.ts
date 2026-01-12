@@ -1,5 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { vi } from 'vitest';
+import path from 'node:path';
 
 // Basic classes and constructors
 export const Uri = {
@@ -177,7 +178,11 @@ export default {
 		registerFileSystemProvider: vi.fn(),
 		registerTextDocumentContentProvider: vi.fn(),
 	},
-	env: { clipboard: { writeText: vi.fn() }, appName: 'Visual Studio Code' },
+	env: {
+		clipboard: { writeText: vi.fn() },
+		appName: 'Visual Studio Code',
+		appRoot: path.join('/Applications', 'VSCode', 'Contents'),
+	},
 	StatusBarAlignment: { Right: 1 },
 	FileChangeType: { Changed: 1, Created: 2, Deleted: 3 },
 	FileType: { Unknown: 0, File: 1, Directory: 2 },

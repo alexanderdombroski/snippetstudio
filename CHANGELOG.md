@@ -30,7 +30,7 @@
 
 ### Added
 
-- TODO - Add built in extension snippet dropdowns
+- Added built-in extension snippets to the location view
 - TODO - Add [new snippet transform preset regex patterns](https://code.visualstudio.com/updates/v1_108#_code-editing)
 
 ### Fixed

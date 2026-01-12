@@ -38,7 +38,8 @@ export function _getExtensionsDirPath(): string {
 
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
-	const extDirPath = _getExtensionsDirPath();
+	const isBuiltIn = path.normalize(snippetPath).startsWith(path.normalize(vscode.env.appRoot));
+	const extDirPath = isBuiltIn ? _getBuiltInExtensionsPath() : _getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
@@ -126,5 +127,9 @@ async function findExtensionSnippetsFilesInDir(dir: string): Promise<ExtensionSn
 
 /** finds all extension snippet files and groups them by extension */
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	return findExtensionSnippetsFilesInDir(_getExtensionsDirPath());
+	const [thirdParty, builtIn] = await Promise.all([
+		findExtensionSnippetsFilesInDir(_getExtensionsDirPath()),
+		findExtensionSnippetsFilesInDir(_getBuiltInExtensionsPath()),
+	]);
+	return { ...thirdParty, ...builtIn };
 }
