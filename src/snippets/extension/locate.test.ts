@@ -9,7 +9,7 @@ import {
 	findAllExtensionSnippetsFiles,
 	findBuiltInExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
-	getBuiltInExtensionsPath,
+	_getBuiltInExtensionsPath,
 	getExtensionSnippetLangs,
 	_getExtensionsDirPath,
 } from './locate';
@@ -189,7 +189,7 @@ describe('locate', () => {
 		it('should return the path to built-in extensions', () => {
 			const mockAppRoot = '/mock/app/root';
 			Object.defineProperty(vscode.env, 'appRoot', { value: mockAppRoot });
-			expect(getBuiltInExtensionsPath()).toBe(path.join(mockAppRoot, 'extensions'));
+			expect(_getBuiltInExtensionsPath()).toBe(path.join(mockAppRoot, 'extensions'));
 		});
 	});
 
@@ -243,7 +243,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'javascript',
-							path: path.resolve(
+							path: path.join(
 								vscode.env.appRoot,
 								'extensions',
 								'builtin-ext1',
@@ -258,7 +258,7 @@ describe('locate', () => {
 					files: [
 						{
 							language: 'typescript',
-							path: path.resolve(
+							path: path.join(
 								vscode.env.appRoot,
 								'extensions',
 								'builtin-ext2',

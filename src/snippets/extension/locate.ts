@@ -77,13 +77,13 @@ export function flattenScopedExtensionSnippets(
 // -------------------- Built-in Extension Files --------------------
 
 /** returns the location of built-in extensions */
-export function getBuiltInExtensionsPath(): string {
+export function _getBuiltInExtensionsPath(): string {
 	return path.join(vscode.env.appRoot, 'extensions');
 }
 
 /** finds all built-in extension snippet files and groups them by extension */
 export async function findBuiltInExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	return findExtensionSnippetsFilesInDir(getBuiltInExtensionsPath());
+	return findExtensionSnippetsFilesInDir(_getBuiltInExtensionsPath());
 }
 
 /** finds all extension snippet files in a given directory and groups them by extension */
