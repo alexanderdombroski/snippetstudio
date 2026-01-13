@@ -27,6 +27,12 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [3.4.1] - 2026-01-13
+
+### Fixed
+
+- When editing snippets from the location view, the editor opens with the correct language
+
 ## [3.4.0] - 2026-01-12
 
 ### Added
