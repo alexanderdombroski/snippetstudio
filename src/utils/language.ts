@@ -1,8 +1,8 @@
 import vscode, { showQuickPick, getLanguages } from '../vscode';
 
 /** Prompts the user to select a language */
-async function selectLanguage(): Promise<string | undefined> {
-	return await showQuickPick(await getLanguages(), {
+async function selectLanguage(options?: string[]): Promise<string | undefined> {
+	return await showQuickPick(options ?? (await getLanguages()), {
 		placeHolder: 'Select a language',
 		canPickMany: false,
 	});
