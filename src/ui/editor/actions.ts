@@ -65,10 +65,14 @@ export async function createSnippetFromSelection() {
 
 /** edit existing snippet */
 export async function editExistingSnippet(item: SnippetTreeItem) {
-	const langId = getCurrentLanguage() ?? 'plaintext';
-	const snippetTitle = item.description;
 	const { readSnippet } = await import('../../snippets/updateSnippets.js');
+	const snippetTitle = item.description;
 	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
+	const langId =
+		_getLangFromSnippetFilePath(item.path) ??
+		(await _getLangFromScope(snippet.scope)) ??
+		getCurrentLanguage() ??
+		'plaintext';
 	const snippetData: SnippetData = {
 		...snippet,
 		filename: item.path,
@@ -99,4 +103,14 @@ export function _getLangFromSnippetFilePath(filepath: string): string | undefine
 	}
 
 	return base.substring(0, dotIndex);
+}
+
+/** Gets a languages from snippet scopes */
+export async function _getLangFromScope(scopes?: string): Promise<string | undefined> {
+	if (!scopes) return;
+	const scopesList = scopes.split(',');
+	if (scopesList.length === 1) return scopesList[0];
+	const lang = getCurrentLanguage();
+	if (scopesList.includes(lang as string)) return lang;
+	return (await selectLanguage(scopesList)) ?? scopesList[0];
 }

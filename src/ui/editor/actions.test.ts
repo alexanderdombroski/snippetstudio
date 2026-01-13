@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeAll, type Mock } from 'vitest';
 import {
 	_defaultPrefix,
+	_getLangFromScope,
 	_getLangFromSnippetFilePath,
 	createGlobalSnippet,
 	createSnippetAt,
@@ -285,34 +286,35 @@ describe('handlers', () => {
 				description: 'Test snippet',
 			});
 
-			await editExistingSnippet(item);
+			await editExistingSnippet({ ...item, path: '/path/to/snippet.code-snippets' });
 
-			expect(readSnippet).toBeCalledWith('/path/to/snippet.json', 'mySnippet');
+			expect(readSnippet).toBeCalledWith('/path/to/snippet.code-snippets', 'mySnippet');
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				{
 					prefix: 'test',
 					body: ['line 1', 'line 2'],
 					description: 'Test snippet',
-					filename: '/path/to/snippet.json',
+					filename: '/path/to/snippet.code-snippets',
 					snippetTitle: 'mySnippet',
 				},
 				'line 1\nline 2'
 			);
 		});
 
-		it('should use plaintext when no current language', async () => {
+		it('should fall back to plaintext when no current language', async () => {
 			(getCurrentLanguage as Mock).mockReturnValue(null);
+			(selectLanguage as Mock).mockResolvedValue(undefined);
 			(readSnippet as Mock).mockResolvedValue({
 				prefix: 'test',
 				body: 'single line',
 			});
-			await editExistingSnippet(item);
+			await editExistingSnippet({ ...item, path: '/path/to/snippet.code-snippets' });
 
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
 				expect.objectContaining({
-					filename: '/path/to/snippet.json',
+					filename: '/path/to/snippet.code-snippets',
 					snippetTitle: 'mySnippet',
 				}),
 				'single line'
@@ -330,18 +332,19 @@ describe('handlers', () => {
 
 			const itemNoDescription: SnippetTreeItem = {
 				...item,
+				path: 'typescript.json',
 				description: 'title',
 			};
 
 			await editExistingSnippet(itemNoDescription);
 
-			expect(readSnippet).toBeCalledWith('/path/to/snippet.json', 'title');
+			expect(readSnippet).toBeCalledWith('typescript.json', 'title');
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				expect.objectContaining({
 					snippetTitle: 'title',
 					body: 'code',
-					filename: '/path/to/snippet.json',
+					filename: 'typescript.json',
 					prefix: 'test',
 				}),
 				'code'
@@ -396,6 +399,22 @@ describe('snippet handler utils', () => {
 		it('should return an empty string for dotfiles like .gitignore', () => {
 			const lang = _getLangFromSnippetFilePath('.gitignore');
 			expect(lang).toBe('');
+		});
+	});
+
+	describe('getLangFromScope', () => {
+		it('should return undefined if no scope', async () => {
+			const lang = await _getLangFromScope();
+			expect(lang).toBeUndefined();
+		});
+		it('should return the only scope if there is only one', async () => {
+			const lang = await _getLangFromScope('python');
+			expect(lang).toBe('python');
+		});
+		it('should allow a choice if there is more than one', async () => {
+			(selectLanguage as Mock).mockResolvedValue('typescript');
+			const lang = await _getLangFromScope('javascript,typescript');
+			expect(lang).toBe('typescript');
 		});
 	});
 });
