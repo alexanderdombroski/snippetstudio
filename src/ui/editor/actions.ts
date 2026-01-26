@@ -5,7 +5,7 @@
 import path from 'node:path';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import { getSelection } from '../../utils/user';
-import { getConfiguration } from '../../vscode';
+import { getConfiguration, showInformationMessage } from '../../vscode';
 import { editSnippet } from './startEditor';
 import type { SnippetTreeItem } from '../templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
@@ -14,7 +14,10 @@ import { snippetBodyAsString } from '../../utils/string';
 
 /** Started the editor for a new snippet of the current language */
 export async function createGlobalSnippet() {
-	const langId = getCurrentLanguage() ?? (await selectLanguage()) ?? 'plaintext';
+	const langId = getCurrentLanguage() ?? (await selectLanguage());
+	if (!langId) {
+		return showInformationMessage('Operation cancelled: no language selected');
+	}
 
 	await editSnippet(
 		langId,

@@ -8,7 +8,7 @@ import {
 	createSnippetFromSelection,
 	editExistingSnippet,
 } from './actions';
-import { getConfiguration } from '../../vscode';
+import { getConfiguration, showInformationMessage } from '../../vscode';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import { getSelection } from '../../utils/user';
 import { getGlobalLangFile } from '../../utils/profile';
@@ -46,8 +46,6 @@ describe('handlers', () => {
 			const mockGet = vi.fn().mockReturnValue('prefix');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-
 			await createGlobalSnippet();
 
 			expect(editSnippet).toBeCalledWith(
@@ -61,26 +59,12 @@ describe('handlers', () => {
 			);
 		});
 
-		it('should use plaintext when no current language', async () => {
+		it('should should end the operation if no language is selected', async () => {
 			(getCurrentLanguage as Mock).mockReturnValue(null);
-			(getGlobalLangFile as Mock).mockResolvedValue('/path/to/plaintext.json');
-			(getSelection as Mock).mockResolvedValue('text');
-			const mockGet = vi.fn().mockReturnValue('');
-			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
-
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 
 			await createGlobalSnippet();
-
-			expect(editSnippet).toBeCalledWith(
-				'plaintext',
-				{
-					filename: '/path/to/plaintext.json',
-					snippetTitle: '',
-					prefix: '',
-				},
-				'text'
-			);
+			expect(showInformationMessage).toBeCalled();
+			expect(editSnippet).not.toBeCalled();
 		});
 
 		it('should use empty string when no selection', async () => {
@@ -89,8 +73,6 @@ describe('handlers', () => {
 			(getSelection as Mock).mockResolvedValue(null);
 			const mockGet = vi.fn().mockReturnValue('');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
-
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 
 			await createGlobalSnippet();
 
@@ -121,8 +103,6 @@ describe('handlers', () => {
 			const mockGet = vi.fn().mockReturnValue('p');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-
 			await createSnippetAt(item.filepath);
 
 			expect(editSnippet).toBeCalledWith(
@@ -144,7 +124,6 @@ describe('handlers', () => {
 			const mockGet = vi.fn().mockReturnValue('');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 			const item: SnippetFileTreeItem = {
 				label: 'test',
 				collapsibleState: 1,
@@ -217,8 +196,6 @@ describe('handlers', () => {
 			const mockGet = vi.fn().mockReturnValue('');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-
 			await createSnippetFromSelection();
 
 			expect(editSnippet).toBeCalledWith(
@@ -259,8 +236,6 @@ describe('handlers', () => {
 			const mockGet = vi.fn().mockReturnValue('');
 			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
 
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
-
 			await createSnippetFromSelection();
 
 			expect(editSnippet).toBeCalledWith(
@@ -279,7 +254,6 @@ describe('handlers', () => {
 		it('should edit an existing snippet', async () => {
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 			const { readSnippet } = await import('../../snippets/updateSnippets.js');
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 			(readSnippet as Mock).mockResolvedValue({
 				prefix: 'test',
 				body: ['line 1', 'line 2'],
@@ -324,7 +298,6 @@ describe('handlers', () => {
 		it('should handle missing description', async () => {
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
 			const { readSnippet } = await import('../../snippets/updateSnippets.js');
-			const { editSnippet } = await import('../../ui/editor/startEditor.js');
 			(readSnippet as Mock).mockResolvedValue({
 				prefix: 'test',
 				body: 'code',
