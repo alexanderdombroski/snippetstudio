@@ -8,9 +8,11 @@ import fs from 'node:fs/promises';
 import * as octo from './octokit';
 import type { Octokit } from '@octokit/core' with { 'resolution-mode': 'import' };
 import { getGistId } from './utils';
+import { exists } from '../utils/fsInfo';
 
 vi.mock('../utils/user');
 vi.mock('./utils');
+vi.mock('../utils/fsinfo');
 vi.mock('../snippets/newSnippetFile');
 
 const snippets: VSCodeSnippets = {
@@ -60,6 +62,32 @@ describe('snippetGists', () => {
 			} as unknown as Octokit);
 			await _saveCodeSnippets('TEST_GIST_ID', '/test/example');
 			expect(showInformationMessage).toBeCalledWith(expect.stringContaining("Couldn't find"));
+		});
+		it('should send files to gist if files are found', async () => {
+			const response = {
+				data: {
+					files: [
+						{
+							filename: 'test.code-snippets',
+							content: '{}',
+						},
+						{
+							filename: 'test2.code-snippets',
+							content: '{}',
+						},
+					],
+				},
+			};
+			vi.spyOn(octo, 'getOctokitClient').mockResolvedValue({
+				request: vi.fn().mockResolvedValue(response),
+			} as unknown as Octokit);
+			(getConfiguration as Mock).mockReturnValue({ get: () => false });
+			(exists as Mock).mockResolvedValue(false);
+
+			await _saveCodeSnippets('TEST_GIST_ID', '/test/example');
+
+			expect(fs.writeFile).toBeCalled();
+			expect(showInformationMessage).toBeCalledWith(expect.stringContaining('Saved 2 files'));
 		});
 	});
 
