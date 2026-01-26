@@ -12,8 +12,8 @@ import { exists } from '../utils/fsInfo';
 
 vi.mock('../utils/user');
 vi.mock('./utils');
-vi.mock('../utils/fsinfo');
 vi.mock('../snippets/newSnippetFile');
+vi.mock('../utils/fsInfo');
 
 const snippets: VSCodeSnippets = {
 	log: {
@@ -83,7 +83,6 @@ describe('snippetGists', () => {
 			} as unknown as Octokit);
 			(getConfiguration as Mock).mockReturnValue({ get: () => false });
 			(exists as Mock).mockResolvedValue(false);
-
 			await _saveCodeSnippets('TEST_GIST_ID', '/test/example');
 
 			expect(fs.writeFile).toBeCalled();

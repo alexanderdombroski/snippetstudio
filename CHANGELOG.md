@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [3.4](#340---2026-01-12) - Built-in Extensions
+- [3.4](#342---2026-01-26) - Built-in Extensions
 - [3.3](#330---2026-01-03) - Kiro Support
 - [3.2](#320---2025-12-31) - Windsurf Support
 - [3.1](#310---2025-12-15) - AbacusAI Support
@@ -26,6 +26,12 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [3.4.2] - 2026-01-26
+
+### Fixed
+
+- Creating language specific snippets no longer defaults to plain text if no active language is detected or selected.
 
 ## [3.4.1] - 2026-01-13
 
