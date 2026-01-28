@@ -22,11 +22,16 @@ export function _hasActiveChild(pid: number): boolean {
 export async function findInactiveTerminal(profile: string): Promise<Terminal | undefined> {
 	const terminals = vscode.window.terminals.filter((t) => t.name === `snippetstudio - ${profile}`);
 	for (const terminal of terminals) {
-		const pid = await terminal.processId;
-		if (pid === undefined || !_hasActiveChild(pid)) {
+		if (await isInactive(terminal)) {
 			return terminal;
 		}
 	}
+}
+
+/** Detect if a terminal is active by its PID */
+export async function isInactive(terminal: Terminal): Promise<boolean> {
+	const pid = await terminal.processId;
+	return pid === undefined || !_hasActiveChild(pid);
 }
 
 /** Gets the platform-specific configuration key for terminal profiles */

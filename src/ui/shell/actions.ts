@@ -24,6 +24,7 @@ import {
 	getAllShellProfiles,
 	getDefaultShellProfile,
 	getPlatformKey,
+	isInactive,
 } from './utils';
 
 /** Command handler to edit an existing shell snippet */
@@ -92,7 +93,11 @@ type RunOptions = { useActive?: boolean };
 export async function runShellSnippet(item: ShellTreeItem, { useActive }: RunOptions = {}) {
 	try {
 		let terminal: Terminal | undefined;
-		if (useActive && vscode.window.activeTerminal?.state?.shell === item.profile) {
+		if (
+			useActive &&
+			vscode.window.activeTerminal?.state?.shell === item.profile &&
+			(await isInactive(vscode.window.activeTerminal as Terminal))
+		) {
 			terminal = vscode.window.activeTerminal;
 		}
 		terminal ??= await findInactiveTerminal(item.profile);
