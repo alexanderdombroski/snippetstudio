@@ -8,7 +8,7 @@ import path from 'node:path';
 let extensionContext: ExtensionContext | undefined;
 
 /** gets the extension context saved globally */
-export async function getExtensionContext(): Promise<ExtensionContext> {
+export function getExtensionContext(): ExtensionContext {
 	if (!extensionContext) {
 		throw new Error('Extension context not correctly initialized');
 	}

@@ -16,7 +16,7 @@ async function getOctokitClient(): Promise<Octokit> {
 async function createOctokitClient(): Promise<Octokit> {
 	const { Octokit } = await import('@octokit/core');
 	const { createOAuthDeviceAuth } = await import('@octokit/auth-oauth-device');
-	const context = await getExtensionContext();
+	const context = getExtensionContext();
 	let token = await context.secrets.get('GITHUB_TOKEN');
 
 	if (token === undefined || (await isTokenRevoked(token))) {

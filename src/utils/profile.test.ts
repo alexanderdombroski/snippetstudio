@@ -16,10 +16,7 @@ import vscode from '../vscode';
 import { context } from '../../.vitest/__mocks__/shared';
 import type { Uri } from 'vscode';
 
-vi.mock('./context', () => ({
-	getExtensionContext: vi.fn(() => Promise.resolve(context)),
-	getUserPath: vi.fn(),
-}));
+vi.mock('./context');
 
 describe('profile utils', () => {
 	const mockUserPath =
@@ -29,7 +26,7 @@ describe('profile utils', () => {
 
 	beforeEach(() => {
 		(getUserPath as Mock).mockReturnValue(mockUserPath);
-		(getExtensionContext as Mock).mockResolvedValue(context);
+		(getExtensionContext as Mock).mockReturnValue(context);
 	});
 
 	describe('getPathFromProfileLocation', () => {

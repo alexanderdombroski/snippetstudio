@@ -148,7 +148,7 @@ describe('context', () => {
 			(readJsonC as Mock).mockResolvedValue(undefined);
 
 			await initGlobalStore(context);
-			const savedContext = await getExtensionContext();
+			const savedContext = getExtensionContext();
 			expect(savedContext).toBe(context);
 		});
 	});

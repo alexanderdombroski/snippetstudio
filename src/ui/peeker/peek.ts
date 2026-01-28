@@ -13,7 +13,7 @@ let snippetPeekProvider: SnippetPeekProvider | undefined;
 /** creates a peek and text document to store the snippets in */
 export async function peekAtSnippet(filepath: string, preferred: string) {
 	if (!snippetPeekProvider) {
-		const context = await getExtensionContext();
+		const context = getExtensionContext();
 		snippetPeekProvider = new SnippetPeekProvider();
 		context.subscriptions.push(
 			vscode.workspace.registerTextDocumentContentProvider('snippetviewer', snippetPeekProvider)

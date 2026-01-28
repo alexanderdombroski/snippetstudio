@@ -9,14 +9,14 @@ const getDefaultProfile = () => ({ location: DEFAULT_PROFILE_ID, name: 'Default'
 
 /** Returns a list of all Profiles */
 async function getProfiles(): Promise<ProfileInfo[]> {
-	const context = await getExtensionContext();
+	const context = getExtensionContext();
 	const profiles = context.globalState.get<ProfileInfo[]>('users') ?? [];
 	return [...profiles, getDefaultProfile()];
 }
 
 /** Returns the active VS Code profile */
 async function getActiveProfile(): Promise<ProfileInfo> {
-	const context = await getExtensionContext();
+	const context = getExtensionContext();
 	const profileAssociations = context.globalState.get<ProfileAssociations>('profileAssociations');
 	const userDataProfiles = await getProfiles();
 	const uri = vscode.workspace.workspaceFolders?.[0]?.uri.toString();

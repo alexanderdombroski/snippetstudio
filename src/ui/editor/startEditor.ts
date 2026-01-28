@@ -44,7 +44,7 @@ export async function _initEditing(context: ExtensionContext): Promise<SnippetEd
 
 /** start up a new buffer editor to create/edit a snippet */
 async function editSnippet(langId: string, snippetData: SnippetData, body: string = '') {
-	const context = await getExtensionContext();
+	const context = getExtensionContext();
 	try {
 		if (getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
 			const { createFile } = await import('../../snippets/newSnippetFile.js');
