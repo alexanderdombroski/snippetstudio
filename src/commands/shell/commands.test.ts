@@ -9,6 +9,7 @@ describe('Shell Snippet Commands', () => {
 			'snippetstudio.shell.edit',
 			'snippetstudio.shell.delete',
 			'snippetstudio.shell.run',
+			'snippetstudio.shell.runDedicated',
 			'snippetstudio.shell.refresh',
 			'snippetstudio.shell.manageProfiles',
 		]);

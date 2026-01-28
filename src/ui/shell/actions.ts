@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import type { QuickPickItem } from 'vscode';
+import type { QuickPickItem, Terminal } from 'vscode';
 import vscode, {
 	showErrorMessage,
 	createTerminal,
@@ -86,10 +86,16 @@ export async function deleteShellSnippet(item: ShellTreeItem) {
 	}
 }
 
+type RunOptions = { useActive?: boolean };
+
 /** Command handler to run a shell command snippet */
-export async function runShellSnippet(item: ShellTreeItem) {
+export async function runShellSnippet(item: ShellTreeItem, { useActive }: RunOptions = {}) {
 	try {
-		let terminal = await findInactiveTerminal(item.profile);
+		let terminal: Terminal | undefined;
+		if (useActive && vscode.window.activeTerminal?.state?.shell === item.profile) {
+			terminal = vscode.window.activeTerminal;
+		}
+		terminal ??= await findInactiveTerminal(item.profile);
 		if (!terminal) {
 			const profiles = await getAllShellProfiles();
 			const config = profiles[item.profile];

@@ -189,6 +189,18 @@ describe('Shell Command Handlers', () => {
 			expect(showWarningMessage).toBeCalled();
 			expect(createTerminal).not.toBeCalled();
 		});
+
+		it('should work with an option to use the active terminal.', async () => {
+			(findInactiveTerminal as Mock).mockReturnValue(undefined);
+			let activeTerminal = { state: { shell: 'zsh' }, ...terminal };
+			Object.defineProperty(vscode.window, 'activeTerminal', activeTerminal);
+			const item = { label: 'echo "hello"', runImmediately: true, profile: 'zsh' };
+
+			await runShellSnippet(item as ShellTreeItem, { useActive: true });
+
+			expect(showWarningMessage).toBeCalled();
+			expect(createTerminal).not.toBeCalled();
+		});
 	});
 
 	describe('createShellSnippet', () => {

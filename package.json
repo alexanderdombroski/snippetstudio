@@ -360,6 +360,10 @@
 				"icon": "$(run)"
 			},
 			{
+				"command": "snippetstudio.shell.runDedicated",
+				"title": "Run in Dedicated Terminal"
+			},
+			{
 				"command": "snippetstudio.shell.manageProfiles",
 				"title": "Manage shell profile settings"
 			}
@@ -625,6 +629,11 @@
 				{
 					"command": "snippetstudio.shell.run",
 					"group": "inline",
+					"when": "viewItem == shell-snippet"
+				},
+				{
+					"command": "snippetstudio.shell.runDedicated",
+					"group": "navigation",
 					"when": "viewItem == shell-snippet"
 				},
 				{

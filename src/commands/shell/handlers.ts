@@ -21,6 +21,12 @@ export async function deleteHandler(item: ShellTreeItem) {
 /** snippetstudio.shell.run command handler */
 export async function runHandler(item: ShellTreeItem) {
 	const { runShellSnippet } = await import('../../ui/shell/actions.js');
+	runShellSnippet(item, { useActive: true });
+}
+
+/** snippetstudio.shell.runDedicated command handler */
+export async function runDedicatedHandler(item: ShellTreeItem) {
+	const { runShellSnippet } = await import('../../ui/shell/actions.js');
 	runShellSnippet(item);
 }
 

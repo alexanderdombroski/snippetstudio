@@ -6,6 +6,7 @@ import {
 	runHandler,
 	refreshHandler,
 	manageProfilesHandler,
+	runDedicatedHandler,
 } from './handlers';
 import {
 	createShellSnippet,
@@ -76,6 +77,13 @@ describe('handlers', () => {
 	describe('runHandler', () => {
 		it('should run a shell snippet', async () => {
 			await runHandler(item);
+			expect(runShellSnippet).toBeCalledWith(item, expect.objectContaining({ useActive: true }));
+		});
+	});
+
+	describe('runDedicatedHandler', () => {
+		it('should run a shell snippet in a dedicated terminal', async () => {
+			await runDedicatedHandler(item);
 			expect(runShellSnippet).toBeCalledWith(item);
 		});
 	});

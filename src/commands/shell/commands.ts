@@ -6,6 +6,7 @@ import {
 	editHandler,
 	manageProfilesHandler,
 	refreshHandler,
+	runDedicatedHandler,
 	runHandler,
 } from './handlers';
 
@@ -16,6 +17,7 @@ export default function initSnippetShellCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.shell.edit', editHandler),
 		registerCommand('snippetstudio.shell.delete', deleteHandler),
 		registerCommand('snippetstudio.shell.run', runHandler),
+		registerCommand('snippetstudio.shell.runDedicated', runDedicatedHandler),
 		registerCommand('snippetstudio.shell.refresh', refreshHandler),
 		registerCommand('snippetstudio.shell.manageProfiles', manageProfilesHandler)
 	);

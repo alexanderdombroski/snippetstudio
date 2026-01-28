@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [3.5](#350---UNRELEASED) - UNRELEASED
 - [3.4](#342---2026-01-26) - Built-in Extensions
 - [3.3](#330---2026-01-03) - Kiro Support
 - [3.2](#320---2025-12-31) - Windsurf Support
@@ -26,6 +27,12 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [3.5.0] - UNRELEASED
+
+### Added
+
+- Can run shell snippets in the active terminal if detected profile matches
 
 ## [3.4.2] - 2026-01-26
 
