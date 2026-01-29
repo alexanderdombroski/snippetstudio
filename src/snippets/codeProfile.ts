@@ -22,7 +22,7 @@ export async function importCodeProfileSnippets() {
 		{
 			label: 'From a gist',
 			description: 'import snippets from a .code-profile file from a gist',
-			run: () => _fromGist(),
+			run: _fromGist,
 		},
 		{
 			label: 'From a file',
@@ -52,18 +52,18 @@ export async function importCodeProfileSnippets() {
 		return;
 	}
 
-	Promise.all(fileContents.map(async (content) => saveCodeProfiles(content, saveDir)));
+	Promise.all(fileContents.map(async (content) => _saveCodeProfiles(content, saveDir)));
 }
 
 // ------------------------------ Parse Code Profile File ------------------------------
 
 /** exports all snippets from a profile to a given directory */
-async function saveCodeProfiles(
+export async function _saveCodeProfiles(
 	profileFileContent: string,
 	saveDir: string
 ): Promise<VSCodeSnippets | undefined> {
 	const firstParse: { snippets?: string } = await processJsonWithComments(profileFileContent);
-	if (!firstParse.snippets) {
+	if (!firstParse?.snippets) {
 		showInformationMessage("Target code profile file didn't have snippets");
 		return;
 	}

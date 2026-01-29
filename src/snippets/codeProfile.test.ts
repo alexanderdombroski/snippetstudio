@@ -1,13 +1,19 @@
 import { vi, describe, it, expect, type Mock } from 'vitest';
-import { _fromBuiltIn, _fromGist, _fromUrl, importCodeProfileSnippets } from './codeProfile';
+import {
+	_fromBuiltIn,
+	_fromGist,
+	_fromUrl,
+	_saveCodeProfiles,
+	importCodeProfileSnippets,
+} from './codeProfile';
 import { showInformationMessage, showInputBox, showQuickPick } from '../vscode';
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import { chooseLocalGlobal } from '../utils/user';
 import { getGistId } from '../git/utils';
 import type { ClientRequest } from 'node:http';
+import { exists } from '../utils/fsInfo';
 
-vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/user');
 vi.mock('../utils/fsInfo');
 vi.mock('../git/utils.js');
@@ -88,6 +94,39 @@ describe.concurrent('codeProfile', () => {
 
 			await _fromBuiltIn();
 			expect(https.get).not.toBeCalled();
+		});
+	});
+
+	describe('saveCodeProfiles', () => {
+		const rustSnippets = {
+			snippets: {
+				'rust.json': JSON.stringify({
+					'barrel import': {
+						prefix: ['pub use', 'barrel'],
+						body: ['mod ${1:module};', 'pub use $1::${2:feature};'],
+						description: 'A way to export/import directly from the root of the module',
+					},
+				}),
+			},
+		};
+		it('should extract and save the snippets', async () => {
+			const codeProfile = JSON.stringify({
+				name: 'Rust Dev',
+				icon: 'flame',
+				snippets: JSON.stringify(rustSnippets),
+			});
+			(exists as Mock).mockResolvedValue(false);
+			await _saveCodeProfiles(codeProfile, '.');
+			expect(fs.writeFile).toBeCalled();
+		});
+		it('should warn if the profile has no snippets', async () => {
+			const codeProfile = JSON.stringify({
+				name: 'Rust Dev',
+				icon: 'flame',
+			});
+			await _saveCodeProfiles(codeProfile, '.');
+			expect(showInformationMessage).toBeCalled();
+			expect(fs.writeFile).not.toBeCalled();
 		});
 	});
 });
