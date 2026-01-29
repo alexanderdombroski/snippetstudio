@@ -182,6 +182,7 @@ export default {
 		clipboard: { writeText: vi.fn() },
 		appName: 'Visual Studio Code',
 		appRoot: path.join('/Applications', 'VSCode', 'Contents'),
+		openExternal: vi.fn(),
 	},
 	StatusBarAlignment: { Right: 1 },
 	FileChangeType: { Changed: 1, Created: 2, Deleted: 3 },

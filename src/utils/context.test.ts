@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach, type Mock, afterAll } 
 import os from 'node:os';
 import path from 'node:path';
 import { readJsonC } from './jsoncFilesIO';
-import vscode, { showErrorMessage } from '../vscode';
+import vscode, { openExternal, showErrorMessage, Uri } from '../vscode';
 import {
 	getUserPath,
 	_readGlobalStorage,
@@ -21,6 +21,8 @@ vi.mock('node:os', () => ({
 vi.mock('./jsoncFilesIO', () => ({
 	readJsonC: vi.fn(),
 }));
+
+vi.unmock('./context');
 
 describe('context', () => {
 	const originalPlatform = process.platform;
@@ -112,6 +114,18 @@ describe('context', () => {
 			);
 			expect(getUserPath()).toBe(expectedPath);
 		});
+
+		it('should default to code for unsupported IDEs', () => {
+			Object.defineProperty(vscode.env, 'appName', { value: 'ChadIDE' });
+			const expectedPath = path.join(
+				'/home/user',
+				'Library',
+				'Application Support',
+				'Code',
+				'User'
+			);
+			expect(getUserPath()).toBe(expectedPath);
+		});
 	});
 
 	describe('initUserPath', () => {
@@ -141,9 +155,23 @@ describe('context', () => {
 			);
 			expect(userPath).toBeUndefined();
 		});
+
+		it('should allow the user to open a github issue', async () => {
+			(showErrorMessage as Mock).mockResolvedValue('Open GitHub Issue');
+			Object.defineProperty(process, 'platform', {
+				value: 'sunos',
+			});
+			_initUserPath();
+			await new Promise(process.nextTick); // Flush the .then in initUserPath
+			expect(openExternal).toBeCalled();
+			expect(Uri.parse).toBeCalled();
+		});
 	});
 
 	describe('getExtensionContext', () => {
+		it("should throw an error if context isn't correctly initialized", async () => {
+			expect(() => getExtensionContext()).toThrow();
+		});
 		it('should return the context after it has been initialized', async () => {
 			(readJsonC as Mock).mockResolvedValue(undefined);
 
@@ -164,6 +192,22 @@ describe('context', () => {
 			const result = await initGlobalStore(context);
 
 			expect(context.globalState.update).toHaveBeenCalledWith('users', storage.userDataProfiles);
+			expect(context.globalState.update).toHaveBeenCalledWith(
+				'profileAssociations',
+				storage.profileAssociations
+			);
+			expect(result).toBe(true);
+		});
+
+		it('should work even if there are no profiles', async () => {
+			const storage = {
+				profileAssociations: { '/root': 'test' },
+			};
+			(readJsonC as Mock).mockResolvedValue(storage);
+
+			const result = await initGlobalStore(context);
+
+			expect(context.globalState.update).toHaveBeenCalledWith('users', []);
 			expect(context.globalState.update).toHaveBeenCalledWith(
 				'profileAssociations',
 				storage.profileAssociations
