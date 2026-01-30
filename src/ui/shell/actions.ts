@@ -241,6 +241,8 @@ export async function manageProfiles() {
 	const settings: QuickPickItem[] = [
 		{ label: `terminal.integrated.profiles.${key}` },
 		{ label: `terminal.integrated.defaultProfile.${key}` },
+		{ label: 'terminal.integrated.focusAfterRun' },
+		{ label: 'terminal.integrated.defaultLocation' },
 	];
 	const setting = await showQuickPick(settings, { title: 'Pick a setting to open' });
 

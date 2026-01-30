@@ -33,6 +33,7 @@
 ### Added
 
 - Can run shell snippets in the active terminal if detected profile matches
+- Added more suggested settings to shell snippets view
 
 ## [3.4.2] - 2026-01-26
 
