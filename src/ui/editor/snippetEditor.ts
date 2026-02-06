@@ -66,7 +66,7 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 	if (prefix) {
 		snippet.prefix =
 			!Array.isArray(prefix) && prefix?.includes(',')
-				? (prefix as string).trim().split(',')
+				? (prefix as string).split(',').map((p) => p.trim())
 				: prefix;
 	}
 	if (description) {
@@ -96,7 +96,7 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 /** Converts singlular globs to a string, and multiple to an array */
 export function _normalizeGlobValue(globs: string | string[]): string | string[] {
 	if (Array.isArray(globs)) return globs;
-	const globsArr = globs.split(',');
+	const globsArr = globs.split(',').map((glob) => glob.trim());
 	if (globsArr.length === 1) return globs;
 	return globsArr;
 }
