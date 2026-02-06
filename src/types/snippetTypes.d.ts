@@ -1,7 +1,4 @@
-type VSCodeSnippet = {
-	/** The prefix to trigger the snippet. This appears as the title of the autocomplete option */
-	prefix: string | string[];
-
+type VSCodeSnippetV2 = {
 	/** The snippet body. Can be a single string or an array of strings. */
 	body: string | string[];
 
@@ -10,9 +7,7 @@ type VSCodeSnippet = {
 
 	/** The language scope(s) in which the snippet is valid. */
 	scope?: string;
-};
 
-type VSCodeSnippetV2 = Omit<VSCodeSnippet, 'prefix'> & {
 	/** The prefix to trigger the snippet. This appears as the title of the autocomplete option */
 	prefix?: string | string[];
 
@@ -35,14 +30,6 @@ type SnippetMap = {
 	[filename: string]: VSCodeSnippets;
 };
 
-type SnippetData = Omit<VSCodeSnippet, 'body'> & {
-	/** snippetTitle appears to the right of autocomplete trigger */
-	snippetTitle: string;
-
-	/** Filepath the snippet will be stored in */
-	filename: string;
-};
-
 type SnippetDataV2 = Omit<VSCodeSnippetV2, 'body'> & {
 	/** snippetTitle appears to the right of autocomplete trigger */
 	snippetTitle: string;
@@ -61,7 +48,6 @@ type ShellSnippet = {
 };
 
 export type {
-	VSCodeSnippet,
 	VSCodeSnippets,
 	SnippetMap,
 	SnippetData,

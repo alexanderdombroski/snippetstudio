@@ -5,7 +5,7 @@ import { readSnippetFile, writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
 import { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { getExtensionSnippetLangs } from './locate';
-import type { VSCodeSnippet, VSCodeSnippets } from '../../types';
+import type { VSCodeSnippetV2, VSCodeSnippets } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { showQuickPick } from '../../vscode';
 import { readSnippet } from '../../snippets/updateSnippets';
@@ -66,7 +66,7 @@ describe('transfer extension snippets', () => {
 	});
 
 	describe('extractAndModify', () => {
-		const snippet: VSCodeSnippet = {
+		const snippet: VSCodeSnippetV2 = {
 			prefix: 'prefix',
 			body: 'body',
 		};
