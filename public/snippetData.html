@@ -39,6 +39,7 @@
 		</form>
 
 		<script>
+			// ---------- Handle form submission ----------
 			let showScope;
 			const saveButton = document.getElementById('saveButton');
 
@@ -58,6 +59,7 @@
 				vscode.postMessage({ command: 'updateSnippetData', data: data });
 			});
 
+			// ---------- Init form ----------
 			window.addEventListener('message', (event) => {
 				if (!event.origin.startsWith('vscode-webview://')) {
 					console.warn('Received message from an unexpected origin:', event.origin);
@@ -77,22 +79,36 @@
 						break;
 
 					case 'initForm':
-						const { snippetTitle, prefix, isFileTemplate, included, excluded, scope, description, filename } =
-							message.data;
+						const {
+							snippetTitle,
+							prefix,
+							isFileTemplate,
+							include,
+							exclude,
+							scope,
+							description,
+							filename,
+						} = message.data;
 						document.getElementById('snippetTitle').value = snippetTitle;
 						const prefixInput = document.getElementById('prefix');
-						if (isFileTemplate) {
-							prefixInput.required = false;
-							document.getElementById('isFileTemplate').value = true;
-						} else {
+						if (prefix) {
 							prefixInput.value = Array.isArray(prefix) ? prefix.join(',') : prefix;
 						}
-
+						if (isFileTemplate) {
+							prefixInput.required = false;
+							document.getElementById('isFileTemplate').checked = true;
+						}
 						if (description) {
 							document.getElementById('description').innerText = description;
 						}
 						if (showScope && scope) {
 							document.getElementById('scope').value = scope;
+						}
+						if (include) {
+							document.getElementById('include').value = include;
+						}
+						if (exclude) {
+							document.getElementById('exclude').value = exclude;
 						}
 						document.getElementById('filename').innerText = filename;
 						break;
@@ -102,6 +118,7 @@
 				}
 			});
 
+			// ---------- Cache form ----------
 			function listenForChanges(id) {
 				document.getElementById(id).addEventListener('input', (event) => {
 					debounce((event) => {
@@ -117,6 +134,9 @@
 			listenForChanges('prefix');
 			listenForChanges('description');
 			listenForChanges('scope');
+			listenForChanges('isFileTemplate');
+			listenForChanges('include');
+			listenForChanges('exclude');
 
 			function debounce(func, delay) {
 				let timeoutId;
@@ -129,7 +149,7 @@
 			}
 		</script>
 		<script type="module">
-			// Helper to ensure prefix XOR isFileTemplate is filled
+			// ---------- ensure prefix XOR isFileTemplate is filled ----------
 			const checkbox = document.getElementById('isFileTemplate');
 			const prefixInput = document.getElementById('prefix');
 			checkbox.addEventListener('change', () => {
