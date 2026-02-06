@@ -15,7 +15,7 @@ export default class SnippetDataManager {
 	}
 
 	/** change the snippet data already stored */
-	setPartialData(uri: string, part: keyof SnippetData, value: string) {
+	setPartialData<K extends keyof SnippetData>(uri: string, part: K, value: SnippetData[K]) {
 		const snippetData = this._dataMap.get(uri);
 		if (snippetData) {
 			snippetData[part] = value;

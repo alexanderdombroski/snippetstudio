@@ -60,7 +60,7 @@ async function extractAndModify(item: SnippetTreeItem) {
 	const snippet = (await readSnippet(item.path, snippetTitle, true)) as VSCodeSnippet;
 	const snippetData: SnippetData = {
 		...snippet,
-		filename: savePath,
+		filepath: savePath,
 		snippetTitle,
 	};
 	if (savePath.includes('.code-snippets')) {

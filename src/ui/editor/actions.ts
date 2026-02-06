@@ -22,7 +22,7 @@ export async function createGlobalSnippet() {
 	await editSnippet(
 		langId,
 		{
-			filename: await getGlobalLangFile(langId),
+			filepath: await getGlobalLangFile(langId),
 			snippetTitle: '',
 			prefix: _defaultPrefix(),
 		},
@@ -41,7 +41,7 @@ export async function createSnippetAt(filepath: string) {
 	await editSnippet(
 		langId,
 		{
-			filename: filepath,
+			filepath,
 			snippetTitle: '',
 			prefix: _defaultPrefix(),
 			scope: langId,
@@ -53,12 +53,12 @@ export async function createSnippetAt(filepath: string) {
 /** start editing a new snippet from the selection */
 export async function createSnippetFromSelection() {
 	const langId = getCurrentLanguage() ?? 'plaintext';
-	const filename = await getGlobalLangFile(langId);
+	const filepath = await getGlobalLangFile(langId);
 
 	await editSnippet(
 		langId,
 		{
-			filename,
+			filepath,
 			snippetTitle: '',
 			prefix: _defaultPrefix(),
 		},
@@ -78,7 +78,7 @@ export async function editExistingSnippet(item: SnippetTreeItem) {
 		'plaintext';
 	const snippetData: SnippetData = {
 		...snippet,
-		filename: item.path,
+		filepath: item.path,
 		snippetTitle,
 	};
 

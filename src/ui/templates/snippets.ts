@@ -16,7 +16,7 @@ export class SnippetTreeItem extends TreeItem {
 		public readonly contextValue: string = 'snippet'
 	) {
 		const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(', ') : snippet.prefix;
-		super(prefix, None);
+		super(prefix ?? snippetTitle, None);
 		this.description = snippetTitle;
 		const body = snippetBodyAsString(snippet.body);
 		this.tooltip = `Keyword: ${prefix}\n\`\`\`text\n${body}\`\`\`${snippet.description ? '\n\n' + snippet.description : ''}`;

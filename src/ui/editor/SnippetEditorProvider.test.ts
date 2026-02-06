@@ -16,7 +16,7 @@ const snippetData: SnippetData = {
 	prefix: 'test',
 	scope: 'typescriptreact',
 	description: 'desc',
-	filename: 'typescriptreact.json',
+	filepath: 'typescriptreact.json',
 };
 
 describe('SnippetEditorProvider', () => {

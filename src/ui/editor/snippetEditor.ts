@@ -57,27 +57,48 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 		showErrorMessage('Cannot save snippet without snippet data');
 		return;
 	}
-	const prefix =
-		!Array.isArray(data.prefix) && data.prefix.includes(',')
-			? data.prefix.trim().split(',')
-			: data.prefix;
-	const snippet: VSCodeSnippet = { prefix, body };
-	if (data.description) {
-		snippet.description = data.description.trim();
+	const { snippetTitle, prefix, scope, description, filepath, isFileTemplate, include, exclude } =
+		data;
+	const snippet: VSCodeSnippet = { body };
+	if (isFileTemplate) {
+		snippet.isFileTemplate = true;
 	}
-	if (data.scope) {
-		snippet.scope = data.scope.trim();
+	if (prefix) {
+		snippet.prefix =
+			!Array.isArray(prefix) && prefix?.includes(',')
+				? (prefix as string).split(',').map((p) => p.trim())
+				: prefix;
+	}
+	if (description) {
+		snippet.description = description.trim();
+	}
+	if (scope) {
+		snippet.scope = scope.trim();
+	}
+	if (include) {
+		snippet.include = _normalizeGlobValue(include);
+	}
+	if (exclude) {
+		snippet.exclude = _normalizeGlobValue(exclude);
 	}
 	const capitalize = getConfiguration('snippetstudio').get<boolean>('autoCapitalizeSnippetName');
 	const { writeSnippet } = await import('../../snippets/updateSnippets.js');
 	await writeSnippet(
-		data.filename,
-		capitalize ? titleCase(data.snippetTitle.trim()) : data.snippetTitle.trim(),
+		filepath,
+		capitalize ? titleCase(snippetTitle.trim()) : snippetTitle.trim(),
 		snippet
 	);
 	await executeCommand('snippetstudio.refresh', true);
 	await executeCommand('workbench.action.closeActiveEditor');
 	await executeCommand('setContext', 'snippetstudio.editorVisible', false);
+}
+
+/** Converts singlular globs to a string, and multiple to an array */
+export function _normalizeGlobValue(globs: string | string[]): string | string[] {
+	if (Array.isArray(globs)) return globs;
+	const globsArr = globs.split(',').map((glob) => glob.trim());
+	if (globsArr.length === 1) return globs;
+	return globsArr;
 }
 
 export default initSnippetEditorCommands;

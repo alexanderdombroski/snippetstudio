@@ -104,7 +104,7 @@ describe('transfer extension snippets', () => {
 				'typescript',
 				expect.objectContaining({
 					scope: 'typescript,javascript',
-					filename: '/path/to/snippets.code-snippets',
+					filepath: '/path/to/snippets.code-snippets',
 				}),
 				'body'
 			);

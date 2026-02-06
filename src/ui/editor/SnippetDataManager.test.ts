@@ -10,7 +10,7 @@ describe('SnippetDataManager', () => {
 		prefix: 'test',
 		scope: 'typescript',
 		description: 'A test snippet',
-		filename: 'typescript.json',
+		filepath: 'typescript.json',
 	};
 
 	beforeEach(() => {

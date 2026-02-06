@@ -62,7 +62,9 @@ export function flattenScopedExtensionSnippets(
 	snippets: VSCodeSnippets | JSONObject
 ): VSCodeSnippets {
 	return Object.values(snippets).some(
-		(val) => ('prefix' in val || 'isFileTemplate' in val) && 'body' in val
+		(val) =>
+			('prefix' in (val as Object) || 'isFileTemplate' in (val as Object)) &&
+			'body' in (val as Object)
 	)
 		? (snippets as VSCodeSnippets)
 		: Object.values(snippets).reduce((acc: VSCodeSnippets, scopedSnippets) => {
