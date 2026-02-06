@@ -11,7 +11,7 @@ import type {
 	JSONObject,
 	PackageJsonSnippetsSection,
 	SnippetContribution,
-	VSCodeSnippetV2,
+	VSCodeSnippet,
 	VSCodeSnippets,
 } from '../../types';
 import { exists } from '../../utils/fsInfo';
@@ -70,7 +70,7 @@ export function flattenScopedExtensionSnippets(
 		: Object.values(snippets).reduce((acc: VSCodeSnippets, scopedSnippets) => {
 				if (typeof scopedSnippets === 'object' && scopedSnippets !== null) {
 					Object.entries(scopedSnippets).forEach(([key, snippet]) => {
-						acc[key] = snippet as VSCodeSnippetV2;
+						acc[key] = snippet as VSCodeSnippet;
 					});
 				}
 				return acc;

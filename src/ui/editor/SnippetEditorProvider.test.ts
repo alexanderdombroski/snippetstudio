@@ -5,13 +5,13 @@ import type { Position as PositionType, TextEditor } from 'vscode';
 import vscode, { Position, getConfiguration, onDidChangeActiveTextEditor } from '../../vscode';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { Uri } from 'vscode';
-import type { SnippetDataV2 } from '../../types';
+import type { SnippetData } from '../../types';
 
 vi.mock('../../utils/fsInfo');
 
 const scheme = 'snippetstudio';
 const testUri = { scheme, path: '/snippets/test.code-snippet' } as Uri;
-const snippetData: SnippetDataV2 = {
+const snippetData: SnippetData = {
 	snippetTitle: 'useEffect Snippet',
 	prefix: 'test',
 	scope: 'typescriptreact',

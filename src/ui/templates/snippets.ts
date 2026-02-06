@@ -2,7 +2,7 @@ import path from 'node:path';
 import type { TreeItemCollapsibleState } from 'vscode';
 import { Collapsed, None, TreeItem } from '../../vscode';
 import { shortenFullPath } from '../../utils/fsInfo';
-import type { SnippetContribution, VSCodeSnippetV2 } from '../../types';
+import type { SnippetContribution, VSCodeSnippet } from '../../types';
 import { snippetBodyAsString } from '../../utils/string';
 
 /** A TreeItem containing a snippet */
@@ -11,7 +11,7 @@ export class SnippetTreeItem extends TreeItem {
 
 	constructor(
 		snippetTitle: string,
-		snippet: VSCodeSnippetV2,
+		snippet: VSCodeSnippet,
 		public readonly path: string,
 		public readonly contextValue: string = 'snippet'
 	) {

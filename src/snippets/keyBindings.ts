@@ -13,7 +13,7 @@ import path from 'node:path';
 import { getActiveProfilePath } from '../utils/profile';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import type { SnippetTreeItem } from '../ui/templates';
-import type { VSCodeSnippetV2 } from '../types';
+import type { VSCodeSnippet } from '../types';
 import { getCurrentLanguage } from '../utils/language';
 import { snippetBodyAsString } from '../utils/string';
 import { exists } from '../utils/fsInfo';
@@ -29,7 +29,7 @@ async function promptAddKeybinding(item: SnippetTreeItem) {
 	const snippetTitle = item.description?.toString() ?? '';
 	const { readSnippet } = await import('../snippets/updateSnippets.js');
 	const [snippet, keybindings] = await Promise.all([
-		readSnippet(item.path, snippetTitle) as Promise<VSCodeSnippetV2>,
+		readSnippet(item.path, snippetTitle) as Promise<VSCodeSnippet>,
 		readJsonC(keyBindPath),
 	]);
 

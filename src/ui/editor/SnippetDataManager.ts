@@ -1,21 +1,21 @@
-import type { SnippetDataV2 } from '../../types';
+import type { SnippetData } from '../../types';
 
 /** Singleton class for storing snippet data to be shared between snippet data webview and snippet editor */
 export default class SnippetDataManager {
-	private _dataMap: Map<string, SnippetDataV2> = new Map();
+	private _dataMap: Map<string, SnippetData> = new Map();
 
 	/** gets snippetdata by uri */
-	getData(uri: string): SnippetDataV2 | undefined {
+	getData(uri: string): SnippetData | undefined {
 		return this._dataMap.get(uri);
 	}
 
 	/** stores snippetdata by uri */
-	setData(uri: string, snippetData: SnippetDataV2) {
+	setData(uri: string, snippetData: SnippetData) {
 		this._dataMap.set(uri, snippetData);
 	}
 
 	/** change the snippet data already stored */
-	setPartialData<K extends keyof SnippetDataV2>(uri: string, part: K, value: SnippetDataV2[K]) {
+	setPartialData<K extends keyof SnippetData>(uri: string, part: K, value: SnippetData[K]) {
 		const snippetData = this._dataMap.get(uri);
 		if (snippetData) {
 			snippetData[part] = value;

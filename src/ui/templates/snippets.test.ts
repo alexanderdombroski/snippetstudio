@@ -3,7 +3,7 @@ import { SnippetTreeItem, SnippetFileTreeItem, ExtSnippetFileTreeItem } from './
 import { shortenFullPath } from '../../utils/fsInfo';
 import { snippetBodyAsString } from '../../utils/string';
 import { Collapsed, None } from '../../vscode';
-import type { VSCodeSnippetV2, SnippetContribution } from '../../types';
+import type { VSCodeSnippet, SnippetContribution } from '../../types';
 
 vi.mock('../../utils/fsInfo');
 vi.mock('../../utils/string');
@@ -15,7 +15,7 @@ describe('snippets', () => {
 
 	describe('SnippetTreeItem', () => {
 		it('should create snippet item with string prefix', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: 'test',
 				body: 'test body',
 			};
@@ -31,7 +31,7 @@ describe('snippets', () => {
 		});
 
 		it('should create snippet item with array prefix', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: ['test1', 'test2', 'test3'],
 				body: 'test body',
 			};
@@ -43,7 +43,7 @@ describe('snippets', () => {
 		});
 
 		it('should include description in tooltip when provided', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: 'test',
 				body: 'test body',
 				description: 'This is a test snippet',
@@ -58,7 +58,7 @@ describe('snippets', () => {
 		});
 
 		it('should not include description in tooltip when not provided', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: 'test',
 				body: 'test body',
 			};
@@ -70,7 +70,7 @@ describe('snippets', () => {
 		});
 
 		it('should set command for showing snippet body', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: 'test',
 				body: 'test body',
 			};
@@ -86,7 +86,7 @@ describe('snippets', () => {
 		});
 
 		it('should accept custom context value', () => {
-			const snippet: VSCodeSnippetV2 = {
+			const snippet: VSCodeSnippet = {
 				prefix: 'test',
 				body: 'test body',
 			};

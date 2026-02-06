@@ -17,7 +17,7 @@ import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
-import type { VSCodeSnippetV2 } from '../types';
+import type { VSCodeSnippet } from '../types';
 import { locateAllSnippetFiles } from './locateSnippets';
 
 vi.mock('../utils/jsoncFilesIO');
@@ -31,7 +31,7 @@ describe('updateSnippets', () => {
 		it('should add scope for .code-snippets files', async () => {
 			(readSnippetFile as Mock).mockResolvedValue({});
 			(getCurrentLanguage as Mock).mockReturnValue('typescript');
-			const snippet: VSCodeSnippetV2 = { prefix: 'p', body: 'b' };
+			const snippet: VSCodeSnippet = { prefix: 'p', body: 'b' };
 			await writeSnippet('test.code-snippets', 'title', snippet);
 			expect(writeSnippetFile).toHaveBeenCalledWith('test.code-snippets', {
 				title: { ...snippet, scope: 'typescript' },
@@ -40,7 +40,7 @@ describe('updateSnippets', () => {
 
 		it('should remove scope for .json files', async () => {
 			(readSnippetFile as Mock).mockResolvedValue({});
-			const snippet: VSCodeSnippetV2 = { prefix: 'p', body: 'b', scope: 'ts' };
+			const snippet: VSCodeSnippet = { prefix: 'p', body: 'b', scope: 'ts' };
 			await writeSnippet('test.json', 'title', snippet);
 			// eslint-disable-next-line no-unused-vars
 			const { scope, ...rest } = snippet;

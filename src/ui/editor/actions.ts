@@ -8,7 +8,7 @@ import { getSelection } from '../../utils/user';
 import { getConfiguration, showInformationMessage } from '../../vscode';
 import { editSnippet } from './startEditor';
 import type { SnippetTreeItem } from '../templates';
-import type { SnippetDataV2, VSCodeSnippetV2 } from '../../types';
+import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getGlobalLangFile } from '../../utils/profile';
 import { snippetBodyAsString } from '../../utils/string';
 
@@ -70,13 +70,13 @@ export async function createSnippetFromSelection() {
 export async function editExistingSnippet(item: SnippetTreeItem) {
 	const { readSnippet } = await import('../../snippets/updateSnippets.js');
 	const snippetTitle = item.description;
-	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippetV2;
+	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
 	const langId =
 		_getLangFromSnippetFilePath(item.path) ??
 		(await _getLangFromScope(snippet.scope)) ??
 		getCurrentLanguage() ??
 		'plaintext';
-	const snippetData: SnippetDataV2 = {
+	const snippetData: SnippetData = {
 		...snippet,
 		filepath: item.path,
 		snippetTitle,

@@ -10,7 +10,7 @@ import type {
 	Disposable,
 } from 'vscode';
 import vscode, { onDidChangeActiveTextEditor, getConfiguration, Range, Uri } from '../../vscode';
-import type { SnippetDataV2 } from '../../types';
+import type { SnippetData } from '../../types';
 import type SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 import { highlightSnippetInsertionFeatures } from '../syntax';
@@ -150,11 +150,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 	}
 
 	/** create a new buffer, track snippet data, and open an editor */
-	async mountSnippet(
-		uri: UriType,
-		snippetData: SnippetDataV2,
-		body: string | undefined = undefined
-	) {
+	async mountSnippet(uri: UriType, snippetData: SnippetData, body: string | undefined = undefined) {
 		this._snippetDataManager.setData(uri.path, snippetData);
 		await this.createFile(uri, body ?? '');
 	}
@@ -179,7 +175,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 	}
 
 	/** returns snippet data of an open editor */
-	getSnippetData(): SnippetDataV2 | undefined {
+	getSnippetData(): SnippetData | undefined {
 		const uri = getCurrentUri();
 		if (uri) {
 			return this._snippetDataManager.getData(uri.path);

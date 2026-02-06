@@ -1,4 +1,4 @@
-type VSCodeSnippetV2 = {
+type VSCodeSnippet = {
 	/** The snippet body. Can be a single string or an array of strings. */
 	body: string | string[];
 
@@ -23,14 +23,14 @@ type VSCodeSnippetV2 = {
 
 type VSCodeSnippets = {
 	/** snippetTitle appears to the right of autocomplete trigger */
-	[snippetTitle: string]: VSCodeSnippetV2;
+	[snippetTitle: string]: VSCodeSnippet;
 };
 
 type SnippetMap = {
 	[filename: string]: VSCodeSnippets;
 };
 
-type SnippetDataV2 = Omit<VSCodeSnippetV2, 'body'> & {
+type SnippetData = Omit<VSCodeSnippet, 'body'> & {
 	/** snippetTitle appears to the right of autocomplete trigger */
 	snippetTitle: string;
 
@@ -47,11 +47,4 @@ type ShellSnippet = {
 	profile: string;
 };
 
-export type {
-	VSCodeSnippets,
-	SnippetMap,
-	SnippetData,
-	ShellSnippet,
-	SnippetDataV2,
-	VSCodeSnippetV2,
-};
+export type { VSCodeSnippets, SnippetMap, ShellSnippet, SnippetData, VSCodeSnippet };

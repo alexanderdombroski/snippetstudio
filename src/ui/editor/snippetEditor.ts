@@ -8,7 +8,7 @@ import vscode, {
 } from '../../vscode';
 import type SnippetEditorProvider from './SnippetEditorProvider';
 import { getCurrentUri } from '../../utils/fsInfo';
-import type { DiagnosticsLevel, VSCodeSnippetV2 } from '../../types';
+import type { DiagnosticsLevel, VSCodeSnippet } from '../../types';
 import { titleCase } from '../../utils/string';
 
 /** registers all snippet editor ui commands */
@@ -59,7 +59,7 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 	}
 	const { snippetTitle, prefix, scope, description, filepath, isFileTemplate, include, exclude } =
 		data;
-	const snippet: VSCodeSnippetV2 = { body };
+	const snippet: VSCodeSnippet = { body };
 	if (isFileTemplate) {
 		snippet.isFileTemplate = true;
 	} else {

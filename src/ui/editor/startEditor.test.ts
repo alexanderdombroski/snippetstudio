@@ -13,7 +13,7 @@ import {
 } from '../../vscode';
 import { createFile } from '../../snippets/newSnippetFile';
 import type { Uri as UriType } from 'vscode';
-import type { SnippetDataV2 } from '../../types';
+import type { SnippetData } from '../../types';
 
 vi.mock('./startEditor', async () => {
 	const actual = await vi.importActual('./startEditor');
@@ -36,7 +36,7 @@ vi.mock('./snippetFeatures');
 
 describe('startEditor', () => {
 	describe('editSnippet', () => {
-		let mockSnippetData: SnippetDataV2;
+		let mockSnippetData: SnippetData;
 		let mockDoc: { uri: UriType };
 
 		beforeEach(() => {
