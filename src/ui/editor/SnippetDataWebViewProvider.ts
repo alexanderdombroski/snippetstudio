@@ -12,7 +12,7 @@ import { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type SnippetDataManager from './SnippetDataManager';
-import type { SnippetData } from '../../types';
+import type { SnippetDataV2 } from '../../types';
 
 /** */
 export default class SnippetDataWebViewProvider implements WebviewViewProvider {
@@ -78,7 +78,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 			switch (message.command) {
 				case 'updateSnippetData': {
 					// Change the saveable context to prevent preemptive saving
-					const snippetData: SnippetData = message.data;
+					const snippetData: SnippetDataV2 = message.data;
 					const uriKey = getCurrentUri()?.path;
 					if (uriKey) {
 						this._snippetDataManager.setData(uriKey, snippetData);
@@ -87,7 +87,7 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 					break;
 				}
 				case 'updatePartialSnippetData': {
-					const { data, type }: { data: string; type: keyof SnippetData } = message.data;
+					const { data, type }: { data: string; type: keyof SnippetDataV2 } = message.data;
 					const uriKey = getCurrentUri()?.path;
 					if (uriKey) {
 						this._snippetDataManager.setPartialData(uriKey, type, data);

@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import SnippetDataManager from './SnippetDataManager';
-import type { SnippetData } from '../../types';
+import type { SnippetDataV2 } from '../../types';
 
 describe('SnippetDataManager', () => {
 	let dataManager: SnippetDataManager;
 	const uri1 = 'snippetstudio:///snippet';
-	const snippetData1: SnippetData = {
+	const snippetData1: SnippetDataV2 = {
 		snippetTitle: 'extension snippets',
 		prefix: 'test',
 		scope: 'typescript',
 		description: 'A test snippet',
-		filename: 'typescript.json',
+		filepath: 'typescript.json',
 	};
 
 	beforeEach(() => {

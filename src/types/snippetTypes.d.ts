@@ -12,7 +12,10 @@ type VSCodeSnippet = {
 	scope?: string;
 };
 
-type VSCodeSnippetV2 = VSCodeSnippet & {
+type VSCodeSnippetV2 = Omit<VSCodeSnippet, 'prefix'> & {
+	/** The prefix to trigger the snippet. This appears as the title of the autocomplete option */
+	prefix?: string | string[];
+
 	/** Snippet expanded with a command instead of a prefix */
 	isFileTemplate?: boolean;
 
@@ -45,7 +48,7 @@ type SnippetDataV2 = Omit<VSCodeSnippetV2, 'body'> & {
 	snippetTitle: string;
 
 	/** Filepath the snippet will be stored in */
-	filename: string;
+	filepath: string;
 };
 
 type ShellSnippet = {

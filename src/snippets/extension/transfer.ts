@@ -11,7 +11,7 @@ import { getExtensionSnippetLangs } from './locate';
 import { getCurrentLanguage } from '../../utils/language';
 import { snippetBodyAsString } from '../../utils/string';
 import type { ExtSnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
-import type { SnippetData, VSCodeSnippet } from '../../types';
+import type { SnippetDataV2, VSCodeSnippetV2 } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
 import { getWorkspaceFolder } from '../../utils/fsInfo';
 import { getActiveProfileSnippetsDir } from '../../utils/profile';
@@ -57,10 +57,10 @@ async function extractAndModify(item: SnippetTreeItem) {
 
 	const snippetTitle = item.description?.toString() ?? '';
 	const { readSnippet } = await import('../../snippets/updateSnippets.js');
-	const snippet = (await readSnippet(item.path, snippetTitle, true)) as VSCodeSnippet;
-	const snippetData: SnippetData = {
+	const snippet = (await readSnippet(item.path, snippetTitle, true)) as VSCodeSnippetV2;
+	const snippetData: SnippetDataV2 = {
 		...snippet,
-		filename: savePath,
+		filepath: savePath,
 		snippetTitle,
 	};
 	if (savePath.includes('.code-snippets')) {

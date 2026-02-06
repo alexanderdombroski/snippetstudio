@@ -10,7 +10,7 @@ import {
 	showWarningMessage,
 	getConfiguration,
 } from '../vscode';
-import type { VSCodeSnippet } from '../types';
+import type { VSCodeSnippet, VSCodeSnippetV2 } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'node:path';
 import fs from 'fs/promises';
@@ -25,7 +25,7 @@ import { getConfirmation } from '../utils/user';
 // -------------------------- CRUD operations --------------------------
 
 /** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
-export async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
+export async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippetV2) {
 	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		showWarningMessage(

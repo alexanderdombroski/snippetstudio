@@ -16,7 +16,7 @@ import SnippetDataWebViewProvider from './SnippetDataWebViewProvider';
 import SnippetEditorProvider from './SnippetEditorProvider';
 import initSnippetEditorCommands from './snippetEditor';
 import initSnippetFeatureCommands from './snippetFeatures';
-import type { SnippetData } from '../../types';
+import type { SnippetDataV2 } from '../../types';
 import { getExtensionContext } from '../../utils/context';
 
 let snippetEditorProvider: SnippetEditorProvider | undefined;
@@ -43,12 +43,13 @@ export async function _initEditing(context: ExtensionContext): Promise<SnippetEd
 }
 
 /** start up a new buffer editor to create/edit a snippet */
-async function editSnippet(langId: string, snippetData: SnippetData, body: string = '') {
+async function editSnippet(langId: string, snippetData: SnippetDataV2, body: string = '') {
 	const context = getExtensionContext();
 	try {
+		const { filepath } = snippetData;
 		if (getConfiguration('snippetstudio').get<boolean>('autoCreateSnippetFiles')) {
 			const { createFile } = await import('../../snippets/newSnippetFile.js');
-			const status = await createFile(snippetData.filename, false);
+			const status = await createFile(filepath, false);
 			if (status === 'skipped') {
 				return;
 			}
@@ -59,10 +60,7 @@ async function editSnippet(langId: string, snippetData: SnippetData, body: strin
 		) {
 			body = _escapeAllSnippetInsertionFeatures(body);
 		}
-		const uri = _newSnippetEditorUri(
-			langId,
-			path.extname(snippetData.filename) === '.code-snippets'
-		);
+		const uri = _newSnippetEditorUri(langId, path.extname(filepath) === '.code-snippets');
 		await provider.mountSnippet(uri, snippetData, body);
 		const doc = await openTextDocument(uri);
 		vscode.languages.setTextDocumentLanguage(doc, langId);

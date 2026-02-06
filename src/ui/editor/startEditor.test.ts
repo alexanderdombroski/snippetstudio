@@ -13,7 +13,7 @@ import {
 } from '../../vscode';
 import { createFile } from '../../snippets/newSnippetFile';
 import type { Uri as UriType } from 'vscode';
-import type { SnippetData } from '../../types';
+import type { SnippetDataV2 } from '../../types';
 
 vi.mock('./startEditor', async () => {
 	const actual = await vi.importActual('./startEditor');
@@ -36,7 +36,7 @@ vi.mock('./snippetFeatures');
 
 describe('startEditor', () => {
 	describe('editSnippet', () => {
-		let mockSnippetData: SnippetData;
+		let mockSnippetData: SnippetDataV2;
 		let mockDoc: { uri: UriType };
 
 		beforeEach(() => {
@@ -45,7 +45,7 @@ describe('startEditor', () => {
 				prefix: 'test',
 				description: 'a test snippet',
 				scope: 'typescript',
-				filename: '/path/to/snippets.json',
+				filepath: '/path/to/snippets.json',
 			};
 
 			mockDoc = {
@@ -81,7 +81,7 @@ describe('startEditor', () => {
 
 			await editSnippet('typescript', mockSnippetData, '');
 
-			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filename, false);
+			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filepath, false);
 		});
 
 		it('should not call createFile if autoCreateSnippetFiles is false', async () => {
@@ -102,7 +102,7 @@ describe('startEditor', () => {
 
 			const result = await editSnippet('typescript', mockSnippetData, '');
 
-			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filename, false);
+			expect(createFile).toHaveBeenCalledWith(mockSnippetData.filepath, false);
 			expect(_initEditing).not.toHaveBeenCalled();
 			expect(result).toBeUndefined();
 		});
