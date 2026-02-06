@@ -51,7 +51,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				{
-					filename: '/path/to/typescript.json',
+					filepath: '/path/to/typescript.json',
 					snippetTitle: '',
 					prefix: 'prefix',
 				},
@@ -79,7 +79,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				{
-					filename: '/path/to/typescript.json',
+					filepath: '/path/to/typescript.json',
 					snippetTitle: '',
 					prefix: '',
 				},
@@ -108,7 +108,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				{
-					filename: '/path/to/snippets.code-snippets',
+					filepath: '/path/to/snippets.code-snippets',
 					snippetTitle: '',
 					prefix: 'p',
 					scope: 'typescript',
@@ -136,7 +136,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'python',
 				{
-					filename: '/path/to/snippets.code-snippets',
+					filepath: '/path/to/snippets.code-snippets',
 					snippetTitle: '',
 					prefix: '',
 					scope: 'python',
@@ -157,7 +157,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'typescript',
 				{
-					filename: '/path/to/snippets.code-snippets',
+					filepath: '/path/to/snippets.code-snippets',
 					snippetTitle: '',
 					prefix: '',
 					scope: 'typescript',
@@ -178,7 +178,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
 				{
-					filename: '/path/to/snippets.code-snippets',
+					filepath: '/path/to/snippets.code-snippets',
 					snippetTitle: '',
 					prefix: '',
 					scope: 'plaintext',
@@ -201,7 +201,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'python',
 				{
-					filename: '/path/to/python.json',
+					filepath: '/path/to/python.json',
 					snippetTitle: '',
 					prefix: '',
 				},
@@ -221,7 +221,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
 				{
-					filename: '/path/to/plaintext.json',
+					filepath: '/path/to/plaintext.json',
 					snippetTitle: '',
 					prefix: '',
 				},
@@ -241,7 +241,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'python',
 				{
-					filename: '/path/to/python.json',
+					filepath: '/path/to/python.json',
 					snippetTitle: '',
 					prefix: '',
 				},
@@ -269,7 +269,7 @@ describe('handlers', () => {
 					prefix: 'test',
 					body: ['line 1', 'line 2'],
 					description: 'Test snippet',
-					filename: '/path/to/snippet.code-snippets',
+					filepath: '/path/to/snippet.code-snippets',
 					snippetTitle: 'mySnippet',
 				},
 				'line 1\nline 2'
@@ -288,7 +288,7 @@ describe('handlers', () => {
 			expect(editSnippet).toBeCalledWith(
 				'plaintext',
 				expect.objectContaining({
-					filename: '/path/to/snippet.code-snippets',
+					filepath: '/path/to/snippet.code-snippets',
 					snippetTitle: 'mySnippet',
 				}),
 				'single line'
@@ -317,7 +317,7 @@ describe('handlers', () => {
 				expect.objectContaining({
 					snippetTitle: 'title',
 					body: 'code',
-					filename: 'typescript.json',
+					filepath: 'typescript.json',
 					prefix: 'test',
 				}),
 				'code'
