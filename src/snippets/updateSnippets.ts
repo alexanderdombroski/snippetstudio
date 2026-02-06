@@ -10,7 +10,7 @@ import {
 	showWarningMessage,
 	getConfiguration,
 } from '../vscode';
-import type { VSCodeSnippet, VSCodeSnippetV2 } from '../types';
+import type { VSCodeSnippetV2 } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'node:path';
 import fs from 'fs/promises';
@@ -69,7 +69,7 @@ export async function readSnippet(
 	filepath: string,
 	snippetTitle: string,
 	isExtensionSnippet?: boolean
-): Promise<VSCodeSnippet | undefined> {
+): Promise<VSCodeSnippetV2 | undefined> {
 	const snippets = await getCacheManager().getSnippets(filepath, {
 		isExtensionSnippet,
 		showError: true,
@@ -104,7 +104,7 @@ export async function moveSnippet(item: SnippetTreeItem) {
 		return;
 	}
 
-	const snippet = (await readSnippet(item.path, item.description)) as VSCodeSnippet;
+	const snippet = (await readSnippet(item.path, item.description)) as VSCodeSnippetV2;
 	if (path.extname(item.path) === '.code-snippets' && !snippet.scope) {
 		snippet.scope = 'global';
 	}

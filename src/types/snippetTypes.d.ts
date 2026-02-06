@@ -28,7 +28,7 @@ type VSCodeSnippetV2 = Omit<VSCodeSnippet, 'prefix'> & {
 
 type VSCodeSnippets = {
 	/** snippetTitle appears to the right of autocomplete trigger */
-	[snippetTitle: string]: VSCodeSnippet;
+	[snippetTitle: string]: VSCodeSnippetV2;
 };
 
 type SnippetMap = {

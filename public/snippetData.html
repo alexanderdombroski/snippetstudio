@@ -22,7 +22,7 @@
 			</div>
 
 			<details>
-				<summary>Advanced Configuration</summary>
+				<summary>Extra Configuration</summary>
 				<input type="checkbox" name="isFileTemplate" id="isFileTemplate" />
 				<label for="isFileTemplate">File Template</label>
 				<label for="include">Include:</label>
@@ -35,7 +35,7 @@
 
 			<button type="submit" id="saveButton">Save</button>
 
-			<p>Snippet will be stored at:&nbsp;<span id="filename"></span></p>
+			<p>Snippet will be stored at:&nbsp;<span id="filepath"></span></p>
 		</form>
 
 		<script>
@@ -48,15 +48,28 @@
 				const formData = new FormData(event.currentTarget);
 				const data = {
 					snippetTitle: formData.get('snippetTitle'),
-					prefix: formData.get('prefix'),
-					filename: document.getElementById('filename').innerText,
+					filepath: document.getElementById('filepath').innerText,
 				};
 				const desc = formData.get('description');
 				if (desc) data.description = desc;
 				const scope = formData.get('scope');
 				if (showScope) data.scope = scope || 'global';
+				const isFileTemplate = formData.get('isFileTemplate');
+				if (isFileTemplate) {
+					data.isFileTemplate = isFileTemplate;
+				} else {
+					data.prefix = formData.get('prefix');
+				}
+				const include = formData.get('include');
+				if (include) {
+					data.include = include;
+				}
+				const exclude = formData.get('exclude');
+				if (exclude) {
+					data.exclude = exclude;
+				}
 
-				vscode.postMessage({ command: 'updateSnippetData', data: data });
+				vscode.postMessage({ command: 'updateSnippetData', data });
 			});
 
 			// ---------- Init form ----------
@@ -87,7 +100,7 @@
 							exclude,
 							scope,
 							description,
-							filename,
+							filepath,
 						} = message.data;
 						document.getElementById('snippetTitle').value = snippetTitle;
 						const prefixInput = document.getElementById('prefix');
@@ -110,7 +123,7 @@
 						if (exclude) {
 							document.getElementById('exclude').value = exclude;
 						}
-						document.getElementById('filename').innerText = filename;
+						document.getElementById('filepath').innerText = filepath;
 						break;
 
 					default:
@@ -206,7 +219,7 @@
 						margin-bottom: var(--spacing-sm);
 					}
 
-					/* ----- Advanced Configuration ----- */
+					/* ----- Extra Configuration ----- */
 					&:has(#isFileTemplate:checked) #prefixContainer {
 						display: none;
 					}
@@ -224,7 +237,7 @@
 								content: '';
 							}
 							&::before {
-								margin-right: 1em;
+								margin-right: 0.8em;
 								content: '[+]';
 							}
 						}
