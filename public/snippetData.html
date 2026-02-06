@@ -71,24 +71,30 @@
 						document.getElementById('scopeContainer').style.display = showScope ? 'block' : 'none';
 						break;
 
-					case 'returnData':
-						document.getElementById('snippetForm').requestSubmit();
-						break;
-
 					case 'setIsEditorActive':
 						saveButton.ariaDisabled = String(!message.data);
 						saveButton.disabled = !message.data;
 						break;
 
 					case 'initForm':
-						const data = message.data;
-						document.getElementById('snippetTitle').value = data.snippetTitle;
-						const prefix = Array.isArray(data.prefix) ? data.prefix.join(',') : data.prefix;
-						document.getElementById('prefix').value = prefix;
-						if (data.description)
-							document.getElementById('description').innerText = data.description;
-						if (showScope && data.scope) document.getElementById('scope').value = data.scope;
-						document.getElementById('filename').innerText = data.filename;
+						const { snippetTitle, prefix, isFileTemplate, included, excluded, scope, description, filename } =
+							message.data;
+						document.getElementById('snippetTitle').value = snippetTitle;
+						const prefixInput = document.getElementById('prefix');
+						if (isFileTemplate) {
+							prefixInput.required = false;
+							document.getElementById('isFileTemplate').value = true;
+						} else {
+							prefixInput.value = Array.isArray(prefix) ? prefix.join(',') : prefix;
+						}
+
+						if (description) {
+							document.getElementById('description').innerText = description;
+						}
+						if (showScope && scope) {
+							document.getElementById('scope').value = scope;
+						}
+						document.getElementById('filename').innerText = filename;
 						break;
 
 					default:
