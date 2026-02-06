@@ -62,7 +62,8 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 	const snippet: VSCodeSnippet = { body };
 	if (isFileTemplate) {
 		snippet.isFileTemplate = true;
-	} else {
+	}
+	if (prefix) {
 		snippet.prefix =
 			!Array.isArray(prefix) && prefix?.includes(',')
 				? (prefix as string).trim().split(',')

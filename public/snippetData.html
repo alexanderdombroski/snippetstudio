@@ -11,10 +11,8 @@
 			<label for="snippetTitle">Title:</label>
 			<input type="text" id="snippetTitle" name="snippetTitle" required />
 
-			<div id="prefixContainer">
-				<label for="prefix">Prefix:</label>
-				<input type="text" id="prefix" name="prefix" required />
-			</div>
+			<label for="prefix">Prefix:</label>
+			<input type="text" id="prefix" name="prefix" />
 
 			<div id="scopeContainer">
 				<label for="scope">Scope:</label>
@@ -55,19 +53,13 @@
 				const scope = formData.get('scope');
 				if (showScope) data.scope = scope || 'global';
 				const isFileTemplate = formData.get('isFileTemplate');
-				if (isFileTemplate) {
-					data.isFileTemplate = isFileTemplate;
-				} else {
-					data.prefix = formData.get('prefix');
-				}
+				if (isFileTemplate) data.isFileTemplate = isFileTemplate;
+				const prefix = formData.get('prefix');
+				if (prefix) data.prefix = prefix;
 				const include = formData.get('include');
-				if (include) {
-					data.include = include;
-				}
+				if (include) data.include = include;
 				const exclude = formData.get('exclude');
-				if (exclude) {
-					data.exclude = exclude;
-				}
+				if (exclude) data.exclude = exclude;
 
 				vscode.postMessage({ command: 'updateSnippetData', data });
 			});
@@ -103,12 +95,11 @@
 							filepath,
 						} = message.data;
 						document.getElementById('snippetTitle').value = snippetTitle;
-						const prefixInput = document.getElementById('prefix');
 						if (prefix) {
+							const prefixInput = document.getElementById('prefix');
 							prefixInput.value = Array.isArray(prefix) ? prefix.join(',') : prefix;
 						}
 						if (isFileTemplate) {
-							prefixInput.required = false;
 							document.getElementById('isFileTemplate').checked = true;
 						}
 						if (description) {
@@ -161,14 +152,6 @@
 				};
 			}
 		</script>
-		<script type="module">
-			// ---------- ensure prefix XOR isFileTemplate is filled ----------
-			const checkbox = document.getElementById('isFileTemplate');
-			const prefixInput = document.getElementById('prefix');
-			checkbox.addEventListener('change', () => {
-				prefixInput.required = !checkbox.checked;
-			});
-		</script>
 
 		<style>
 			body {
@@ -220,10 +203,6 @@
 					}
 
 					/* ----- Extra Configuration ----- */
-					&:has(#isFileTemplate:checked) #prefixContainer {
-						display: none;
-					}
-
 					& details {
 						& summary {
 							margin-block: var(--spacing-sm);
