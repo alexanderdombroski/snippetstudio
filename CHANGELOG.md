@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [4.0](#400---unreleased) - Snippet Blob Scope
 - [3.5](#350---2026-01-29) - Shell Snippets UX
 - [3.4](#342---2026-01-26) - Built-in Extensions
 - [3.3](#330---2026-01-03) - Kiro Support
@@ -27,6 +28,20 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [4.0.0] - UNRELEASED
+
+### Added
+
+- New snippet options `isFileTemplate`, `exclude`, and `include`
+- TODO - Progressive enhancement to support IDEs behind v1.109
+- TODO - Icons in raw snippet files to edit snippets
+
+### Fixed
+
+- TODO - move snippets no longer duplicates files in quickpick
+
+### Changed
 
 ## [3.5.0] - 2026-01-29
 
