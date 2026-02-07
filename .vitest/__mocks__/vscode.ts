@@ -196,4 +196,5 @@ export default {
 	Location: class {},
 	ConfigurationTarget: {},
 	QuickPickItemKind: { Seperator: 0 },
+	version: '1.109.0-insiders',
 };

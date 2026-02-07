@@ -99,11 +99,12 @@ describe('SnippetDataWebViewProvider', () => {
 			await provider.resolveWebviewView(mockWebviewView, {} as any, {} as any);
 		});
 
-		it('should post updateScope message', () => {
+		it('should post filterFields message', () => {
 			provider.initMessages(testUri);
 			expect(mockWebview.postMessage).toHaveBeenCalledWith({
-				command: 'updateScope',
+				command: 'filterFields',
 				showScope: true,
+				showGlob: true,
 			});
 		});
 

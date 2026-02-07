@@ -9,6 +9,7 @@ import {
 	initGlobalStore,
 	_initUserPath,
 	getExtensionContext,
+	getVersion,
 } from './context';
 import { context } from '../../.vitest/__mocks__/shared';
 
@@ -250,6 +251,52 @@ describe('context', () => {
 
 			expect(readJsonC).not.toHaveBeenCalled();
 			expect(result).toBeUndefined();
+		});
+	});
+
+	describe('getVersion', () => {
+		it('should return a SemVer object for a valid version', () => {
+			vi.spyOn(vscode, 'version', 'get').mockReturnValue('1.85.2');
+
+			const result = getVersion();
+
+			expect(result).toEqual({
+				major: 1,
+				minor: 85,
+				patch: 2,
+			});
+		});
+		it('parses prerelease versions correctly', () => {
+			vi.spyOn(vscode, 'version', 'get').mockReturnValue('1.86.0-insider');
+
+			const result = getVersion();
+
+			expect(result).toEqual({
+				major: 1,
+				minor: 86,
+				patch: 0,
+				prerelease: 'insider',
+			});
+		});
+
+		it('supports complex prerelease identifiers', () => {
+			vi.spyOn(vscode, 'version', 'get').mockReturnValue('1.109.0-alpha.1');
+
+			const result = getVersion();
+
+			expect(result).toEqual({
+				major: 1,
+				minor: 109,
+				patch: 0,
+				prerelease: 'alpha.1',
+			});
+		});
+		it('returns null for an invalid version string', () => {
+			vi.spyOn(vscode, 'version', 'get').mockReturnValue('invalid-version');
+
+			const result = getVersion();
+
+			expect(result).toBeNull();
 		});
 	});
 });
