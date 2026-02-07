@@ -930,7 +930,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^22.19.3",
-		"@types/vscode": "^1.99.0",
+		"@types/vscode": "^1.105.0",
 		"@typescript-eslint/eslint-plugin": "^8.54.0",
 		"@typescript-eslint/parser": "^8.54.0",
 		"@vitest/coverage-v8": "^4.0.18",
