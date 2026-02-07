@@ -6,6 +6,7 @@ import {
 	editSnippet,
 } from './startEditor';
 import {
+	executeCommand,
 	getConfiguration,
 	openTextDocument,
 	showErrorMessage,
@@ -69,6 +70,9 @@ describe('startEditor', () => {
 
 			const doc = await editSnippet(langId, mockSnippetData, body);
 
+			expect(executeCommand).toBeCalledWith(
+				'workbench.view.extension.snippet-manager-view-container'
+			);
 			expect(showTextDocument).toBeCalledWith(mockDoc, expect.anything());
 			expect(doc).toBe(mockDoc);
 		});

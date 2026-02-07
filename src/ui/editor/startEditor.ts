@@ -4,6 +4,7 @@
 
 import type { ExtensionContext, Uri as UriType } from 'vscode';
 import vscode, {
+	executeCommand,
 	getConfiguration,
 	openTextDocument,
 	showErrorMessage,
@@ -64,6 +65,7 @@ async function editSnippet(langId: string, snippetData: SnippetData, body: strin
 		await provider.mountSnippet(uri, snippetData, body);
 		const doc = await openTextDocument(uri);
 		vscode.languages.setTextDocumentLanguage(doc, langId);
+		executeCommand('workbench.view.extension.snippet-manager-view-container');
 		await showTextDocument(doc, {
 			viewColumn: vscode.ViewColumn.Active,
 			preview: false,
