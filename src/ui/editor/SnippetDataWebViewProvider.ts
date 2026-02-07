@@ -13,17 +13,21 @@ import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type SnippetDataManager from './SnippetDataManager';
 import type { SnippetData } from '../../types';
+import { getVersion } from '../../utils/context';
 
-/** */
+/** Reads HTML for webview and sets up data connection via message passing */
 export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 	private _view?: WebviewView;
 	private _snippetDataManager: SnippetDataManager;
+	private _isGlobEngineSupport: boolean;
 
 	constructor(
 		private readonly _context: ExtensionContext,
 		manager: SnippetDataManager
 	) {
 		this._snippetDataManager = manager;
+		const version = getVersion();
+		this._isGlobEngineSupport = !!version && version.minor >= 109;
 	}
 
 	/** loads the webview and sets up messages */
@@ -108,8 +112,9 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 		const view = this._view?.webview;
 		if (view) {
 			view.postMessage({
-				command: 'updateScope',
+				command: 'filterFields',
 				showScope: uri.query.includes('showScope=true'),
+				showGlob: this._isGlobEngineSupport,
 			});
 			if (this._snippetDataManager.hasKey(uri.path)) {
 				view.postMessage({

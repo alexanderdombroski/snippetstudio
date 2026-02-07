@@ -80,3 +80,31 @@ export function getUserPath(): string {
 			throw new Error("Unknown OS: Couldn't find user path");
 	}
 }
+
+type SemVer = {
+	major: number;
+	minor: number;
+	patch: number;
+	prerelease?: string;
+};
+
+/** Returns details about the VS Code API version */
+export function getVersion(): SemVer | null {
+	const match = vscode.version.match(/^(\d+)\.(\d+)\.(\d+)(?:-([\w.-]+))?$/);
+
+	if (!match) return null;
+
+	const [, major, minor, patch, prerelease] = match;
+
+	const semVer: SemVer = {
+		major: Number(major),
+		minor: Number(minor),
+		patch: Number(patch),
+	};
+
+	if (prerelease) {
+		semVer.prerelease = prerelease;
+	}
+
+	return semVer;
+}

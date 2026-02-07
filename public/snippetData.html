@@ -23,10 +23,12 @@
 				<summary>Extra Configuration</summary>
 				<input type="checkbox" name="isFileTemplate" id="isFileTemplate" />
 				<label for="isFileTemplate">File Template</label>
-				<label for="include">Include:</label>
-				<input type="text" name="include" id="include" />
-				<label for="exclude">Exclude:</label>
-				<input type="text" name="exclude" id="exclude" />
+				<div id="globContainer">
+					<label for="include">Include:</label>
+					<input type="text" name="include" id="include" />
+					<label for="exclude">Exclude:</label>
+					<input type="text" name="exclude" id="exclude" />
+				</div>
 				<label for="description">Description:</label>
 				<textarea id="description" name="description"></textarea>
 			</details>
@@ -73,9 +75,12 @@
 
 				const message = event.data;
 				switch (message.command) {
-					case 'updateScope':
+					case 'filterFields':
 						showScope = message.showScope;
 						document.getElementById('scopeContainer').style.display = showScope ? 'block' : 'none';
+						document.getElementById('globContainer').style.display = message.showGlob
+							? 'block'
+							: 'none';
 						break;
 
 					case 'setIsEditorActive':
