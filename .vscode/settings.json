@@ -18,6 +18,11 @@
 			"command": "npm run package && npx vsce package",
 			"runImmediately": true,
 			"profile": "zsh"
+		},
+		{
+			"command": "git clean -fx '*.vsix'",
+			"runImmediately": true,
+			"profile": "zsh"
 		}
 	]
 }
