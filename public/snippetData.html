@@ -9,28 +9,30 @@
 	<body>
 		<form id="snippetForm">
 			<label for="snippetTitle">Title:</label>
-			<input type="text" id="snippetTitle" name="snippetTitle" required />
+			<input type="text" id="snippetTitle" name="snippetTitle" title="a unique id for a snippet" required />
 
 			<label for="prefix">Prefix:</label>
-			<input type="text" id="prefix" name="prefix" />
+			<input type="text" id="prefix" name="prefix" title="trigger to expand snippet" />
 
 			<div id="scopeContainer">
 				<label for="scope">Scope:</label>
-				<input type="text" id="scope" name="scope" />
+				<input type="text" id="scope" name="scope" title="scope snippet to specific language ids" />
 			</div>
 
 			<details>
 				<summary>Extra Configuration</summary>
-				<input type="checkbox" name="isFileTemplate" id="isFileTemplate" />
-				<label for="isFileTemplate">File Template</label>
+				<div title="snippet meant to replace content in file">
+					<input type="checkbox" name="isFileTemplate" id="isFileTemplate" />
+					<label for="isFileTemplate">File Template</label>
+				</div>
 				<div id="globContainer">
 					<label for="include">Include:</label>
-					<input type="text" name="include" id="include" />
+					<input type="text" name="include" id="include" title="scope snippet to specific filepaths" />
 					<label for="exclude">Exclude:</label>
-					<input type="text" name="exclude" id="exclude" />
+					<input type="text" name="exclude" id="exclude" title="blacklist specific filepaths" />
 				</div>
 				<label for="description">Description:</label>
-				<textarea id="description" name="description"></textarea>
+				<textarea id="description" name="description" title="a description for the snippet"></textarea>
 			</details>
 
 			<button type="submit" id="saveButton">Save</button>
