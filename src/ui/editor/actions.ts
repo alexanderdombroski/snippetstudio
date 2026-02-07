@@ -11,6 +11,7 @@ import type { SnippetTreeItem } from '../templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getGlobalLangFile } from '../../utils/profile';
 import { snippetBodyAsString } from '../../utils/string';
+import { getCacheManager } from '../../snippets/SnippetCacheManager';
 
 /** Started the editor for a new snippet of the current language */
 export async function createGlobalSnippet() {
@@ -69,6 +70,7 @@ export async function createSnippetFromSelection() {
 /** edit existing snippet */
 export async function editExistingSnippet(item: SnippetTreeItem) {
 	const { readSnippet } = await import('../../snippets/updateSnippets.js');
+	await getCacheManager().addSnippets(item.path, { showError: true }); // Force a refresh of the file
 	const snippetTitle = item.description;
 	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
 	const langId =
