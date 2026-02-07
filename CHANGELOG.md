@@ -35,7 +35,7 @@
 
 - New snippet options `isFileTemplate`, `exclude`, and `include`
 - TODO - Progressive enhancement to support IDEs behind v1.109
-- TODO - Icons in raw snippet files to edit snippets
+- Can select a snippet to edit directly from the snippet file
 
 ### Fixed
 

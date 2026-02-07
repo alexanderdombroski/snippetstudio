@@ -16,6 +16,7 @@ import {
 
 import { initGlobalStore } from './utils/context';
 import { getShellSnippets } from './ui/shell/config';
+import { initGutterLoading } from './ui/gutter/init';
 
 /** This method is called when your extension is activated */
 export async function activate(context: ExtensionContext) {
@@ -68,6 +69,8 @@ export async function activate(context: ExtensionContext) {
 		const { createStatusBar } = await import('./ui/statusBar.js');
 		createStatusBar(context);
 	}
+
+	initGutterLoading();
 
 	console.log('The extension "snippetstudio" is now active!');
 }

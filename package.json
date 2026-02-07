@@ -57,7 +57,8 @@
 	"preview": false,
 	"pricing": "Free",
 	"activationEvents": [
-		"onFileSystem:snippetstudio"
+		"onFileSystem:snippetstudio",
+		"onLanguage:snippets"
 	],
 	"main": "./dist/extension.js",
 	"contributes": {
