@@ -33,8 +33,9 @@
 
 ### Added
 
+- Redesign of snippet editor view
 - New snippet options `isFileTemplate`, `exclude`, and `include`
-- TODO - Progressive enhancement to support IDEs behind v1.109
+- Progressive enhancement to support IDEs behind v1.109
 - Can select a snippet to edit directly from the snippet file
 
 ### Fixed
