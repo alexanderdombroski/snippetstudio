@@ -1,3 +1,4 @@
+import type { Uri } from 'vscode';
 import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { refreshAll } from '../utils';
 
@@ -43,6 +44,18 @@ export async function moveHandler(item: SnippetTreeItem) {
 	const { moveSnippet } = await import('../../snippets/updateSnippets.js');
 	await moveSnippet(item);
 	refreshAll(true);
+}
+
+/** snippetstudio.snippet.newTemplate command handler */
+export async function newTemplateHandler(fileUri: Uri) {
+	const { createFileTemplate } = await import('../../ui/editor/actions.js');
+	await createFileTemplate(fileUri);
+}
+
+/** snippetstudio.snippet.usingPattern command handler */
+export async function usingPatternHandler(fileUri: Uri) {
+	const { createSnippetUsingFileExtension } = await import('../../ui/editor/actions.js');
+	await createSnippetUsingFileExtension(fileUri);
 }
 
 /** snippetstudio.snippet.addKeybinding command handler */

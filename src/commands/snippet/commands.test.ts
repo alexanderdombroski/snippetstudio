@@ -12,6 +12,8 @@ describe('Snippet Commands', () => {
 			'snippetstudio.snippet.edit',
 			'snippetstudio.snippet.delete',
 			'snippetstudio.snippet.move',
+			'snippetstudio.snippet.newTemplate',
+			'snippetstudio.snippet.usingPattern',
 			'snippetstudio.snippet.addKeybinding',
 		]);
 	});

@@ -8,6 +8,8 @@ import {
 	deleteSnippetHandler,
 	moveHandler,
 	addKeybindingHandler,
+	newTemplateHandler,
+	usingPatternHandler,
 } from './handlers';
 import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { promptAddKeybinding } from '../../snippets/keyBindings';
@@ -15,11 +17,14 @@ import { deleteSnippet, moveSnippet } from '../../snippets/updateSnippets';
 import { refreshAll } from '../utils';
 import { peekAtSnippet } from '../../ui/peeker/peek';
 import {
+	createFileTemplate,
 	createGlobalSnippet,
 	createSnippetAt,
 	createSnippetFromSelection,
+	createSnippetUsingFileExtension,
 	editExistingSnippet,
 } from '../../ui/editor/actions';
+import type { Uri } from 'vscode';
 
 vi.mock('../utils');
 vi.mock('../../ui/peeker/peek');
@@ -88,6 +93,20 @@ describe('handlers', () => {
 			await moveHandler(item);
 			expect(moveSnippet).toBeCalledWith(item);
 			expect(refreshAll).toBeCalled();
+		});
+	});
+
+	describe('newTemplateHandler', () => {
+		it('should run the command', async () => {
+			await newTemplateHandler({} as Uri);
+			expect(createFileTemplate).toBeCalled();
+		});
+	});
+
+	describe('usingPatternHandler', () => {
+		it('should run the command', async () => {
+			await usingPatternHandler({} as Uri);
+			expect(createSnippetUsingFileExtension).toBeCalled();
 		});
 	});
 
