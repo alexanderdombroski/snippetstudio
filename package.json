@@ -286,6 +286,16 @@
 				"when": false
 			},
 			{
+				"command": "snippetstudio.snippet.newTemplate",
+				"title": "New File Template",
+				"when": false
+			},
+			{
+				"command": "snippetstudio.snippet.usingPattern",
+				"title": "New Snippet for File Type",
+				"when": false
+			},
+			{
 				"command": "snippetstudio.profile.link",
 				"title": "Choose profiles to use file",
 				"when": false
@@ -452,6 +462,18 @@
 					"command": "snippetstudio.editor.insertVariableWithTransformation",
 					"group": "snippetstudio",
 					"when": "resourceScheme == snippetstudio"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "snippetstudio.snippet.newTemplate",
+					"when": "!explorerResourceIsFolder",
+					"group": "snippetstudio"
+				},
+				{
+					"command": "snippetstudio.snippet.usingPattern",
+					"when": "!explorerResourceIsFolder",
+					"group": "snippetstudio"
 				}
 			],
 			"view/title": [
