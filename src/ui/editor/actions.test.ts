@@ -3,18 +3,24 @@ import {
 	_defaultPrefix,
 	_getLangFromScope,
 	_getLangFromSnippetFilePath,
+	_getFileTypePattern,
+	_getUriInfo,
 	createGlobalSnippet,
 	createSnippetAt,
 	createSnippetFromSelection,
+	createSnippetUsingFileExtension,
+	createFileTemplate,
 	editExistingSnippet,
 } from './actions';
-import { getConfiguration, showInformationMessage } from '../../vscode';
+import { getConfiguration, showInformationMessage, openTextDocument } from '../../vscode';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import { getSelection } from '../../utils/user';
 import { getGlobalLangFile } from '../../utils/profile';
 import type { SnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import { editSnippet } from './startEditor';
 import { readSnippet } from '../../snippets/updateSnippets';
+import path from 'node:path';
+import type { Uri } from 'vscode';
 
 vi.mock('../utils');
 vi.mock('../../utils/language');
@@ -324,6 +330,114 @@ describe('handlers', () => {
 			);
 		});
 	});
+
+	describe('createSnippetUsingFileExtension', () => {
+		it('should create snippet with file extension pattern', async () => {
+			const fp = path.join('path', 'to', 'file.tsx');
+			const snippetsFilepath = path.join('path', 'to', 'typescript.json');
+			const mockUri = { path: fp } as Uri;
+			const mockDoc = { languageId: 'typescript', getText: vi.fn() };
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+			(getSelection as Mock).mockResolvedValue('const App = () => {};');
+			(getGlobalLangFile as Mock).mockResolvedValue(snippetsFilepath);
+			const mockGet = vi.fn().mockReturnValue('tsx');
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
+
+			await createSnippetUsingFileExtension(mockUri);
+
+			expect(editSnippet).toBeCalledWith(
+				'typescript',
+				expect.objectContaining({
+					filepath: snippetsFilepath,
+					snippetTitle: '',
+					prefix: 'tsx',
+					include: '*.tsx',
+				}),
+				'const App = () => {};'
+			);
+		});
+
+		it('should use empty string for body when no selection', async () => {
+			const fp = path.join('path', 'to', 'template.py');
+			const snippetsFilepath = path.join('path', 'to', 'python.json');
+			const mockUri = { path: fp } as Uri;
+			const mockDoc = { languageId: 'python' };
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+			(getSelection as Mock).mockResolvedValue(null);
+			(getGlobalLangFile as Mock).mockResolvedValue(snippetsFilepath);
+			const mockGet = vi.fn().mockReturnValue('');
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
+
+			await createSnippetUsingFileExtension(mockUri);
+
+			expect(editSnippet).toBeCalledWith(
+				'python',
+				expect.objectContaining({
+					filepath: snippetsFilepath,
+					include: '*.py',
+					prefix: '',
+					snippetTitle: '',
+				}),
+				''
+			);
+		});
+	});
+
+	describe('createFileTemplate', () => {
+		it('should create a file template with document content', async () => {
+			const fp = path.join('path', 'to', 'template.tsx');
+			const mockUri = { path: fp } as Uri;
+			const mockDoc = {
+				languageId: 'typescript',
+				getText: vi.fn().mockReturnValue('const Template = () => <div></div>;'),
+			};
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+			(getGlobalLangFile as Mock).mockResolvedValue('templates.json');
+			const mockGet = vi.fn().mockReturnValue('');
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
+
+			await createFileTemplate(mockUri);
+
+			expect(mockDoc.getText).toBeCalled();
+			expect(editSnippet).toBeCalledWith(
+				'typescript',
+				expect.objectContaining({
+					filepath: 'templates.json',
+					snippetTitle: 'template.tsx Template',
+					prefix: '',
+					include: 'template.tsx',
+					isFileTemplate: true,
+				}),
+				'const Template = () => <div></div>;'
+			);
+		});
+
+		it('should use basename as include pattern', async () => {
+			const fp = path.join('some', 'nested', 'path', 'myComponent.jsx');
+			const mockUri = { path: fp } as Uri;
+			const mockDoc = {
+				languageId: 'javascript',
+				getText: vi.fn().mockReturnValue('export default function() {}'),
+			};
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+			(getGlobalLangFile as Mock).mockResolvedValue('templates.json');
+			const mockGet = vi.fn().mockReturnValue('comp');
+			(getConfiguration as Mock).mockReturnValue({ get: mockGet });
+
+			await createFileTemplate(mockUri);
+
+			expect(editSnippet).toBeCalledWith(
+				'javascript',
+				expect.objectContaining({
+					snippetTitle: 'myComponent.jsx Template',
+					include: 'myComponent.jsx',
+					isFileTemplate: true,
+					filepath: 'templates.json',
+				}),
+				expect.anything()
+			);
+		});
+	});
 });
 
 describe('snippet handler utils', () => {
@@ -345,6 +459,57 @@ describe('snippet handler utils', () => {
 
 			const prefix = _defaultPrefix();
 			expect(prefix).toBe('');
+		});
+	});
+
+	describe('getFileTypePattern', () => {
+		it('should extract file extension with wildcard', () => {
+			const pattern = _getFileTypePattern('/path/to/file.tsx');
+			expect(pattern).toBe('*.tsx');
+		});
+
+		it('should work with simple filename', () => {
+			const pattern = _getFileTypePattern('component.jsx');
+			expect(pattern).toBe('*.jsx');
+		});
+
+		it('should handle multiple extensions (take first dot onward)', () => {
+			const pattern = _getFileTypePattern('archive.tar.gz');
+			expect(pattern).toBe('*.tar.gz');
+		});
+
+		it('should return the filename when no extension', () => {
+			const pattern = _getFileTypePattern('/path/to/Makefile');
+			expect(pattern).toBe('Makefile');
+		});
+
+		it('should handle dotfiles', () => {
+			const pattern = _getFileTypePattern('.bashrc');
+			expect(pattern).toBe('*.bashrc');
+		});
+	});
+
+	describe('getUriInfo', () => {
+		it('should open document and return doc and language id', async () => {
+			const mockUri = { path: '/path/to/file.ts' };
+			const mockDoc = { languageId: 'typescript', getText: vi.fn() };
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+
+			const result = await _getUriInfo(mockUri as any);
+
+			expect(openTextDocument).toBeCalledWith(mockUri);
+			expect(result).toEqual({ doc: mockDoc, langId: 'typescript' });
+		});
+
+		it('should work with python files', async () => {
+			const mockUri = { path: '/path/to/script.py' };
+			const mockDoc = { languageId: 'python' };
+			(openTextDocument as Mock).mockResolvedValue(mockDoc);
+
+			const result = await _getUriInfo(mockUri as any);
+
+			expect(result.langId).toBe('python');
+			expect(result.doc).toBe(mockDoc);
 		});
 	});
 

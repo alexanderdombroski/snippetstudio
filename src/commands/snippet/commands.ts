@@ -10,6 +10,8 @@ import {
 	deleteSnippetHandler,
 	moveHandler,
 	addKeybindingHandler,
+	newTemplateHandler,
+	usingPatternHandler,
 } from './handlers';
 
 /** register all snippet creation commands */
@@ -22,6 +24,8 @@ function initSnippetCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.snippet.edit', editHandler),
 		registerCommand('snippetstudio.snippet.delete', deleteSnippetHandler),
 		registerCommand('snippetstudio.snippet.move', moveHandler),
+		registerCommand('snippetstudio.snippet.newTemplate', newTemplateHandler),
+		registerCommand('snippetstudio.snippet.usingPattern', usingPatternHandler),
 		registerCommand('snippetstudio.snippet.addKeybinding', addKeybindingHandler)
 	);
 }
