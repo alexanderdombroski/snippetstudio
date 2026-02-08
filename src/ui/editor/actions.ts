@@ -5,13 +5,14 @@
 import path from 'node:path';
 import { getCurrentLanguage, selectLanguage } from '../../utils/language';
 import { getSelection } from '../../utils/user';
-import { getConfiguration, showInformationMessage } from '../../vscode';
+import { getConfiguration, openTextDocument, showInformationMessage } from '../../vscode';
 import { editSnippet } from './startEditor';
 import type { SnippetTreeItem } from '../templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getGlobalLangFile } from '../../utils/profile';
 import { snippetBodyAsString } from '../../utils/string';
 import { getCacheManager } from '../../snippets/SnippetCacheManager';
+import type { Uri } from 'vscode';
 
 /** Started the editor for a new snippet of the current language */
 export async function createGlobalSnippet() {
@@ -64,6 +65,62 @@ export async function createSnippetFromSelection() {
 			prefix: _defaultPrefix(),
 		},
 		(await getSelection()) ?? ''
+	);
+}
+
+/** Extracts an extended file extension identifier */
+export function _getFileTypePattern(fp: string): string {
+	const filename = path.basename(fp);
+	const firstDot = filename.indexOf('.');
+	if (firstDot === -1) {
+		return filename;
+	}
+
+	return `*${filename.slice(firstDot)}`;
+}
+
+/** Opens a uri to get information about it */
+export async function _getUriInfo(fileUri: Uri) {
+	const doc = await openTextDocument(fileUri);
+	return { doc, langId: doc.languageId } as const;
+}
+
+/** Create a snippet and use the file extension as a scope */
+export async function createSnippetUsingFileExtension(fileUri: Uri) {
+	const body = (await getSelection()) ?? '';
+	const include = _getFileTypePattern(fileUri.path);
+	const { langId } = await _getUriInfo(fileUri);
+	const filepath = await getGlobalLangFile(langId);
+
+	await editSnippet(
+		langId,
+		{
+			filepath,
+			snippetTitle: '',
+			prefix: _defaultPrefix(),
+			include,
+		},
+		body
+	);
+}
+
+/** Make current file into a file template */
+export async function createFileTemplate(fileUri: Uri) {
+	const include = path.basename(fileUri.path);
+	const { doc, langId } = await _getUriInfo(fileUri);
+	const body = doc.getText();
+	const filepath = await getGlobalLangFile(langId);
+
+	await editSnippet(
+		langId,
+		{
+			filepath,
+			snippetTitle: `${include} Template`,
+			prefix: _defaultPrefix(),
+			include,
+			isFileTemplate: true,
+		},
+		body
 	);
 }
 
