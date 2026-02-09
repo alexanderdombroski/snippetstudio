@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"module": "Node16",
+		"module": "Node20",
 		"target": "ES2022",
 		"lib": ["ES2022"],
 		"types": ["node"],
@@ -9,6 +9,6 @@
 		"strict": true /* enable all strict type-checking options */,
 		"skipLibCheck": true
 	},
-	"include": ["src", ".vitest/__mocks__"],
+	"include": ["src", ".vitest"],
 	"exclude": ["docs", "scripts", "vitest.config.ts"]
 }

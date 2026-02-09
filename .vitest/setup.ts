@@ -2,6 +2,9 @@ import { vi } from 'vitest';
 import { loadEnvFile } from 'node:process';
 import path from 'node:path';
 import { context } from './__mocks__/shared';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 try {
 	loadEnvFile(path.resolve(__dirname, '.env'));
