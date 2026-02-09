@@ -1,7 +1,7 @@
 ---
 title: Snippet Backups
 sidebar_label: Snippet Backups
-sidebar_position: 9
+sidebar_position: 10
 ---
 
 This guide shows how to back up all your snippets and import them later using `.code-profile` files in VS Code with the SnippetStudio extension.

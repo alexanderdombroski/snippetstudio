@@ -1,16 +1,14 @@
 --- 
 sidebar_label: Snippet Scoping
-title: Working with profile snippets
+title: Advanced Snippet Scoping
 sidebar_position: 7
 ---
-
-## Snippet Scopes
 
 Snippets can be scoped in different ways to control where they are available. The following scopes provide increasing levels of specificity.
 
 ### Language Snippet Scope
 
-Language snippet scope limits a snippet to files of a specific programming language.
+[Language snippet scope](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_language-snippet-scope) limits a snippet to files of a specific programming language. `<lang>.json` files include scope in the name, and `<name>.code-snipppets` files can include a scope property for each snippet.
 
 * Defined using a language identifier (for example: `javascript`, `python`)
 * Applies to **all files** of that language in the workspace
@@ -25,10 +23,10 @@ Language snippet scope limits a snippet to files of a specific programming langu
 
 ### Project Snippet Scope
 
-Project snippet scope makes a snippet available across the entire workspace, regardless of language or file type.
+[Project snippet scope](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_project-snippet-scope) makes a snippet available across the entire workspace, regardless of language or file type. Other workspaces won't have access to the local snippets.
 
 * Applies to all files in the project
-* Useful for organization- or project-specific conventions
+* Useful for organization or project-specific conventions <i className="codicon codicon-folder"></i>
 
 **Example use cases**
 
@@ -40,11 +38,11 @@ Project snippet scope makes a snippet available across the entire workspace, reg
 
 ### File Pattern Scope
 
-File pattern scope restricts snippets to files that match one or more glob patterns.
+[File pattern scope](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_file-pattern-scope) restricts snippets to files that match one or more glob patterns.
 
-* Uses glob-style patterns (for example: `src/**/*.ts`, `**/*.test.ts`)
+* Uses glob-style <i className="codicon codicon-regex"></i> patterns (for example: `src/**/*.ts`, `**/*.test.ts`)
 * Allows very fine-grained control over snippet availability
-* Can be combined with include and exclude rules
+* Can be combined with `include` and `exclude` rules
 
 **Example use cases**
 
@@ -63,8 +61,8 @@ Scopes can be combined with `include` and `exclude` fields to precisely control 
 ```json
 {
   "scope": "typescript",
-  "include": ["src/**/*.ts"],
-  "exclude": ["**/*.test.ts"]
+  "include": ["*.ts"],
+  "exclude": ["*.test.ts"]
 }
 ```
 
@@ -72,29 +70,28 @@ This makes the snippet available only in TypeScript source files, excluding test
 
 ---
 
-### Example: Project-wide snippet excluding generated files
-
-```json
-{
-  "scope": "project",
-  "exclude": ["dist/**", "node_modules/**"]
-}
-```
-
-This provides a project-level snippet while avoiding build output and dependencies.
-
----
-
 ### Example: File pattern scope for test utilities
 
 ```json
 {
-  "scope": "filePattern",
-  "include": ["**/*.test.ts", "**/*.spec.ts"]
+  "scope": "javascript",
+  "include": ["**/*.test.js", "**/*.spec.js"]
 }
 ```
 
 This snippet appears only in test files, regardless of language configuration elsewhere.
+
+### Example: Configuration File Template
+
+```json
+{
+  "scope": "json",
+  "isFileTemplate": true,
+  "include": ".prettierrc"
+}
+```
+
+This [file template](https://code.visualstudio.com/docs/editing/userdefinedsnippets#_file-template-snippets) <i className="codicon codicon-collection"></i> will only appear in the **Snippets: Fill File with Snippet** command quick pick if the file matches.
 
 ---
 
@@ -102,6 +99,8 @@ This snippet appears only in test files, regardless of language configuration el
 File pattern scope is only supported on platforms that use **VS Code version 1.109 or newer**.
 On older versions, file pattern–scoped snippets will be ignored.
 :::
+
+You can also scope snippets to only be used by specifc profiles. Read about Profile Snippets <i className="codicon codicon-organization"></i> next
 
 ---
 

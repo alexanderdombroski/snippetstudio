@@ -1,7 +1,7 @@
 ---
 sidebar_label: Profile Snippets
 title: Working with profile snippets
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 # Working with profile snippets

@@ -46,6 +46,8 @@
 
 ### Changed
 
+- TODO - are the some settings or functionality I should remove?
+
 ## [3.5.0] - 2026-01-29
 
 ### Added
