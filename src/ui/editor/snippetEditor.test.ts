@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, type Mock, type Mocked } from 'vitest';
-import initSnippetEditorCommands, { _saveSnippet } from './snippetEditor';
+import initSnippetEditorCommands, { _saveSnippet, _normalizeGlobValue } from './snippetEditor';
 import vscode, {
 	executeCommand,
+	getConfiguration,
 	onDidChangeActiveTextEditor,
 	registerCommand,
 	showErrorMessage,
@@ -69,16 +70,36 @@ describe('saveSnippet', () => {
 			} as TextDocument,
 		} as TextEditor);
 
+		(getConfiguration as Mock).mockReturnValue({ get: vi.fn(() => true) });
+
 		(mockEditor.getSnippetData as Mock).mockReturnValue({
 			snippetTitle: 'example',
-			prefix: 'snippet',
+			prefix: 'snippet, snip',
 			filename: 'example.code-snippets',
 			scope: 'markdown',
 			description: 'example snippet',
+			isFileTemplate: true,
+			include: '*.md',
+			exclude: '*.mdx',
 		});
 
 		await _saveSnippet(mockEditor);
 		expect(writeSnippet).toHaveBeenCalled();
 		expect(executeCommand).toHaveBeenCalledTimes(3);
+	});
+});
+
+describe('_normalizeGlobValue', () => {
+	it('returns the same array when passed an array', () => {
+		const input = ['**/*.js', '**/*.ts'];
+		expect(_normalizeGlobValue(input)).toEqual(input);
+	});
+
+	it('returns the original string when no comma is present', () => {
+		expect(_normalizeGlobValue('**/*.js')).toBe('**/*.js');
+	});
+
+	it('splits comma-separated strings into a trimmed array', () => {
+		expect(_normalizeGlobValue('**/*.js, **/*.ts')).toEqual(['**/*.js', '**/*.ts']);
 	});
 });

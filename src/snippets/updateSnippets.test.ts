@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, type Mock } from 'vitest';
+import { vi, describe, it, expect, type Mock, beforeAll } from 'vitest';
 import {
 	deleteSnippet,
 	writeSnippet,
@@ -57,14 +57,25 @@ describe('updateSnippets', () => {
 	});
 
 	describe('readSnippet', () => {
+		beforeAll(() => {
+			vi.spyOn(console, 'error');
+		});
+
 		it('should read a snippet', async () => {
 			const snippet = { prefix: 'p', body: 'b' };
 			(readSnippetFile as Mock).mockResolvedValue({ title: snippet });
-			vi.spyOn(console, 'error');
 			const result = await readSnippet('test2.json', 'title');
 
 			expect(console.error).not.toBeCalled();
 			expect(result).toEqual(snippet);
+		});
+
+		it('should log an error and return undefined when snippet not found', async () => {
+			(readSnippetFile as Mock).mockResolvedValue({});
+			const result = await readSnippet('test2.json', 'missing');
+
+			expect(console.error).toBeCalled();
+			expect(result).toBeUndefined();
 		});
 	});
 
