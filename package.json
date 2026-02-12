@@ -789,15 +789,13 @@
 					"type": "string",
 					"enum": [
 						"all",
-						"suppressed",
 						"none"
 					],
 					"default": "none",
 					"markdownDescription": "Control diagnostics for `snippetstudio` scheme",
 					"enumDescriptions": [
 						"Show all diagnostics",
-						"Mask syntax errors caused by insertion features",
-						"Remove all diagnostics within the scheme"
+						"Remove all diagnostics within the snippet editor"
 					]
 				},
 				"snippetstudio.export.location": {

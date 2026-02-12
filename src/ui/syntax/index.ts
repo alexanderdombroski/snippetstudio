@@ -1,6 +1,5 @@
-import type { DiagnosticsLevel } from '../../types';
-import vscode, { createTextEditorDecorationType, getConfiguration, Range } from '../../vscode';
-import type { DecorationOptions, Range as RangeType, TextDocument, TextEditor } from 'vscode';
+import { createTextEditorDecorationType, Range } from '../../vscode';
+import type { DecorationOptions, TextEditor } from 'vscode';
 
 const insertionFeatureDecorationType = createTextEditorDecorationType({
 	color: '#FFF', // White in Dark+
@@ -9,25 +8,10 @@ const insertionFeatureDecorationType = createTextEditorDecorationType({
 		color: '#D801F8', // Purple for Light+
 	},
 });
-const diagnosticSuppressorDecorationType = createTextEditorDecorationType({
-	backgroundColor: 'var(--vscode-editor-background)',
-	textDecoration: 'underline wavy var(--vscode-editor-background)', // Mask underline squiggles
-	isWholeLine: true,
-});
-const diagnosticSuppressorDecorationOverLine = createTextEditorDecorationType({
-	textDecoration: 'overline wavy var(--vscode-editor-background)', // Additional Coverup underline squiggles
-	isWholeLine: true,
-});
 
 /** adds text decoration to highlight snippet insertion features within a text editor */
 export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 	const document = editor.document;
-	const shouldMaskDiagnostics =
-		getConfiguration('snippetstudio').get<DiagnosticsLevel>('editor.diagnosticsLevel') ===
-		'suppressed';
-	const diagnostics = shouldMaskDiagnostics
-		? vscode.languages.getDiagnostics(document.uri)
-		: undefined;
 
 	const text = document.getText();
 	const regexes = [
@@ -39,39 +23,13 @@ export function highlightSnippetInsertionFeatures(editor: TextEditor) {
 		/(?<!\\)\$\{\d+\/.*?\/.*?\/[gimsuy]*\}/g,
 	];
 	const decorations: DecorationOptions[] = [];
-	const supressedDiagnostics: DecorationOptions[] = [];
-	const supressedDiagnosticsOverLine: DecorationOptions[] = [];
 
 	for (const match of regexes.flatMap((regex) => Array.from(text.matchAll(regex)))) {
 		const startPos = document.positionAt(match.index);
 		const endPos = document.positionAt(match.index + match[0].length);
 		const range = new Range(startPos, endPos);
 		decorations.push({ range });
-
-		diagnostics
-			?.filter((dg) => dg.range.intersection(range))
-			.forEach((dg) => {
-				supressedDiagnostics.push({ range: dg.range });
-				supressedDiagnosticsOverLine.push({ range: _moveRangeDown(dg.range, document) });
-				diagnostics.splice(diagnostics.indexOf(dg), 1);
-			});
 	}
 
 	editor.setDecorations(insertionFeatureDecorationType, decorations);
-	if (shouldMaskDiagnostics) {
-		editor.setDecorations(diagnosticSuppressorDecorationType, supressedDiagnostics);
-		editor.setDecorations(diagnosticSuppressorDecorationOverLine, supressedDiagnosticsOverLine);
-	}
-}
-
-/** moves a vscode range down a line and shrinks it to fit the textdocument */
-export function _moveRangeDown(range: RangeType, document: TextDocument): RangeType {
-	const newStartLine = Math.min(range.start.line + 1, document.lineCount - 1);
-	const newEndLine = Math.min(range.end.line + 1, document.lineCount - 1);
-
-	// Clamp the character positions to the line length
-	const newStartChar = Math.min(range.start.character, document.lineAt(newStartLine).text.length);
-	const newEndChar = Math.min(range.end.character, document.lineAt(newEndLine).text.length);
-
-	return new Range(newStartLine, newStartChar, newEndLine, newEndChar);
 }

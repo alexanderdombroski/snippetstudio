@@ -1,3 +1,3 @@
-type DiagnosticsLevel = 'all' | 'suppressed' | 'none';
+type DiagnosticsLevel = 'all' | 'none';
 
 export type { DiagnosticsLevel };
