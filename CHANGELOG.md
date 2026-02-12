@@ -41,7 +41,7 @@
 
 ### Fixed
 
-- TODO - move snippets no longer duplicates files in quickpick
+- Move and export snippets no longer show duplicates in quickpick
 - Sidebar view automatically opens when editing snippets
 
 ### Changed

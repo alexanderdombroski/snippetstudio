@@ -18,7 +18,7 @@ import { getCurrentLanguage } from '../utils/language';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
 import type { VSCodeSnippet } from '../types';
-import { locateAllSnippetFiles } from './locateSnippets';
+import { getAllSnippetFilesList } from './locateSnippets';
 
 vi.mock('../utils/jsoncFilesIO');
 vi.mock('../utils/language');
@@ -81,7 +81,7 @@ describe('updateSnippets', () => {
 
 	describe('moveSnippet', () => {
 		it('should not move if no file is selected', async () => {
-			(locateAllSnippetFiles as Mock).mockReturnValue([[], [], {}]);
+			(getAllSnippetFilesList as Mock).mockReturnValue([]);
 			(showQuickPick as Mock).mockReturnValue(undefined);
 			await moveSnippet({
 				path: '/global/snippet',

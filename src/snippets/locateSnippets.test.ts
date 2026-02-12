@@ -4,6 +4,7 @@ import path from 'node:path';
 import {
 	_getGlobalLangSnippetFiles,
 	findCodeSnippetsFiles,
+	getAllSnippetFilesList,
 	locateAllSnippetFiles,
 	locateSnippetFiles,
 } from './locateSnippets';
@@ -123,6 +124,21 @@ describe('locateSnippets', () => {
 					path.join('/profiles', 'other', 'snippets', 'typescript.json'),
 				]),
 			});
+		});
+	});
+
+	describe('getAllSnippetFilesList', () => {
+		it('should return a list of all snippet files', async () => {
+			const files = await getAllSnippetFilesList();
+			expect(files).toStrictEqual(
+				expect.arrayContaining<string>([
+					'/workspace/.vscode/local.code-snippets',
+					'/profiles/active/snippets/typescript.json',
+					'/profiles/active/snippets/active.code-snippets',
+					'/profiles/other/snippets/typescript.json',
+					'/profiles/other/snippets/other.code-snippets',
+				])
+			);
 		});
 	});
 });

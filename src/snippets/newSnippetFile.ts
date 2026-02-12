@@ -14,7 +14,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { exists, getWorkspaceFolder } from '../utils/fsInfo';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
-import { locateAllSnippetFiles } from './locateSnippets';
+import { getAllSnippetFilesList } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
@@ -175,11 +175,7 @@ export async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 
 /** Uses a quickpick to allow the user select one or more snippet paths */
 async function chooseSnippetFiles(): Promise<string[] | undefined> {
-	const [actives, locals, profiles] = await locateAllSnippetFiles();
-	const profileFiles = Object.values(profiles)
-		.map((files) => files)
-		.flat();
-	const snippetFiles = [...actives, ...locals, ...profileFiles];
+	const snippetFiles = await getAllSnippetFilesList();
 	if (snippetFiles.length === 0) {
 		showWarningMessage('You have no snippets to export. Operation cancelled');
 		return;

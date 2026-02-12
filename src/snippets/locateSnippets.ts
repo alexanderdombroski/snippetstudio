@@ -108,6 +108,16 @@ export async function locateAllSnippetFiles(): Promise<[string[], string[], Prof
 	return [local, global, profile];
 }
 
+/** Returns a list of all user created snippet files */
+export async function getAllSnippetFilesList(): Promise<string[]> {
+	const [actives, locals, profiles] = await locateAllSnippetFiles();
+	const profileFiles = Object.values(profiles)
+		.map((files) => files)
+		.flat();
+	const snippetFiles = [...actives, ...locals, ...profileFiles];
+	return [...new Set(snippetFiles)];
+}
+
 /** Finds all global snippet files. */
 async function findAllGlobalSnippetFiles(globalDir: string): Promise<string[]> {
 	const snippetFiles: string[] = [];

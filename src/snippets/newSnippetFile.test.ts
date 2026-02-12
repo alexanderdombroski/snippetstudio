@@ -27,7 +27,7 @@ import {
 	updateAllSettings,
 } from './links/config';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
-import { locateAllSnippetFiles } from './locateSnippets';
+import { getAllSnippetFilesList, locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
 
 vi.mock('../utils/fsInfo');
@@ -101,7 +101,7 @@ describe('newSnippetFile', () => {
 
 	describe('mergeSnippetFiles', async () => {
 		it('should show a warning if you have no snippet files', async () => {
-			(locateAllSnippetFiles as Mock).mockReturnValue([[], [], {}]);
+			(getAllSnippetFilesList as Mock).mockReturnValue([]);
 			await mergeSnippetFiles();
 
 			expect(showWarningMessage).toBeCalledWith(expect.stringContaining('no snippets'));
@@ -113,7 +113,7 @@ describe('newSnippetFile', () => {
 				info: { prefix: ['info', 'logi'], body: 'console.info' },
 			};
 
-			(locateAllSnippetFiles as Mock).mockReturnValue([[fp], [], {}]);
+			(getAllSnippetFilesList as Mock).mockReturnValue([fp]);
 			(showQuickPick as Mock).mockImplementation((obj) => obj);
 			(readJsoncFilesAsync as Mock).mockResolvedValue([[fp, snippets]]);
 

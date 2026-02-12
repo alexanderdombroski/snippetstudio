@@ -15,7 +15,7 @@ import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'node:path';
 import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
-import { locateAllSnippetFiles } from './locateSnippets';
+import { getAllSnippetFilesList } from './locateSnippets';
 import type { SnippetTreeItem } from '../ui/templates';
 import { exists } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
@@ -86,11 +86,7 @@ export async function readSnippet(
 
 /** Handler for the snippet.move command */
 export async function moveSnippet(item: SnippetTreeItem) {
-	const [actives, locals, profiles] = await locateAllSnippetFiles();
-	const profileFiles = Object.values(profiles)
-		.map((files) => files)
-		.flat();
-	const files = [...actives, ...locals, ...profileFiles];
+	const files = await getAllSnippetFilesList();
 	const options = files
 		.filter((file) => file !== item.path)
 		.map((file) => ({
