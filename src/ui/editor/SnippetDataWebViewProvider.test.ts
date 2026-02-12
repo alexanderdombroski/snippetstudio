@@ -99,21 +99,22 @@ describe('SnippetDataWebViewProvider', () => {
 			await provider.resolveWebviewView(mockWebviewView, {} as any, {} as any);
 		});
 
-		it('should post filterFields message', () => {
-			provider.initMessages(testUri);
+		it('should post filterFields message', async () => {
+			await provider.initMessages(testUri);
 			expect(mockWebview.postMessage).toHaveBeenCalledWith({
 				command: 'filterFields',
 				showScope: true,
 				showGlob: true,
+				langIds: ['python', 'css', 'javascript', 'typescript', 'global'],
 			});
 		});
 
-		it('should post initForm message if data exists', () => {
+		it('should post initForm message if data exists', async () => {
 			const snippetData = { prefix: 'test' };
 			vi.spyOn(dataManager, 'hasKey').mockReturnValue(true);
 			vi.spyOn(dataManager, 'getData').mockReturnValue(snippetData as any);
 
-			provider.initMessages(testUri);
+			await provider.initMessages(testUri);
 
 			expect(mockWebview.postMessage).toHaveBeenCalledWith({
 				command: 'initForm',
@@ -121,9 +122,9 @@ describe('SnippetDataWebViewProvider', () => {
 			});
 		});
 
-		it('should not post initForm message if data does not exist', () => {
+		it('should not post initForm message if data does not exist', async () => {
 			vi.spyOn(dataManager, 'hasKey').mockReturnValue(false);
-			provider.initMessages(testUri);
+			await provider.initMessages(testUri);
 			expect(mockWebview.postMessage).not.toHaveBeenCalledWith(
 				expect.objectContaining({ command: 'initForm' })
 			);

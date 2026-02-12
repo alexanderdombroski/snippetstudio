@@ -8,7 +8,7 @@ import type {
 	Disposable,
 	Uri as UriType,
 } from 'vscode';
-import { Uri, executeCommand, onDidChangeActiveTextEditor } from '../../vscode';
+import { Uri, executeCommand, getLanguages, onDidChangeActiveTextEditor } from '../../vscode';
 import fs from 'node:fs/promises';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type SnippetDataManager from './SnippetDataManager';
@@ -108,13 +108,14 @@ export default class SnippetDataWebViewProvider implements WebviewViewProvider {
 	private schemeNotifier: Disposable | undefined;
 
 	/** sets up messages passing and sets up snippet format */
-	public initMessages(uri: UriType) {
+	public async initMessages(uri: UriType) {
 		const view = this._view?.webview;
 		if (view) {
 			view.postMessage({
 				command: 'filterFields',
 				showScope: uri.query.includes('showScope=true'),
 				showGlob: this._isGlobEngineSupport,
+				langIds: [...(await getLanguages()), 'global'],
 			});
 			if (this._snippetDataManager.hasKey(uri.path)) {
 				view.postMessage({

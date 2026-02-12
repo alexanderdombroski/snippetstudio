@@ -83,6 +83,11 @@
 						document.getElementById('globContainer').style.display = message.showGlob
 							? 'block'
 							: 'none';
+						if (showScope) {
+							const delimited = message.langIds.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+							const pattern = message.langIds = `^(${delimited})(,(${delimited}))*$`
+							document.getElementById('scope').setAttribute('pattern', pattern)
+						}
 						break;
 
 					case 'setIsEditorActive':
