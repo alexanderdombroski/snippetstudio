@@ -47,6 +47,7 @@
 ### Changed
 
 - TODO - are the some settings or functionality I should remove?
+- Increased the required extension API version to >1.105
 
 ## [3.5.0] - 2026-01-29
 
