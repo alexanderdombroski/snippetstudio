@@ -10,6 +10,7 @@ import type SnippetEditorProvider from './SnippetEditorProvider';
 import { getCurrentUri } from '../../utils/fsInfo';
 import type { DiagnosticsLevel, VSCodeSnippet } from '../../types';
 import { titleCase } from '../../utils/string';
+import { isUserSnippet } from '../../snippets/links/config';
 
 /** registers all snippet editor ui commands */
 function initSnippetEditorCommands(context: ExtensionContext, provider: SnippetEditorProvider) {
@@ -59,6 +60,17 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 	}
 	const { snippetTitle, prefix, scope, description, filepath, isFileTemplate, include, exclude } =
 		data;
+
+	if (vscode.env.isTelemetryEnabled) {
+		const type = isUserSnippet(filepath) ? 'user' : 'project';
+		const { captureEvent } = await import('../../utils/analytics.js');
+		captureEvent('saved_snippet', {
+			primaryLang: editor.document.languageId,
+			lines: body.length,
+			type,
+		});
+	}
+
 	const snippet: VSCodeSnippet = { body };
 	if (isFileTemplate) {
 		snippet.isFileTemplate = true;

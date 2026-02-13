@@ -87,7 +87,7 @@ async function main() {
 			'.js': '.mjs',
 		},
 		define: {
-			'process.env.USE_VERBOSE_LOGGING': JSON.stringify(!production),
+			'process.env.IS_PRODUCTION_BUILD': JSON.stringify(production),
 		},
 		drop: production ? ['console', 'debugger'] : [],
 		chunkNames: 'chunks/[name]-[hash]',

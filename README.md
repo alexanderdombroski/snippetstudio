@@ -92,6 +92,10 @@ See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discus
 
 Check out the [changelog](https://github.com/alexanderdombroski/snippetstudio/blob/main/CHANGELOG.md)!
 
+## Telemetry
+
+This extension tracks [basic Telemetry](https://github.com/alexanderdombroski/snippetstudio/discussions/110). You can [disable](https://code.visualstudio.com/docs/configure/telemetry#_disable-telemetry-reporting) it by ensuring `telemetry.telemetryLevel !== all`.
+
 ## License & Contributions
 
 This extension is open source! Feel free to add GitHub [issues](https://github.com/alexanderdombroski/snippetstudio/issues), [ideas](https://github.com/alexanderdombroski/snippetstudio/discussions) or [contribute](https://github.com/alexanderdombroski/snippetstudio/blob/main/CONTRIBUTING.md).

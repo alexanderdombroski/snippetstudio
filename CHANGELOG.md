@@ -38,6 +38,7 @@
 - Progressive enhancement to support IDEs behind v1.109
 - Can select a snippet to edit directly from the snippet file
 - New commands to create file templates and snippets from the file explorer
+- Basic Analytics
 
 ### Fixed
 

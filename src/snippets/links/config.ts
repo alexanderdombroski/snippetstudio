@@ -87,4 +87,4 @@ export async function isSnippetLinked(filepath: string, strict?: boolean): Promi
 	);
 }
 
-const isUserSnippet = (filepath: string) => isParentDir(getUserPath(), filepath);
+export const isUserSnippet = (filepath: string) => isParentDir(getUserPath(), filepath);

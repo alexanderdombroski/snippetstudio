@@ -24,6 +24,11 @@ export async function activate(context: ExtensionContext) {
 		return;
 	}
 
+	if (vscode.env.isTelemetryEnabled) {
+		const { captureEvent } = await import('./utils/analytics.js');
+		captureEvent('activated', { platform: vscode.env.appName, os: process.platform });
+	}
+
 	// Reset setting
 	vscode.workspace
 		.getConfiguration('problems')
