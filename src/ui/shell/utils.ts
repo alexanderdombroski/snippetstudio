@@ -72,7 +72,8 @@ type ShellProfiles = {
 };
 
 type ShellProfileConfig = {
-	path: string;
+	path?: string;
+	source?: string;
 	args?: string[];
 };
 
@@ -84,7 +85,9 @@ export async function getAllShellProfiles(): Promise<ShellProfiles> {
 
 	const entries = await Promise.all(
 		Object.entries(profiles).map(async ([key, profile]) =>
-			commandExists(profile.path) || (await _isExecutablePath(profile.path)) ? [key, profile] : null
+			commandExists(profile.path) || (await _isExecutablePath(profile.path)) || profile.source
+				? [key, profile]
+				: null
 		)
 	);
 
@@ -96,7 +99,8 @@ export async function getAllShellProfiles(): Promise<ShellProfiles> {
  * @param filePath - Absolute or relative path to a file.
  * @returns true if the file exists and is executable, false otherwise.
  */
-export async function _isExecutablePath(filePath: string): Promise<boolean> {
+export async function _isExecutablePath(filePath?: string): Promise<boolean> {
+	if (!filePath) return false;
 	try {
 		await access(filePath, constants.X_OK);
 		return true;
@@ -106,7 +110,8 @@ export async function _isExecutablePath(filePath: string): Promise<boolean> {
 }
 
 /** Check if a command or path to an executable exists. */
-export function commandExists(command: string): boolean {
+export function commandExists(command?: string): boolean {
+	if (!command) return false;
 	try {
 		const cmd = process.platform === 'win32' ? `where ${command}` : `command -v ${command}`;
 		execSync(cmd, { stdio: 'ignore' });

@@ -22,6 +22,8 @@ vi.mock('fs/promises', () => ({
 describe('shell utils', () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		(access as Mock).mockImplementation(() => {});
+		(execSync as Mock).mockImplementation(() => {});
 		(getConfiguration as Mock).mockReturnValue(config);
 		Object.defineProperty(process, 'platform', {
 			value: 'win32',
@@ -76,6 +78,7 @@ describe('shell utils', () => {
 			Object.defineProperty(vscode.window, 'terminals', {
 				value: [mockTerminal],
 			});
+			(execSync as Mock).mockImplementation(() => '12345: process info');
 			const terminal = await findInactiveTerminal('bash');
 			expect(terminal).toBeUndefined();
 		});
@@ -111,7 +114,7 @@ describe('shell utils', () => {
 
 	describe('getAllShellProfiles', () => {
 		it('should return configured profiles', async () => {
-			const profiles = { PowerShell: {}, bash: {} };
+			const profiles = { PowerShell: { path: '/Powershell' }, bash: { path: '/bash' } };
 			(config.get as Mock).mockReturnValue(profiles);
 			const result = await getAllShellProfiles();
 			expect(result).toEqual(profiles);
@@ -127,15 +130,33 @@ describe('shell utils', () => {
 		it('should filter out non executables', async () => {
 			const profiles = { PowerShell: {}, bash: {} };
 			(config.get as Mock).mockReturnValue(profiles);
-			(execSync as Mock).mockImplementationOnce(() => {
+			(execSync as Mock).mockImplementation(() => {
 				throw new Error();
 			});
-			(access as Mock).mockImplementationOnce(() => {
+			(access as Mock).mockImplementation(() => {
 				throw new Error();
 			});
 			const result = await getAllShellProfiles();
-			expect(result).toEqual({ bash: {} });
+			expect(result).toEqual({});
 			expect(config.get).toBeCalledWith('profiles.windows');
+		});
+	});
+
+	describe('commandExists', () => {
+		it("should return false if a command doesn't exist", () => {
+			(execSync as Mock).mockImplementation(() => {
+				throw new Error();
+			});
+			const exists = commandExists('jq');
+			expect(exists).toBe(false);
+		});
+		it('should use a different command for unix', () => {
+			Object.defineProperty(process, 'platform', {
+				value: 'darwin',
+			});
+			const exists = commandExists('jq');
+			expect(execSync).toBeCalledWith(expect.stringContaining('command -v'), expect.anything());
+			expect(exists).toBe(true);
 		});
 	});
 
@@ -152,24 +173,6 @@ describe('shell utils', () => {
 			});
 			const isExe = await _isExecutablePath(mockPath);
 			expect(isExe).toBe(false);
-		});
-	});
-
-	describe('commandExists', () => {
-		it("should return false if a command doesn't exist", () => {
-			(execSync as Mock).mockImplementationOnce(() => {
-				throw new Error();
-			});
-			const exists = commandExists('jq');
-			expect(exists).toBe(false);
-		});
-		it('should use a different command for unix', () => {
-			Object.defineProperty(process, 'platform', {
-				value: 'darwin',
-			});
-			const exists = commandExists('jq');
-			expect(execSync).toBeCalledWith(expect.stringContaining('command -v'), expect.anything());
-			expect(exists).toBe(true);
 		});
 	});
 });

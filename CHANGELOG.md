@@ -44,6 +44,7 @@
 
 - Move and export snippets no longer show duplicates in quickpick
 - Sidebar view automatically opens when editing snippets
+- Shell Snippets works again for Powershell without extra configuration
 
 ### Changed
 
@@ -51,7 +52,7 @@
 
 ### Removed
 
-- Unreliable Mask diagnostics setting. 
+- Unreliable Mask diagnostics setting
 
 ## [3.5.0] - 2026-01-29
 

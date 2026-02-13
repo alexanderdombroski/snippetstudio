@@ -104,7 +104,7 @@ export async function runShellSnippet(item: ShellTreeItem, { useActive }: RunOpt
 		if (!terminal) {
 			const profiles = await getAllShellProfiles();
 			const config = profiles[item.profile];
-			if (!config?.path) {
+			if (!(config?.path || config?.source)) {
 				showWarningMessage(
 					`Shell profile ${item.profile} not recognized. Recreate command with new profile or add ${item.profile} profile to VS Code configuration.`
 				);
@@ -147,7 +147,7 @@ export async function createShellSnippet(item?: ShellTreeDropdown) {
 	const profiles = await getAllShellProfiles();
 	if (!(defaultProfile in profiles)) {
 		showWarningMessage(
-			"VS Code configuration for `terminal.integrated.profiles` will cause issues because profile list contains no shell executables or doesn't contain the default."
+			`VS Code configuration for \`terminal.integrated.profiles.${getPlatformKey()}\` doesn't contain the default: ${defaultProfile}`
 		);
 		return;
 	}
