@@ -3,12 +3,11 @@ import { getCurrentLanguage } from '../../utils/language';
 import { Collapsed, Expanded, None, ThemeIcon, TreeItem } from '../../vscode';
 import type { ProfileInfo } from '../../types';
 import { getPathFromProfileLocation } from '../../utils/profile';
-import { capitalize } from '../../utils/string';
 
 /** Dropdown for a VS Code language */
 export class LanguageDropdown extends TreeItem {
 	constructor(lang: string, expanded: boolean) {
-		super(capitalize(lang), expanded ? Expanded : Collapsed);
+		super(lang.toUpperCase(), expanded ? Expanded : Collapsed);
 		this.iconPath = new ThemeIcon('code');
 		this.tooltip = 'The language of the open file';
 		this.contextValue = 'active-snippets';

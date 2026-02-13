@@ -28,7 +28,7 @@ describe('dropdowns', () => {
 		it('should create a language dropdown with correct properties', () => {
 			const dropdown = new LanguageDropdown('typescript', false);
 
-			expect(dropdown.label).toBe('Typescript');
+			expect(dropdown.label).toBe('TYPESCRIPT');
 			expect(dropdown.collapsibleState).toBe(Collapsed);
 			expect(dropdown.tooltip).toBe('The language of the open file');
 			expect(dropdown.contextValue).toBe('active-snippets');
