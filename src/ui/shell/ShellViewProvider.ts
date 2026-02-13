@@ -43,19 +43,10 @@ class ShellViewProvider implements TreeDataProvider<TreeItemType> {
 		} else if (element?.label === 'Local Shell Snippets') {
 			return this.localItems;
 		}
+		const collapsable = Boolean(this.globalItems.length || this.localItems.length);
 		return [
-			new ShellTreeDropdown(
-				'Global Shell Snippets',
-				Boolean(this.globalItems.length),
-				'globe',
-				true
-			),
-			new ShellTreeDropdown(
-				'Local Shell Snippets',
-				Boolean(this.localItems.length),
-				'folder',
-				false
-			),
+			new ShellTreeDropdown('Global Shell Snippets', collapsable, 'globe', true),
+			new ShellTreeDropdown('Local Shell Snippets', collapsable, 'folder', false),
 		];
 	}
 

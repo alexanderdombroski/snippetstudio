@@ -86,7 +86,7 @@ describe('ShellViewProvider', () => {
 			shellViewProvider.refresh();
 			let children = shellViewProvider.getChildren();
 			expect(children[0].hasItems).toBe(true);
-			expect(children[1].hasItems).toBe(false);
+			expect(children[1].hasItems).toBe(true);
 
 			(getShellSnippets as Mock).mockReturnValue([
 				[],
@@ -94,7 +94,7 @@ describe('ShellViewProvider', () => {
 			]);
 			shellViewProvider.refresh();
 			children = shellViewProvider.getChildren();
-			expect(children[0].hasItems).toBe(false);
+			expect(children[0].hasItems).toBe(true);
 			expect(children[1].hasItems).toBe(true);
 		});
 	});
