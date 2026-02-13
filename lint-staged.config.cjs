@@ -1,6 +1,8 @@
+const joinFiles = (files) => files.map((file) => `"${file}"`).join(' ');
+
 module.exports = {
 	'*.{ts,js,mjs}': (stagedFiles) => [
-		`prettier --write ${stagedFiles.join(' ')}`,
-		`eslint --max-warnings=0 ${stagedFiles.join(' ')}`,
+		`prettier --write ${joinFiles(stagedFiles)}`,
+		`eslint --max-warnings=0 ${joinFiles(stagedFiles)}`,
 	],
 };
