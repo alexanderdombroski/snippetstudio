@@ -84,7 +84,7 @@ See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discus
 
 ## Known Issues
 
-[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-90.1%25-lime)
+[![GitHub Open Issues](https://img.shields.io/github/issues-raw/alexanderdombroski/snippetstudio)](https://github.com/alexanderdombroski/snippetstudio/issues) ![Coverage](https://img.shields.io/badge/coverage-90.7%25-lime)
 
 [![Known Vulnerabilities](https://snyk.io/test/github/alexanderdombroski/snippetstudio/badge.svg)](https://snyk.io/test/github/alexanderdombroski/snippetstudio)
 
