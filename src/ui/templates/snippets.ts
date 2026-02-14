@@ -7,13 +7,13 @@ import { snippetBodyAsString } from '../../utils/string';
 
 /** A TreeItem containing a snippet */
 export class SnippetTreeItem extends TreeItem {
-	public readonly description: string;
+	public override readonly description: string;
 
 	constructor(
 		snippetTitle: string,
 		snippet: VSCodeSnippet,
 		public readonly path: string,
-		public readonly contextValue: string = 'snippet'
+		public override readonly contextValue: string = 'snippet'
 	) {
 		const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(', ') : snippet.prefix;
 		super(prefix ?? snippetTitle, None);
@@ -41,9 +41,9 @@ export class SnippetTreeItem extends TreeItem {
 /** A TreeItem containing snippet file metadata */
 export class SnippetFileTreeItem extends TreeItem {
 	constructor(
-		public readonly collapsibleState: TreeItemCollapsibleState,
+		public override readonly collapsibleState: TreeItemCollapsibleState,
 		public readonly filepath: string,
-		public readonly contextValue: string
+		public override readonly contextValue: string
 	) {
 		const label = (contextValue.includes('linked') ? '\u{1F517} ' : '') + path.basename(filepath);
 		super(label, collapsibleState);

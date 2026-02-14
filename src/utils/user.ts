@@ -80,7 +80,7 @@ async function getFileName(
 }
 
 /** Choose file name, export location, and return a filepath */
-async function getSavePath() {
+async function getSavePath(): Promise<string | undefined> {
 	const filename = (await getFileName()) + '.code-snippets';
 	if (filename === 'undefined.code-snippets') {
 		return;

@@ -131,11 +131,10 @@ export default [
 		},
 	},
 	{
-		files: ['**/*.ts'],
+		files: ['**/*.test.ts'],
 		plugins: {
 			jsdoc,
 		},
-		files: ['**/*.test.ts'],
 		rules: {
 			'jsdoc/require-jsdoc': 'off',
 		},
