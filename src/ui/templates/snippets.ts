@@ -1,6 +1,6 @@
 import path from 'node:path';
 import type { TreeItemCollapsibleState } from 'vscode';
-import { Collapsed, None, TreeItem } from '../../vscode';
+import { Collapsed, MarkdownString, None, TreeItem } from '../../vscode';
 import { shortenFullPath } from '../../utils/fsInfo';
 import type { SnippetContribution, VSCodeSnippet } from '../../types';
 import { snippetBodyAsString } from '../../utils/string';
@@ -19,7 +19,17 @@ export class SnippetTreeItem extends TreeItem {
 		super(prefix ?? snippetTitle, None);
 		this.description = snippetTitle;
 		const body = snippetBodyAsString(snippet.body);
-		this.tooltip = `Keyword: ${prefix}\n\`\`\`text\n${body}\`\`\`${snippet.description ? '\n\n' + snippet.description : ''}`;
+		let tooltip = '';
+		if (prefix) tooltip += `Keyword: ${prefix}\n\n`;
+		tooltip += `\`\`\`text\n${body}\n\`\`\`\n\n`;
+		if (snippet.description) tooltip += `${snippet.description}\n\n`;
+		if (snippet.scope || snippet.include || snippet.exclude) tooltip += 'Scope Modifcations:\n\n';
+		if (snippet.scope) tooltip += `- Languages: ${snippet.scope}\n`;
+		if (snippet.include)
+			tooltip += `- Included: ${String(snippet.include).replace(/\*/g, '\\*')}\n`;
+		if (snippet.exclude)
+			tooltip += `- Excluded: ${String(snippet.exclude).replace(/\*/g, '\\*')}\n`;
+		this.tooltip = new MarkdownString(tooltip.trimEnd());
 		this.command = {
 			title: 'Show Snippet Body',
 			command: 'snippetstudio.snippet.showBody',

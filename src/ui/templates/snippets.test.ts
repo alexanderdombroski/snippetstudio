@@ -4,6 +4,7 @@ import { shortenFullPath } from '../../utils/fsInfo';
 import { snippetBodyAsString } from '../../utils/string';
 import { Collapsed, None } from '../../vscode';
 import type { VSCodeSnippet, SnippetContribution } from '../../types';
+import type { MarkdownString } from 'vscode';
 
 vi.mock('../../utils/fsInfo');
 vi.mock('../../utils/string');
@@ -52,9 +53,9 @@ describe('snippets', () => {
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
-			expect(item.tooltip).toContain('Keyword: test');
-			expect(item.tooltip).toContain('test body');
-			expect(item.tooltip).toContain('This is a test snippet');
+			expect((item.tooltip as MarkdownString).value).toContain('Keyword: test');
+			expect((item.tooltip as MarkdownString).value).toContain('test body');
+			expect((item.tooltip as MarkdownString).value).toContain('This is a test snippet');
 		});
 
 		it('should not include description in tooltip when not provided', () => {
@@ -66,7 +67,9 @@ describe('snippets', () => {
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
-			expect(item.tooltip).toBe('Keyword: test\n```text\ntest body```');
+			expect((item.tooltip as MarkdownString).value).toBe(
+				'Keyword: test\n\n```text\ntest body\n```'
+			);
 		});
 
 		it('should set command for showing snippet body', () => {

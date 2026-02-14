@@ -186,7 +186,7 @@ describe('CompletionItemProvider', () => {
 		);
 	});
 
-	it('should register six completion items', () => {
+	it('should register six completion items', async () => {
 		const items = provider.provideCompletionItems(
 			{} as TextDocument,
 			{} as Position,

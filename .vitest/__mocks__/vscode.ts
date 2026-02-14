@@ -23,7 +23,14 @@ export const SnippetString = vi.fn();
 export const CompletionItem = vi.fn(function (this: { label: string }, label: string) {
 	this.label = label;
 });
-export const MarkdownString = vi.fn();
+export const MarkdownString = vi.fn(
+	class MarkdownString {
+		value: string;
+		constructor(str: string) {
+			this.value = str;
+		}
+	}
+);
 export const ThemeIcon = class {
 	iconPath: string;
 
@@ -197,4 +204,5 @@ export default {
 	ConfigurationTarget: {},
 	QuickPickItemKind: { Seperator: 0 },
 	version: '1.109.0-insiders',
+	MarkdownString,
 };
