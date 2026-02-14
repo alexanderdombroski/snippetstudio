@@ -29,6 +29,7 @@ export const MarkdownString = vi.fn(
 		constructor(str: string) {
 			this.value = str;
 		}
+		appendMarkdown = vi.fn();
 	}
 );
 export const ThemeIcon = class {
@@ -156,7 +157,7 @@ export default {
 		public fire = vi.fn();
 	},
 	window: {
-		activeTextEditor: vi.fn(),
+		activeTextEditor: undefined,
 		withProgress: vi.fn(),
 		createStatusBarItem: vi.fn(),
 		onDidChangeVisibleTextEditors: vi.fn(),
@@ -190,6 +191,7 @@ export default {
 		appName: 'Visual Studio Code',
 		appRoot: path.join('/Applications', 'VSCode', 'Contents'),
 		openExternal: vi.fn(),
+		machineId: 'TEST_MACHINE_ID',
 	},
 	StatusBarAlignment: { Right: 1 },
 	FileChangeType: { Changed: 1, Created: 2, Deleted: 3 },

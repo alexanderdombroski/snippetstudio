@@ -20,7 +20,7 @@ type CaptureBody = {
 };
 
 /** Send an event with posthog */
-export function captureEvent(event: string, data: JSONObject) {
+export async function captureEvent(event: string, data: JSONObject) {
 	if (!process.env.IS_PRODUCTION_BUILD) return;
 	const payload: CaptureBody = {
 		api_key: PUBLIC_API_KEY,
