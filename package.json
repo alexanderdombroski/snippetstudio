@@ -2,7 +2,7 @@
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
 	"description": "A snippets manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
-	"version": "3.5.0",
+	"version": "4.0.0",
 	"publisher": "AlexDombroski",
 	"author": {
 		"name": "Alex Dombroski",
