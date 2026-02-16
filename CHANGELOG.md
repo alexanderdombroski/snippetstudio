@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [4.1](#410---unreleased) - Code Server Support
 - [4.0](#401---2026-02-15) - Snippet Glob Scope
 - [3.5](#350---2026-01-29) - Shell Snippets UX
 - [3.4](#342---2026-01-26) - Built-in Extensions
@@ -28,6 +29,17 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [4.1.0] - UNRELEASED
+
+### Added
+
+- Support for Code Server
+
+### Fixed
+
+- Crash for users without global vscode storage
+
 
 ## [4.0.1] - 2026-02-15
 

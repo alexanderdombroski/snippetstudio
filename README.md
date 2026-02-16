@@ -79,8 +79,9 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 - [Kiro](https://kiro.dev/)
 - [Trae](https://www.trae.ai/)
 - [AbacusAI](https://desktop.abacus.ai/)
+- [Code Server](https://coder.com/)
 
-See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/19) for more info about adding support for other platforms.
+See this [discussion](https://github.com/alexanderdombroski/snippetstudio/discussions/114) for more info about adding support for other platforms.
 
 ## Known Issues
 

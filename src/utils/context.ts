@@ -71,8 +71,11 @@ export function getUserPath(): string {
 		Kiro: 'Kiro',
 		Trae: 'Trae',
 		AbacusAI: 'AbacusAI',
+		'code-server': 'code-server',
 	};
 	const appName = appNames[vscode.env.appName] ?? 'Code';
+	if (appName === 'code-server' && process.platform !== 'win32')
+		return path.join(os.homedir(), '.local', 'share', 'code-server', 'User');
 	switch (process.platform) {
 		case 'win32':
 			return path.join(os.homedir(), 'AppData', 'Roaming', appName, 'User');

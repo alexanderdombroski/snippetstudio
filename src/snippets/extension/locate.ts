@@ -31,6 +31,10 @@ export function _getExtensionsDirPath(): string {
 		Kiro: '.kiro',
 		Trae: '.trae',
 		AbacusAI: '.abacusai',
+		'code-server':
+			process.platform === 'win32'
+				? path.join('AppData', 'Roaming', 'code-server')
+				: path.join('.local', 'share', 'code-server'),
 	};
 	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');
