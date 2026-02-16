@@ -12,7 +12,7 @@
 			<input type="text" id="snippetTitle" name="snippetTitle" title="a unique id for a snippet" required />
 
 			<label for="prefix">Prefix:</label>
-			<input type="text" id="prefix" name="prefix" title="trigger to expand snippet" />
+			<input type="text" id="prefix" name="prefix" title="trigger to expand snippet" required />
 
 			<div id="scopeContainer">
 				<label for="scope">Scope:</label>
@@ -44,6 +44,19 @@
 			// ---------- Handle form submission ----------
 			let showScope;
 			const saveButton = document.getElementById('saveButton');
+			const prefixInput = document.getElementById('prefix');
+			const isFileTemplateCheckbox = document.getElementById('isFileTemplate');
+
+			// ---------- Handle prefix required state ----------
+			function updatePrefixRequired() {
+				if (isFileTemplateCheckbox.checked) {
+					prefixInput.removeAttribute('required');
+				} else {
+					prefixInput.setAttribute('required', '');
+				}
+			}
+
+			isFileTemplateCheckbox.addEventListener('change', updatePrefixRequired);
 
 			document.getElementById('snippetForm').addEventListener('submit', (event) => {
 				event.preventDefault();
@@ -84,9 +97,11 @@
 							? 'block'
 							: 'none';
 						if (showScope) {
-							const delimited = message.langIds.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-							const pattern = message.langIds = `^(${delimited})(,(${delimited}))*$`
-							document.getElementById('scope').setAttribute('pattern', pattern)
+							const delimited = message.langIds
+								.map((s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+								.join('|');
+							const pattern = (message.langIds = `^(${delimited})(,(${delimited}))*$`);
+							document.getElementById('scope').setAttribute('pattern', pattern);
 						}
 						break;
 
@@ -108,11 +123,10 @@
 						} = message.data;
 						document.getElementById('snippetTitle').value = snippetTitle;
 						if (prefix) {
-							const prefixInput = document.getElementById('prefix');
 							prefixInput.value = Array.isArray(prefix) ? prefix.join(',') : prefix;
 						}
 						if (isFileTemplate) {
-							document.getElementById('isFileTemplate').checked = true;
+							isFileTemplateCheckbox.checked = true;
 						}
 						if (description) {
 							document.getElementById('description').innerText = description;
@@ -127,6 +141,7 @@
 							document.getElementById('exclude').value = exclude;
 						}
 						document.getElementById('filepath').innerText = filepath;
+						updatePrefixRequired();
 						break;
 
 					default:
