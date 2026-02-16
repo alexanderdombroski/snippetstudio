@@ -4,6 +4,7 @@ import type { GlobalStorage } from '../types';
 import { readJsonC } from './jsoncFilesIO';
 import os from 'node:os';
 import path from 'node:path';
+import { exists } from './fsInfo';
 
 let extensionContext: ExtensionContext | undefined;
 
@@ -34,6 +35,9 @@ export async function _readGlobalStorage(): Promise<GlobalStorage | undefined> {
 	const userPath = _initUserPath();
 	if (userPath) {
 		const globalStoragePath = path.join(userPath, 'globalStorage', 'storage.json');
+		if (!(await exists(globalStoragePath))) {
+			return { userDataProfiles: [], profileAssociations: { emptyWindows: {}, workspaces: {} } };
+		}
 		return (await readJsonC(globalStoragePath)) as GlobalStorage;
 	}
 }
