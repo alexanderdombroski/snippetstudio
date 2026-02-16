@@ -17,6 +17,8 @@ export const {
 	Selection,
 	TreeItem,
 	Position,
+	DataTransfer,
+	DataTransferItem,
 } = vscode;
 
 export const { registerTextEditorCommand, registerCommand, executeCommand } = vscode.commands;
