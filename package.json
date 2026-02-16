@@ -2,7 +2,7 @@
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
 	"description": "A snippets manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"publisher": "AlexDombroski",
 	"author": {
 		"name": "Alex Dombroski",
@@ -20,7 +20,7 @@
 	},
 	"qna": "https://github.com/alexanderdombroski/snippetstudio/discussions",
 	"engines": {
-		"vscode": "^1.105.0",
+		"vscode": "^1.103.0",
 		"node": ">=20.0.0"
 	},
 	"capabilities": {
@@ -950,7 +950,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^22.19.11",
-		"@types/vscode": "^1.105.0",
+		"@types/vscode": "^1.103.0",
 		"@typescript-eslint/eslint-plugin": "^8.55.0",
 		"@typescript-eslint/parser": "^8.55.0",
 		"@vitest/coverage-v8": "^4.0.18",
@@ -962,7 +962,7 @@
 		"esbuild-visualizer": "^0.7.0",
 		"eslint": "^9.39.2",
 		"eslint-plugin-import": "^2.32.0",
-		"eslint-plugin-jsdoc": "^62.5.4",
+		"eslint-plugin-jsdoc": "^62.5.5",
 		"htmlnano": "^3.1.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^16.2.7",
