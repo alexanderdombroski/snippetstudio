@@ -27,3 +27,5 @@ Similar to code snippets, shell workspace snippets are associated with a project
 **Shell Profile**: the kind of terminal to use
 
 The extension will pull from VS Code configuration to know what default shells to suggest and use. Read the VS Code documentation about [terminal profiles](https://code.visualstudio.com/docs/terminal/profiles).
+
+![Run Shell Snippets](https://github.com/alexanderdombroski/snippetstudio/blob/main/public/examples/shell-snippets.gif?raw=true)

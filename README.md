@@ -16,6 +16,10 @@ The **Snippets** view updates to include all snippets of the active editor's lan
 
 ![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/edit.gif)
 
+Double click a snippet file to open it. Double click to peek at a snippet. You can also reorder and move snippets.
+
+![Reorder and Move Snippets Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/reorder.gif)
+
 See how to [manage snippets](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/snippet-crud) in depth.
 
 ### Managing Snippet Files
@@ -29,6 +33,12 @@ See how to [create global and project snippet files](https://alexanderdombroski.
 The **Snippet Editor** view only appears when creating or editing snippets.
 
 ![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/selection.gif)
+
+### Snippet Keybindings
+
+Command to easily add [attach a keybinding](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/keybinding-snippets) to a snippet. These are bound to the target languages by default.
+
+![Add a Keybinding](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/keybindings.gif)
 
 ### Tooling for Insertion Features
 
@@ -46,10 +56,6 @@ Import and export snippets using [GitHub gists](https://alexanderdombroski.githu
 
 VS Code already has [powerful syncing](https://code.visualstudio.com/docs/configure/settings-sync) that provides a way to backup your snippets.
 
-### Snippet Keybindings
-
-Command to easily add [attach a keybinding](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/keybinding-snippets) to a snippet. These are bound to the target languages by default.
-
 ### Profile Support
 
 Snippets added to the active profile, or choose files to [sync across all profiles](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/profile-snippets).
@@ -63,6 +69,8 @@ Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/
 ### Shell Snippets
 
 Save terminal commands commonly ran in the terminal across workspaces or globally. Hit the run button to automatically create a terminal and run it.
+
+![Shell Snippets Example](./public/examples/shell-snippets.gif)
 
 ## Requirements
 
