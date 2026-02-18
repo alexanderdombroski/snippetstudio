@@ -17,6 +17,8 @@ import {
 import { initGlobalStore } from './utils/context';
 import { getShellSnippets } from './ui/shell/config';
 import { initGutterLoading } from './ui/gutter/init';
+import { DragAndDropController } from './ui/DragAndDropController';
+import { SnippetDropProvider } from './ui/DocumentDropEditProvider';
 
 /** This method is called when your extension is activated */
 export async function activate(context: ExtensionContext) {
@@ -52,10 +54,18 @@ export async function activate(context: ExtensionContext) {
 		})
 	);
 
-	vscode.window.createTreeView('snippet-manager-view', { treeDataProvider });
+	vscode.window.createTreeView('snippet-manager-view', {
+		treeDataProvider,
+		dragAndDropController: new DragAndDropController('snippet-manager-view'),
+	});
 	vscode.window.createTreeView('location-manager', {
 		treeDataProvider: locationTreeProvider,
+		dragAndDropController: new DragAndDropController('location-manager'),
 	});
+
+	context.subscriptions.push(
+		vscode.languages.registerDocumentDropEditProvider({ scheme: 'file' }, new SnippetDropProvider())
+	);
 
 	// Register Commands
 	initSnippetUICommands(context);

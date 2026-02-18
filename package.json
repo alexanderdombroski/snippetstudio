@@ -942,10 +942,9 @@
 		"profile:lazy": "esbuild-lazy-analyzer --metafile ./profile/meta.json --outmeta ./profile/lazy.json --outreport ./profile/lazy.html && open ./profile/lazy.html",
 		"test": "vitest watch",
 		"test:env": "node .vitest/createEnv.mts",
-		"test:ui": "vitest watch --ui",
+		"test:ui": "vitest watch --ui --coverage",
 		"coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text --coverage.reporter=text-summary",
 		"coverage:publish": "vitest run --coverage --reporter=dot --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true",
-		"coverage:report": "npm run coverage:publish && open ./coverage/index.html",
 		"prepare": "husky"
 	},
 	"devDependencies": {

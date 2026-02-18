@@ -20,6 +20,12 @@ export const Uri = {
 	from: vi.fn((obj) => obj),
 };
 export const SnippetString = vi.fn();
+export const DocumentDropEdit = vi.fn(class {});
+export const DataTransferItem = vi.fn(
+	class {
+		constructor(public readonly value: any) {}
+	}
+);
 export const CompletionItem = vi.fn(function (this: { label: string }, label: string) {
 	this.label = label;
 });
