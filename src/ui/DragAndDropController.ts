@@ -1,6 +1,11 @@
-import type { CancellationToken, DataTransfer, TreeDragAndDropController } from 'vscode';
-import type { SnippetTreeItem } from './templates';
-import { DataTransferItem, showWarningMessage } from '../vscode';
+import type {
+	CancellationToken,
+	DataTransfer,
+	DataTransferItem as DataTransferItemType,
+	TreeDragAndDropController,
+} from 'vscode';
+import type { SnippetFileTreeItem, SnippetTreeItem } from './templates';
+import { DataTransferItem } from '../vscode';
 import { getCacheManager } from '../snippets/SnippetCacheManager';
 import { snippetBodyAsString } from '../utils/string';
 import type { VSCodeSnippets } from '../types';
@@ -40,7 +45,7 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 		)) as VSCodeSnippets;
 		const snippet = snippets?.[id];
 
-		// Allow reordering snippets
+		// Allow reordering and moving snippets
 		dataTransfer.set(this.viewId, new DataTransferItem({ id, fp: draggableItems[0].path }));
 
 		// Allow dropping into editor
@@ -50,23 +55,42 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 
 	/** Handle drops from other tree views */
 	async handleDrop?(
-		target: SnippetTreeItem | undefined,
+		target: SnippetTreeItem | SnippetFileTreeItem | undefined,
 		dataTransfer: DataTransfer,
 		// eslint-disable-next-line no-unused-vars
 		token: CancellationToken
 	): Promise<void> {
-		if (target?.contextValue !== 'snippet') return; // No destination
+		if (!target?.contextValue) return; // No destination
 
 		const item = dataTransfer.get(this.viewId);
 		if (!item) return; // Not our drag
 
 		if (item.value.id === target.description) return; // Drag canceled
 
-		if (target.path !== item.value.fp) {
-			showWarningMessage('Dragging to move snippets not implimented!');
-			return;
-		}
+		if (target.contextValue.includes('extension')) return;
+		if (!(target.contextValue === 'snippet' || target.contextValue.includes('snippet-filepath')))
+			return; // Not a valid target
 
+		const targetFilepath =
+			target.contextValue === 'snippet'
+				? (target as SnippetTreeItem).path
+				: (target as SnippetFileTreeItem).filepath;
+
+		if (target.contextValue === 'snippet' && targetFilepath === item.value.fp) {
+			await this.reorderSnippet(item, target as SnippetTreeItem);
+		} else {
+			const { moveSnippetToDestination } = await import('../snippets/updateSnippets.js');
+			await moveSnippetToDestination(item.value.id, item.value.fp, targetFilepath);
+		}
+		await Promise.all([
+			this.cacheManager.addSnippets(item.value.fp),
+			this.cacheManager.addSnippets(targetFilepath),
+		]);
+		refreshAll();
+	}
+
+	/** Reorders tree items within the same dropdown */
+	async reorderSnippet(item: DataTransferItemType, target: SnippetTreeItem) {
 		const snippets = (await this.cacheManager.getSnippets(item.value.fp)) as VSCodeSnippets;
 		const asArray = Object.entries(snippets);
 
@@ -93,7 +117,5 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 					];
 
 		await writeSnippetFile(item.value.fp, Object.fromEntries(reorderedSnippets), '', true);
-		await this.cacheManager.addSnippets(item.value.fp);
-		refreshAll();
 	}
 }

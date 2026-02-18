@@ -3,7 +3,6 @@
 // -------------------------------------------------------------------
 
 import {
-	executeCommand,
 	showQuickPick,
 	showInformationMessage,
 	showErrorMessage,
@@ -24,8 +23,15 @@ import { getConfirmation } from '../utils/user';
 
 // -------------------------- CRUD operations --------------------------
 
-/** adds a snippet to a snippet file. Overwrites entries of the same titleKey */
-export async function writeSnippet(filepath: string, titleKey: string, snippet: VSCodeSnippet) {
+/**
+ * adds a snippet to a snippet file. Overwrites entries of the same titleKey
+ * @returns true if it is successful
+ */
+export async function writeSnippet(
+	filepath: string,
+	titleKey: string,
+	snippet: VSCodeSnippet
+): Promise<boolean | undefined> {
 	const snippets = await readSnippetFile(filepath, { showError: true });
 	if (snippets === undefined) {
 		showWarningMessage(
@@ -42,6 +48,7 @@ export async function writeSnippet(filepath: string, titleKey: string, snippet: 
 
 	snippets[titleKey] = snippet;
 	await writeSnippetFile(filepath, snippets);
+	return true;
 }
 
 /** removes a single snippet from a snippet file */
@@ -100,15 +107,32 @@ export async function moveSnippet(item: SnippetTreeItem) {
 		return;
 	}
 
-	const snippet = (await readSnippet(item.path, item.description)) as VSCodeSnippet;
-	if (path.extname(item.path) === '.code-snippets' && !snippet.scope) {
+	await moveSnippetToDestination(item.description, item.path, selected.description);
+}
+
+/** Logic to move a snippet to another file */
+export async function moveSnippetToDestination(
+	snippetId: string,
+	startPath: string,
+	endPath: string
+) {
+	const cache = getCacheManager();
+	const destinationSnippets = await cache.getSnippets(endPath);
+	if (!destinationSnippets) return;
+	if (Object.hasOwn(destinationSnippets, snippetId)) {
+		showWarningMessage('Snippet file already has a snippet of this id');
+		return;
+	}
+
+	const snippet = (await readSnippet(startPath, snippetId)) as VSCodeSnippet;
+	if (path.extname(startPath) === '.code-snippets' && !snippet.scope) {
 		snippet.scope = 'global';
 	}
 
-	await Promise.all([
-		writeSnippet(selected.description, item.description, snippet),
-		executeCommand('snippetstudio.snippet.delete', item),
-	]);
+	const success = await writeSnippet(endPath, snippetId, snippet);
+	if (success) {
+		await deleteSnippet(startPath, snippetId);
+	}
 }
 
 /** deletes snippet file on user confirmation if not linked and exists */
@@ -140,10 +164,9 @@ export async function deleteSnippetFile(filepath: string) {
 		getCacheManager().remove(filepath);
 		showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
 	} catch (error) {
-		if (error instanceof Error) {
-			showErrorMessage(`Error deleting file: ${error.message}`);
-		} else {
-			showErrorMessage(`An unknown error occurred: ${error}`);
-		}
+		const msg = (error as Error).message
+			? `Error deleting file: ${(error as Error).message}`
+			: `An unknown error occurred: ${error}`;
+		showErrorMessage(msg);
 	}
 }
