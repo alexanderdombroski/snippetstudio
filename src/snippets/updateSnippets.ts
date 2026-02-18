@@ -52,13 +52,18 @@ export async function writeSnippet(
 }
 
 /** removes a single snippet from a snippet file */
-export async function deleteSnippet(filepath: string, titleKey: string) {
+export async function deleteSnippet(
+	filepath: string,
+	titleKey: string,
+	options?: { skipConfirmation: boolean }
+) {
 	const snippets = await getCacheManager().getSnippets(filepath, { showError: true });
 	if (!snippets) {
 		return;
 	}
 
 	if (
+		!options?.skipConfirmation &&
 		getConfiguration('snippetstudio').get<boolean>('confirmSnippetDeletion') &&
 		!(await getConfirmation(`Are you sure you want to delete "${titleKey}"?`))
 	) {
@@ -131,7 +136,7 @@ export async function moveSnippetToDestination(
 
 	const success = await writeSnippet(endPath, snippetId, snippet);
 	if (success) {
-		await deleteSnippet(startPath, snippetId);
+		await deleteSnippet(startPath, snippetId, { skipConfirmation: true });
 	}
 }
 
