@@ -50,7 +50,7 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 
 		// Allow dropping into editor
 		const body = snippetBodyAsString(snippet?.body);
-		dataTransfer.set('text/plain', new DataTransferItem(snippetBodyAsString(body)));
+		dataTransfer.set('text/plain', new DataTransferItem(body));
 	}
 
 	/** Handle drops from other tree views */
