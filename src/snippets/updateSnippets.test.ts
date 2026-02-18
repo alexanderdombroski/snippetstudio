@@ -5,6 +5,7 @@ import {
 	readSnippet,
 	deleteSnippetFile,
 	moveSnippet,
+	moveSnippetToDestination,
 } from './updateSnippets';
 import {
 	showInformationMessage,
@@ -45,6 +46,13 @@ describe('updateSnippets', () => {
 			// eslint-disable-next-line no-unused-vars
 			const { scope, ...rest } = snippet;
 			expect(writeSnippetFile).toHaveBeenCalledWith('test.json', { title: rest });
+		});
+
+		it('should show a warning if pre-write read operation failed', async () => {
+			(readSnippetFile as Mock).mockResolvedValue(undefined);
+			await writeSnippet('test.json', 'title', {} as VSCodeSnippet);
+			expect(showWarningMessage).toBeCalled();
+			expect(writeSnippetFile).not.toHaveBeenCalled();
 		});
 	});
 
@@ -91,6 +99,22 @@ describe('updateSnippets', () => {
 				contextValue: 'snippet',
 			});
 			expect(showInformationMessage).not.toBeCalled();
+		});
+	});
+
+	describe('moveSnippetToDestination', () => {
+		it('should not move snippest to files with the same key', async () => {
+			const snippet = { 'my-snippet': {} };
+			(readSnippetFile as Mock).mockResolvedValue(snippet);
+			await moveSnippetToDestination(
+				'my-snippet',
+				'move-test1.code-snippets',
+				'move-test2.code-snippets'
+			);
+			expect(showWarningMessage).toBeCalledWith(
+				expect.stringContaining('already has a snippet of this id')
+			);
+			expect(writeSnippetFile).not.toBeCalled();
 		});
 	});
 

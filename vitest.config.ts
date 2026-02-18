@@ -16,6 +16,7 @@ export default defineConfig({
 				'src/ui/templates/index.ts', // Barrel file
 				'src/vscode.ts', // Barrel file
 				'**/*.d.ts', // types
+				'**/.DS_Store',
 			],
 			watermarks: {
 				statements: [30, 60],
