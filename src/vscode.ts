@@ -19,6 +19,7 @@ export const {
 	Position,
 	DataTransfer,
 	DataTransferItem,
+	DocumentDropEdit,
 } = vscode;
 
 export const { registerTextEditorCommand, registerCommand, executeCommand } = vscode.commands;

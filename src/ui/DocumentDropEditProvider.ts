@@ -1,12 +1,12 @@
 import type {
 	CancellationToken,
 	DataTransfer,
-	DocumentDropEdit,
+	DocumentDropEdit as DocumentDropEditType,
 	DocumentDropEditProvider,
 	Position,
 	TextDocument,
 } from 'vscode';
-import vscode, { SnippetString } from '../vscode';
+import { SnippetString, DocumentDropEdit } from '../vscode';
 
 /** Allows user to drop snippets into the editor */
 export class SnippetDropProvider implements DocumentDropEditProvider {
@@ -17,12 +17,12 @@ export class SnippetDropProvider implements DocumentDropEditProvider {
 		dataTransfer: DataTransfer,
 		// eslint-disable-next-line no-unused-vars
 		token: CancellationToken
-	): Promise<DocumentDropEdit | undefined> {
+	): Promise<DocumentDropEditType | undefined> {
 		const item = dataTransfer.get('text/plain');
 		if (!item) return; // Not our drag
 
 		const snippetContent = await item.asString();
 
-		return new vscode.DocumentDropEdit(new SnippetString(snippetContent));
+		return new DocumentDropEdit(new SnippetString(snippetContent));
 	}
 }
