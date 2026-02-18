@@ -18,7 +18,7 @@ The **Snippets** view updates to include all snippets of the active editor's lan
 
 Double click a snippet file to open it. Double click to peek at a snippet. You can also reorder and move snippets.
 
-![Reorder and Move Snippets Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/reorder.gif)
+<img src="https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/reorder.gif" width="400" >
 
 See how to [manage snippets](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/snippet-crud) in depth.
 
