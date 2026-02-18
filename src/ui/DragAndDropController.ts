@@ -20,8 +20,8 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 
 	constructor(viewId: string) {
 		this.viewId = `application/vnd.code.tree.${viewId}`;
-		this.dragMimeTypes = [viewId];
-		this.dropMimeTypes = [viewId];
+		this.dragMimeTypes = [this.viewId];
+		this.dropMimeTypes = [this.viewId];
 	}
 
 	private cacheManager = getCacheManager();
