@@ -38,7 +38,9 @@ export default class SnippetCacheManager {
 		const tasks: Promise<void>[] = [];
 		for (const file of this.snippets.keys()) {
 			if (this.snippets.get(file)) {
-				tasks.push(this.addSnippets(file, { isExtensionSnippet: isExtensionSnippetPath(file) }));
+				tasks.push(
+					this.addSnippets(file, { isExtensionSnippet: await isExtensionSnippetPath(file) })
+				);
 			}
 		}
 		await Promise.all(tasks).then();

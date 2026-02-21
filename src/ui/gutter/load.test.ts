@@ -3,6 +3,7 @@ import type { TextEditor, TextDocument } from 'vscode';
 import { addGutterIcons } from './load';
 import { readSnippetFile } from '../../utils/jsoncFilesIO';
 import { Position } from '../../vscode';
+import path from 'node:path';
 
 vi.mock('../../utils/jsoncFilesIO');
 
@@ -12,7 +13,7 @@ describe('addGutterIcons', () => {
 
 	beforeEach(() => {
 		document = {
-			uri: { scheme: 'file' },
+			uri: { scheme: 'file', path: path.join('/snippets', 'test.code-snippets') },
 			isUntitled: false,
 			getText: vi.fn(() => '{"snippet1": {}} some text "snippet2": {}'),
 			positionAt: vi.fn((offset: number) => new Position(0, offset)),

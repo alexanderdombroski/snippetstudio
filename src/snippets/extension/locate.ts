@@ -20,7 +20,7 @@ import vscode from '../../vscode';
 const extensionsWithNoSnippets = new Set();
 
 /** returns the location of downloaded extensions for current platform and os */
-export function _getExtensionsDirPath(): string {
+export function getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
 		Antigravity: '.antigravity',
 		'Visual Studio Code': '.vscode',
@@ -43,7 +43,7 @@ export function _getExtensionsDirPath(): string {
 /** given the path of an extension snippet file, return the package.json contribution path */
 function getPackagePathFromSnippetPath(snippetPath: string): string {
 	const isBuiltIn = path.normalize(snippetPath).startsWith(path.normalize(vscode.env.appRoot));
-	const extDirPath = isBuiltIn ? _getBuiltInExtensionsPath() : _getExtensionsDirPath();
+	const extDirPath = isBuiltIn ? getBuiltInExtensionsPath() : getExtensionsDirPath();
 	const relative = path.relative(extDirPath, snippetPath);
 	const extensionFolder = relative.split(path.sep)[0];
 	return path.join(extDirPath, extensionFolder, 'package.json');
@@ -84,13 +84,13 @@ export function flattenScopedExtensionSnippets(
 // -------------------- Built-in Extension Files --------------------
 
 /** returns the location of built-in extensions */
-export function _getBuiltInExtensionsPath(): string {
+export function getBuiltInExtensionsPath(): string {
 	return path.join(vscode.env.appRoot, 'extensions');
 }
 
 /** finds all built-in extension snippet files and groups them by extension */
 export async function findBuiltInExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
-	return findExtensionSnippetsFilesInDir(_getBuiltInExtensionsPath());
+	return findExtensionSnippetsFilesInDir(getBuiltInExtensionsPath());
 }
 
 /** finds all extension snippet files in a given directory and groups them by extension */
@@ -134,8 +134,8 @@ async function findExtensionSnippetsFilesInDir(dir: string): Promise<ExtensionSn
 /** finds all extension snippet files and groups them by extension */
 export async function findAllExtensionSnippetsFiles(): Promise<ExtensionSnippetFilesMap> {
 	const [thirdParty, builtIn] = await Promise.all([
-		findExtensionSnippetsFilesInDir(_getExtensionsDirPath()),
-		findExtensionSnippetsFilesInDir(_getBuiltInExtensionsPath()),
+		findExtensionSnippetsFilesInDir(getExtensionsDirPath()),
+		findExtensionSnippetsFilesInDir(getBuiltInExtensionsPath()),
 	]);
 	return { ...thirdParty, ...builtIn };
 }

@@ -9,9 +9,9 @@ import {
 	findAllExtensionSnippetsFiles,
 	findBuiltInExtensionSnippetsFiles,
 	flattenScopedExtensionSnippets,
-	_getBuiltInExtensionsPath,
+	getBuiltInExtensionsPath,
 	getExtensionSnippetLangs,
-	_getExtensionsDirPath,
+	getExtensionsDirPath,
 } from './locate';
 import vscode from '../../vscode';
 
@@ -157,31 +157,31 @@ describe('locate', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code' });
 		});
 		it('should find the vscode extensions folder', () => {
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
+			expect(getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 		it('should update the path for the nightly build', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Visual Studio Code - Insiders' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
+			expect(getExtensionsDirPath()).toBe(configPath`.vscode-insiders`);
 		});
 		it('should update the path for VSCodium', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'VSCodium' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
+			expect(getExtensionsDirPath()).toBe(configPath`.vscode-oss`);
 		});
 		it('should update the path for Cursor', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Cursor' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.cursor`);
+			expect(getExtensionsDirPath()).toBe(configPath`.cursor`);
 		});
 		it('should update the path for Windsurf', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Windsurf' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.windsurf`);
+			expect(getExtensionsDirPath()).toBe(configPath`.windsurf`);
 		});
 		it('should update the path for Kiro', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'Kiro' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.kiro`);
+			expect(getExtensionsDirPath()).toBe(configPath`.kiro`);
 		});
 		it('should default to VS Code', () => {
 			Object.defineProperty(vscode.env, 'appName', { value: 'StarWarsIDE2000' });
-			expect(_getExtensionsDirPath()).toBe(configPath`.vscode`);
+			expect(getExtensionsDirPath()).toBe(configPath`.vscode`);
 		});
 	});
 
@@ -189,7 +189,7 @@ describe('locate', () => {
 		it('should return the path to built-in extensions', () => {
 			const mockAppRoot = '/mock/app/root';
 			Object.defineProperty(vscode.env, 'appRoot', { value: mockAppRoot });
-			expect(_getBuiltInExtensionsPath()).toBe(path.join(mockAppRoot, 'extensions'));
+			expect(getBuiltInExtensionsPath()).toBe(path.join(mockAppRoot, 'extensions'));
 		});
 	});
 

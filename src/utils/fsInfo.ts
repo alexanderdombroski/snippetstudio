@@ -49,9 +49,10 @@ function isParentDir(parent: string, child: string): boolean {
 }
 
 /** Detects whether snippet originates in extension folder */
-function isExtensionSnippetPath(fp: string): boolean {
-	const dir = path.posix.dirname(fp);
-	return /.+\/extensions\/[^/]+\/snippets$/.test(dir);
+async function isExtensionSnippetPath(fp: string): Promise<boolean> {
+	const { getExtensionsDirPath, getBuiltInExtensionsPath } =
+		await import('../snippets/extension/locate.js');
+	return isParentDir(getExtensionsDirPath(), fp) || isParentDir(getBuiltInExtensionsPath(), fp);
 }
 
 /** Check if a file/folder exists */

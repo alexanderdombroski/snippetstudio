@@ -2,6 +2,7 @@ import type { DecorationOptions, TextEditor } from 'vscode';
 import { readSnippetFile } from '../../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../../types';
 import { createTextEditorDecorationType, MarkdownString, Position, Range } from '../../vscode';
+import { isExtensionSnippetPath } from '../../utils/fsInfo';
 
 let pencilDecoration = createTextEditorDecorationType({
 	textDecoration: 'underline dashed',
@@ -11,6 +12,7 @@ let pencilDecoration = createTextEditorDecorationType({
 export async function addGutterIcons(editor: TextEditor) {
 	const doc = editor.document;
 	if (doc.uri.scheme !== 'file' || doc.isUntitled) return;
+	if (await isExtensionSnippetPath(doc.uri.path)) return;
 
 	const text = doc.getText();
 	const snippets = (await readSnippetFile(doc.fileName)) as VSCodeSnippets;

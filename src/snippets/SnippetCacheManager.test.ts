@@ -168,7 +168,7 @@ describe('SnippetCacheManager', () => {
 			manager.snippets.set('/path/to/file1.json', mockSnippets1);
 			manager.snippets.set('/path/to/file2.json', mockSnippets2);
 
-			(isExtensionSnippetPath as Mock).mockReturnValue(false);
+			(isExtensionSnippetPath as Mock).mockResolvedValue(false);
 			(readSnippetFile as Mock).mockResolvedValue(mockSnippets1);
 
 			await manager.hardRefresh();
@@ -180,7 +180,7 @@ describe('SnippetCacheManager', () => {
 			manager.snippets.set('/path/to/file1.json', null);
 			manager.snippets.set('/path/to/file2.json', { test: { prefix: 't', body: 'b' } });
 
-			(isExtensionSnippetPath as Mock).mockReturnValue(false);
+			(isExtensionSnippetPath as Mock).mockResolvedValue(false);
 			(readSnippetFile as Mock).mockResolvedValue({});
 
 			await manager.hardRefresh();
