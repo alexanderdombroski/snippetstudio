@@ -132,6 +132,9 @@ export async function moveSnippetToDestination(
 	const snippet = (await readSnippet(startPath, snippetId)) as VSCodeSnippet;
 	if (path.extname(startPath) === '.code-snippets' && !snippet.scope) {
 		snippet.scope = 'global';
+	} else if (path.extname(startPath) === '.json' && path.extname(endPath) === '.code-snippets') {
+		const { getLangFromSnippetFilePath } = await import('../ui/editor/actions.js');
+		snippet.scope = getLangFromSnippetFilePath(startPath);
 	}
 
 	const success = await writeSnippet(endPath, snippetId, snippet);

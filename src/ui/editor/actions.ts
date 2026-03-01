@@ -35,7 +35,7 @@ export async function createGlobalSnippet() {
 /** snippetstudio.snippet.createAt command handler */
 export async function createSnippetAt(filepath: string) {
 	const langId =
-		_getLangFromSnippetFilePath(filepath) ??
+		getLangFromSnippetFilePath(filepath) ??
 		(await selectLanguage()) ??
 		getCurrentLanguage() ??
 		'plaintext';
@@ -131,7 +131,7 @@ export async function editExistingSnippet(item: SnippetTreeItem) {
 	const snippetTitle = item.description;
 	const snippet = (await readSnippet(item.path, snippetTitle)) as VSCodeSnippet;
 	const langId =
-		_getLangFromSnippetFilePath(item.path) ??
+		getLangFromSnippetFilePath(item.path) ??
 		(await _getLangFromScope(snippet.scope)) ??
 		getCurrentLanguage() ??
 		'plaintext';
@@ -153,7 +153,7 @@ export function _defaultPrefix(): string {
 }
 
 /** attempts to return a language identifier from the snippet filepath */
-export function _getLangFromSnippetFilePath(filepath: string): string | undefined {
+export function getLangFromSnippetFilePath(filepath: string): string | undefined {
 	if (path.extname(filepath) === '.code-snippets') {
 		return;
 	}

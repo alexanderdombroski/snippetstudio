@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeAll, type Mock } from 'vitest';
 import {
 	_defaultPrefix,
 	_getLangFromScope,
-	_getLangFromSnippetFilePath,
+	getLangFromSnippetFilePath,
 	_getFileTypePattern,
 	_getUriInfo,
 	createGlobalSnippet,
@@ -515,27 +515,27 @@ describe('snippet handler utils', () => {
 
 	describe('getLangFromSnippetFilePath', () => {
 		it('should return undefined for .code-snippets files', () => {
-			const lang = _getLangFromSnippetFilePath('/path/to/my.code-snippets');
+			const lang = getLangFromSnippetFilePath('/path/to/my.code-snippets');
 			expect(lang).toBeUndefined();
 		});
 
 		it('should extract language from filename like typescript.json', () => {
-			const lang = _getLangFromSnippetFilePath('typescript.json');
+			const lang = getLangFromSnippetFilePath('typescript.json');
 			expect(lang).toBe('typescript');
 		});
 
 		it('should extract language from filename with full path', () => {
-			const lang = _getLangFromSnippetFilePath('/some/path/javascript.json');
+			const lang = getLangFromSnippetFilePath('/some/path/javascript.json');
 			expect(lang).toBe('javascript');
 		});
 
 		it('should return undefined for files with no extension', () => {
-			const lang = _getLangFromSnippetFilePath('/path/to/file');
+			const lang = getLangFromSnippetFilePath('/path/to/file');
 			expect(lang).toBeUndefined();
 		});
 
 		it('should return an empty string for dotfiles like .gitignore', () => {
-			const lang = _getLangFromSnippetFilePath('.gitignore');
+			const lang = getLangFromSnippetFilePath('.gitignore');
 			expect(lang).toBe('');
 		});
 	});
