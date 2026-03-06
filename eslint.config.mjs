@@ -1,6 +1,5 @@
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
-import importPlugin from 'eslint-plugin-import';
 import jsdoc from 'eslint-plugin-jsdoc';
 
 const customPlugin = {
@@ -50,7 +49,6 @@ const customPlugin = {
 };
 
 export default [
-	importPlugin.flatConfigs.typescript,
 	{
 		ignores: ['node_modules/**', 'dist/**'],
 	},
@@ -78,14 +76,6 @@ export default [
 				},
 			],
 
-			'import/extensions': [
-				'error',
-				'never',
-				{
-					ts: 'never',
-					js: 'never',
-				},
-			],
 			'custom/no-extension-on-imports-except-await': 'error',
 			'no-restricted-imports': ['error', { patterns: ['**/*.test*'] }],
 
