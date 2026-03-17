@@ -25,6 +25,24 @@ describe('language utils', () => {
 			const result = await selectLanguage();
 			expect(result).toBeUndefined();
 		});
+
+		it('should recommend the active language', async () => {
+			vscode.window.activeTextEditor = {
+				document: {
+					languageId: 'python',
+				},
+			} as any;
+			const langIds = await getLanguages();
+			const mockLangs = ['typescript', 'javascript', 'python'];
+			langIds.splice(0, langIds.length, ...mockLangs); // reset and fill
+
+			await selectLanguage();
+
+			expect(showQuickPick).toHaveBeenCalledWith(['python', 'typescript', 'javascript'], {
+				placeHolder: 'Select a language',
+				canPickMany: false,
+			});
+		});
 	});
 
 	describe('getCurrentLanguage', () => {
