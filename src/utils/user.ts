@@ -148,13 +148,13 @@ async function _unTabMultiline(selection: SelectionType, editor: TextEditor): Pr
 /** for every line, find the one with the least amount of spaces */
 function _countMinSpaces(lines: string[]): number {
 	let minCount = 9999;
-	for (let line of lines) {
+	for (const line of lines) {
 		if (line.trim().length === 0) {
 			continue;
 		}
 
 		let count = 0;
-		for (let char of line) {
+		for (const char of line) {
 			if (char === ' ') {
 				count += 1;
 			} else {

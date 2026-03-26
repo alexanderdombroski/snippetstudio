@@ -109,7 +109,7 @@ export async function mergeSnippetFiles(): Promise<VSCodeSnippets | undefined> {
 		return;
 	}
 
-	let snippetsToExport: VSCodeSnippets = {};
+	const snippetsToExport: VSCodeSnippets = {};
 	const snippetGroups: [string, VSCodeSnippets][] = await readJsoncFilesAsync(filepaths);
 	for (const [filepath, fileSnippets] of snippetGroups) {
 		const items = Object.entries(fileSnippets).map(([k, v]) => {

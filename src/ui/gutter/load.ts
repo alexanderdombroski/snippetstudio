@@ -4,7 +4,7 @@ import type { VSCodeSnippets } from '../../types';
 import { createTextEditorDecorationType, MarkdownString, Position, Range } from '../../vscode';
 import { isExtensionSnippetPath } from '../../utils/fsInfo';
 
-let pencilDecoration = createTextEditorDecorationType({
+const pencilDecoration = createTextEditorDecorationType({
 	textDecoration: 'underline dashed',
 });
 

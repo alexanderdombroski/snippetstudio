@@ -192,7 +192,7 @@ describe('Shell Command Handlers', () => {
 
 		it('should work with an option to use the active terminal.', async () => {
 			(findInactiveTerminal as Mock).mockReturnValue(undefined);
-			let activeTerminal = { state: { shell: 'zsh' }, ...terminal };
+			const activeTerminal = { state: { shell: 'zsh' }, ...terminal };
 			Object.defineProperty(vscode.window, 'activeTerminal', activeTerminal);
 			const item = { label: 'echo "hello"', runImmediately: true, profile: 'zsh' };
 

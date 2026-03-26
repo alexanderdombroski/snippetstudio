@@ -74,7 +74,7 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 			}
 
 			// Replace the entire document with the updated text.
-			let edit = new vscode.WorkspaceEdit();
+			const edit = new vscode.WorkspaceEdit();
 			edit.replace(
 				changeEvent.document.uri,
 				new Range(0, 0, changeEvent.document.lineCount, changeEvent.document.getText().length),
