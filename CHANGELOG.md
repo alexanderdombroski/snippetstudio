@@ -4,7 +4,7 @@
 
 ## Table of Contents
 
-- [4.1](#413---2026-03-17) - Code Server & Drag/Drop Support
+- [4.1](#414---2026-03-29) - Code Server & Drag/Drop Support
 - [4.0](#401---2026-02-15) - Snippet Glob Scope
 - [3.5](#350---2026-01-29) - Shell Snippets UX
 - [3.4](#342---2026-01-26) - Built-in Extensions
