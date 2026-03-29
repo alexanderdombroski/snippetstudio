@@ -30,6 +30,12 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [4.1.4] - 2026-03-29
+
+### Fixed
+
+- Is File Template checkbox correctly matches color theme
+
 ## [4.1.3] - 2026-03-17
 
 ### Changed

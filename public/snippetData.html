@@ -217,11 +217,18 @@
 					& input {
 						font-size: 0.7rem;
 						&[type='checkbox'] {
-							width: unset;
 							display: inline;
 							margin: 0;
 							margin-right: 4px;
 							vertical-align: middle;
+							appearance: none;
+							width: 1rem;
+							height: 1rem;
+							text-align: center;
+							
+							&:checked::after {
+								content: "\2713";
+							}
 						}
 					}
 					& textarea {
