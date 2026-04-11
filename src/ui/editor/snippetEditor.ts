@@ -82,7 +82,8 @@ export async function _saveSnippet(provider: SnippetEditorProvider) {
 				: prefix;
 	}
 	if (description) {
-		snippet.description = description.trim();
+		const normalizedDesc = (description as string).trim().split(/\r\n|\r|\n/);
+		snippet.description = normalizedDesc.length === 1 ? normalizedDesc[0] : normalizedDesc;
 	}
 	if (scope) {
 		snippet.scope = scope.trim();

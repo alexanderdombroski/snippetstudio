@@ -3,7 +3,7 @@ type VSCodeSnippet = {
 	body: string | string[];
 
 	/** The snippet description. This appears when hovering over the autocomplete option */
-	description?: string;
+	description?: string | string[];
 
 	/** The language scope(s) in which the snippet is valid. */
 	scope?: string;
