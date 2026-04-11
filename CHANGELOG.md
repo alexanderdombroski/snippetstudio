@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [4.2](#420---2026-04-10) - Array Descriptions
 - [4.1](#414---2026-03-29) - Code Server & Drag/Drop Support
 - [4.0](#401---2026-02-15) - Snippet Glob Scope
 - [3.5](#350---2026-01-29) - Shell Snippets UX
@@ -29,6 +30,19 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [4.2.0] - 2026-04-10
+
+### Added
+
+- Support for string array snippet descriptions
+- Multiline descriptions will save as an array
+
+### Fixed
+
+- Manually defined description arrays appear correctly in tooltips
+- Descriptions with newlines appear correctly in tooltips
+- Snippet description arrays will be parsed correctly when loaded into the snippet editor
 
 ## [4.1.4] - 2026-03-29
 
