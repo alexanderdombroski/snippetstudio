@@ -22,7 +22,8 @@ export class SnippetTreeItem extends TreeItem {
 		let tooltip = '';
 		if (prefix) tooltip += `Keyword: ${prefix}\n\n`;
 		tooltip += `\`\`\`text\n${body}\n\`\`\`\n\n`;
-		if (snippet.description) tooltip += `${snippet.description}\n\n`;
+		if (snippet.description)
+			tooltip += `${ensureString(snippet.description).replaceAll('\n', ' \\\n')}\n\n`;
 		if (snippet.scope || snippet.include || snippet.exclude) tooltip += 'Scope Modifcations:\n\n';
 		if (snippet.scope) tooltip += `- Languages: ${snippet.scope}\n`;
 		if (snippet.include)
