@@ -14,6 +14,7 @@ import type { SnippetData } from '../../types';
 import type SnippetDataManager from './SnippetDataManager';
 import { getCurrentUri } from '../../utils/fsInfo';
 import { highlightSnippetInsertionFeatures } from '../syntax';
+import { ensureString } from '../../utils/string';
 
 /** Provider that handles a custom buffer editor and changes within the editor */
 export default class SnippetEditorProvider implements FileSystemProvider {
@@ -151,6 +152,8 @@ export default class SnippetEditorProvider implements FileSystemProvider {
 
 	/** create a new buffer, track snippet data, and open an editor */
 	async mountSnippet(uri: UriType, snippetData: SnippetData, body: string | undefined = undefined) {
+		if (snippetData.description)
+			snippetData = { ...snippetData, description: ensureString(snippetData.description) };
 		this._snippetDataManager.setData(uri.path, snippetData);
 		await this.createFile(uri, body ?? '');
 	}
