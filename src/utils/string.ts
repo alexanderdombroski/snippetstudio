@@ -12,8 +12,8 @@ function capitalize(str: string): string {
 }
 
 /** ensures a snippet code is formatted as a string */
-function snippetBodyAsString(body: string | string[] | null | undefined) {
+function ensureString(body: string | string[] | null | undefined) {
 	return Array.isArray(body) ? body.join('\n') : (body ?? '');
 }
 
-export { titleCase, snippetBodyAsString, capitalize };
+export { titleCase, ensureString, capitalize };

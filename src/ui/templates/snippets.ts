@@ -3,7 +3,7 @@ import type { TreeItemCollapsibleState } from 'vscode';
 import { Collapsed, MarkdownString, None, TreeItem } from '../../vscode';
 import { shortenFullPath } from '../../utils/fsInfo';
 import type { SnippetContribution, VSCodeSnippet } from '../../types';
-import { snippetBodyAsString } from '../../utils/string';
+import { ensureString } from '../../utils/string';
 
 /** A TreeItem containing a snippet */
 export class SnippetTreeItem extends TreeItem {
@@ -18,7 +18,7 @@ export class SnippetTreeItem extends TreeItem {
 		const prefix = Array.isArray(snippet.prefix) ? snippet.prefix.join(', ') : snippet.prefix;
 		super(prefix ?? snippetTitle, None);
 		this.description = snippetTitle;
-		const body = snippetBodyAsString(snippet.body);
+		const body = ensureString(snippet.body);
 		let tooltip = '';
 		if (prefix) tooltip += `Keyword: ${prefix}\n\n`;
 		tooltip += `\`\`\`text\n${body}\n\`\`\`\n\n`;

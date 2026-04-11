@@ -15,7 +15,7 @@ import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import type { SnippetTreeItem } from '../ui/templates';
 import type { VSCodeSnippet } from '../types';
 import { getCurrentLanguage } from '../utils/language';
-import { snippetBodyAsString } from '../utils/string';
+import { ensureString } from '../utils/string';
 import { exists } from '../utils/fsInfo';
 import fs from 'node:fs/promises';
 
@@ -43,7 +43,7 @@ async function promptAddKeybinding(item: SnippetTreeItem) {
 			? 'editorTextFocus'
 			: `editorTextFocus && (${langs.map((lang) => `editorLangId == ${lang}`).join(' || ')})`,
 		args: {
-			snippet: snippetBodyAsString(snippet.body),
+			snippet: ensureString(snippet.body),
 		},
 	});
 

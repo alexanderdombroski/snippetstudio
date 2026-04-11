@@ -5,7 +5,7 @@ import { getActiveProfilePath } from '../utils/profile';
 import { readJsonC, writeJson } from '../utils/jsoncFilesIO';
 import { SnippetTreeItem } from '../ui/templates';
 import { readSnippet } from '../snippets/updateSnippets';
-import { snippetBodyAsString } from '../utils/string';
+import { ensureString } from '../utils/string';
 import type { Position } from 'vscode';
 import path from 'node:path';
 import { exists } from '../utils/fsInfo';
@@ -39,7 +39,7 @@ describe('keyBindings', () => {
 			(getActiveProfilePath as Mock).mockResolvedValue('/profile');
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(readJsonC as Mock).mockResolvedValue(keybindings);
-			(snippetBodyAsString as Mock).mockReturnValue('b');
+			(ensureString as Mock).mockReturnValue('b');
 			(openTextDocument as Mock).mockResolvedValue(doc);
 			(showTextDocument as Mock).mockResolvedValue(editor);
 
@@ -80,7 +80,7 @@ describe('keyBindings', () => {
 			(getActiveProfilePath as Mock).mockResolvedValue('/profile');
 			(readSnippet as Mock).mockResolvedValue(snippet);
 			(readJsonC as Mock).mockResolvedValue(keybindings);
-			(snippetBodyAsString as Mock).mockReturnValue('b');
+			(ensureString as Mock).mockReturnValue('b');
 			(openTextDocument as Mock).mockResolvedValue(doc);
 			(showTextDocument as Mock).mockResolvedValue(editor);
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { capitalize, snippetBodyAsString, titleCase } from './string';
+import { capitalize, ensureString, titleCase } from './string';
 
 describe('string utils', () => {
 	describe('titleCase', () => {
@@ -30,18 +30,18 @@ describe('string utils', () => {
 		});
 	});
 
-	describe('snippetBodyAsString', () => {
+	describe('ensureString', () => {
 		it('should convert a string array to a string', () => {
-			expect(snippetBodyAsString(['line 1', 'line 2'])).toBe('line 1\nline 2');
+			expect(ensureString(['line 1', 'line 2'])).toBe('line 1\nline 2');
 		});
 
 		it('should return the same string if a string is passed', () => {
-			expect(snippetBodyAsString('hello world')).toBe('hello world');
+			expect(ensureString('hello world')).toBe('hello world');
 		});
 
 		it('should return an empty string for null or undefined', () => {
-			expect(snippetBodyAsString(null)).toBe('');
-			expect(snippetBodyAsString(undefined)).toBe('');
+			expect(ensureString(null)).toBe('');
+			expect(ensureString(undefined)).toBe('');
 		});
 	});
 });

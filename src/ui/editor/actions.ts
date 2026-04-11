@@ -10,7 +10,7 @@ import { editSnippet } from './startEditor';
 import type { SnippetTreeItem } from '../templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getGlobalLangFile } from '../../utils/profile';
-import { snippetBodyAsString } from '../../utils/string';
+import { ensureString } from '../../utils/string';
 import { getCacheManager } from '../../snippets/SnippetCacheManager';
 import type { Uri } from 'vscode';
 
@@ -141,7 +141,7 @@ export async function editExistingSnippet(item: SnippetTreeItem) {
 		snippetTitle,
 	};
 
-	const body = snippetBodyAsString(snippet?.body);
+	const body = ensureString(snippet?.body);
 	await editSnippet(langId, snippetData, body);
 }
 

@@ -7,7 +7,7 @@ import type {
 import type { SnippetFileTreeItem, SnippetTreeItem } from './templates';
 import { DataTransferItem } from '../vscode';
 import { getCacheManager } from '../snippets/SnippetCacheManager';
-import { snippetBodyAsString } from '../utils/string';
+import { ensureString } from '../utils/string';
 import type { VSCodeSnippets } from '../types';
 import { writeSnippetFile } from '../utils/jsoncFilesIO';
 import { refreshAll } from '../commands/utils';
@@ -49,7 +49,7 @@ export class DragAndDropController implements TreeDragAndDropController<SnippetT
 		dataTransfer.set(this.viewId, new DataTransferItem({ id, fp: draggableItems[0].path }));
 
 		// Allow dropping into editor
-		const body = snippetBodyAsString(snippet?.body);
+		const body = ensureString(snippet?.body);
 		dataTransfer.set('text/plain', new DataTransferItem(body));
 	}
 
