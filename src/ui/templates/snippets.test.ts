@@ -1,13 +1,11 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { SnippetTreeItem, SnippetFileTreeItem, ExtSnippetFileTreeItem } from './snippets';
 import { shortenFullPath } from '../../utils/fsInfo';
-import { ensureString } from '../../utils/string';
 import { Collapsed, None } from '../../vscode';
 import type { VSCodeSnippet, SnippetContribution } from '../../types';
 import type { MarkdownString } from 'vscode';
 
 vi.mock('../../utils/fsInfo');
-vi.mock('../../utils/string');
 
 describe('snippets', () => {
 	beforeEach(() => {
@@ -20,7 +18,6 @@ describe('snippets', () => {
 				prefix: 'test',
 				body: 'test body',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
@@ -36,7 +33,6 @@ describe('snippets', () => {
 				prefix: ['test1', 'test2', 'test3'],
 				body: 'test body',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
@@ -49,7 +45,6 @@ describe('snippets', () => {
 				body: 'test body',
 				description: 'This is a test snippet',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
@@ -63,7 +58,6 @@ describe('snippets', () => {
 				prefix: 'test',
 				body: 'test body',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
@@ -77,7 +71,6 @@ describe('snippets', () => {
 				prefix: 'test',
 				body: 'test body',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem('My Snippet', snippet, '/path/to/file.json');
 
@@ -93,7 +86,6 @@ describe('snippets', () => {
 				prefix: 'test',
 				body: 'test body',
 			};
-			(ensureString as Mock).mockReturnValue('test body');
 
 			const item = new SnippetTreeItem(
 				'My Snippet',
