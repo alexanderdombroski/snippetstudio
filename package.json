@@ -976,5 +976,9 @@
 		"@octokit/core": "^7.0.6",
 		"strip-json-comments": "^5.0.3"
 	},
-	"types": "src/types/index.d.ts"
+	"bundleDependencies": [
+		"@octokit/auth-oauth-device",
+		"@octokit/core",
+		"strip-json-comments"
+	]
 }
