@@ -9,7 +9,6 @@ import { writeSnippetFile } from '../../utils/jsoncFilesIO';
 import { chooseLocalGlobal, getFileName } from '../../utils/user';
 import { getExtensionSnippetLangs } from './locate';
 import { getCurrentLanguage } from '../../utils/language';
-import { ensureString } from '../../utils/string';
 import type { ExtSnippetFileTreeItem, SnippetTreeItem } from '../../ui/templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { findCodeSnippetsFiles, locateSnippetFiles } from '../locateSnippets';
@@ -70,7 +69,7 @@ async function extractAndModify(item: SnippetTreeItem) {
 	const active = String(getCurrentLanguage());
 	const langId = langs.includes(active) ? active : langs[0];
 
-	await editSnippet(langId, snippetData, ensureString(snippet?.body));
+	await editSnippet(langId, snippetData, snippet?.body);
 }
 
 /** Given a list of languages, have the user select an existing snipppet file */

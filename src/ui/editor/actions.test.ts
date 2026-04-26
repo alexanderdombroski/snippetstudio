@@ -89,7 +89,7 @@ describe('handlers', () => {
 					snippetTitle: '',
 					prefix: '',
 				},
-				''
+				null
 			);
 		});
 	});
@@ -189,7 +189,7 @@ describe('handlers', () => {
 					prefix: '',
 					scope: 'plaintext',
 				},
-				''
+				null
 			);
 		});
 	});
@@ -251,7 +251,7 @@ describe('handlers', () => {
 					snippetTitle: '',
 					prefix: '',
 				},
-				''
+				null
 			);
 		});
 	});
@@ -278,7 +278,7 @@ describe('handlers', () => {
 					filepath: '/path/to/snippet.code-snippets',
 					snippetTitle: 'mySnippet',
 				},
-				'line 1\nline 2'
+				['line 1', 'line 2']
 			);
 		});
 
@@ -378,7 +378,7 @@ describe('handlers', () => {
 					prefix: '',
 					snippetTitle: '',
 				}),
-				''
+				null
 			);
 		});
 	});

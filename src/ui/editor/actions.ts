@@ -10,7 +10,6 @@ import { editSnippet } from './startEditor';
 import type { SnippetTreeItem } from '../templates';
 import type { SnippetData, VSCodeSnippet } from '../../types';
 import { getGlobalLangFile } from '../../utils/profile';
-import { ensureString } from '../../utils/string';
 import { getCacheManager } from '../../snippets/SnippetCacheManager';
 import type { Uri } from 'vscode';
 
@@ -28,7 +27,7 @@ export async function createGlobalSnippet() {
 			snippetTitle: '',
 			prefix: _defaultPrefix(),
 		},
-		(await getSelection()) ?? ''
+		await getSelection()
 	);
 }
 
@@ -48,7 +47,7 @@ export async function createSnippetAt(filepath: string) {
 			prefix: _defaultPrefix(),
 			scope: langId,
 		},
-		(await getSelection()) ?? ''
+		await getSelection()
 	);
 }
 
@@ -64,7 +63,7 @@ export async function createSnippetFromSelection() {
 			snippetTitle: '',
 			prefix: _defaultPrefix(),
 		},
-		(await getSelection()) ?? ''
+		await getSelection()
 	);
 }
 
@@ -87,7 +86,6 @@ export async function _getUriInfo(fileUri: Uri) {
 
 /** Create a snippet and use the file extension as a scope */
 export async function createSnippetUsingFileExtension(fileUri: Uri) {
-	const body = (await getSelection()) ?? '';
 	const include = _getFileTypePattern(fileUri.path);
 	const { langId } = await _getUriInfo(fileUri);
 	const filepath = await getGlobalLangFile(langId);
@@ -100,7 +98,7 @@ export async function createSnippetUsingFileExtension(fileUri: Uri) {
 			prefix: _defaultPrefix(),
 			include,
 		},
-		body
+		await getSelection()
 	);
 }
 
@@ -141,8 +139,7 @@ export async function editExistingSnippet(item: SnippetTreeItem) {
 		snippetTitle,
 	};
 
-	const body = ensureString(snippet?.body);
-	await editSnippet(langId, snippetData, body);
+	await editSnippet(langId, snippetData, snippet?.body);
 }
 
 // -------------------- UTILS -------------------- //
