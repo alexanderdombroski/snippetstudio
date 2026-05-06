@@ -1,5 +1,4 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
+import { parser, plugin } from 'typescript-eslint';
 import jsdoc from 'eslint-plugin-jsdoc';
 
 const customPlugin = {
@@ -57,12 +56,12 @@ export default [
 	},
 	{
 		plugins: {
-			'@typescript-eslint': typescriptEslint,
+			'@typescript-eslint': plugin,
 			custom: customPlugin,
 		},
 
 		languageOptions: {
-			parser: tsParser,
+			parser,
 			ecmaVersion: 2022,
 			sourceType: 'module',
 		},
