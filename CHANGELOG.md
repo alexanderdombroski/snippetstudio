@@ -35,8 +35,8 @@
 
 ### Fixed
 
-- command pallete command to open snippetstudio uses correct view container name
-- removed all ui-only commands from the command pallete
+- command to quick open snippetstudio uses correct view container name
+- removed all ui-only commands from the command palette
 
 ## [4.2.0] - 2026-04-10
 
