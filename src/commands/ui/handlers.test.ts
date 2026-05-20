@@ -16,7 +16,9 @@ describe('handlers', () => {
 	describe('openViewHandler', () => {
 		it('should execute the workbench view command', () => {
 			openViewHandler();
-			expect(executeCommand).toBeCalledWith('workbench.view.extension.snippet-manager-view');
+			expect(executeCommand).toBeCalledWith(
+				'workbench.view.extension.snippet-manager-view-container'
+			);
 		});
 	});
 

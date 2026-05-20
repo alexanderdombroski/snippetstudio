@@ -3,7 +3,7 @@ import type { SnippetCategoryDropdown } from '../../ui/templates';
 
 /** snippetstudio.openView command handler */
 export function openViewHandler() {
-	executeCommand('workbench.view.extension.snippet-manager-view');
+	executeCommand('workbench.view.extension.snippet-manager-view-container');
 }
 
 /** snippetstudio.openSettings command handler */
