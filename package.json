@@ -121,9 +121,9 @@
 			},
 			{
 				"command": "snippetstudio.snippet.addGlobal",
-				"title": "Add Global Snippet",
+				"title": "Create Global Snippet",
 				"icon": "$(plus)",
-				"shortTitle": "Add Snippet",
+				"shortTitle": "Create Snippet",
 				"category": "snippetstudio"
 			},
 			{
@@ -380,6 +380,144 @@
 			}
 		],
 		"menus": {
+			"commandPalette": [
+				{
+					"command": "snippetstudio.snippet.showBody",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.open",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.openFromDouble",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.open.Explorer",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.open.Terminal",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.delete",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.edit",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.delete",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.move",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.addKeybinding",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.refresh",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.refresh",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.file.rename",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.save",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.cancel",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertTabStop",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholder",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertChoice",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariable",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariablePlaceholder",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertPlaceholderWithTranformation",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.editor.insertVariableWithTransformation",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.createAt",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.newTemplate",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.usingPattern",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.profile.link",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.snippet.fromSelection",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.extension.modify",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.extension.extract",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.delete",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.edit",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.run",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.runDedicated",
+					"when": "false"
+				},
+				{
+					"command": "snippetstudio.shell.manageProfiles",
+					"when": "false"
+				}
+			],
 			"editor/title": [
 				{
 					"command": "snippetstudio.editor.cancel",
