@@ -1086,27 +1086,27 @@
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@types/node": "^22.19.19",
+		"@types/node": "^22.20.0",
 		"@types/vscode": "^1.103.0",
-		"@vitest/coverage-v8": "^4.1.7",
-		"@vitest/ui": "^4.1.7",
-		"@vscode/vsce": "^3.9.1",
-		"cssnano": "^8.0.1",
-		"esbuild": "^0.28.0",
+		"@vitest/coverage-v8": "^4.1.9",
+		"@vitest/ui": "^4.1.9",
+		"@vscode/vsce": "^3.9.2",
+		"cssnano": "^8.0.2",
+		"esbuild": "^0.28.1",
 		"esbuild-lazy-analyzer": "^1.4.0",
 		"esbuild-visualizer": "^0.7.0",
-		"eslint": "^10.4.0",
-		"eslint-plugin-jsdoc": "^63.0.0",
+		"eslint": "^10.5.0",
+		"eslint-plugin-jsdoc": "^63.0.7",
 		"htmlnano": "^3.3.2",
 		"husky": "^9.1.7",
-		"lint-staged": "^17.0.5",
+		"lint-staged": "^17.0.8",
 		"npm-run-all": "^4.1.5",
-		"ovsx": "^0.10.12",
-		"prettier": "^3.8.3",
+		"ovsx": "^1.0.2",
+		"prettier": "^3.8.4",
 		"terser": "^5.48.0",
-		"typescript": "^5.9.3",
-		"typescript-eslint": "^8.59.4",
-		"vitest": "^4.1.7"
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.62.0",
+		"vitest": "^4.1.9"
 	},
 	"dependencies": {
 		"@octokit/auth-oauth-device": "^8.0.3",
@@ -1117,5 +1117,11 @@
 		"@octokit/auth-oauth-device",
 		"@octokit/core",
 		"strip-json-comments"
-	]
+	],
+	"allowScripts": {
+		"@vscode/vsce-sign@2.0.7": true,
+		"keytar@7.9.0": true,
+		"esbuild@0.28.1": true,
+		"fsevents@2.3.3": true
+	}
 }
