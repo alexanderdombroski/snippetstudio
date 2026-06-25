@@ -23,6 +23,7 @@ const extensionsWithNoSnippets = new Set();
 export function getExtensionsDirPath(): string {
 	const appConfigs: Record<string, string> = {
 		Antigravity: '.antigravity',
+		'Antigravity IDE': '.antigravity-ide',
 		'Visual Studio Code': '.vscode',
 		'Visual Studio Code - Insiders': '.vscode-insiders',
 		VSCodium: '.vscode-oss',

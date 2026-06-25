@@ -63,6 +63,7 @@ export function _initUserPath(): string | undefined {
 export function getUserPath(): string {
 	const appNames: Record<string, string> = {
 		Antigravity: 'Antigravity',
+		'Antigravity IDE': 'Antigravity IDE',
 		'Visual Studio Code': 'Code',
 		'Visual Studio Code - Insiders': 'Code - Insiders',
 		VSCodium: 'VSCodium',
