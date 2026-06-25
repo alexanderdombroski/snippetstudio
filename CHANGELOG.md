@@ -4,6 +4,7 @@
 
 ## Table of Contents
 
+- [4.3](#430---2026-06-25) - Antigravity IDE Support
 - [4.2](#421---2026-05-20) - Array Descriptions
 - [4.1](#414---2026-03-29) - Code Server & Drag/Drop Support
 - [4.0](#401---2026-02-15) - Snippet Glob Scope
@@ -30,6 +31,12 @@
 - [1.2](#121---2025-04-15) - Export Snippets
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
+
+## [4.3.0] - 2026-06-25
+
+### Added
+
+- Antigravity IDE support
 
 ## [4.2.1] - 2026-05-20
 
