@@ -83,6 +83,7 @@ Save terminal commands commonly ran in the terminal across workspaces or globall
 - [VSCodium](https://vscodium.com/)
 - [Cursor](https://cursor.com/)
 - [Windsurf](https://windsurf.com/)
+- [Devin Desktop](https://devin.ai/desktop)
 - [Antigravity](https://antigravity.google/)
 - [Kiro](https://kiro.dev/)
 - [Trae](https://www.trae.ai/)

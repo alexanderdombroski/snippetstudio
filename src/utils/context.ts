@@ -68,6 +68,7 @@ export function getUserPath(): string {
 		'Visual Studio Code - Insiders': 'Code - Insiders',
 		VSCodium: 'VSCodium',
 		Cursor: 'Cursor',
+		Devin: 'Devin',
 		Windsurf: 'Windsurf',
 		Kiro: 'Kiro',
 		Trae: 'Trae',

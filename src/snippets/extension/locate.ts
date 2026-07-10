@@ -29,6 +29,7 @@ export function getExtensionsDirPath(): string {
 		VSCodium: '.vscode-oss',
 		Cursor: '.cursor',
 		Windsurf: '.windsurf',
+		Devin: '.devin',
 		Kiro: '.kiro',
 		Trae: '.trae',
 		AbacusAI: '.abacusai',
