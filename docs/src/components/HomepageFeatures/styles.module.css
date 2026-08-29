@@ -5,28 +5,31 @@
   width: 100%;
 }
 
-/* Create feature: image beside text on medium+ screens */
+/* Create feature: single flex row, image + text side by side */
 .createBlock {
   margin-bottom: 3rem;
 }
 
 .createRow {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
 }
 
 .createImage {
-  width: 100%;
-  max-width: 18.75rem;
+  width: 18.75rem;
+  max-width: 100%;
   border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: 1rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
 }
 
 .createText {
   text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  max-width: 28rem;
 }
 
 .createText p {
@@ -65,17 +68,24 @@
 }
 
 .reasonIcon {
-  font-size: 1.5rem;
-  line-height: 1.5rem;
-  color: var(--ifm-color-primary);
   flex-shrink: 0;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: var(--ifm-color-primary);
   margin-top: 0.1rem;
 }
 
+.reasonText {
+  line-height: 1.6;
+}
+
 @media screen and (max-width: 996px) {
+  .createRow {
+    flex-direction: column;
+    text-align: center;
+  }
+
   .createText {
     text-align: center;
-    align-items: center;
-    margin-top: 1.25rem;
   }
 }

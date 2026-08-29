@@ -55,15 +55,6 @@ const Reasons: ReasonItem[] = [
     ),
   },
   {
-    icon: 'codicon-git-branch',
-    text: (
-      <>
-        <strong>Sync via GitHub</strong> — back up and share snippet collections
-        with gists and version control.
-      </>
-    ),
-  },
-  {
     icon: 'codicon-archive',
     text: (
       <>
@@ -85,16 +76,14 @@ const Reasons: ReasonItem[] = [
 
 function CreateFeatureCard({title, imageSrc, imageAlt, description}: FeatureItem) {
   return (
-    <div className={clsx('row', styles.createRow)}>
-      <div className="col col--6">
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className={styles.createImage}
-          role="img"
-        />
-      </div>
-      <div className={clsx('col col--6', styles.createText)}>
+    <div className={styles.createRow}>
+      <img
+        src={imageSrc}
+        alt={imageAlt}
+        className={styles.createImage}
+        role="img"
+      />
+      <div className={styles.createText}>
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
       </div>
@@ -106,7 +95,7 @@ function Reason({icon, text}: ReasonItem) {
   return (
     <li className={styles.reasonItem}>
       <i className={clsx('codicon', icon, styles.reasonIcon)} aria-hidden="true" />
-      <span>{text}</span>
+      <span className={styles.reasonText}>{text}</span>
     </li>
   );
 }
