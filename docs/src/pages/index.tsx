@@ -15,10 +15,13 @@ function HomepageHero() {
     <>
       <section className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <Heading as="h1" className="hero__title">
+          <p className={styles.heroTagline}>
             VS Code's Missing Snippet Editor
+          </p>
+          <Heading as="h1" className="hero__title">
+            SnippetStudio
           </Heading>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <p className="hero__subtitle">Create your own autocomplete</p>
           <div className={styles.buttons}>
             <Link
               className="button button--secondary button--lg"
