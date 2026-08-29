@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import Heading from '@theme/Heading';
 import styles from './HeroSlider.module.css';
 
 type imageArray = { src: string, alt: string }[]
@@ -60,17 +61,24 @@ function HeroSlider() {
   const handleMouseLeave = () => setIsGrabbing(false);
 
   return (
-    <div
-      className={styles.slider}
-      ref={containerRef}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-    >
-      {gifList.map(({src, alt}, i) => (
-        <img key={alt} src={src} alt={`snippet in a ${alt} file`} className={styles.gif} draggable={false} />
-      ))}
-    </div>
+    <section className={styles.sliderSection}>
+      <div className="container">
+        <Heading as="h2" className={styles.sliderHeading}>
+          See it in action
+        </Heading>
+      </div>
+      <div
+        className={styles.slider}
+        ref={containerRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+      >
+        {gifList.map(({src, alt}, i) => (
+          <img key={alt} src={src} alt={`SnippetStudio editing a ${alt} snippet`} className={styles.gif} draggable={false} />
+        ))}
+      </div>
+    </section>
   );
 }
 

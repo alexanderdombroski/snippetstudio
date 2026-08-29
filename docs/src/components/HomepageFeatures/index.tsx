@@ -14,32 +14,31 @@ const FeatureList: FeatureItem[] = [
   {
     title: 'Create',
     imageSrc: require('@site/static/img/vscode.png').default,
-    imageAlt: 'vscode on a laptop',
+    imageAlt: 'VS Code editor with the SnippetStudio view open',
     description: (
       <>
-        Create your own code snippets for your favorite Microsoft code editor: VS Code!
+        Author snippets in a structured editor — no hand-writing JSON.
       </>
     ),
   },
   {
     title: 'Share',
     imageSrc: require('@site/static/img/server.png').default,
-    imageAlt: '',
+    imageAlt: 'Syncing snippets to a GitHub gist',
     description: (
       <>
-        Regularly sync your global snippets or share your snippet gists through GitHub, 
-        Microsoft's version control service.
+        Sync your global snippets or publish gists through GitHub.
       </>
     ),
   },
   {
-    title: 'Collaborate',
+    title: 'Open source',
     imageSrc: require('@site/static/img/program.png').default,
-    imageAlt: 'two characters coding',
+    imageAlt: 'SnippetStudio source code',
     description: (
       <>
-        SnippetStudio is made using TypeScript (created by Microsoft). Thanks
-        Microsoft! <i>Message not sponsored by Microsoft.</i>
+        SnippetStudio is built in TypeScript and released under the MIT
+        license. Contributions are welcome.
       </>
     ),
   },

@@ -1,7 +1,7 @@
 {
 	"name": "snippetstudio",
 	"displayName": "SnippetStudio",
-	"description": "A snippets manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
+	"description": "VS Code's missing snippet editor — a manager that assists you in creating, editing, viewing, and deleting snippets and snippet files.",
 	"version": "4.4.0",
 	"publisher": "AlexDombroski",
 	"author": {
