@@ -84,7 +84,7 @@ function CreateFeatureCard({title, imageSrc, imageAlt, description}: FeatureItem
         role="img"
       />
       <div className={styles.createText}>
-        <Heading as="h3">{title}</Heading>
+        <Heading as="h2">{title}</Heading>
         <p>{description}</p>
       </div>
     </div>

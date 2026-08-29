@@ -18,6 +18,17 @@
   flex-wrap: wrap;
 }
 
+@media screen and (max-width: 768px) {
+  .createRow {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .createText {
+    text-align: center;
+  }
+}
+
 .createImage {
   width: 18.75rem;
   max-width: 100%;
@@ -72,14 +83,14 @@
   font-size: 1.4rem;
   line-height: 1.6;
   color: var(--ifm-color-primary);
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
 }
 
 .reasonText {
   line-height: 1.6;
 }
 
-@media screen and (max-width: 996px) {
+@media screen and (max-width: 768px) {
   .createRow {
     flex-direction: column;
     text-align: center;
