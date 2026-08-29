@@ -10,47 +10,91 @@ type FeatureItem = {
   description: ReactNode;
 };
 
-const FeatureList: FeatureItem[] = [
+const CreateFeature: FeatureItem = {
+  title: 'Create',
+  imageSrc: require('@site/static/img/vscode.png').default,
+  imageAlt: 'VS Code editor with the SnippetStudio view open',
+  description: (
+    <>
+      Author snippets in a structured editor — no hand-writing JSON.
+    </>
+  ),
+};
+
+type ReasonItem = {
+  icon: string;
+  text: ReactNode;
+};
+
+const Reasons: ReasonItem[] = [
   {
-    title: 'Create',
-    imageSrc: require('@site/static/img/vscode.png').default,
-    imageAlt: 'VS Code editor with the SnippetStudio view open',
-    description: (
+    icon: 'codicon-law',
+    text: (
       <>
-        Author snippets in a structured editor — no hand-writing JSON.
+        <strong>Open source &amp; MIT licensed</strong> — free to use, fork,
+        and contribute to.
       </>
     ),
   },
   {
-    title: 'Share',
-    imageSrc: require('@site/static/img/server.png').default,
-    imageAlt: 'Syncing snippets to a GitHub gist',
-    description: (
+    icon: 'codicon-sparkle',
+    text: (
       <>
-        Sync your global snippets or publish gists through GitHub.
+        <strong>Minimal &amp; offline-first</strong> — no accounts or servers
+        required to get started; your snippets live on your machine.
       </>
     ),
   },
   {
-    title: 'Open source',
-    imageSrc: require('@site/static/img/program.png').default,
-    imageAlt: 'SnippetStudio source code',
-    description: (
+    icon: 'codicon-layout',
+    text: (
       <>
-        SnippetStudio is built in TypeScript and released under the MIT
-        license. Contributions are welcome.
+        <strong>VS Code-native layout</strong> — built with the native tree
+        views and command palette, not heavy webviews.
+      </>
+    ),
+  },
+  {
+    icon: 'codicon-git-branch',
+    text: (
+      <>
+        <strong>Sync via GitHub</strong> — back up and share snippet collections
+        with gists and version control.
+      </>
+    ),
+  },
+  {
+    icon: 'codicon-archive',
+    text: (
+      <>
+        <strong>Portable &amp; backed up</strong> — import and export to
+        <code>.code-snippets</code> so your collection travels with you.
+      </>
+    ),
+  },
+  {
+    icon: 'codicon-extensions',
+    text: (
+      <>
+        <strong>Works everywhere</strong> — runs on VS Code, VSCodium, Cursor,
+        Windsurf, and other compatible editors.
       </>
     ),
   },
 ];
 
-function Feature({title, imageSrc, imageAlt, description}: FeatureItem) {
+function CreateFeatureCard({title, imageSrc, imageAlt, description}: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <img src={imageSrc} alt={imageAlt} className={styles.featureSvg} role="img" />
+    <div className={clsx('row', styles.createRow)}>
+      <div className="col col--6">
+        <img
+          src={imageSrc}
+          alt={imageAlt}
+          className={styles.createImage}
+          role="img"
+        />
       </div>
-      <div className="text--center padding-horiz--md">
+      <div className={clsx('col col--6', styles.createText)}>
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
       </div>
@@ -58,14 +102,31 @@ function Feature({title, imageSrc, imageAlt, description}: FeatureItem) {
   );
 }
 
+function Reason({icon, text}: ReasonItem) {
+  return (
+    <li className={styles.reasonItem}>
+      <i className={clsx('codicon', icon, styles.reasonIcon)} aria-hidden="true" />
+      <span>{text}</span>
+    </li>
+  );
+}
+
 export default function HomepageFeatures(): ReactNode {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
+        <div className={styles.createBlock}>
+          <CreateFeatureCard {...CreateFeature} />
+        </div>
+        <div className={styles.reasonsBlock}>
+          <Heading as="h2" className={styles.reasonsTitle}>
+            Why SnippetStudio
+          </Heading>
+          <ul className={styles.reasonList}>
+            {Reasons.map((props, idx) => (
+              <Reason key={idx} {...props} />
+            ))}
+          </ul>
         </div>
       </div>
     </section>
