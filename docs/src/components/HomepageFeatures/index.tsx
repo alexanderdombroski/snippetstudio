@@ -1,6 +1,7 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+import Link from '@docusaurus/Link';
 import styles from './styles.module.css';
 
 type FeatureItem = {
@@ -74,6 +75,20 @@ const Reasons: ReasonItem[] = [
   },
 ];
 
+type LinkCardItem = {
+  title: string;
+  description: ReactNode;
+  href: string;
+};
+
+const LinkCards: LinkCardItem[] = [
+  {
+    title: 'Endless Resume',
+    description: <>A companion project for building and managing your resume.</>,
+    href: 'https://github.com/alexanderdombroski/endless-resume-app',
+  },
+];
+
 function CreateFeatureCard({title, imageSrc, imageAlt, description}: FeatureItem) {
   return (
     <div className={styles.createRow}>
@@ -100,6 +115,17 @@ function Reason({icon, text}: ReasonItem) {
   );
 }
 
+function LinkCard({title, description, href}: LinkCardItem) {
+  return (
+    <Link to={href} className={styles.linkCard}>
+      <Heading as="h3" className={styles.linkCardTitle}>
+        {title}
+      </Heading>
+      <p className={styles.linkCardText}>{description}</p>
+    </Link>
+  );
+}
+
 export default function HomepageFeatures(): ReactNode {
   return (
     <section className={styles.features}>
@@ -116,6 +142,11 @@ export default function HomepageFeatures(): ReactNode {
               <Reason key={idx} {...props} />
             ))}
           </ul>
+        </div>
+        <div className={styles.linkCardsBlock}>
+          {LinkCards.map((props, idx) => (
+            <LinkCard key={idx} {...props} />
+          ))}
         </div>
       </div>
     </section>

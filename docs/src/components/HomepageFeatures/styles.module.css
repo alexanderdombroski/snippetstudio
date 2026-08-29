@@ -90,13 +90,39 @@
   line-height: 1.6;
 }
 
-@media screen and (max-width: 768px) {
-  .createRow {
-    flex-direction: column;
-    text-align: center;
-  }
+/* Linked project cards (e.g. Endless Resume) */
+.linkCardsBlock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 3rem;
+}
 
-  .createText {
-    text-align: center;
-  }
+.linkCard {
+  display: block;
+  flex: 1 1 16rem;
+  max-width: 22rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 1rem;
+  background: var(--ifm-card-background-color, var(--ifm-background-surface-color));
+  text-decoration: none;
+  color: var(--ifm-font-color-base);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.linkCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.linkCardTitle {
+  margin-bottom: 0.25rem;
+}
+
+.linkCardText {
+  margin-bottom: 0;
+  color: var(--ifm-color-emphasis-700);
 }
