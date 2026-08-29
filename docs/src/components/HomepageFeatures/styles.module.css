@@ -5,9 +5,98 @@
   width: 100%;
 }
 
-.featureSvg {
-  height: 12.5rem;
+/* Create feature: single flex row, image + text side by side */
+.createBlock {
+  margin-bottom: 3rem;
+}
+
+.createRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 768px) {
+  .createRow {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .createText {
+    text-align: center;
+  }
+}
+
+.createImage {
   width: 18.75rem;
-  border: solid 0.25rem black;
+  max-width: 100%;
+  border: 1px solid var(--ifm-color-emphasis-300);
   border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.createText {
+  text-align: left;
+  max-width: 28rem;
+}
+
+.createText p {
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+/* Why SnippetStudio: icon bullet list */
+.reasonsBlock {
+  max-width: 42rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.reasonsTitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.reasonList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reasonItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.reasonItem:last-child {
+  border-bottom: none;
+}
+
+.reasonIcon {
+  flex-shrink: 0;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  color: var(--ifm-color-primary);
+  margin-top: 0.15rem;
+}
+
+.reasonText {
+  line-height: 1.6;
+}
+
+@media screen and (max-width: 768px) {
+  .createRow {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .createText {
+    text-align: center;
+  }
 }

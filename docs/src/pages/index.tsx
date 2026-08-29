@@ -13,30 +13,26 @@ function HomepageHero() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <>
-      <div className={clsx('hero hero--primary', styles.heroBanner)}>
-        <div className="container">
-          <Heading as="h1" className="hero__title">
-            Ready to code <i>Really Fast</i>?
-          </Heading>
-        </div>
-      </div>
-      <HeroSlider />
       <section className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
-          <Heading as="h2" className="hero__title">
-            {siteConfig.title}
+          <p className={styles.heroTagline}>
+            VS Code's Missing Snippet Editor
+          </p>
+          <Heading as="h1" className="hero__title">
+            SnippetStudio
           </Heading>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
+          <p className="hero__subtitle">Create your own autocomplete</p>
           <div className={styles.buttons}>
             <Link
               className="button button--secondary button--lg"
               to="/docs/getting-started/installation"
             >
-              SnippetStudio Tutorial - 10min ⏱️
+              Get Started
             </Link>
           </div>
         </div>
       </section>
+      <HeroSlider />
     </>
   );
 }
@@ -45,8 +41,8 @@ export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`${siteConfig.title} — VS Code's Missing Snippet Editor`}
+      description="SnippetStudio is a VS Code extension for creating, editing, and managing code snippets without the JSON friction."
     >
       <HomepageHero />
       <main>

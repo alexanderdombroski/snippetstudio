@@ -1,5 +1,7 @@
 # Snippet Studio
 
+**VS Code's Missing Snippet Editor**
+
 This VS Code extension streamlines creation and management of [VS Code snippets](https://code.visualstudio.com/docs/editor/userdefinedsnippets).
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repo-blue?logo=github)](https://github.com/alexanderdombroski/snippetstudio) [![Version](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio.svg)](https://badge.fury.io/gh/alexanderdombroski%2Fsnippetstudio)

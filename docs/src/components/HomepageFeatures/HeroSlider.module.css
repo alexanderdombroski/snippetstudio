@@ -1,3 +1,12 @@
+.sliderSection {
+  padding: 2.5rem 0;
+  text-align: center;
+}
+
+.sliderHeading {
+  margin-bottom: 1.5rem;
+}
+
 .slider {
   display: flex;
   overflow-x: scroll;
