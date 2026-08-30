@@ -150,7 +150,7 @@ describe('variableList', () => {
 		expect(typeof list).toBe('string');
 		expect(list).toContain('TM_SELECTED_TEXT');
 		expect(list).toContain('LINE_COMMENT');
-		expect(list.split(',')).toHaveLength(34);
+		expect(list.split(',')).toHaveLength(35);
 	});
 });
 
