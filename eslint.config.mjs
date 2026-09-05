@@ -1,5 +1,6 @@
 import { parser, plugin } from 'typescript-eslint';
 import jsdoc from 'eslint-plugin-jsdoc';
+import { defineConfig } from 'eslint/config';
 
 const customPlugin = {
 	rules: {
@@ -47,7 +48,7 @@ const customPlugin = {
 	},
 };
 
-export default [
+export default defineConfig([
 	{
 		ignores: ['node_modules/**', 'dist/**'],
 	},
@@ -138,4 +139,4 @@ export default [
 			'jsdoc/no-types': 'off',
 		},
 	},
-];
+]);
