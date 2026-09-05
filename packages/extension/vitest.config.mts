@@ -1,5 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
-import baseConfig from '../../vitest.config';
+import baseConfig from '../../vitest.config.ts';
 import path from 'node:path';
 
 const setup = path.join(import.meta.dirname, '.vitest', 'setup.ts');
