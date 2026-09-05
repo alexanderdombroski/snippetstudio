@@ -1,6 +1,6 @@
 import { defineConfig, mergeConfig, type Plugin, type UserConfig } from 'vite';
 import { ViteMinifyPlugin } from 'vite-plugin-minify';
-import baseConfig from '../../vite.config';
+import baseConfig from '../../vite.config.ts';
 
 function vscodeCjsWrapper(): Plugin {
 	return {

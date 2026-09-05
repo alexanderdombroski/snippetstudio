@@ -35,5 +35,11 @@ export default defineConfig({
 				'typescript/no-misused-spread': 'off',
 			},
 		},
+		{
+			files: ['vitest.config.{ts,mts}', 'vite.config.{ts,mts}'],
+			rules: {
+				'import/extensions': ['warn', 'ignorePackages'],
+			},
+		},
 	],
 });
