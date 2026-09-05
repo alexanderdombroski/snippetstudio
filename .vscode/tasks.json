@@ -5,47 +5,50 @@
 	"tasks": [
 		{
 			"label": "watch",
-			"dependsOn": ["npm: watch:tsc", "npm: watch:esbuild"],
-			"presentation": {
-				"reveal": "never"
-			},
+			"dependsOn": ["tsc", "vite"],
+			"dependsOrder": "parallel",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"problemMatcher": []
 		},
 		{
-			"type": "npm",
-			"script": "watch:esbuild",
+			"type": "shell",
+			"label": "vite",
+			"command": "npx vite build --watch --mode development",
+			"options": {
+				"cwd": "${workspaceFolder}/packages/extension"
+			},
 			"group": "build",
-			"problemMatcher": "$esbuild-watch",
 			"isBackground": true,
-			"label": "npm: watch:esbuild",
+			"problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*$",
+          "endsPattern": "^.*built in.*$"
+        }
+      },
 			"presentation": {
-				"group": "watch",
-				"reveal": "never"
+				"group": "watch"
 			}
 		},
 		{
-			"type": "npm",
-			"script": "watch:tsc",
+			"type": "shell",
+			"label": "tsc",
+			"command": "npx tsc --watch",
+			"options": {
+				"cwd": "${workspaceFolder}/packages/extension"
+			},
 			"group": "build",
 			"problemMatcher": "$tsc-watch",
 			"isBackground": true,
-			"label": "npm: watch:tsc",
 			"presentation": {
-				"group": "watch",
-				"reveal": "never"
-			}
-		},
-		{
-			"label": "build:prod",
-			"type": "npm",
-			"script": "package",
-			"group": "build",
-			"problemMatcher": ["$tsc"],
-			"presentation": {
-				"reveal": "silent"
+				"group": "watch"
 			}
 		}
 	]

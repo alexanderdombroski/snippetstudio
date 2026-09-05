@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+		"noEmit": true,
+		"skipLibCheck": true,
+    "types": ["node"],
+    
+    // Additional modifcations
+		"strict": true /* enable all strict type-checking options */,
+    "allowUnreachableCode": false,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedSideEffectImports": true,
+  }
+}
