@@ -1,0 +1,12 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"module": "nodenext",
+		"target": "ES2024",
+		"lib": ["ES2024"],
+		"sourceMap": true,
+		"isolatedModules": true,
+	},
+	"include": ["src", ".vitest"],
+	"exclude": []
+}

@@ -9,20 +9,15 @@
 			"name": "Run Extension",
 			"type": "extensionHost",
 			"request": "launch",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+			"args": ["--extensionDevelopmentPath=${workspaceFolder/packages/extension}"],
 			"env": {
 				"USE_VERBOSE_LOGGING": "true"
 			},
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
+			"outFiles": [
+				"${workspaceFolder}/packages/extension/dist/**/*.js",
+				"${workspaceFolder}/packages/extension/dist/**/*.mjs"
+			],
 			"preLaunchTask": "${defaultBuildTask}"
-		},
-		{
-			"name": "Run Extension (Production)",
-			"type": "extensionHost",
-			"request": "launch",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
-			"outFiles": ["${workspaceFolder}/dist/**/*.js"],
-			"preLaunchTask": "build:prod"
 		}
 	]
 }
