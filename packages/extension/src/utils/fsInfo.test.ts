@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, type Mock } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
@@ -11,7 +11,9 @@ import {
 	getDownloadsDirPath,
 	isParentDir,
 	exists,
+	commandExists,
 } from './fsInfo';
+import { execSync } from 'node:child_process';
 
 describe('fsInfo', () => {
 	describe('getWorkspaceFolder', () => {
@@ -123,6 +125,24 @@ describe('fsInfo', () => {
 		it('should return false if fs.access rejects', async () => {
 			vi.spyOn(fs, 'access').mockRejectedValue(new Error('File not found'));
 			await expect(exists('/any/path')).resolves.toBe(false);
+		});
+	});
+
+	describe('commandExists', () => {
+		it("should return false if a command doesn't exist", () => {
+			(execSync as Mock).mockImplementation(() => {
+				throw new Error();
+			});
+			const exists = commandExists('jq');
+			expect(exists).toBe(false);
+		});
+		it('should use a different command for unix', () => {
+			Object.defineProperty(process, 'platform', {
+				value: 'darwin',
+			});
+			const exists = commandExists('jq');
+			expect(execSync).toBeCalledWith(expect.stringContaining('command -v'), expect.anything());
+			expect(exists).toBe(true);
 		});
 	});
 });

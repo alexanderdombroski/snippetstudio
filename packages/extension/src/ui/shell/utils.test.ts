@@ -5,7 +5,6 @@ import {
 	findInactiveTerminal,
 	_hasActiveChild,
 	_isExecutablePath,
-	commandExists,
 } from './utils';
 import vscode, { getConfiguration } from '../../vscode';
 import { execSync } from 'node:child_process';
@@ -139,24 +138,6 @@ describe('shell utils', () => {
 			const result = await getAllShellProfiles();
 			expect(result).toEqual({});
 			expect(config.get).toBeCalledWith('profiles.windows');
-		});
-	});
-
-	describe('commandExists', () => {
-		it("should return false if a command doesn't exist", () => {
-			(execSync as Mock).mockImplementation(() => {
-				throw new Error();
-			});
-			const exists = commandExists('jq');
-			expect(exists).toBe(false);
-		});
-		it('should use a different command for unix', () => {
-			Object.defineProperty(process, 'platform', {
-				value: 'darwin',
-			});
-			const exists = commandExists('jq');
-			expect(execSync).toBeCalledWith(expect.stringContaining('command -v'), expect.anything());
-			expect(exists).toBe(true);
 		});
 	});
 

@@ -3,6 +3,7 @@ import vscode from '../vscode';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 
 /**
  * Grabs the CWD workspace of VSCode
@@ -65,6 +66,18 @@ async function exists(fp: string): Promise<boolean> {
 	}
 }
 
+/** Check if a command or path to an executable exists. */
+function commandExists(command?: string): boolean {
+	if (!command) return false;
+	try {
+		const cmd = process.platform === 'win32' ? `where ${command}` : `command -v ${command}`;
+		execSync(cmd, { stdio: 'ignore' });
+		return true;
+	} catch {
+		return false;
+	}
+}
+
 export {
 	getWorkspaceFolder,
 	getCurrentUri,
@@ -73,4 +86,5 @@ export {
 	getDownloadsDirPath,
 	isParentDir,
 	exists,
+	commandExists,
 };

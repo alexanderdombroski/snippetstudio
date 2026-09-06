@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process';
 import type { Terminal } from 'vscode';
 import vscode, { getConfiguration } from '../../vscode';
 import { access, constants } from 'node:fs/promises';
+import { commandExists } from '../../utils/fsInfo';
 
 /** Tells whether a shell PID has a command running */
 export function _hasActiveChild(pid: number): boolean {
@@ -103,18 +104,6 @@ export async function _isExecutablePath(filePath?: string): Promise<boolean> {
 	if (!filePath) return false;
 	try {
 		await access(filePath, constants.X_OK);
-		return true;
-	} catch {
-		return false;
-	}
-}
-
-/** Check if a command or path to an executable exists. */
-export function commandExists(command?: string): boolean {
-	if (!command) return false;
-	try {
-		const cmd = process.platform === 'win32' ? `where ${command}` : `command -v ${command}`;
-		execSync(cmd, { stdio: 'ignore' });
 		return true;
 	} catch {
 		return false;
