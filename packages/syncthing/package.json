@@ -1,6 +1,7 @@
 {
   "name": "syncthing",
   "description": "utils for bundling and interacting with syncthing",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

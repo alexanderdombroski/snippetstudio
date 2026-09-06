@@ -9,7 +9,7 @@
 			"name": "Run Extension",
 			"type": "extensionHost",
 			"request": "launch",
-			"args": ["--extensionDevelopmentPath=${workspaceFolder/packages/extension}"],
+			"args": ["--extensionDevelopmentPath=${workspaceFolder}/packages/extension"],
 			"env": {
 				"USE_VERBOSE_LOGGING": "true"
 			},

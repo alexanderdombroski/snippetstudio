@@ -21,7 +21,7 @@ import { DragAndDropController } from './ui/DragAndDropController';
 import { SnippetDropProvider } from './ui/DocumentDropEditProvider';
 
 /** This method is called when your extension is activated */
-export async function activate(context: ExtensionContext) {
+async function _activate(context: ExtensionContext) {
 	if (!(await initGlobalStore(context))) {
 		return;
 	}
@@ -92,3 +92,13 @@ export async function activate(context: ExtensionContext) {
 
 /** This method is called when your extension is deactivated */
 export function deactivate() {}
+
+export const activate = process.env.IS_PRODUCTION_BUILD
+	? _activate
+	: async (context: ExtensionContext) => {
+			try {
+				await _activate(context);
+			} catch (err) {
+				console.error(`Extension Failed to activate: ${err as Error}`);
+			}
+		};
