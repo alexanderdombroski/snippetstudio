@@ -23,16 +23,16 @@
 			"group": "build",
 			"isBackground": true,
 			"problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": "."
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*$",
-          "endsPattern": "^.*built in.*$"
-        }
-      },
+			"owner": "vite",
+			"pattern": {
+				"regexp": ".",
+			},
+			"background": {
+				"activeOnStart": true,
+				"beginsPattern": "^.*build started.*$",
+				"endsPattern": "^.*built in \\d+.*$"
+			}
+		},
 			"presentation": {
 				"group": "watch"
 			}

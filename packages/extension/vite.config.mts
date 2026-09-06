@@ -45,11 +45,14 @@ export default defineConfig(({ mode }) => {
 			minify: isProd,
 			sourcemap: !isProd,
 
+			modulePreload: false,
+
 			rolldownOptions: {
 				input: {
 					extension: 'extension.ts',
 					snippetData: 'snippetData.html',
 				},
+				preserveEntrySignatures: 'exports-only',
 				external: ['vscode'],
 				output: {
 					format: 'esm',

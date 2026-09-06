@@ -3,11 +3,11 @@ import vscode, { showErrorMessage, showInformationMessage, Uri } from '../vscode
 import path from 'node:path';
 import type { GenericJson, VSCodeSnippets } from '../types';
 import { getLinkLocations } from '../snippets/links/config';
+import stripJsonComments from 'strip-json-comments';
 
 /** Removes trailing commas and comments from a jsonString */
 export async function processJsonWithComments(jsonString: string): Promise<any> {
 	try {
-		const { default: stripJsonComments } = await import('strip-json-comments');
 		let cleanedJson = stripJsonComments(jsonString);
 
 		try {
