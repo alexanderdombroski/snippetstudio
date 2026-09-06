@@ -1,0 +1,15 @@
+{
+  "name": "research",
+  "description": "Packages used for scripts in this file can be installed here",
+  "type": "module",
+  "scripts": {
+    "sublime:to-vscode": "node sublime/scripts/convert-sublime-to-vscode.js",
+    "sublime:from-vscode": "node sublime/scripts/convert-vscode-to-sublime.js",
+    "textmate:to-vscode": "node textmate/textMateToVscode.js",
+    "textmate:from-vscode": "node textmate/vscodeToTextMate.js",
+    "xcode:import": "node xcode/importFromXcode.cjs"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.7.2"
+  }
+}

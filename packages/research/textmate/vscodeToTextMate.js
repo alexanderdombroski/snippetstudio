@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 // vscodeToTextMate.js
 // Read a VS Code snippets JSON file and write TextMate .tmSnippet plist files
-/* eslint-disable jsdoc/require-jsdoc */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function sanitizeBody(body) {
 	if (!body) return '';
@@ -36,12 +39,12 @@ function buildTmSnippet({ name, tabTrigger, scope, content, uuid }) {
 
 function main() {
 	const argv = process.argv.slice(2);
-	if (argv.length < 1) {
-		console.error('Usage: node vscodeToTextMate.js <vscode-snippets.json> [outdir]');
-		process.exit(2);
-	}
-	const inFile = argv[0];
-	const outDir = path.resolve(process.cwd(), argv[1] || './out');
+	const defaultSampleInput = path.resolve(
+		__dirname,
+		'../sublime/scripts/input/sample.code-snippets.json'
+	);
+	const inFile = argv[0] || defaultSampleInput;
+	const outDir = path.resolve(argv[1] ? process.cwd() : __dirname, argv[1] || './output');
 
 	if (!fs.existsSync(inFile)) {
 		console.error('Input file not found:', inFile);
@@ -52,7 +55,7 @@ function main() {
 	const data = JSON.parse(fs.readFileSync(inFile, 'utf8'));
 	for (const [key, snippet] of Object.entries(data)) {
 		const name = snippet.title || key;
-		const tabTrigger = snippet.prefix || snippet['prefix'];
+		const tabTrigger = snippet.prefix;
 		const scope = snippet.scope || null;
 		const body = Array.isArray(snippet.body) ? snippet.body.join('\n') : snippet.body || '';
 		const sanitized = sanitizeBody(body);
@@ -63,4 +66,4 @@ function main() {
 	}
 }
 
-if (require.main === module) main();
+main();

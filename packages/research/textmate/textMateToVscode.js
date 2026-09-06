@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 // textMateToVscode.js
 // Read .tmSnippet plist files from a directory and output a VS Code snippets JSON
-/* eslint-disable jsdoc/require-jsdoc */
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
-const fs = require('fs');
-const path = require('path');
-const { spawnSync } = require('child_process');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function plutilToJson(filePath) {
 	const res = spawnSync('plutil', ['-convert', 'json', '-o', '-', filePath], { encoding: 'utf8' });
@@ -17,7 +20,7 @@ function plutilToJson(filePath) {
 function tmToVscode(snippetObj) {
 	const name = snippetObj.name || snippetObj['title'];
 	const body = snippetObj.content || '';
-	const tabTrigger = snippetObj.tabTrigger || snippetObj['tabTrigger'] || null;
+	const tabTrigger = snippetObj.tabTrigger || null;
 	const scope =
 		(snippetObj.scope && Array.isArray(snippetObj.scope) && snippetObj.scope[0]) ||
 		snippetObj.scope ||
@@ -33,12 +36,16 @@ function tmToVscode(snippetObj) {
 
 function main() {
 	const argv = process.argv.slice(2);
-	const dir =
-		argv[0] ||
-		path.join(
-			require('os').homedir(),
-			'Library/Application Support/Avian/Bundles/User.tmbundle/Snippets'
-		);
+	const defaultUserDir = path.join(
+		os.homedir(),
+		'Library/Application Support/Avian/Bundles/User.tmbundle/Snippets'
+	);
+	const sampleInputDir = path.resolve(__dirname, 'input');
+
+	let dir = argv[0];
+	if (!dir) {
+		dir = fs.existsSync(defaultUserDir) ? defaultUserDir : sampleInputDir;
+	}
 
 	if (!fs.existsSync(dir)) {
 		console.error('Directory does not exist:', dir);
@@ -66,4 +73,4 @@ function main() {
 	console.log(JSON.stringify(out, null, 2));
 }
 
-if (require.main === module) main();
+main();
