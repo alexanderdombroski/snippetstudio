@@ -1,0 +1,8 @@
+{
+  "name": "syncthing",
+  "description": "utils for bundling and interacting with syncthing",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module"
+}
