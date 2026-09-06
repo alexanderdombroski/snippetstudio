@@ -1,7 +1,7 @@
 import { defineConfig } from 'oxlint';
 
 export default defineConfig({
-	ignorePatterns: ['**/node_modules/**', '**/dist/**', 'research/**'],
+	ignorePatterns: ['**/node_modules/**', '**/dist/**', 'packages/docs/**'],
 	options: {
 		typeAware: true,
 		typeCheck: true,

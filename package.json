@@ -39,6 +39,8 @@
   "allowScripts": {
     "fsevents@2.3.3": true,
     "@vscode/vsce-sign@2.1.0": true,
-    "keytar@7.9.0": true
+    "keytar@7.9.0": true,
+    "core-js@3.50.0": true,
+    "@swc/core@1.16.2": true
   }
 }
