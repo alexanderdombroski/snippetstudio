@@ -109,3 +109,11 @@ export class ProfileDropdown extends SnippetCategoryDropdown {
 		this.contextValue = 'profile-dropdown category-dropdown';
 	}
 }
+
+export class AllEditorsDropdown extends TreeItem {
+	constructor() {
+		super('Code Editors', Collapsed);
+		this.iconPath = new ThemeIcon('code');
+		this.contextValue = 'all-editors';
+	}
+}

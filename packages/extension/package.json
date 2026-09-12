@@ -351,6 +351,10 @@
 				"category": "snippetstudio"
 			},
 			{
+				"command": "snippetstudio.sync.setup",
+				"title": "Setup Local Sync"
+			},
+			{
 				"command": "snippetstudio.shell.create",
 				"title": "Create Shell Snippet",
 				"icon": "$(plus)"
@@ -376,7 +380,7 @@
 			},
 			{
 				"command": "snippetstudio.shell.manageProfiles",
-				"title": "Manage shell profile settings"
+				"title": "Manage Shell Profile Settings"
 			}
 		],
 		"menus": {
@@ -678,6 +682,11 @@
 				{
 					"command": "snippetstudio.profile.import",
 					"group": "inline_import",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.sync.setup",
+					"group": "inline_sync",
 					"when": "view == location-manager"
 				},
 				{

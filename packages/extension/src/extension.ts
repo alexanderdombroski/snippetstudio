@@ -19,6 +19,7 @@ import { getShellSnippets } from './ui/shell/config';
 import { initGutterLoading } from './ui/gutter/init';
 import { DragAndDropController } from './ui/DragAndDropController';
 import { SnippetDropProvider } from './ui/DocumentDropEditProvider';
+import initSnippetSyncCommands from './commands/sync/commands';
 
 /** This method is called when your extension is activated */
 async function _activate(context: ExtensionContext) {
@@ -75,6 +76,7 @@ async function _activate(context: ExtensionContext) {
 	initSnippetGithubCommands(context);
 	initSnippetShellCommands(context);
 	initSnippetProfileCommands(context);
+	initSnippetSyncCommands(context);
 
 	if (getShellSnippets().flat().length) {
 		executeCommand('snippetstudio.shell.refresh');

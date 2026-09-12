@@ -7,6 +7,7 @@ import type {
 } from 'vscode';
 import vscode, { Collapsed, None } from '../vscode';
 import {
+	AllEditorsDropdown,
 	AllExtensionDropdown,
 	AllProfilesDropdown,
 	ExtensionDropdown,
@@ -111,6 +112,7 @@ export default class LocationTreeProvider implements TreeDataProvider<TreeItem> 
 			if ((await getProfiles()).length > 1) {
 				topLevelDropdowns.push(new AllProfilesDropdown());
 			}
+			topLevelDropdowns.push(new AllEditorsDropdown());
 
 			return topLevelDropdowns;
 		}
