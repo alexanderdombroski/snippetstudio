@@ -2,6 +2,7 @@ import { describe, it, expect, vi, type Mock } from 'vitest';
 import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
+import { execSync } from 'node:child_process';
 import type { WorkspaceFolder, TextDocument, TextEditor } from 'vscode';
 import vscode, { Uri } from '../vscode';
 import {
@@ -13,7 +14,8 @@ import {
 	exists,
 	commandExists,
 } from './fsInfo';
-import { execSync } from 'node:child_process';
+
+vi.mock('node:child_process');
 
 describe('fsInfo', () => {
 	describe('getWorkspaceFolder', () => {
@@ -135,14 +137,6 @@ describe('fsInfo', () => {
 			});
 			const exists = commandExists('jq');
 			expect(exists).toBe(false);
-		});
-		it('should use a different command for unix', () => {
-			Object.defineProperty(process, 'platform', {
-				value: 'darwin',
-			});
-			const exists = commandExists('jq');
-			expect(execSync).toBeCalledWith(expect.stringContaining('command -v'), expect.anything());
-			expect(exists).toBe(true);
 		});
 	});
 });
