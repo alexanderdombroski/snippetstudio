@@ -24,8 +24,8 @@
     "@vscode/codicons": "^0.0.45",
     "clsx": "^2.1.1",
     "prism-react-renderer": "^2.4.1",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "svg-pan-zoom": "^3.6.2"
   },
   "devDependencies": {
