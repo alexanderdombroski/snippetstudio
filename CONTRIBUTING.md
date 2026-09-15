@@ -40,7 +40,7 @@ _If you want immediate feedback, you can add a comment `@coderabbitai review` an
 
 ## Contributing to docs
 
-This site uses Docusaurus inside of the docs/ directory.
+This site uses Docusaurus inside of the `packages/docs` directory.
 
 ---
 
