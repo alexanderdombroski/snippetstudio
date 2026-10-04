@@ -9,16 +9,11 @@
 		"dist": true // set this to false to include "dist" folder in search results
 	},
 	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-	"typescript.tsc.autoDetect": "off",
+	"js/ts.tsc.autoDetect": "off",
 	"[typescript][json][jsonc]": {
 		"editor.tabSize": 2
 	},
 	"snippetstudio.shell.snippets": [
-		{
-			"command": "npm run package && npx vsce package",
-			"runImmediately": true,
-			"profile": "zsh"
-		},
 		{
 			"command": "git clean -fx '*.vsix'",
 			"runImmediately": true,

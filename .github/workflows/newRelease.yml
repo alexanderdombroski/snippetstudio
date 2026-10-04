@@ -42,14 +42,10 @@ jobs:
           git commit -m "bot: update readme code coverage" --no-verify || echo "No changes to commit"
           git push origin HEAD:main --no-verify
 
-      - name: Compile extension
-        run: npm run package
-
       - name: Package extension
-        id: package
         run: |
-          npx @vscode/vsce package
-          echo "VSIX_PATH=$(ls *.vsix)" >> $GITHUB_ENV
+          npm run package
+          echo "VSIX_PATH=$(ls **/*.vsix)" >> $GITHUB_ENV
 
       - name: Delete tag on publish prep failure
         if: failure()
