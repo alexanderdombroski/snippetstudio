@@ -1,11 +1,5 @@
 import { vi } from 'vitest';
-import { loadEnvFile } from 'node:process';
-import path from 'node:path';
 import { context } from './__mocks__/shared';
-
-try {
-	loadEnvFile(path.resolve(import.meta.dirname, '.env'));
-} catch {}
 
 vi.mock('../src/vscode', async () => {
 	return await import('./__mocks__/vscode');
