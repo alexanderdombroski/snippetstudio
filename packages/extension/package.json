@@ -20,7 +20,7 @@
 	},
 	"qna": "https://github.com/alexanderdombroski/snippetstudio/discussions",
 	"engines": {
-		"vscode": "^1.103.0",
+		"vscode": "^1.125.0",
 		"node": ">=20.0.0"
 	},
 	"capabilities": {
@@ -1069,6 +1069,7 @@
 	"scripts": {
 		"check-types": "tsc --noEmit",
 		"package": "vite build --mode production",
+		"bundle": "vsce package --readme-path ../../README.md --changelog-path ../../CHANGELOG.md",
 		"test": "vitest run",
 		"coverage": "vitest run --coverage --reporter=dot --coverage.reporter=text-summary",
 		"coverage:ui": "vitest watch --ui --coverage",

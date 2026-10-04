@@ -6,7 +6,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "package": "npm run package --workspaces --if-present",
+    "package": "npm run package --workspace snippetstudio && npm run bundle --workspace snippetstudio",
     "lint": "oxlint",
     "check-types": "npm-run-all check-types:*",
     "check-types:packages": "npm run check-types --workspaces --if-present",
@@ -20,7 +20,7 @@
   },
   "workspaces": [
     "packages/*"
-  ],
+  ], 
   "devDependencies": {
     "@types/node": "^24.19.1",
     "@vitest/coverage-v8": "^5.0.3",
