@@ -1,6 +1,6 @@
 import type { ExtensionContext } from 'vscode';
 import vscode, { openExternal, showErrorMessage, Uri } from '../vscode';
-import type { GlobalStorage } from '../types';
+import type { AppName, GlobalStorage } from '../types';
 import { readJsonC } from './jsoncFilesIO';
 import os from 'node:os';
 import path from 'node:path';
@@ -61,7 +61,7 @@ export function _initUserPath(): string | undefined {
 
 /** returns the vscode user path based on platform and os */
 export function getUserPath(): string {
-	const appNames: Record<string, string> = {
+	const appNames: Record<AppName, string> = {
 		Antigravity: 'Antigravity',
 		'Antigravity IDE': 'Antigravity IDE',
 		'Visual Studio Code': 'Code',
@@ -75,7 +75,7 @@ export function getUserPath(): string {
 		AbacusAI: 'AbacusAI',
 		'code-server': 'code-server',
 	};
-	const appName = appNames[vscode.env.appName] ?? 'Code';
+	const appName = appNames[vscode.env.appName as AppName] ?? 'Code';
 	if (appName === 'code-server' && process.platform !== 'win32')
 		return path.join(os.homedir(), '.local', 'share', 'code-server', 'User');
 	switch (process.platform) {

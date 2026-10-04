@@ -7,6 +7,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { readJson } from '../../utils/jsoncFilesIO';
 import type {
+	AppName,
 	ExtensionSnippetFilesMap,
 	JSONObject,
 	PackageJsonSnippetsSection,
@@ -21,7 +22,7 @@ const extensionsWithNoSnippets = new Set();
 
 /** returns the location of downloaded extensions for current platform and os */
 export function getExtensionsDirPath(): string {
-	const appConfigs: Record<string, string> = {
+	const appConfigs: Record<AppName, string> = {
 		Antigravity: '.antigravity',
 		'Antigravity IDE': '.antigravity-ide',
 		'Visual Studio Code': '.vscode',
@@ -38,7 +39,7 @@ export function getExtensionsDirPath(): string {
 				? path.join('AppData', 'Roaming', 'code-server')
 				: path.join('.local', 'share', 'code-server'),
 	};
-	const appConfig = appConfigs[vscode.env.appName] ?? '.vscode';
+	const appConfig = appConfigs[vscode.env.appName as AppName] ?? '.vscode';
 	return path.join(os.homedir(), appConfig, 'extensions');
 }
 
