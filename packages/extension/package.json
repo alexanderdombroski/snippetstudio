@@ -1075,14 +1075,14 @@
 		"coverage:publish": "vitest run --coverage --reporter=dot --coverage.reporter=html --coverage.reporter=json-summary --coverage.reportOnFailure=true"
 	},
 	"dependencies": {
-		"@octokit/auth-oauth-device": "^8.0.3",
-		"@octokit/core": "^7.0.6",
+		"@octokit/auth-oauth-device": "^8.0.5",
+		"@octokit/core": "^7.0.8",
 		"strip-json-comments": "^5.0.3"
 	},
 	"devDependencies": {
 		"@types/vscode": "^1.125.0",
-		"@vscode/vsce": "^3.9.2",
-		"ovsx": "^1.0.2"
+		"@vscode/vsce": "^4.0.0",
+		"ovsx": "^1.2.0"
 	},
 	"bundleDependencies": [
 		"@octokit/auth-oauth-device",

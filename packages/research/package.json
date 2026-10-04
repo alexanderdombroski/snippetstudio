@@ -2,6 +2,7 @@
   "name": "research",
   "description": "Packages used for scripts in this file can be installed here",
   "type": "module",
+  "private": true,
   "scripts": {
     "sublime:to-vscode": "node sublime/scripts/convert-sublime-to-vscode.js",
     "sublime:from-vscode": "node sublime/scripts/convert-vscode-to-sublime.js",
@@ -10,6 +11,6 @@
     "xcode:import": "node xcode/importFromXcode.cjs"
   },
   "dependencies": {
-    "fast-xml-parser": "^5.7.2"
+    "fast-xml-parser": "^5.11.2"
   }
 }
