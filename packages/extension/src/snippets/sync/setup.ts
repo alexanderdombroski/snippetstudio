@@ -72,8 +72,14 @@ export async function runSetupFlow(): Promise<boolean> {
 			path.join(getLocalDataDir(), 'snippets'),
 			{ recursive: true }
 		);
-	} else {
-		// TODO - create setup flow for a new editor
+	}
+
+	if (config['sync.startingEditor'] !== vscode.env.appName) {
+		await fs.cp(
+			path.join(getUserPath(config['sync.startingEditor']), 'snippets'),
+			path.join(getUserPath(), 'snippets'),
+			{ recursive: true }
+		);
 	}
 
 	const enabledEditors = config['sync.editors'] ?? [];
