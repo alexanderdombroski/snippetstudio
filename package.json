@@ -10,7 +10,7 @@
     "lint": "oxlint",
     "check-types": "npm-run-all check-types:*",
     "check-types:packages": "npm run check-types --workspaces --if-present",
-    "check-types:configs": "tsc --noEmit --project tsconfig.config.json",
+    "check-types:configs": "tsc --noEmit",
     "test": "npm run test --workspaces --if-present",
     "test:setup": "node .vitest/createEnv.ts",
     "test:ui": "vitest watch --ui --coverage",

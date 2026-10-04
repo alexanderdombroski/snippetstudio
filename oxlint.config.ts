@@ -4,7 +4,7 @@ export default defineConfig({
 	ignorePatterns: ['**/node_modules/**', '**/dist/**', 'packages/docs/**'],
 	options: {
 		typeAware: true,
-		typeCheck: true,
+		typeCheck: false,
 		maxWarnings: 0,
 		reportUnusedDisableDirectives: 'warn',
 	},
