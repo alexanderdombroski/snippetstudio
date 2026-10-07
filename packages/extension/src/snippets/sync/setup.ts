@@ -1,12 +1,11 @@
-import fs from 'node:fs/promises';
 import type { AppName } from '../../types';
 import { editorAppNames, getUserPath } from '../../utils/context';
 import { exists } from '../../utils/fsInfo';
 import { getDeviceSettings, writeDeviceSettings } from '../../utils/local';
 import { getConfirmation } from '../../utils/user';
 import vscode, { executeCommand, showInformationMessage, showQuickPick } from '../../vscode';
-import path from 'node:path';
 import type { QuickPickItem } from 'vscode';
+import { resetGlobalSnippets } from './reset';
 
 const upgradeWarning = `
 Snippet Studio v5 changes how snippets are stored.
@@ -70,11 +69,7 @@ export async function runSetupFlow(): Promise<boolean> {
 	}
 
 	if (config['sync.startingEditor'] !== vscode.env.appName) {
-		await fs.cp(
-			path.join(getUserPath(config['sync.startingEditor']), 'snippets'),
-			path.join(getUserPath(), 'snippets'),
-			{ recursive: true }
-		);
+		await resetGlobalSnippets(true);
 	}
 
 	const enabledEditors = config['sync.editors'] ?? [];

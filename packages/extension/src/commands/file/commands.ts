@@ -8,6 +8,7 @@ import {
 	deleteHandler,
 	exportHandler,
 	renameHandler,
+	resetHandler,
 } from './handlers';
 import { onDoubleClick } from '../utils';
 
@@ -21,6 +22,7 @@ export default function initSnippetFileCommands(context: ExtensionContext) {
 		registerCommand('snippetstudio.file.createGlobalSnippets', createGlobalSnippetsHandler),
 		registerCommand('snippetstudio.file.delete', deleteHandler),
 		registerCommand('snippetstudio.file.export', exportHandler),
-		registerCommand('snippetstudio.file.rename', renameHandler)
+		registerCommand('snippetstudio.file.rename', renameHandler),
+		registerCommand('snippetstudio.file.reset', resetHandler)
 	);
 }

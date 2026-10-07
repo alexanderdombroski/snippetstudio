@@ -314,6 +314,11 @@
 				"category": "snippetstudio"
 			},
 			{
+				"command": "snippetstudio.file.reset",
+				"title": "Reset snippets to default ide",
+				"category": "snippetstudio-reset"
+			},
+			{
 				"command": "snippetstudio.github.export",
 				"title": "Export Snippets to a GitHub Gist",
 				"shortTitle": "Export Snippets To Gist",
@@ -678,6 +683,11 @@
 				{
 					"command": "snippetstudio.profile.import",
 					"group": "inline_import",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.file.reset",
+					"group": "inline_reset",
 					"when": "view == location-manager"
 				},
 				{
