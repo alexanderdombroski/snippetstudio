@@ -2,7 +2,7 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import {
+import vscode, {
 	showErrorMessage,
 	createQuickPick,
 	showWarningMessage,
@@ -12,19 +12,16 @@ import {
 } from '../vscode';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { exists, getWorkspaceFolder } from '../utils/fsInfo';
+import { exists, getWorkspaceFolder, isDefaultProfileSnippetPath } from '../utils/fsInfo';
 import { getCurrentLanguage, selectLanguage } from '../utils/language';
 import { getAllSnippetFilesList } from './locateSnippets';
-import type { VSCodeSnippets } from '../types';
+import type { AppName, VSCodeSnippets } from '../types';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
-import {
-	getLinkedSnippets,
-	getLinkLocations,
-	isSnippetLinked,
-	updateAllSettings,
-} from './links/config';
+import { isSnippetLinked } from './links/config';
+import { getDeviceSettings } from '../utils/local';
+import { getUserPath } from '../utils/context';
 
 /** Creates an empty JSON file with {} and returns string alertStatus */
 export async function createFile(
@@ -41,8 +38,12 @@ export async function createFile(
 		return 'skipped';
 	} else {
 		// File doesn't exist and should, create it
-		await fs.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
-		await fs.writeFile(filepath, '{}'); // Create an empty JSON file
+		if (await isDefaultProfileSnippetPath(filepath)) {
+			await writeSnippetFile(filepath, {}, '', true);
+		} else {
+			await fs.mkdir(path.dirname(filepath), { recursive: true }); // Ensure directory exists
+			await fs.writeFile(filepath, '{}'); // Create an empty JSON file
+		}
 	}
 }
 
@@ -201,40 +202,36 @@ export async function renameSnippetFile(fp: string) {
 	}
 
 	const newFile = newName + '.code-snippets';
-	const isLinked = await isSnippetLinked(fp);
 
-	const filesToCheck: string[] = [];
-	let links;
-	if (isLinked) {
-		links = await getLinkedSnippets();
-		if (Object.hasOwn(links, newFile)) {
-			showWarningMessage(
-				`Cannot rename file because ${newFile} is already linked in some other profile`
-			);
-			return;
-		}
-		filesToCheck.push(...(await getLinkLocations(fp)).map((dir) => path.join(dir, newFile)));
-	} else {
-		filesToCheck.push(path.join(path.dirname(fp), newFile));
+	let editors = [vscode.env.appName as AppName];
+	const isDefaultProfileSnippet = await isDefaultProfileSnippetPath(fp);
+	if (isDefaultProfileSnippet) {
+		const config = await getDeviceSettings();
+		editors = config?.['sync.editors'] ?? editors;
 	}
 
-	const pathAlreadyUsed = (await Promise.all(filesToCheck.map((p) => exists(p)))).some(Boolean);
-	if (pathAlreadyUsed) {
+	for (const editor of editors) {
+		if (await isSnippetLinked(fp, true, editor)) {
+			showWarningMessage(`Can't rename a linked snippet file! (linked in ${editor})`);
+			return;
+		}
+	}
+
+	const newPath = path.join(path.dirname(fp), newFile);
+	if (await exists(newPath)) {
 		showWarningMessage('A snippet file of that name already exists and would be overwritten');
 		return;
 	}
 
-	const task = async (newPath: string) => {
-		const oldPath = path.join(path.dirname(newPath), oldFile);
-		await fs.rename(oldPath, newPath);
-	};
-	await Promise.all(filesToCheck.map((fp) => task(fp)));
-
-	if (isLinked && links) {
-		links[newFile] = links[oldFile];
-		delete links[oldFile];
-		await updateAllSettings(links);
+	if (isDefaultProfileSnippet) {
+		for (const editor of editors) {
+			const oldPath = path.join(getUserPath(editor), 'snippets', oldFile);
+			const newPath = path.join(getUserPath(editor), 'snippets', newFile);
+			await fs.rename(oldPath, newPath);
+		}
+	} else {
+		await fs.rename(fp, newPath);
 	}
 
-	showInformationMessage(`Successfully renamed ${filesToCheck.length} files`);
+	showInformationMessage(`Successfully renamed ${oldFile} to ${newFile}`);
 }

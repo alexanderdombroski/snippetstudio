@@ -120,6 +120,7 @@ describe('updateSnippets', () => {
 
 	describe('deleteSnippetFile', () => {
 		it('should show warning if snippet is linked', async () => {
+			(exists as Mock).mockResolvedValue(true);
 			(isSnippetLinked as Mock).mockResolvedValue(true);
 			await deleteSnippetFile('test.json');
 			expect(showWarningMessage).toHaveBeenCalled();

@@ -12,6 +12,10 @@ Read [installation and getting started](https://alexanderdombroski.github.io/sni
 
 ## Features
 
+### NEW Local Editor Sync in v5
+
+As you create snippets in your favorite editor, Cursor, Antigravity, and VS Code are automatically updated to match. Read more about [local editor sync](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/local-editor-sync).
+
 ### Managing Snippets
 
 The **Snippets** view updates to include all snippets of the active editor's language.

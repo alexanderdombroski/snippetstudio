@@ -11,3 +11,8 @@ export type AppName =
 	| 'Trae'
 	| 'AbacusAI'
 	| 'code-server';
+
+export type MachineConfig = {
+	'sync.startingEditor'?: AppName;
+	'sync.editors'?: AppName[];
+};

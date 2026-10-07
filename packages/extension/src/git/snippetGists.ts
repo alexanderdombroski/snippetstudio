@@ -17,6 +17,7 @@ import { mergeSnippetFiles } from '../snippets/newSnippetFile';
 import { chooseLocalGlobal, getFileName, getSavePathFromDialog } from '../utils/user';
 import { getGistId } from './utils';
 import { exists } from '../utils/fsInfo';
+import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO';
 
 /** creates a new gist from exported snippets */
 async function createGist() {
@@ -99,7 +100,12 @@ async function _saveCodeSnippets(gist_id: string, saveDir: string): Promise<void
 				}
 
 				if (savePath) {
-					await fs.writeFile(savePath, file.content);
+					try {
+						const jsonObj = await processJsonWithComments(file.content);
+						await writeSnippetFile(savePath, jsonObj, '', true);
+					} catch {
+						await fs.writeFile(savePath, file.content);
+					}
 					fileCount += 1;
 				}
 			}

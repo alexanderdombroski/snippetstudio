@@ -7,6 +7,7 @@ import {
 	deleteHandler,
 	exportHandler,
 	renameHandler,
+	resetHandler,
 } from './handlers';
 import { refreshAll } from '../utils';
 import {
@@ -17,11 +18,13 @@ import {
 	renameSnippetFile,
 } from '../../snippets/newSnippetFile';
 import { deleteSnippetFile } from '../../snippets/updateSnippets';
+import { resetGlobalSnippets } from '../../snippets/sync/reset';
 import { showTextDocument, openTextDocument, Uri } from '../../vscode';
 import type { SnippetFileTreeItem } from '../../ui/templates';
 
 vi.mock('../../snippets/newSnippetFile');
 vi.mock('../../snippets/updateSnippets');
+vi.mock('../../snippets/sync/reset');
 vi.mock('../utils');
 
 beforeAll(() => {
@@ -88,6 +91,14 @@ describe('handlers', () => {
 		it('should rename a snippets file', async () => {
 			await renameHandler(item);
 			expect(renameSnippetFile).toBeCalled();
+			expect(refreshAll).toBeCalled();
+		});
+	});
+
+	describe('resetHandler', () => {
+		it('should reset global snippets and refresh', async () => {
+			await resetHandler();
+			expect(resetGlobalSnippets).toBeCalled();
 			expect(refreshAll).toBeCalled();
 		});
 	});
