@@ -5,16 +5,17 @@ import { getDeviceSettings, writeDeviceSettings } from '../../utils/local';
 import { getConfirmation } from '../../utils/user';
 import vscode, { executeCommand, showInformationMessage, showQuickPick } from '../../vscode';
 import type { QuickPickItem } from 'vscode';
-import { resetGlobalSnippets } from './reset';
 
 const upgradeWarning = `
 Snippet Studio v5 changes how snippets are stored.
 
 v4: Snippets are specific to each IDE.
-v5+: Shared snippets across IDEs, with optional cloud sync
+v5+: Shared snippets across IDEs, with optional cloud sync coming in the future
 
 Project-specific snippets work in both versions.
 Profiles are IDE-specific, so their snippets remain IDE-sepcific.
+
+Learn more at https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/local-editor-sync
 
 Continue with v5?
 `.trim();
@@ -69,6 +70,7 @@ export async function runSetupFlow(): Promise<boolean> {
 	}
 
 	if (config['sync.startingEditor'] !== vscode.env.appName) {
+		const { resetGlobalSnippets } = await import('./reset.js');
 		await resetGlobalSnippets(true);
 	}
 
