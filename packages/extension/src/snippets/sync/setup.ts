@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import type { AppName } from '../../types';
 import { editorAppNames, getUserPath } from '../../utils/context';
 import { exists } from '../../utils/fsInfo';
-import { getDeviceSettings, getLocalDataDir, writeDeviceSettings } from '../../utils/local';
+import { getDeviceSettings, writeDeviceSettings } from '../../utils/local';
 import { getConfirmation } from '../../utils/user';
 import vscode, { executeCommand, showInformationMessage, showQuickPick } from '../../vscode';
 import path from 'node:path';
@@ -67,11 +67,6 @@ export async function runSetupFlow(): Promise<boolean> {
 			"Which editor's snippets would you like SnippetStudio to use as a starting point?"
 		);
 		config['sync.startingEditor'] = editor;
-		await fs.cp(
-			path.join(getUserPath(editor), 'snippets'),
-			path.join(getLocalDataDir(), 'snippets'),
-			{ recursive: true }
-		);
 	}
 
 	if (config['sync.startingEditor'] !== vscode.env.appName) {

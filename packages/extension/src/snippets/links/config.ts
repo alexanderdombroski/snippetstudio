@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { getUserPath } from '../../utils/context';
 import { readJsonC, writeJson } from '../../utils/jsoncFilesIO';
-import type { JSONObject, SnippetLinks } from '../../types';
+import type { AppName, JSONObject, SnippetLinks } from '../../types';
 import {
 	getActiveProfile,
 	getPathFromProfileLocation,
@@ -27,8 +27,8 @@ export async function removeFileLink(filename: string) {
 }
 
 /** Returns the linked snippet file basenames */
-export async function getLinkedSnippets(): Promise<SnippetLinks> {
-	const settingsPath = path.join(getUserPath(), 'settings.json');
+export async function getLinkedSnippets(ide?: AppName): Promise<SnippetLinks> {
+	const settingsPath = path.join(getUserPath(ide), 'settings.json');
 	if (!(await exists(settingsPath))) {
 		return {};
 	}
@@ -58,14 +58,14 @@ export async function updateAllSettings(newLinksValue: SnippetLinks) {
 }
 
 /** Gets the link paths for a given filepath */
-export async function getLinkLocations(filepath: string): Promise<string[]> {
+export async function getLinkLocations(filepath: string, ide?: AppName): Promise<string[]> {
 	if (!isUserSnippet(filepath)) {
 		return [];
 	}
-	const linkedSnippets = await getLinkedSnippets();
+	const linkedSnippets = await getLinkedSnippets(ide);
 	const links = linkedSnippets[path.basename(filepath)];
 	if (links?.includes(getProfileIdFromPath(filepath))) {
-		return links.map((location) => getPathFromProfileLocation(location));
+		return links.map((location) => getPathFromProfileLocation(location, ide));
 	}
 	return [];
 }
@@ -75,15 +75,19 @@ export async function getLinkLocations(filepath: string): Promise<string[]> {
  * @param filepath filepath of the snippet
  * @param strict true if linked to any profile
  */
-export async function isSnippetLinked(filepath: string, strict?: boolean): Promise<boolean> {
+export async function isSnippetLinked(
+	filepath: string,
+	strict?: boolean,
+	ide?: AppName
+): Promise<boolean> {
 	if (!isUserSnippet(filepath)) {
 		return false; // Only user snippets can be linked
 	}
-	const linkedSnippets = await getLinkedSnippets();
+	const linkedSnippets = await getLinkedSnippets(ide);
 	const basename = path.basename(filepath);
 	return (
 		basename in linkedSnippets &&
-		(strict || linkedSnippets[basename].includes((await getActiveProfile()).location))
+		(strict || !!ide || linkedSnippets[basename].includes((await getActiveProfile()).location))
 	);
 }
 

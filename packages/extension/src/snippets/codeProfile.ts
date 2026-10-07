@@ -6,7 +6,7 @@ import { showOpenDialog, showInformationMessage, showQuickPick, showInputBox } f
 import fs from 'node:fs/promises';
 import https from 'node:https';
 import path from 'node:path';
-import { processJsonWithComments } from '../utils/jsoncFilesIO';
+import { processJsonWithComments, writeSnippetFile } from '../utils/jsoncFilesIO';
 import type { VSCodeSnippets } from '../types';
 import { chooseLocalGlobal } from '../utils/user';
 import { exists } from '../utils/fsInfo';
@@ -82,7 +82,8 @@ export async function _saveCodeProfiles(
 			Object.values(parsed).forEach((snippet) => (snippet.scope = lang));
 			fileContent = JSON.stringify(parsed, null, 2);
 		}
-		await fs.writeFile(savePath, fileContent, 'utf-8');
+
+		await writeSnippetFile(savePath, JSON.parse(fileContent), '', true);
 	});
 
 	await Promise.all(tasks);
