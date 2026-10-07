@@ -16,11 +16,11 @@ Read [installation and getting started](https://alexanderdombroski.github.io/sni
 
 The **Snippets** view updates to include all snippets of the active editor's language.
 
-![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/edit.gif)
+![Edit Snippet Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/packages/extension/public/examples/edit.gif)
 
 Double click a snippet file to open it. Double click to peek at a snippet. You can also reorder and move snippets.
 
-<img src="https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/reorder.gif" width="400" >
+<img src="https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/packages/extension/public/examples/reorder.gif" width="400" >
 
 See how to [manage snippets](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/snippet-crud) in depth.
 
@@ -34,19 +34,19 @@ See how to [create global and project snippet files](https://alexanderdombroski.
 
 The **Snippet Editor** view only appears when creating or editing snippets.
 
-![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/selection.gif)
+![Creating a Snippet from Selection](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/packages/extension/public/examples/selection.gif)
 
 ### Snippet Keybindings
 
 Command to easily add [attach a keybinding](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/keybinding-snippets) to a snippet. These are bound to the target languages by default.
 
-![Add a Keybinding](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/keybindings.gif)
+![Add a Keybinding](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/packages/extension/public/examples/keybindings.gif)
 
 ### Tooling for Insertion Features
 
 Use insertion features such as [placeholders, tabstops, variables, etc](https://alexanderdombroski.github.io/snippetstudio/docs/snippet-management/snippet-insertion-features) to make your snippets more powerful.
 
-![Snippet Placeholder Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/public/examples/placeholder.gif)
+![Snippet Placeholder Example](https://raw.githubusercontent.com/alexanderdombroski/snippetstudio/refs/heads/main/packages/extension/public/examples/placeholder.gif)
 
 ### Exporting Snippets
 
@@ -72,7 +72,7 @@ Copy snippets from [snippet extension packs](https://code.visualstudio.com/docs/
 
 Save terminal commands commonly ran in the terminal across workspaces or globally. Hit the run button to automatically create a terminal and run it.
 
-![Shell Snippets Example](./public/examples/shell-snippets.gif)
+![Shell Snippets Example](./packages/extension/public/examples/shell-snippets.gif)
 
 ## Requirements
 
