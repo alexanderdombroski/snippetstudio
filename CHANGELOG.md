@@ -33,6 +33,14 @@
 - [1.1](#111---2025-04-08) - Snippet Insertion Features
 - [1.0](#103---2025-03-22) - Initial Release
 
+## [5.0.0] - 2026-10-16 (prerelease)
+
+### Added
+
+- Device settings to configure local sync and default editor
+- Snippet management operations update snippets in all VSCode-like editors
+- Local Sync only affects global snippets and profile snippets linked to global snippets
+
 ## [4.4.0] - 2026-07-10
 
 ### Added
