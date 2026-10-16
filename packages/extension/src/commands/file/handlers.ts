@@ -49,3 +49,10 @@ export async function exportHandler() {
 	await exportSnippets();
 	refreshAll();
 }
+
+/** snippetstudio.file.reset command handler */
+export async function resetHandler() {
+	const { resetGlobalSnippets } = await import('../../snippets/sync/reset.js');
+	await resetGlobalSnippets();
+	refreshAll();
+}

@@ -20,7 +20,7 @@
 	},
 	"qna": "https://github.com/alexanderdombroski/snippetstudio/discussions",
 	"engines": {
-		"vscode": "^1.125.0",
+		"vscode": "^1.107.0",
 		"node": ">=20.0.0"
 	},
 	"capabilities": {
@@ -312,6 +312,11 @@
 				"title": "Export Snippets to Code Snippets File",
 				"shortTitle": "Export Snippets",
 				"category": "snippetstudio"
+			},
+			{
+				"command": "snippetstudio.file.reset",
+				"title": "Reset snippets to default ide",
+				"category": "snippetstudio-reset"
 			},
 			{
 				"command": "snippetstudio.github.export",
@@ -678,6 +683,11 @@
 				{
 					"command": "snippetstudio.profile.import",
 					"group": "inline_import",
+					"when": "view == location-manager"
+				},
+				{
+					"command": "snippetstudio.file.reset",
+					"group": "inline_reset",
 					"when": "view == location-manager"
 				},
 				{
@@ -1081,7 +1091,7 @@
 		"strip-json-comments": "^5.0.3"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.125.0",
+		"@types/vscode": "^1.107.0",
 		"@vscode/vsce": "^4.0.0",
 		"ovsx": "^1.2.0"
 	},

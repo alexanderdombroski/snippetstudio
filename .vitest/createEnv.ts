@@ -32,14 +32,7 @@ async function createEnvFile() {
 		console.log('Authentication successful!');
 
 		const envContent = `GITHUB_TOKEN=${token}\n`;
-		const envPath = path.resolve(
-			import.meta.dirname,
-			'..',
-			'packages',
-			'extension',
-			'.vitest',
-			'.env'
-		);
+		const envPath = path.resolve(import.meta.dirname, '.env');
 
 		await fs.writeFile(envPath, envContent);
 

@@ -16,19 +16,16 @@ import {
 } from '../vscode';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { exists, getWorkspaceFolder } from '../utils/fsInfo';
+import { exists, getWorkspaceFolder, isDefaultProfileSnippetPath } from '../utils/fsInfo';
 import { getCurrentLanguage } from '../utils/language';
 import { getActiveProfileSnippetsDir } from '../utils/profile';
 import { getFileName, getSavePath } from '../utils/user';
-import {
-	getLinkedSnippets,
-	getLinkLocations,
-	isSnippetLinked,
-	updateAllSettings,
-} from './links/config';
+import { isSnippetLinked } from './links/config';
 import { readJsoncFilesAsync, writeSnippetFile } from '../utils/jsoncFilesIO';
 import { getAllSnippetFilesList, locateAllSnippetFiles } from './locateSnippets';
 import type { VSCodeSnippets } from '../types';
+import { getDeviceSettings } from '../utils/local';
+import { getUserPath } from '../utils/context';
 
 vi.mock('../utils/fsInfo');
 vi.mock('../utils/language');
@@ -37,8 +34,14 @@ vi.mock('../utils/profile');
 vi.mock('../utils/user');
 vi.mock('./links/config');
 vi.mock('./locateSnippets');
+vi.mock('../utils/local');
+vi.mock('../utils/context');
 
 describe('newSnippetFile', () => {
+	beforeEach(() => {
+		(isDefaultProfileSnippetPath as Mock).mockResolvedValue(false);
+	});
+
 	describe('createFile', () => {
 		it('should show info if file exists', async () => {
 			(exists as Mock).mockResolvedValue(true);
@@ -57,9 +60,18 @@ describe('newSnippetFile', () => {
 		it('should write new file', async () => {
 			(exists as Mock).mockResolvedValue(false);
 			(isSnippetLinked as Mock).mockResolvedValue(false);
+			(isDefaultProfileSnippetPath as Mock).mockResolvedValue(false);
 			await createFile('path/to/file');
 			expect(fs.mkdir).toHaveBeenCalledWith('path/to', { recursive: true });
 			expect(fs.writeFile).toHaveBeenCalledWith('path/to/file', '{}');
+		});
+
+		it('should write snippet file if default profile snippet', async () => {
+			(exists as Mock).mockResolvedValue(false);
+			(isSnippetLinked as Mock).mockResolvedValue(false);
+			(isDefaultProfileSnippetPath as Mock).mockResolvedValue(true);
+			await createFile('path/to/file');
+			expect(writeSnippetFile).toHaveBeenCalledWith('path/to/file', {}, '', true);
 		});
 	});
 
@@ -152,6 +164,7 @@ describe('newSnippetFile', () => {
 			(getFileName as Mock).mockReturnValue('new');
 			(exists as Mock).mockResolvedValue(false);
 			(isSnippetLinked as Mock).mockResolvedValue(false);
+			(isDefaultProfileSnippetPath as Mock).mockResolvedValue(false);
 		});
 
 		it('should exit early with no filename', async () => {
@@ -173,24 +186,32 @@ describe('newSnippetFile', () => {
 			expect(showInformationMessage).toBeCalled();
 		});
 
-		it('should warn if there would be a link override', async () => {
+		it('should warn if snippet is linked', async () => {
 			(isSnippetLinked as Mock).mockResolvedValue(true);
-			(getLinkedSnippets as Mock).mockResolvedValue({ 'new.code-snippets': ['/example/path'] });
 
 			await renameSnippetFile(fp);
 			expect(fs.rename).not.toBeCalled();
 			expect(showWarningMessage).toBeCalled();
 		});
 
-		it('should rename all linked files and update settings', async () => {
-			(isSnippetLinked as Mock).mockResolvedValue(true);
-			(getLinkedSnippets as Mock).mockResolvedValue({ 'test.code-snippets': ['/example/path'] });
-			(getLinkLocations as Mock).mockResolvedValue(['/example/path']);
+		it('should rename all editor files if default profile snippet', async () => {
+			(isDefaultProfileSnippetPath as Mock).mockResolvedValue(true);
+			(getDeviceSettings as Mock).mockResolvedValue({
+				'sync.editors': ['Visual Studio Code', 'Cursor'],
+			});
+			(getUserPath as Mock).mockImplementation((editor: string) => `/user/${editor}`);
 
 			await renameSnippetFile(fp);
-			expect(fs.rename).toBeCalled();
+			expect(fs.rename).toBeCalledTimes(2);
+			expect(fs.rename).toHaveBeenCalledWith(
+				path.join('/user/Visual Studio Code', 'snippets', 'test.code-snippets'),
+				path.join('/user/Visual Studio Code', 'snippets', 'new.code-snippets')
+			);
+			expect(fs.rename).toHaveBeenCalledWith(
+				path.join('/user/Cursor', 'snippets', 'test.code-snippets'),
+				path.join('/user/Cursor', 'snippets', 'new.code-snippets')
+			);
 			expect(showInformationMessage).toBeCalled();
-			expect(updateAllSettings).toBeCalled();
 		});
 	});
 });

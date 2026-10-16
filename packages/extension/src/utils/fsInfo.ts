@@ -4,6 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import fs from 'node:fs/promises';
 import { execSync } from 'node:child_process';
+import { getUserPath } from './context';
 
 /**
  * Grabs the CWD workspace of VSCode
@@ -56,6 +57,11 @@ async function isExtensionSnippetPath(fp: string): Promise<boolean> {
 	return isParentDir(getExtensionsDirPath(), fp) || isParentDir(getBuiltInExtensionsPath(), fp);
 }
 
+/** Is the snippet path located on the default profile */
+async function isDefaultProfileSnippetPath(fp: string): Promise<boolean> {
+	return isParentDir(path.join(getUserPath(), 'snippets'), fp);
+}
+
 /** Check if a file/folder exists */
 async function exists(fp: string): Promise<boolean> {
 	try {
@@ -83,6 +89,7 @@ export {
 	getCurrentUri,
 	shortenFullPath,
 	isExtensionSnippetPath,
+	isDefaultProfileSnippetPath,
 	getDownloadsDirPath,
 	isParentDir,
 	exists,

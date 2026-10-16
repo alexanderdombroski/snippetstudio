@@ -19,6 +19,7 @@ import { getShellSnippets } from './ui/shell/config';
 import { initGutterLoading } from './ui/gutter/init';
 import { DragAndDropController } from './ui/DragAndDropController';
 import { SnippetDropProvider } from './ui/DocumentDropEditProvider';
+import { runSetupFlow } from './snippets/sync/setup';
 
 /** This method is called when your extension is activated */
 async function _activate(context: ExtensionContext) {
@@ -30,6 +31,9 @@ async function _activate(context: ExtensionContext) {
 		const { captureEvent } = await import('./utils/analytics.js');
 		void captureEvent('activated', { platform: vscode.env.appName, os: process.platform });
 	}
+
+	const success = await runSetupFlow();
+	if (!success) return;
 
 	// Reset setting
 	vscode.workspace

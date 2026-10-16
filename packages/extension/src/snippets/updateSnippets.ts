@@ -2,24 +2,26 @@
 // ---------- Lazy Loaded - Only import with await import() ----------
 // -------------------------------------------------------------------
 
-import {
+import vscode, {
 	showQuickPick,
 	showInformationMessage,
 	showErrorMessage,
 	showWarningMessage,
 	getConfiguration,
 } from '../vscode';
-import type { VSCodeSnippet } from '../types';
+import type { AppName, VSCodeSnippet } from '../types';
 import { readSnippetFile, writeSnippetFile } from '../utils/jsoncFilesIO';
 import path from 'node:path';
 import fs from 'fs/promises';
 import { getCurrentLanguage } from '../utils/language';
 import { getAllSnippetFilesList } from './locateSnippets';
 import type { SnippetTreeItem } from '../ui/templates';
-import { exists } from '../utils/fsInfo';
+import { exists, isDefaultProfileSnippetPath } from '../utils/fsInfo';
 import { isSnippetLinked } from './links/config';
 import { getCacheManager } from './SnippetCacheManager';
 import { getConfirmation } from '../utils/user';
+import { getDeviceSettings } from '../utils/local';
+import { getUserPath } from '../utils/context';
 
 // -------------------------- CRUD operations --------------------------
 
@@ -145,15 +147,26 @@ export async function moveSnippetToDestination(
 
 /** deletes snippet file on user confirmation if not linked and exists */
 export async function deleteSnippetFile(filepath: string) {
-	if (await isSnippetLinked(filepath)) {
-		showWarningMessage("Don't delete a linked snippet file until you unlink it first!");
-		return;
-	}
 	const filename = path.basename(filepath);
-
 	if (!(await exists(filepath))) {
 		showErrorMessage(`${filename} File doesn't exits: ${filepath}`);
 		return;
+	}
+
+	let editors = [vscode.env.appName as AppName];
+	const isDefaultProfileSnippet = await isDefaultProfileSnippetPath(filepath);
+	if (isDefaultProfileSnippet) {
+		const config = await getDeviceSettings();
+		editors = config?.['sync.editors'] ?? editors;
+	}
+
+	for (const editor of editors) {
+		if (await isSnippetLinked(filepath, true, editor)) {
+			showWarningMessage(
+				`Don't delete a linked snippet file until you unlink it first! (linked in ${editor})`
+			);
+			return;
+		}
 	}
 
 	// Confirmation message
@@ -168,7 +181,14 @@ export async function deleteSnippetFile(filepath: string) {
 	}
 
 	try {
-		await fs.unlink(filepath);
+		if (isDefaultProfileSnippet) {
+			for (const editor of editors) {
+				const userPath = getUserPath(editor);
+				await fs.unlink(path.join(userPath, 'snippets', filename));
+			}
+		} else {
+			await fs.unlink(filepath);
+		}
 		getCacheManager().remove(filepath);
 		showInformationMessage(`Snippet file deleted: ${filename}\n${filepath}`);
 	} catch (error) {

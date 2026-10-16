@@ -1,9 +1,12 @@
 import * as fs from 'node:fs/promises';
 import vscode, { showErrorMessage, showInformationMessage, Uri } from '../vscode';
 import path from 'node:path';
-import type { GenericJson, VSCodeSnippets } from '../types';
+import type { AppName, GenericJson, VSCodeSnippets } from '../types';
 import { getLinkLocations } from '../snippets/links/config';
 import stripJsonComments from 'strip-json-comments';
+import { getDeviceSettings } from './local';
+import { isDefaultProfileSnippetPath } from './fsInfo';
+import { getUserPath } from './context';
 
 /** Removes trailing commas and comments from a jsonString */
 export async function processJsonWithComments(jsonString: string): Promise<any> {
@@ -85,19 +88,37 @@ export async function writeSnippetFile(
 ) {
 	try {
 		const jsonString = JSON.stringify(jsonObject, null, 2);
-		const links = await getLinkLocations(filepath);
-		if (links.length) {
-			const basename = path.basename(filepath);
-			await Promise.all(
-				links.map(async (dir) => {
-					const fp = path.join(dir, basename);
-					await fs.mkdir(path.dirname(fp), { recursive: true });
-					await fs.writeFile(fp, jsonString);
-				})
-			);
-		} else {
-			await fs.writeFile(filepath, jsonString);
+
+		let editors = [vscode.env.appName as AppName];
+		const isDefaultProfileSnippet = await isDefaultProfileSnippetPath(filepath);
+		if (isDefaultProfileSnippet) {
+			const config = await getDeviceSettings();
+			editors = config?.['sync.editors'] ?? editors;
 		}
+
+		for (const editor of editors) {
+			const links = await getLinkLocations(filepath, editor);
+			if (links.length) {
+				const basename = path.basename(filepath);
+				await Promise.all(
+					links.map(async (dir) => {
+						const fp = path.join(dir, basename);
+						await fs.mkdir(path.dirname(fp), { recursive: true });
+						await fs.writeFile(fp, jsonString);
+					})
+				);
+			} else {
+				if (isDefaultProfileSnippet) {
+					await fs.writeFile(
+						path.join(getUserPath(editor), 'snippets', path.basename(filepath)),
+						jsonString
+					);
+				} else {
+					await fs.writeFile(filepath, jsonString);
+				}
+			}
+		}
+
 		if (!silent) {
 			showInformationMessage(successMessage);
 		}

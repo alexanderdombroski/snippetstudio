@@ -59,23 +59,26 @@ export function _initUserPath(): string | undefined {
 	}
 }
 
+const appNames: Record<AppName, string> = {
+	Antigravity: 'Antigravity',
+	'Antigravity IDE': 'Antigravity IDE',
+	'Visual Studio Code': 'Code',
+	'Visual Studio Code - Insiders': 'Code - Insiders',
+	VSCodium: 'VSCodium',
+	Cursor: 'Cursor',
+	Devin: 'Devin',
+	Windsurf: 'Windsurf',
+	Kiro: 'Kiro',
+	Trae: 'Trae',
+	AbacusAI: 'AbacusAI',
+	'code-server': 'code-server',
+} as const;
+
+export const editorAppNames = Object.keys(appNames) as AppName[];
+
 /** returns the vscode user path based on platform and os */
-export function getUserPath(): string {
-	const appNames: Record<AppName, string> = {
-		Antigravity: 'Antigravity',
-		'Antigravity IDE': 'Antigravity IDE',
-		'Visual Studio Code': 'Code',
-		'Visual Studio Code - Insiders': 'Code - Insiders',
-		VSCodium: 'VSCodium',
-		Cursor: 'Cursor',
-		Devin: 'Devin',
-		Windsurf: 'Windsurf',
-		Kiro: 'Kiro',
-		Trae: 'Trae',
-		AbacusAI: 'AbacusAI',
-		'code-server': 'code-server',
-	};
-	const appName = appNames[vscode.env.appName as AppName] ?? 'Code';
+export function getUserPath(ide?: AppName): string {
+	const appName = appNames[ide ?? (vscode.env.appName as AppName)] ?? 'Code';
 	if (appName === 'code-server' && process.platform !== 'win32')
 		return path.join(os.homedir(), '.local', 'share', 'code-server', 'User');
 	switch (process.platform) {

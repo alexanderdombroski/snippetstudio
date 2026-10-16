@@ -1,7 +1,7 @@
 // Utilities for interacting with VS Code profiles
 import vscode from '../vscode';
 import path from 'node:path';
-import type { ProfileInfo, ProfileAssociations } from '../types';
+import type { ProfileInfo, ProfileAssociations, AppName } from '../types';
 import { getExtensionContext, getUserPath } from './context';
 
 const DEFAULT_PROFILE_ID = '__default__profile__';
@@ -60,10 +60,10 @@ async function getAllGlobalSnippetDirs(): Promise<string[]> {
 }
 
 /** Returns the snippets path for the given profile */
-function getPathFromProfileLocation(location: string): string {
+function getPathFromProfileLocation(location: string, ide?: AppName): string {
 	return location === DEFAULT_PROFILE_ID
-		? path.join(getUserPath(), 'snippets')
-		: path.join(getUserPath(), 'profiles', location, 'snippets');
+		? path.join(getUserPath(ide), 'snippets')
+		: path.join(getUserPath(ide), 'profiles', location, 'snippets');
 }
 
 /** Extracts the profile id from the snippets path */
